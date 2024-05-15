@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        <style>
+            body {
+                color: #0d6efd;
+                font-weight: bold;
+                font-size:12px;
+            }
+            #header {
+                height: 90px;
+                border-style: solid;
+                border-width: 0 0 2px 0;
+            }
+            #user_info {
+                margin: 10px;
+                text-align: right;
+            }
+            #company_info {
+                margin: 10px;
+                text-align: center;
+                width: 700px;
+            }
+            #logo {
+                margin: 20px;
+                height: 70px;
+                width: 140px;
+            }
+            
+            #main_window {
+                border-style: solid #0d6efd;
+                border-width: 1px;
+                height: 100%;
+                width: 100%;
+                margin-top: 10px;
+            }
+            #menu {
+                #0d6efd
+                width: 300px;
+                height: 100%;
+                margin-left: 20px ;
+                border-style: solid;
+                border-width: 0 2px 0 0;
+            }
+            #mst, #company {
+                text-align: center;
+            }
+            #left_window, #right_window {
+                height: 100%;
+                border-style: solid;
+                border-width: 0 2px 0 0;
+            }
+            label {
+                align-content: left;
+                text-align: left;
+                width: 120px;
+            }
+            select,input {
+                width: 100px;
+                margin-right:5px;
+            }
+            #hopdong {
+                width: 400px;
+                margin: 0 auto;
+            }
+            #btn_save {
+                display:fixed;
+                margin-left: 380px;
+                margin-top: 80px;
+                width: 100px;
+                
+            }
+            #subfunction {
+                font-size: 12px;
+                margin-left: 20px;
+            }
+            #subfunction_active {
+                font-size: 12px;
+                margin-left: 20px;
+                color: white;
+                background-color: #0d6efd;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="header">
+            <div class="row">
+                <div class="col">
+                    <img src="static/Logo.png" id="logo" alt="logo">
+                </div>
+                <div class="col">
+                    <div id="company_info">
+                        <h5 id="company"><b>Công ty CPSX Nam Thuận</b></h5>
+                        <h3><b>Phần mềm quản lí nhân sự Nam Thuận</b></h3>
+                    </div>
+                </div>
+                <div class="col">
+                    <div id="user_info">
+                        <p id="mst"><b>MST:12579</b></p>
+                        <p><a class="btn btn-secondary" href="/">Đổi mật khẩu</a>
+                        <a class="btn btn-primary" href="/">Đăng xuất</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid" id="main_window">
+            <div class="row">
+                <div class="col-3">
+                    <div id="menu">
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item active">
+                                <a class="nav-link" href="/">1.Tuyển dụng</a>
+                                <a class="nav-link" href="/">2.Nhận việc</a>
+                                <a class="nav-link" href="/" id="subfunction_active">2.1.Nhập mới</a>
+                                <a class="nav-link" href="/" id="subfunction">2.2.Sửa thông tin</a>
+                                <a class="nav-link" href="/">3.Đào tạo</a>
+                                <a class="nav-link" href="/">4.Đánh giá hiệu quả làm việc</a>
+                                <a class="nav-link" href="/">5.Phát triển sự nghiệp</a>
+                                <a class="nav-link" href="/">6.Lương thưởng và phúc lợi</a>
+                                <a class="nav-link" href="/">7.Gắn kết</a>
+                                <a class="nav-link" href="/">8.Tuân thủ chính sách</a>
+                                <a class="nav-link" href="/">9.Quản lý nghỉ việc</a>
+                                <a class="nav-link" href="/">10.Kết nối cựu nhân viên</a>
+                            </li>
+                        </ul>
+ 
+                    </div>
+                </div>
+                <div class="col" id="left_window">
+                    <div>
+                        <p><label for="scancccd">Scan QR CCCD</label><input type="text"></p>
+                        <p><label for="mst">Mã số thẻ</label><input type="text" > <label for="thechamcong">Thẻ chấm công</label><input type="text" > </p>
+                        <p><label for="hovaten">Họ và tên</label><input type="text" > <label for="gioitinh">Giới tính</label><input type="text" > </p>
+                        <p><label for="ngaysinh">Ngày sinh</label><input type="text" ></p>
+                        <p><label for="thuongtru">Địa chỉ thường trú</label><input type="text" style="width:330px;"></p>
+                        <p><label for="socccd">Số CCCD</label><input type="text" > <label for="ngaycapcccd">Ngày cấp</label><input  > </p>
+                        <p><label for="mst">Quốc tịch</label><select  ></select> <label for="dantoc">Dân tộc</label><select  ></select> </p>
+                        <p><label for="mst">Tình trạng hôn nhân</label><select  ></select> <label for="thechamcong">Tôn giáo</label><select  ></select> </p>
+                        <p><label for="thuongtru">Địa chỉ tạm trú</label><input type="text" style="width: 330px;"></p>
+                        <p><label for="dienthoai">Điện thoại</label><input type="text" ><label for="hocvan">Học vấn</label><select ></select></p>
+                        <p><label for="nganhang">Ngân hàng</label><select type="text" ></select><label for="stk">Số tài khoản</label><input type="text" ></p>
+                        <p><label for="masothue">Mã số thuế</label><input type="text" style="width: 330px;"></p>
+                    </div>
+                </div>
+                    <div class="col" id="right_window">
+                        <div>
+                            <p>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="mst">Ảnh</label><input type="text" style="width:100px;height:100px;margin-bottom:20px;">
+                                    </div>
+                                    <div class="col" id="hopdong">
+                                        <p><label for="mst">Ngày thử việc</label><select type="text" ></select></p>
+                                        <p><label for="mst">Loại hợp đồng</label><select type="text" ></select></p>
+                                        <p><label for="mst">Ngày chính thức</label><select type="text" ></select></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p><label for="mst">Chức vụ</label><select type="text" ></select></p>
+                                        <p><label for="mst">Cấp bậc</label><select type="text" ></select></p>
+                                        <p><label for="mst">Công ty</label><select type="text" ></select></p>
+                                        <p><label for="mst">Mã bộ phận</label><select type="text" ></select></p>
+                                        <p><label for="mst">Chức vụ</label><select type="text" ></select></p>
+                                        <p><label for="mst">Mã vị trí</label><select type="text" ></select></p>
+                                    </div>
+                                    <div class="col">
+                                        <p><label for="mst">Chuyền/Tổ</label><select type="text" ></select></p>
+                                        <p><label for="mst">Phân loại HC</label><select type="text" ></select></p>
+                                        <p><label for="mst">Phòng ban</label><select type="text" ></select></p>
+                                        <p><label for="mst">Diễn giải</label><select type="text" ></select></p>
+                                        <p><label for="mst">Loại lao động</label><select type="text" ></select></p>
+                                        <p><label for="mst">Vị trí</label><select type="text" ></select></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <a id="btn_save" class="btn btn-primary" href="/">Lưu</a>
+                                </div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
