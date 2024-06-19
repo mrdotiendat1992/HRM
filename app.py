@@ -1938,7 +1938,7 @@ def khaibaochamcong():
         danhsachca = laycacca()
         cacchuyen = laycacto()
         mst = request.args.get("mst")
-        calamviec = laycatheomst(mst)
+        calamviec = laycahientai(mst)
         return render_template("7_1_1.html",
                                 page="7.1.1 Đổi ca làm việc",
                                 danhsachphongban=danhsachphongban,
