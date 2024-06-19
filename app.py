@@ -2398,7 +2398,19 @@ def dangkitangcanhom():
         except Exception as e:
             print(e)
             return redirect("/muc7_1_6")
-        
+
+@app.route("/export_dstc", methods=["POST"])
+def export_dstc():
+    mst = request.form.get("mst")
+    phongban = request.form.get("phongban")
+    ngay = request.form.get("ngay")
+    danhsach = laydanhsachtangca(mst,phongban,ngay)
+    df = pd.DataFrame(users)
+    df.to_excel("danhsachtangca.xlsx", index=False)
+    
+    return send_file("danhsachtangca.xlsx", as_attachment=True)
+    
+       
 @app.route("/export_dsnv", methods=["POST"])
 def export_dsnv():
     

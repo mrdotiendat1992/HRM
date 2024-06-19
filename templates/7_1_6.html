@@ -94,8 +94,10 @@ button {
                 </div>
 
             </form>
-            <form action="/muc7_1_6" method="POST" id="filterngay">
+            <form action="/export_dstc" method="POST" id="filterngay">
                 <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+                <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
+                <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
                 <input type="submit" value="Xuất Excel" class="btn btn-success">
             </form>
         </div>
