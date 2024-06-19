@@ -970,7 +970,19 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
     conn.close()
     result = []
     for row in rows:
-        result.append(row)
+        result.append(
+            {
+                'Nhà máy': {row[0]},
+                'MST': {row[1]},
+                'Họ tên': {row[2]},
+                'Chức danh': {row[3]},
+                'Chuyền': {row[4]},
+                'Phòng ban': {row[5]},
+                'Ngày đăng ký': {row[6]},
+                'Giờ tăng ca': {row[7]},
+                'Giờ tăng ca thực tế': {row[8]},
+            }
+        )
     return result
     
 def laydanhsachbaocom(chuyen=None,phongban=None,ngayxem=None):
