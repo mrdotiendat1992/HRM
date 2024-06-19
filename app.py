@@ -1933,16 +1933,22 @@ def lichsucongtac():
 @login_required
 @roles_required('cong','sa','developer')
 def khaibaochamcong():
+    if request.method == "GET":
+        danhsachphongban = laycacphongban()
+        danhsachca = laycacca()
+        cacchuyen = laycacto()
+        mst = request.args.get("mst")
+        calamviec = laycatheomst(mst)
+        return render_template("7_1_1.html",
+                                page="7.1.1 Đổi ca làm việc",
+                                danhsachphongban=danhsachphongban,
+                                danhsachca = danhsachca,
+                                cacchuyen=cacchuyen,
+                                calamviec=calamviec)
+    elif request.method == "POST":
+        mst = request.form.get('mst')
+        return redirect(f"/muc7_1_2?mst={mst}")
     
-    danhsachphongban = laycacphongban()
-    danhsachca = laycacca()
-    cacchuyen = laycacto()
-    return render_template("7_1_1.html",
-                            page="7.1.1 Đổi ca làm việc",
-                            danhsachphongban=danhsachphongban,
-                            danhsachca = danhsachca,
-                            cacchuyen=cacchuyen)
-
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
 @roles_required('cong','sa','developer')
