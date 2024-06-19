@@ -956,13 +956,14 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     
-    query = f"SELECT * FROM HR.dbo.Dang_ky_tang_ca WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_dang_ky desc"
+    query = f"SELECT * FROM HR.dbo.Dang_ky_tang_ca WHERE Nha_may = '{current_user.macongty}'"
     if mst:
         query += f"AND MST = '{mst}' "
     if phongban:
         query += f"AND Bo_phan = '{phongban}' "
     if ngayxem:
         query += f"AND Ngay_dang_ky = '{ngayxem}'"
+    query += f" ORDER BY Ngay_dang_ky desc"
     print(query)
     rows = cursor.execute(query).fetchall()
     # print(rows)
