@@ -2421,7 +2421,6 @@ def export_dstc():
                 'Giờ tăng ca thực tế': {row[8]},
             }
         )
-    return result
     df = pd.DataFrame(result)
     df.to_excel("danhsachtangca.xlsx", index=False)
     
