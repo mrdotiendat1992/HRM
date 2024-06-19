@@ -828,25 +828,32 @@ def laydanhsachchamcongthucte(mst=None, phongban=None, tungay=None, denngay=None
         result.append(row)
     return result
 
-def laydanhsachdiemdanhbu(mst=None, chuyen=None, bophan=None):
+def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
+    query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
     if mst:
-        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE MST='{mst}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
-    else:
-        if chuyen:
-            if bophan:
-                query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Line='{chuyen}' AND Bo_phan='{bophan}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Line='{chuyen}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
-        else:
-            if bophan:
-                query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Bo_phan='{bophan}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
-                
-    # query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC"
+        query += f"AND MST='{mst}'"
+    if hoten:
+        query += f"AND Ho_ten = N'{hoten}'"
+    if chucvu:
+        query += f"AND Chuc_vu = N'{chucvu}'"
+    if chuyen:
+        query += f"AND Line = N'{chuyen}'"
+    if bophan:
+        query += f"AND Bo_phan = N'{bophan}'"
+    if loaidiemdanh:
+        query += f"AND Loai_diem_danh = '{loaidiemdanh}'"
+    if ngaydiemdanh:
+        query += f"AND Ngay_diem_danh = '{ngaydiemdanh}'"    
+    if lido:
+        query += f"AND Ly_do = N'{lido}'"   
+    if trangthai:
+        query += f"AND Trang_thai = N'{trangthai}'"   
+         
+    query += " ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
+    print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
     result = []
@@ -1103,7 +1110,7 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
     conn.close()
     
 ######################################################################################################################################################
-""" ALL ROUTE"""
+#          MAIN ROUTES
 ######################################################################################################################################################
 
 @app.route('/unauthorized')
@@ -2002,14 +2009,31 @@ def loichamcong():
 def diemdanhbu():
     
     mst = request.args.get("mst")
+    hoten = request.args.get("hoten")
+    chucvu = request.args.get("chucvu")
     chuyen = request.args.get("chuyen")
     bophan = request.args.get("bophan")
+    loaidiemdanh = request.args.get("loaidiemdanh")
+    ngay = request.args.get("ngay")
+    lido = request.args.get("lido")
+    trangthai = request.args.get("trangthai")
     danh_sach_chuyen = laydanhsachchuyen()
     danh_sach_bophan = laydanhsachbophan()
-    danhsach_diemdanh_bu = laydanhsachdiemdanhbu(mst,chuyen,bophan)
+    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai)
+    count = len(danhsach)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(danhsach)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    danhsachphongban = laycacphongban()
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template("7_1_4.html",
                         page="7.1.4 Danh sách điểm danh bù",
-                        danhsach_diemdanh_bu=danhsach_diemdanh_bu,
+                        danhsach=paginated_rows, 
+                        pagination=pagination,
+                        count=count,
                         danh_sach_chuyen=danh_sach_chuyen,
                         danh_sach_bophan=danh_sach_bophan)
  
@@ -2257,6 +2281,10 @@ def inchamduthopdong():
                 return redirect("/muc10_3")
         except:
             return redirect("/muc10_3")  
+
+#######################################################################################################################
+#                "OTHER ENDPOINT"
+#######################################################################################################################
 
 @app.route("/thaydoiphanquyen", methods=["POST"])
 def thaydoiphanquyen():
@@ -2529,12 +2557,35 @@ def export_dsddb():
     mst = request.form.get("mst")
     chuyen = request.form.get("chuyen")
     bophan = request.form.get("bophan")
-    rows = laydanhsachdiemdanhbu(mst,chuyen, bophan)
+    hoten = request.form.get("hoten")
+    chucvu = request.form.get("chucvu")
+    ngaydiemdanh = request.form.get("ngay")
+    lydo = request.form.get("lydo")
+    trangthai = request.form.get("trangthai")
+    loaidiemdanh = request.form.get("loaidiemdanh")
     
-    df = pd.DataFrame(rows)
-    df.to_excel("diemdanhbu.xlsx", index=False)
+    rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai)
+    result = []
+    for row in rows:
+        result.append({
+            "Nhà máy": row[0],
+            "MST": row[1],
+            "Họ tên": row[2],
+            "Chức vụ": row[3],
+            "Chuyền tổ": row[4],
+            "Bộ phận": row[5],
+            "Loại điểm danh": row[6],
+            "Ngày điểm danh": row[7],
+            "Giờ điểm danh": row[8],
+            "Lý do": row[9],
+            "Trạng thái": row[10]
+        })
     
-    return send_file("diemdanhbu.xlsx", as_attachment=True)  
+    df = pd.DataFrame(result)
+    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
+    
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
 
 @app.route("/export_dsxnp", methods=["POST"])
 def export_dsxnp():
