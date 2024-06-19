@@ -15,15 +15,15 @@ from functools import wraps
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "abc"
-app.config['UPLOAD_FOLDER'] = './static/uploads'
+app.config['UPLOAD_FOLDER'] = r'./static/uploads'
 db = SQLAlchemy()
  
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
  
-# used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+#used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
 print(used_db)
 
 class Users(UserMixin, db.Model):
@@ -943,10 +943,14 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giobatdau,giokett
     cursor = conn.cursor()
     query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giobatdau}','{gioketthuc}')"
     print(query)
-    cursor.execute(query)
-    conn.commit()
-    conn.close()
-
+    try:
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        conn.close()
+        
 def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
     
     conn = pyodbc.connect(used_db)
@@ -2381,12 +2385,15 @@ def dangkitangcanhom():
                 return redirect("/muc7_1_6")
             if file:
                 filename = secure_filename(file.filename)
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                ngaylam = datetime.now().strftime("%d%m%Y_%H%M%S")
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath).to_dict(orient="records")
                 for row in data:
-                    insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"], row["Giờ tăng ca thực tế"])
-                    
+                    try:
+                        insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"], row["Giờ tăng ca thực tế"])
+                    except Exception as e:
+                        print(e)                
                 return redirect("/muc7_1_6")
         except Exception as e:
             print(e)
