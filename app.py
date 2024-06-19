@@ -956,7 +956,7 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     
-    query = f"SELECT * FROM HR.dbo.Dang_ky_tang_ca WHERE Nha_may = '{current_user.macongty}' "
+    query = f"SELECT * FROM HR.dbo.Dang_ky_tang_ca WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_dang_ky desc"
     if mst:
         query += f"AND MST = '{mst}' "
     if phongban:
@@ -2405,7 +2405,7 @@ def export_dstc():
     phongban = request.form.get("phongban")
     ngay = request.form.get("ngay")
     danhsach = laydanhsachtangca(mst,phongban,ngay)
-    df = pd.DataFrame(users)
+    df = pd.DataFrame(danhsach)
     df.to_excel("danhsachtangca.xlsx", index=False)
     
     return send_file("danhsachtangca.xlsx", as_attachment=True)
