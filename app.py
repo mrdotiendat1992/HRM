@@ -970,19 +970,7 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
     conn.close()
     result = []
     for row in rows:
-        result.append(
-            {
-                'Nhà máy': {row[0]},
-                'MST': {row[1]},
-                'Họ tên': {row[2]},
-                'Chức danh': {row[3]},
-                'Chuyền': {row[4]},
-                'Phòng ban': {row[5]},
-                'Ngày đăng ký': {row[6]},
-                'Giờ tăng ca': {row[7]},
-                'Giờ tăng ca thực tế': {row[8]},
-            }
-        )
+        result.append(row)
     return result
     
 def laydanhsachbaocom(chuyen=None,phongban=None,ngayxem=None):
@@ -2418,7 +2406,23 @@ def export_dstc():
     phongban = request.form.get("phongban")
     ngay = request.form.get("ngay")
     danhsach = laydanhsachtangca(mst,phongban,ngay)
-    df = pd.DataFrame(danhsach)
+    result = []
+    for row in danhsach:
+        result.append(
+            {
+                'Nhà máy': {row[0]},
+                'MST': {row[1]},
+                'Họ tên': {row[2]},
+                'Chức danh': {row[3]},
+                'Chuyền': {row[4]},
+                'Phòng ban': {row[5]},
+                'Ngày đăng ký': {row[6]},
+                'Giờ tăng ca': {row[7]},
+                'Giờ tăng ca thực tế': {row[8]},
+            }
+        )
+    return result
+    df = pd.DataFrame(result)
     df.to_excel("danhsachtangca.xlsx", index=False)
     
     return send_file("danhsachtangca.xlsx", as_attachment=True)
