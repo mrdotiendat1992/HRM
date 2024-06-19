@@ -963,7 +963,7 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
         query += f"AND Bo_phan = '{phongban}' "
     if ngayxem:
         query += f"AND Ngay_dang_ky = '{ngayxem}'"
-    query += f" ORDER BY Ngay_dang_ky desc"
+    query += f" ORDER BY Ngay_dang_ky desc, CAST(MST as INT) asc"
     print(query)
     rows = cursor.execute(query).fetchall()
     # print(rows)
