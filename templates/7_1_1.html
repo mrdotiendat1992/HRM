@@ -1,0 +1,184 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+.col {
+    border-right: 1px solid #dee2e6;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    font-size: 12px;
+}
+
+label, input, select {
+    width: 100px;
+    margin-left: 10px;
+}
+
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h5>Cập nhật theo nhóm</h5>
+            <hr />
+            <br>
+            <form action="/doicanhom" method="POST">
+                <div class="form-group">
+                    <label for="cacongty">Cả công ty</label>
+                    <select id="cacongty" name="cacongty">
+                        <option value="">Không</option>
+                        <option value="Có">Có</option>                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="phongban">Phòng ban</label>
+                    <select id="phongban" name="phongban">
+                        <option value="">Chọn</option>
+                        {% for phongban in danhsachphongban %}
+                        <option value={{phongban}}>{{phongban}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="chuyento">Chuyền tổ</label>
+                    <select id="chuyento" name="chuyento">
+                        <option value="">Chọn</option>
+                        {% for chuyen in cacchuyen %}
+                        <option value={{chuyen}}>{{chuyen}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cacunhom">Ca cũ</label>
+                    <select id="cacunhom" name="cacunhom">
+                        {% for ca in danhsachca %}
+                        <option value={{ca}}>{{ca}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="camoinhom">Ca mới</label>
+                    <select id="camoinhom" name="camoinhom">
+                        {% for ca in danhsachca %}
+                        <option value={{ca}}>{{ca}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ngaycapnhat">Ngày bắt đầu</label>
+                    <input id="ngaycapnhat" name="ngaycapnhat" type="date">
+                </div>
+                <div class="form-group">
+                    <label for="ngayketthuc">Ngày kết thúc</label>
+                    <input id="ngayketthuc" name="ngayketthuc" type="date">
+                </div>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
+            </form>
+        </div>
+        <div class="col">
+            <h5>Cập nhật theo cá nhân</h5>
+            <hr />
+            <br>
+            <form action="/doicacanhan" method="POST">
+                <div class="form-group">
+                    <label for="mst">Mã số thẻ</label>
+                    <input id="mst" name="mst" type="text">
+                </div>
+                <div class="form-group">
+                    <label for="cacu">Ca cũ</label>
+                    <input id="cacu" name="cacu" type="text" readonly> 
+                </div>
+                <div class="form-group">
+                    <label for="camoi">Ca mới</label>
+                    <select id="camoi" name="camoi">
+                        {% for ca in danhsachca %}
+                        <option value={{ca}}>{{ca}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ngaycapnhat">Ngày bắt đầu</label>
+                    <input id="ngaycapnhat" name="ngaycapnhat" type="date">
+                </div>
+                <div class="form-group">
+                    <label for="ngayketthuc">Ngày kết thúc</label>
+                    <input id="ngayketthuc" name="ngayketthuc" type="date">
+                </div>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
+            </form>
+        </div>
+        <div class="col">
+            <h5>Danh sách ca làm việc</h5>
+            <hr />
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-primary">
+                        <th scope="col">STT</th>
+                        <th scope="col">Ca</th>
+                        <th scope="col">Giờ làm việc</th>
+                        <th scope="col">Bộ phận</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>A1</td>
+                        <td>07:30 - 16:30</td>
+                        <td>Tất cả</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>A2</td>
+                        <td>06:30 - 15:30</td>
+                        <td rowspan="2">Lò hơi</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">3</th>
+                        <td>A4</td>
+                        <td>08:00 - 17:00</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">4</th>
+                        <td>A3</td>
+                        <td>07:00 - 16:00</td>
+                        <td>Tạp vụ</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">5</th>
+                        <td>A5</td>
+                        <td>06:00 - 15:00</td>
+                        <td>Tất cả</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">6</th>
+                        <td>E1</td>
+                        <td>07:30 - 15:30</td>
+                        <td>LĐ mang thai/ cao tuổi</td>
+                    </tr>
+                    <tr>
+                        <th scope="row">7</th>
+                        <td>F1</td>
+                        <td>07:30 - 14:30</td>
+                        <td>LĐ nữ con nhỏ(<1 tuổi)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('mst').addEventListener("change", function(event) {
+        axios({
+            method: 'post',
+            url: '/laycatheomst?mst=' + document.getElementById('mst').value
+        }).then(function(response) {
+            console.log(response.data)
+            document.getElementById('cacu').value = response.data['Ca']
+        })
+    })
+</script>
+{% endblock content %}

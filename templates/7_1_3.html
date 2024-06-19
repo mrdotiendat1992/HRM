@@ -1,0 +1,84 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td {
+    font-size: 10px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    <form method="GET" action="/muc7_1_3">
+        <div class="row mb-3">
+            <div class="col">
+                <label for="chuyen">Chuyền:</label>
+                <select id="chuyen" name="chuyen" class="form-control">
+                    <option value="">Tất cả</option>
+                    <!-- Add options dynamically from the server -->
+                    {% for chuyen in danh_sach_chuyen %}
+                    <option value="{{ chuyen }}" {% if chuyen == request.args.get('chuyen') %}selected{% endif %}>{{ chuyen }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="bophan">Bộ phận:</label>
+                <select id="bophan" name="bophan" class="form-control">
+                    <option value="">Tất cả</option>
+                    <!-- Add options dynamically from the server -->
+                    {% for bophan in danh_sach_bophan %}
+                    <option value="{{ bophan }}" {% if bophan == request.args.get('bophan') %}selected{% endif %}>{{ bophan }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col">
+                <label for="ngay">Ngày</label>
+                <input id="ngay" name="ngay" class="form-control" type="date" onchange="this.form.submit()" value={{'chuyen'}}></input>
+            </div>
+        </div>
+    </form>
+    <form method="POST" action="/export_dslt">
+        <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+        <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+        <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
+        <button type="submit" class="btn btn-primary mb-3">Export Excel</button>
+    </form>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Nhà máy</th>
+                <th>Mã số thẻ</th>
+                <th>Họ tên</th>
+                <th>Chuyền tổ</th>
+                <th>Chức vụ</th>
+                <th>Ngày điểm danh</th>
+                <th>Giờ vào</th>
+                <th>Giờ ra</th>
+                <th>Ca</th>
+                <th>Bắt đầu</th>
+                <th>Kết thúc</th>
+                <th>Phân loại</th>
+                <th>Số phút thiếu</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in danhsachloichamcong %}
+            <tr>
+                <th>{{row["Nhà máy"]}}</th>
+                <th>{{row["MST"]}}</th>
+                <th>{{row["Họ tên"]}}</th>
+                <th>{{row["Chuyền tổ"]}}</th>
+                <th>{{row["Chức vụ"]}}</th>
+                <th>{{row["Ngày chấm"]}}</th>
+                <th>{{row["Giờ vào"]}}</th>
+                <th>{{row["Giờ ra"]}}</th>
+                <th>{{row["Ca"]}}</th>
+                <th>{{row["Bắt đầu"]}}</th>
+                <th>{{row["Kết thúc"]}}</th>
+                <th>{{row["Phân loại"]}}</th>
+                <th>{{row["Số phút thiếu"]}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

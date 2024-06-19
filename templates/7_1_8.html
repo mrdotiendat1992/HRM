@@ -1,0 +1,106 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    .container {
+        width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        display: inline-block;
+        margin: 10px;
+    }
+    input, select, label {
+        margin-left: 20px;
+    }
+    table, th, td {
+        font-size: 8px;
+    }
+    #chudoc {
+        writing-mode: vertical-rl;
+        text-orientation: mixed;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="form-group">
+            <label for="thang">Tháng</label>
+            <select id="thang" name="thang">
+                <option value="1">Tháng 1</option>
+                <option value="2">Tháng 2</option>
+                <option value="3">Tháng 3</option>
+                <option value="4">Tháng 4</option>
+                <option value="5">Tháng 5</option>
+                <option value="6">Tháng 6</option>
+                <option value="7">Tháng 7</option>
+                <option value="8">Tháng 8</option>
+                <option value="9">Tháng 9</option>
+                <option value="10">Tháng 10</option>
+                <option value="11">Tháng 11</option>
+                <option value="12">Tháng 12</option>
+            </select>
+            <label for="phongban">Phòng ban</label>
+            <select id="phongban" name="phongban">
+                <option value="ALL">Tất cả</option>
+                <option value="ACT">ACT</option>
+                <option value="HRD">HRD</option>
+                <option value="PDN">PDN</option>
+                <option value="PPC">PPC</option>
+            </select>
+            <label for="mst">Nhập mã số thẻ</label>
+            <input type="text" id="mst" name="mst">
+        </div>
+        <button class="btn btn-primary">Xuất excel</button>
+    </div>
+    <table class="table table-bordered">
+        <thead>
+            <tr class="table-primary">
+                <th colspan="8" rowspan="2">Thông tin nhân viên</th>
+                <th colspan="5" rowspan="2">Ngày làm việc</th>
+                <th colspan="22">Thông tin chấm công tháng</th>
+            </tr>
+            <tr class="table-info">
+                <th colspan="2">Tổng số ngày làm việc</th>
+                <th colspan="2">Tổng số ngày làm việc</th>
+                <th rowspan="2" id="chudoc">Số ngày nghỉ phép</th>
+                <th rowspan="2" id="chudoc">Số ngày nghỉ không lương</th>
+                <th colspan="2">Tổng số ngày nghỉ quốc lễ</th>
+                <th rowspan="2" id="chudoc">Số ngày nghỉ hưởng BHXH</th>
+                <th rowspan="2" id="chudoc">Số ngày chưa nhận việc</th>
+                <th colspan="2">Số ngày nghỉ được hưởng lương</th>
+                <th rowspan="2" id="chudoc">Số ngày nghỉ không lương, tự do</th>
+                <th rowspan="2" id="chudoc">Số ngày nghỉ việc</th>
+                <th rowspan="2" id="chudoc">Tổng số công đi muộn, về sớm</th>
+                <th rowspan="2" id="chudoc">Số lần đi muộn</th>
+                <th rowspan="2" id="chudoc">Số lần về sớm</th>
+                <th rowspan="2" id="chudoc">Số giờ về sớm</th>
+                <th rowspan="2" id="chudoc">Số lần ra ngoài việc riêng</th>
+                <th rowspan="2" id="chudoc">Số giờ ra ngoài</th>
+                <th rowspan="2" id="chudoc">Tổng ngày công</th>
+            </tr>
+            <tr class="table-info">
+                <th id="chudoc">STT</th>
+                <th id="chudoc">Mã số thẻ</th>
+                <th id="chudoc">Họ tên</th>
+                <th id="chudoc">Chức vụ</th>
+                <th id="chudoc">Bộ phận</th>
+                <th id="chudoc">Tổ</th>
+                <th id="chudoc">Ngày thử việc</th>
+                <th id="chudoc">Ngày làm chính thức</th>
+                <th>1</th>
+                <th>2</th>
+                <th>3</th>
+                <th>...</th>
+                <th>26</th>
+                <th id="chudoc">Hành chính</th>
+                <th id="chudoc">Chủ nhật</th>
+                <th id="chudoc">Thử việc</th>
+                <th id="chudoc">Chính thức</th>
+                <th id="chudoc">Thử việc</th>   
+                <th id="chudoc">Chính thức</th>
+                <th id="chudoc">Thử việc</th>    
+            </tr>
+        </thead>
+    </table>
+</div>
+{% endblock content %}

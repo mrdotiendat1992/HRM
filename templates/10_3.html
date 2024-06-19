@@ -1,0 +1,89 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+label {
+    width:150px;
+    margin-left: 10px;
+}
+input, select {
+    margin-left: 10px;
+    width: 150px;
+    readonly;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="content">
+    
+    <div class="form-group">
+        <label for="masothe">Mã số thẻ</label>
+        {% if mst %}
+        <input type="text" id="masothe" name="masothe" value="{{mst}}">
+        {% else %}
+        <input type="text" id="masothe" name="masothe">
+        {% endif %}
+        <input type="submit" value="Kiểm tra" class="btn btn-primary" onclick="kiemtrathongtinnld()">
+    </div>
+
+    <hr />
+    <form method="post" action="/muc10_3">
+        <div class="form-group">
+            <label for="mst">Mã số thẻ</label>
+            <input type="text" id="mst" name="mst" readonly>
+            <label for="hoten">Họ tên</label>
+            <input type="text" id="hoten" name="hoten" readonly>
+            <label for="ngaynghi">Ngày nghỉ</label>
+            <input type="date" id="ngaynghi" name="ngaynghi">
+        </div>
+
+        <div class="form-group">
+            <label for="chucvu">Chức vụ</label>
+            <input type="text" id="chucvu" name="chucvu" readonly>
+            <label for="ngaylamhd">Ngày làm HĐ</label>
+            <input type="date" id="ngaylamhd" name="ngaylamhd">
+        </div>
+
+        <hr />
+        <div class="form-group">
+            <label for="kieuhopdong">Loại HĐ muốn in</label>
+            <input type="text" disabled value="Chấm dứt hợp đồng">
+            <input class="btn btn-primary" value="In" type="submit">
+        </div>
+        
+
+    <script>
+        function strtodate(str) {
+            let day = str.substring(0, 2);
+            let month = str.substring(2, 4);
+            let year = str.substring(4, 8);
+
+            // Tạo đối tượng Date
+            let date = new Date(year, month - 1, day);
+
+            // Định dạng ngày tháng
+            let options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            let formattedDate = date.toLocaleDateString('vi-VN', options);
+            return formattedDate
+        }
+        function kiemtrathongtinnld() {
+            axios({
+                method: 'post',
+                url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        document.getElementById("mst").value = data["MST"]; // 1
+                        document.getElementById("hoten").value = data["Họ tên"]; //3
+                        document.getElementById("chucvu").value = data["Chức vụ"]; //14
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+    </script>
+</div>
+{% endblock content %}

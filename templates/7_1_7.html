@@ -1,0 +1,67 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    table, th, td {
+        font-size: 10px;
+    }
+
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <form action="/muc7_1_7" method="GET" onchange="this.submit()" id="filterngay">
+        <div class="form-group">
+            <label for="ngay">Ngày</label>
+            <input type="date" id="ngay" name="ngay">
+            <label for="phongban">Phòng ban</label>
+            <select id="phongban" name="phongban">
+                <option value="">Tất cả</option>
+                {% for phongban in danhsachphongban %}
+                    <option value="{{ phongban }}" {% if phongban == request.args.get('phongban') %}selected{% endif %}>{{ phongban }}</option>
+                {% endfor %}
+            </select>
+            <label for="chuyen">Chuyền tổ</label>
+            <select id="chuyen" name="chuyen">
+                <option value="">Tất cả</option>
+                {% for chuyen in danhsachchuyen %}
+                    <option value="{{ chuyen }}" {% if chuyen == request.args.get('chuyen') %}selected{% endif %}>{{ chuyen }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </form>
+    <form action="/muc7_1_7" method="POST" id="filterngay">
+        <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+        <input type="submit" value="Xuất Excel" class="btn btn-success">
+    </form>
+    <br>
+    <h5>Tổng số người: {{count}}</h5>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>STT</th>
+                <th>Mã số thẻ</th>
+                <th>Họ tên</th>
+                <th>Chuyền</th>
+                <th>Phòng ban</th>
+                <th>Ngày chấm</th>
+                <th>Giờ dập thẻ</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if danhsach %}
+            {% for row in danhsach %}
+            <tr>
+                <th>{{loop.index}}</th>
+                <th>{{row[1]}}</th>
+                <th>{{row[2]}}</th>
+                <th>{{row[4]}}</th>
+                <th>{{row[5]}}</th>
+                <th>{{row[6]}}</th>
+                <th>{{row[7]}}</th>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

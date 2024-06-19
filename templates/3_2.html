@@ -1,0 +1,294 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+label {
+    width:150px;
+    margin-left: 10px;
+}
+input, select {
+    margin-left: 10px;
+    width: 150px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="content">
+    
+    
+    <div class="form-group">
+        <label for="masothe">Mã số thẻ</label>
+        <input type="text" id="masothe" name="masothe">
+    </div>
+
+    <hr />
+    <form action="/muc3_2" method="POST">
+        <h5>Thông tin người lao động </h5>
+        <div class="form-group">
+            <input type="text" id="mst" name="mst" hidden>
+            <label for="trangthai" class="half-width">Tình trạng</label>
+            <input type="text" id="trangthai" name="trangthai">
+
+            <label for="cccd">CCCD</label>
+            <input type="text" id="cccd" name="cccd">
+            
+            <label for="ngaycapcccd">Ngày cấp</label>
+            <input type="text" id="ngaycapcccd" name="ngaycapcccd">
+
+        </div>        
+        <div class="form-group">
+            <label for="hoten">Họ và tên</label>
+            <input type="text" id="hoten" name="hoten">
+
+            <label for="ngaysinh">Ngày sinh</label>
+            <input type="text" id="ngaysinh" name="ngaysinh">
+
+            <label for="gioitinh">Giới tính</label>
+            <input type="text" id="gioitinh" name="gioitinh">
+
+        </div>
+
+        <div class="form-group">
+            <label for="cmt">Chứng minh thư</label>
+            <input type="text" id="cmt" name="cmt">
+
+            <label for="quoctich">Quốc tịch</label>
+            <input type="text" id="quoctich" name="quoctich">
+
+            <label for="dienthoai">Điện thoại</label>
+            <input type="text" id="dienthoai" name="dienthoai">
+        </div>
+        <div class="form-group">
+            <label for="thonxom">Thôn/xóm</label>
+            <input type="text" id="thonxom" name="thonxom">
+
+            <label for="phuongxa">Phường/Xã</label>
+            <input type="text" id="phuongxa" name="phuongxa">
+
+            <label for="quanhuyen">Quận/Huyện</label>
+            <input type="text" id="quanhuyen" name="quanhuyen">
+        </div>
+        <div class="form-group">
+            <label for="tinhthanhpho">Tỉnh/Thành phố</label>
+            <input type="text" id="tinhthanhpho" name="tinhthanhpho">
+            <label for="sobhxh">Số BHXH</label>
+            <input type="text" id="sobhxh" name="sobhxh">
+            <label for="masothue">Mã số thuế</label>
+            <input type="text" id="masothue" name="masothue">
+        </div>
+        <div class="form-group">
+            <label for="dantoc">Dân tộc</label>
+            <input type="text" id="dantoc" name="dantoc">
+
+            <label for="tongiao">Tôn giáo</label>
+            <input type="text" id="tongiao" name="tongiao">
+            
+            <label for="hocvan">Học vấn</label>
+            <input type="text" id="hocvan" name="hocvan">
+        </div>
+
+        <div class="form-group">
+            <label for="masothue">Mã số thuế</label>
+            <input type="text" id="masothue" name="masothue">
+
+
+            <label for="nganhang">Ngân hàng</label>
+            <input type="text" id="nganhang" name="nganhang">
+
+            <label for="sotaikhoan">Số tài khoản</label>
+            <input type="text" id="sotaikhoan" name="sotaikhoan">
+        </div>
+
+        <div class="form-group">
+            <label for="dienthoai">Điện thoại</label>
+            <input type="text" id="dienthoai" name="dienthoai">
+            <label for="connho">Có con nhỏ</label>
+            <input type="text" id="connho" name="connho">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho1">Tên con nhỏ 1</label>
+            <input type="text" id="tenconnho1" name="tenconnho1">
+            <label for="ngaysinhcon1">Ngày sinh con 1</label>
+            <input type="text" id="ngaysinhcon1" name="ngaysinhcon1">
+            <label for="nguoithan">Người thân</label>
+            <input type="text" id="nguoithan" name="nguoithan">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho2">Tên con nhỏ 2</label>
+            <input type="text" id="tenconnho2" name="tenconnho2">
+            <label for="ngaysinhcon2">Ngày sinh con 2</label>
+            <input type="text" id="ngaysinhcon2" name="ngaysinhcon2">
+            <label for="sdtnguoithan">SĐT người thân</label>
+            <input type="text" id="sdtnguoithan" name="sdtnguoithan">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho3">Tên con nhỏ 3</label>
+            <input type="text" id="tenconnho3" name="tenconnho3">
+            <label for="ngaysinhcon3">Ngày sinh con 3</label>
+            <input type="text" id="ngaysinhcon3" name="ngaysinhcon3">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho4">Tên con nhỏ 4</label>
+            <input type="text" id="tenconnho4" name="tenconnho4">
+            <label for="ngaysinhcon4">Ngày sinh con 4</label>
+            <input type="text" id="ngaysinhcon4" name="ngaysinhcon4">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho5">Tên con nhỏ 5</label>
+            <input type="text" id="tenconnho5" name="tenconnho5">
+            <label for="ngaysinhcon5">Ngày sinh con 5</label>
+            <input type="text" id="ngaysinhcon5" name="ngaysinhcon5">
+        </div>
+
+        <hr />
+        
+        <h5> Thông tin vị trí làm việc </h5>
+
+        <div class="form-group">
+            <label for="jobtitlevn">Detail job title(VN)</label>
+            <input type="text" id="jobtitlevn" name="jobtitlevn" class="hanchechinhsua" readonly>
+            <label for="line">Line</label>
+            <input id="line" name="line" class="hanchechinhsua" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="factory">Factory</label>
+            <input type="text" id="factory" name="factory" class="hanchechinhsua" readonly>
+            <label for="hccategory">Headcount category</label>
+            <input type="text" id="hccategory" name="hccategory" class="hanchechinhsua" readonly>
+            <label for="gradecode">Grade Code</label>
+            <input type="text" id="gradecode" name="gradecode" class="hanchechinhsua" readonly>
+        </div>
+
+        <div class="form-group">
+            <label for="department">Department</label>
+            <input type="text" id="department" name="department" class="hanchechinhsua" readonly>
+            <label for="chucvu">Chức vụ</label>
+            <input type="text" id="chucvu" name="chucvu" class="hanchechinhsua" readonly>
+            <label for="employeetype">Employee type</label>
+            <input type="text" id="employeetype" name="employeetype" class="hanchechinhsua" readonly>
+        </div>
+        <div class="form-group">
+            <label for="sectioncode">Section Code</label>
+            <input type="text" id="sectioncode" name="sectioncode" class="hanchechinhsua" readonly>
+            <label for="sectiondescription">Section Description</label>
+            <input type="text" id="sectiondescription" name="sectiondescription" class="hanchechinhsua" readonly>
+            <label for="jobtitleen">Detail job title(EN)</label>
+            <input type="text" id="jobtitleen" name="jobtitleen" class="hanchechinhsua" readonly>
+        </div>
+        <div class="form-group">
+            <label for="positioncode">Position Code</label>
+            <input type="text" id="positioncode" name="positioncode" class="hanchechinhsua" readonly>
+            <label for="positioncodedescription">Posotion code description</label>
+            <input type="text" id="positioncodedescription" name="positioncodedescription" class="hanchechinhsua" readonly>
+
+        </div>
+        <hr />
+        <h5> Thông tin hợp đồng </h5>
+        <div class="form-group">
+            <label for="kieuhopdong">Loại Hợp đồng</label>
+            <input id="kieuhopdong" name="kieuhopdong"></input>
+            <label for="ngaybatdau">Ngày bắt đầu</label>
+            <input type="date" id="ngaybatdau" name="ngaybatdau">
+            <label for="ngayketthuc">Ngày kết thúc</label>
+            <input type="date" id="ngayketthuc" name="ngayketthuc">
+        </div>
+        <div class="form-group">
+            <label for="mucluong">Mức lương</label>
+            <input id="mucluong" name="mucluong"></input>
+            <label for="phucap">Phụ cấp</label>
+            <input type="text" id="phucap" name="phucap">
+            <label for="tongphucap">Tổng phụ cấp</label>
+            <input type="number" id="tongphucap" name="tongphucap">
+        </div>
+        <hr />
+        <input type="submit" value="Lưu" class="btn btn-primary"/>
+    </form>
+    <script>
+        function kiemtrathongtinnld() {
+            axios({
+                method: 'post',
+                url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        document.getElementById("mst").value = data["MST"]
+                        document.getElementById("trangthai").value = data["Trạng thái"];
+                        document.getElementById("cccd").value = data["CCCD"];
+                        document.getElementById("ngaycapcccd").value = data["Ngày cấp CCCD"];
+                        document.getElementById("ngaysinh").value = data["Ngày sinh"];
+                        document.getElementById("hoten").value = data["Họ tên"];
+                        document.getElementById("gioitinh").value = data["Giới tính"];
+                        document.getElementById("quoctich").value = data["Quốc tịch"];
+                        document.getElementById("dienthoai").value = data["Số điện thoại"];
+                        document.getElementById("thonxom").value = data["Thôn xóm"];
+                        document.getElementById("phuongxa").value = data["Phường xã"];
+                        document.getElementById("quanhuyen").value = data["Quận huyện"];
+                        document.getElementById("tinhthanhpho").value = data["Tỉnh thành phố"];
+                        document.getElementById("nganhang").value = data["Ngân hàng"];
+                        document.getElementById("sotaikhoan").value = data["Số tài khoản"];
+                        document.getElementById("dantoc").value = data["Dân tộc"];
+                        document.getElementById("tongiao").value = data["Tôn giáo"];
+                        document.getElementById("hocvan").value = data["Học vấn"];
+                        document.getElementById("masothue").value = data["Mã số thuế"];
+                        document.getElementById("cmt").value = data["CMT"];
+                        document.getElementById("connho").value = data["Con nhỏ"];
+                        document.getElementById("tenconnho1").value = data["Tên con 1"];
+                        document.getElementById("tenconnho2").value = data["Tên con 2"];
+                        document.getElementById("tenconnho3").value = data["Tên con 3"];
+                        document.getElementById("tenconnho4").value = data["Tên con 4"];
+                        document.getElementById("tenconnho5").value = data["Tên con 5"];
+                        document.getElementById("ngaysinhcon1").value = data["Ngày sinh con 1"];
+                        document.getElementById("ngaysinhcon2").value = data["Ngày sinh con 2"];
+                        document.getElementById("ngaysinhcon3").value = data["Ngày sinh con 3"];
+                        document.getElementById("ngaysinhcon4").value = data["Ngày sinh con 4"];
+                        document.getElementById("ngaysinhcon5").value = data["Ngày sinh con 5"];
+                        document.getElementById("jobtitlevn").value = data["Job title VN"];
+                        document.getElementById("jobtitleen").value = data["Job title EN"];
+                        document.getElementById("positioncode").value = data["Position code"];
+                        document.getElementById("positioncodedescription").value = data["Position description"];
+                        document.getElementById("chucvu").value = data["Chức vụ"];
+                        document.getElementById("line").value = data["Line"];
+                        document.getElementById("department").value = data["Department"];
+                        document.getElementById("sectioncode").value = data["Section code"];
+                        document.getElementById("sectiondescription").value = data["Section description"];
+                        document.getElementById("hccategory").value = data["HC category"];
+                        document.getElementById("employeetype").value = data["Employee type"];
+                        document.getElementById("gradecode").value = data["Gradecode"];
+                        document.getElementById("factory").value = data["Factory"];
+                        document.getElementById("kieuhopdong").value = data["Loại hợp đồng"];
+                        document.getElementById("ngaybatdau").value = data["Ngày ký HĐ"];
+                        document.getElementById("ngayketthuc").value = data["Ngày hết hạn"];
+                        document.getElementById("mucluong").value = data["Lương cơ bản"];
+                        document.getElementById("phucap").value = data["Phụ cấp"];
+                        document.getElementById("tongphucap").value = data["Tiền phụ cấp"];
+                        xoahanchechinhsua()
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+    document.getElementById("masothe").addEventListener("change", kiemtrathongtinnld)
+    
+    function xoahanchechinhsua() {
+        let chackdate = document.getElementById("ngaybatdau").value;
+        let today = new Date().toISOString().split('T')[0];
+
+        if (chackdate === today) {
+            let elements = document.getElementsByClassName("hanchechinhsua");
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].readOnly = false;
+            }
+        }
+    }
+    </script>
+</div>
+{% endblock content %}

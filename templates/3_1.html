@@ -1,0 +1,462 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+label {
+    width:120px;
+    margin-left: 10px;
+}
+input, select {
+    margin-left: 10px;
+    width: 150px;
+}
+.flashes {
+    color: red;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="content"> 
+    <form action="/muc3_1" method="POST">
+        <div class="form-group">
+            <label for="anh">Ảnh</label>
+            <input type="text" id="anh" name="anh" style="width:200px;height:200px;" readonly>
+            <label for="masothe">Mã số thẻ</label>
+            <input type="text" id="masothe" name="masothe" readonly value={{masothe}}>
+            
+        </div>
+
+        <hr />
+
+        <h5>Thông tin CCCD </h5>
+        <div class="form-group">
+            <label for="scan-qrcode">Scan QR CCCD</label>
+            <input type="text" id="scan-qrcode" name="scan-qrcode">
+            <label for="cccd">CCCD</label>
+            <input type="text" id="cccd" name="cccd">
+            <label for="ngaycap">Ngày cấp</label>
+            <input type="text" id="ngaycap" name="ngaycap">
+            
+        </div>        
+        <div class="form-group">
+            <label for="hoten">Họ và tên</label>
+            <input type="text" id="hoten" name="hoten">
+            <label for="ngaysinh">Ngày sinh</label>
+            <input type="text" id="ngaysinh" name="ngaysinh">
+            <label for="gioitinh">Giới tính</label>
+            <input type="text" id="gioitinh" name="gioitinh">
+        </div>
+
+        <div class="form-group">
+            <input type="text" id="tamtru" name="tamtru" hidden>
+            <input type="text" id="thuongtru" name="thuongtru" hidden>
+            <input type="text" id="noisinh" name="noisinh" hidden>
+        </div>
+
+        <div class="form-group">
+            <label for="cmt">Chứng minh thư</label>
+            <input type="text" id="cmt" name="cmt">
+            <label for="quoctich">Quốc tịch</label>
+            <input type="text" id="quoctich" name="quoctich">
+            <label for="thonxom">Thôn/xóm</label>
+            <input type="text" id="thonxom" name="thonxom">
+        </div>
+        <div class="form-group">
+            <label for="phuongxa">Phường/Xã</label>
+            <input type="text" id="phuongxa" name="phuongxa">
+            <label for="quanhuyen">Quận/Huyện</label>
+            <input type="text" id="quanhuyen" name="quanhuyen">
+            <label for="tinhthanhpho">Tỉnh/Thành phố</label>
+            <input type="text" id="tinhthanhpho" name="tinhthanhpho">
+        </div>
+        <hr />
+
+        <h5>Thông tin tuyển dụng</h5>
+        
+        <div class="form-group">
+            <label for="dantoc">Dân tộc</label>
+            <input type="text" id="dantoc" name="dantoc">
+            <label for="tongiao">Tôn giáo</label>
+            <input type="text" id="tongiao" name="tongiao">
+            <label for="hocvan">Học vấn</label>
+            <input type="text" id="hocvan" name="hocvan">
+        </div>
+
+        <div class="form-group">
+            <label for="nganhang">Ngân hàng</label>
+            <input type="text" id="nganhang" name="nganhang">
+            <label for="sotaikhoan">Số tài khoản</label>
+            <input type="text" id="sotaikhoan" name="sotaikhoan">
+            <label for="sobhxh">Số BHXH</label>
+            <input type="text" id="sobhxh" name="sobhxh">
+        </div>
+
+        
+        <div class="form-group">
+            <label for="dienthoai">Điện thoại</label>
+            <input type="text" id="dienthoai" name="dienthoai">
+            <label for="masothue">Mã số thuế</label>
+            <input type="text" id="masothue" name="masothue">        
+            <label for="connho">Có con nhỏ</label>
+            <input type="text" id="connho" name="connho">
+        </div>
+       
+        <div class="form-group">
+            <label for="tenconnho1">Tên con nhỏ 1</label>
+            <input type="text" id="tenconnho1" name="tenconnho1">
+            <label for="ngaysinhcon1">Ngày sinh con 1</label>
+            <input type="text" id="ngaysinhcon1" name="ngaysinhcon1">
+            <label for="nguoithan">Người thân</label>
+            <input type="text" id="nguoithan" name="nguoithan">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho2">Tên con nhỏ 2</label>
+            <input type="text" id="tenconnho2" name="tenconnho2">
+            <label for="ngaysinhcon2">Ngày sinh con 2</label>
+            <input type="text" id="ngaysinhcon2" name="ngaysinhcon2">
+            <label for="sdtnguoithan">SĐT người thân</label>
+            <input type="text" id="sdtnguoithan" name="sdtnguoithan">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho3">Tên con nhỏ 3</label>
+            <input type="text" id="tenconnho3" name="tenconnho3">
+            <label for="ngaysinhcon3">Ngày sinh con 3</label>
+            <input type="text" id="ngaysinhcon3" name="ngaysinhcon3">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho4">Tên con nhỏ 4</label>
+            <input type="text" id="tenconnho4" name="tenconnho4">
+            <label for="ngaysinhcon4">Ngày sinh con 4</label>
+            <input type="text" id="ngaysinhcon4" name="ngaysinhcon4">
+        </div>
+
+        <div class="form-group">
+            <label for="tenconnho5">Tên con nhỏ 5</label>
+            <input type="text" id="tenconnho5" name="tenconnho5">
+            <label for="ngaysinhcon5">Ngày sinh con 5</label>
+            <input type="text" id="ngaysinhcon5" name="ngaysinhcon5">
+        </div>
+
+        <hr />
+        
+        <h5> Thống tin vị trí làm việc </h5>
+
+        <div class="form-group">
+            <label for="vitri">Detail job title(VN)</label>
+            <select type="text" id="vitri" name="vitri">
+                <option value="" readonly>Chọn vị trí</option>
+                {% for vitri in cacvitri %}
+                <option value="{{ vitri }}">{{ vitri }}</option>
+                {% endfor %}
+            </select>
+            <label for="line">Line</label>
+            <select id="line" name="line">
+            </select>
+            <label for="calamviec">Ca làm việc</label>
+            <select type="text" id="calamviec" name="calamviec">
+                <option value="" readonly>Chọn ca</option>
+                {% for ca in cacca %}
+                    <option value="{{ ca }}">{{ ca }}</option>
+                {% endfor %}
+            </select>
+
+        </div>
+
+        <div class="form-group">
+            <label for="nhamay">Factory</label>
+            <input type="text" id="nhamay" name="nhamay" value={{macongty}}>
+            <label for="hccategory">Headcount category</label>
+            <input type="text" id="hccategory" name="hccategory">
+            <label for="gradecode">Grade Code</label>
+            <input type="text" id="gradecode" name="gradecode">
+        </div>
+
+        <div class="form-group">
+            <label for="phongban">Department</label>
+            <input type="text" id="phongban" name="phongban">
+            <label for="chucvu">Chức vụ</label>
+            <input type="text" id="chucvu" name="chucvu">
+            <label for="loailaodong">Employee type</label>
+            <input type="text" id="loailaodong" name="loailaodong">
+        </div>
+        <div class="form-group">
+            <label for="mabophan">Section Code</label>
+            <input type="text" id="mabophan" name="mabophan">
+            <label for="bophan">Section Description</label>
+            <input type="text" id="bophan" name="bophan">
+            <label for="vitrien">Detail job title(EN)</label>
+            <input type="text" id="vitrien" name="vitrien">
+        </div>
+        <div class="form-group">
+            <label for="mavitri">Position Code</label>
+            <input type="text" id="mavitri" name="mavitri">
+            <label for="tenvitri">Posotion code description</label>
+            <input type="text" id="tenvitri" name="tenvitri">
+
+        </div>
+        <hr />
+        <h5> Thống tin hợp đồng </h5>
+        <div class="form-group">
+            <label for="kieuhopdong">Loại Hợp đồng</label>
+            <select id="kieuhopdong" name="kieuhopdong" onchange="showFields()">
+                <option value="">Chọn</option>
+                <option value="HĐ thử việc">HĐ thử việc</option>
+                <option value="HĐ có thời hạn lần 1">HĐ có thời hạn lần 1</option>
+                <option value="HĐ có thời hạn lần 2">HĐ có thời hạn lần 2</option>
+                <option value="HĐ vô thời hạn">HĐ vô thời hạn</option>
+            </select>
+            <label for="luongcoban">Lương cơ bản</label>
+            <input type="number" id="luongcoban" name="luongcoban" min="0">
+        </div>
+    
+        <div id="thuViecFields" class="form-group hidden">
+            <label for="soNgay">Số ngày</label>
+            <input type="number" id="soNgay" name="soNgay" min="1" onchange="calculateEndDate()">
+            <label for="tongphucap">Tổng phụ cấp</label>
+            <input type="number" id="tongphucap" name="tongphucap" min="0">
+        </div>
+    
+        <div id="batDauFields" class="form-group hidden">
+            <label for="ngayBatDau">Ngày bắt đầu</label>
+            <input type="date" id="ngayBatDau" name="ngayBatDau">
+        </div>
+    
+        <div id="ketThucFields" class="form-group hidden">
+            <label for="ngayKetThuc">Ngày kết thúc</label>
+            <input type="date" id="ngayKetThuc" name="ngayKetThuc">
+        </div>
+
+        <hr />
+        <input type="submit" value="Lưu" class="btn btn-primary"/>
+    </form>
+    <script>
+        function showFields() {
+            const kieuhopdong = document.getElementById("kieuhopdong").value;
+            const thuViecFields = document.getElementById("thuViecFields");
+            const batDauFields = document.getElementById("batDauFields");
+            const ketThucFields = document.getElementById("ketThucFields");
+
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("ngayBatDau").value = today;
+
+            if (kieuhopdong === "HĐ thử việc") {
+                thuViecFields.classList.remove("hidden");
+                batDauFields.classList.remove("hidden");
+                ketThucFields.classList.remove("hidden");
+            } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+                thuViecFields.classList.add("hidden");
+                batDauFields.classList.remove("hidden");
+                ketThucFields.classList.remove("hidden");
+            } else if (kieuhopdong === "HĐ vô thời hạn") {
+                thuViecFields.classList.add("hidden");
+                batDauFields.classList.remove("hidden");
+                ketThucFields.classList.add("hidden");
+            }
+
+            calculateEndDate();
+        }
+
+        function calculateEndDate() {
+            const kieuhopdong = document.getElementById("kieuhopdong").value;
+            const soNgay = document.getElementById("soNgay").value;
+            const ngayBatDau = document.getElementById("ngayBatDau").value;
+            const ngayKetThuc = document.getElementById("ngayKetThuc");
+
+            if (ngayBatDau) {
+                const startDate = new Date(ngayBatDau);
+                let endDate;
+
+                if (kieuhopdong === "HĐ thử việc" && soNgay) {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + parseInt(soNgay)-1);
+                } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate()+364);
+                }
+
+                if (endDate) {
+                    ngayKetThuc.value = endDate.toISOString().split('T')[0];
+                } else {
+                    ngayKetThuc.value = '';
+                }
+            } else {
+                ngayKetThuc.value = '';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            showFields();
+        });
+
+        function strtodate(str) {
+            let day = str.substring(0, 2);
+            let month = str.substring(2, 4);
+            let year = str.substring(4, 8);
+
+            // Tạo đối tượng Date
+            let date = new Date(year, month - 1, day);
+
+            // Định dạng ngày tháng
+            let options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+            let formattedDate = date.toLocaleDateString('vi-VN', options);
+            return formattedDate
+        }
+
+        document.getElementById("scan-qrcode").addEventListener("change", function() {
+            var scanqrcode = document.getElementById("scan-qrcode").value
+            if (scanqrcode != "") {
+                var datacccd = scanqrcode.split("|");
+                var datalength = datacccd.length;
+                if (datalength === 7) {
+                    document.getElementById("cccd").value = datacccd[0];
+                    document.getElementById("hoten").value = datacccd[2];
+                    document.getElementById("cmt").value = datacccd[1];
+                    document.getElementById("ngaysinh").value = strtodate(datacccd[3]);
+                    document.getElementById("gioitinh").value = datacccd[4];
+                    document.getElementById("ngaycap").value = strtodate(datacccd[6]);
+                    var diachi_data = datacccd[5].split(",");
+                    document.getElementById("thuongtru").value = diachi_data;
+                    document.getElementById("thonxom").value = diachi_data[0];
+                    document.getElementById("phuongxa").value = diachi_data[1];
+                    document.getElementById("quanhuyen").value = diachi_data[2];
+                    document.getElementById("tinhthanhpho").value = diachi_data[3];
+
+                }
+                else if (datalength === 6) {
+                    document.getElementById("cccd").value = datacccd[0];
+                    document.getElementById("hoten").value = datacccd[1];
+                    document.getElementById("ngaysinh").value = strtodate(datacccd[2]);
+                    document.getElementById("gioitinh").value = datacccd[3];
+                    document.getElementById("ngaycap").value = strtodate(datacccd[5]);
+                    var diachi_data = datacccd[4].split(",");
+                    document.getElementById("thonxom").value = diachi_data[0];
+                    document.getElementById("phuongxa").value = diachi_data[1];
+                    document.getElementById("quanhuyen").value = diachi_data[2];
+                    document.getElementById("tinhthanhpho").value = diachi_data[3];
+                }
+                document.getElementById("quoctich").value = "Việt Nam";
+            }
+        })
+        
+        document.getElementById("cccd").addEventListener("change", function() {
+            axios({
+                method: 'post',
+                url: '/laythongtincccd?cccd=' + document.getElementById("cccd").value
+            })
+                .then(function(response) {
+                    data = response.data
+                    console.log(data)
+                    alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
+                    document.getElementById("dantoc").value = data["Dân tộc"];
+                    document.getElementById("tongiao").value = data["Tôn giáo"];
+                    document.getElementById("dienthoai").value = data["Số điện thoại"];
+                    document.getElementById("quoctich").value = data["Quốc tịch"];
+                    document.getElementById("hocvan").value = data["Trình độ học vấn"];
+                    document.getElementById("masothue").value = data["Mã số thuế"];
+                    document.getElementById("nganhang").value = data["Ngân hàng"];
+                    document.getElementById("sotaikhoan").value = data["Số tài khoản"];
+                    document.getElementById("connho").value = data["Con nhỏ"];
+                    if (data["Tên con 1"] != null) {
+                        document.getElementById("tenconnho1").value = data["Tên con 1"];
+                    }
+                    if (data["Ngày sinh con 1"]) {
+                        document.getElementById("ngaysinhcon1").value = data["Ngày sinh con 1"];
+                    }
+                    if (data["Tên con 2"]) {
+                        document.getElementById("tenconnho2").value = data["Tên con 2"];
+                    }
+                    if (data["Ngày sinh con 2"]) {
+                        document.getElementById("ngaysinhcon2").value = data["Ngày sinh con 2"];
+                    }
+                    if (data["Tên con 3"]) {
+                        document.getElementById("tenconnho3").value = data["Tên con 3"];
+                    }
+                    if (data["Ngày sinh con 3"]) {
+                        document.getElementById("ngaysinhcon3").value = data["Ngày sinh con 3"];
+                    }
+                    if (data["Tên con 4"]) {
+                        document.getElementById("tenconnho4").value = data["Tên con 4"];
+                    }
+                    if (data["Ngày sinh con 4"]) {
+                        document.getElementById("ngaysinhcon4").value = data["Ngày sinh con 3"];
+                    }
+                    if (data["Tên con 5"]) {
+                        document.getElementById("tenconnho5").value = data["Tên con 5"];
+                    }
+                    if (data["Ngày sinh con 5"]) {
+                        document.getElementById("ngaysinhcon5").value = data["Ngày sinh con 5"];
+                    }
+                    if (data["Nơi sinh"]) {
+                        document.getElementById("noisinh").value = data["Nơi sinh"];
+                    }
+                    if (data["Số BHXH"]) {
+                        document.getElementById("sobhxh").value = data["Số BHXH"];
+                    }
+                    if (data["Tạm trú"]) {
+                        document.getElementById("tamtru").value = data["Tạm trú"];
+                    }
+                    if (data["Tên người thân"]) {
+                        document.getElementById("nguoithan").value = data["Tên người thân"];
+                    }
+                    if (data["SĐT người thân"]) {
+                        document.getElementById("sdtnguoithan").value = data["SĐT người thân"];
+                    }
+                })
+        })
+
+        document.getElementById("vitri").addEventListener("change", function() {
+            var vitri = document.getElementById("vitri").value
+            axios({
+                method: 'post',
+                url: '/check_line_from_detailjob?vitrimoi=' + vitri
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        if (Array.isArray(data)) {
+                            var select = document.getElementById('line');
+                            select.innerHTML = ''; // Clear existing options
+                            data.forEach(function(item) {
+                                var option = document.createElement('option');
+                                option.value = item; // Assuming item has a 'value' property
+                                option.text = item; // Assuming item has a 'text' property
+                                select.appendChild(option);
+                            });
+                        }
+                        var chuyenmoi=data[0]
+                        axios({
+                            method: 'post',
+                            url: '/check_hcname?vitri=' + vitri+"&line="+chuyenmoi
+                        })
+                        .then(function (response) {
+                            var data = response.data
+                            if (response.data != "") {
+                                console.log(data)
+                                data = response.data
+                                document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                                document.getElementById("gradecode").value = data["Grade_code"]; // 3
+                                document.getElementById("mabophan").value = data["Section_code"]; // 4
+                                document.getElementById("hccategory").value = data["HC_category"]; // 5
+                                document.getElementById("phongban").value = data["Department"]; // 6
+                                document.getElementById("bophan").value = data["Section_description"]; // 7
+                                document.getElementById("loailaodong").value = data["Employee_type"]; // 8
+                                document.getElementById("mavitri").value = data["Position_code"]; // 9
+                                document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
+                                document.getElementById("chucvu").value = data["Detail_job_title_VN"]; // 11
+                                    }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        })
+    </script>
+</div>
+{% endblock content %}

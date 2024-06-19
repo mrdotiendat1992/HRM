@@ -1,0 +1,71 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td {
+    font-size: 10px;
+}
+input, select {
+    margin-left: 10px;
+    width: 150px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    <form action="/muc6_2" method="get">
+        <label for="mst">Nhập mã số thẻ:</label>
+        <input type="text" id="mst" name="mst">
+
+        <label for="date">Ngày:</label>
+        <input type="date" id="date" name="date">
+
+        <label for="department">Phòng ban:</label>
+        <select id="department" name="department">
+            <option value="ACT">ACT</option>
+            <option value="HRD">HRD</option>
+            <option value="PDN">PDN</option>
+            <option value="PPC">PPC</option>
+        </select>
+
+        <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+        <br>
+        <!-- Thêm các trường và nút khác nếu cần -->
+
+    </form>
+      
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>STT</th> 
+                <th>Mã số thẻ</th>
+                <th>Nhà máy</th>
+                <th>Vị trí cũ</th>
+                <th>Line cũ</th>
+                <th>Vị trí mới</th>
+                <th>Line mới</th>
+                <th>Kiểu điều chuyển</th>
+                <th>Ngày thực hiện</th>
+            </tr>
+        </thead>
+      
+        <tbody>
+            {% for row in danhsach %}
+            <tr>
+                <th>{{loop.index}}</th> 
+                <th>{{row["MST"]}}</th>
+                <th>{{row["Nhà máy"]}}</th>
+                <th>{{row["Vị trí cũ"]}}</th>
+                <th>{{row["Chuyền cũ"]}}</th>
+                <th>{{row["Vị trí mới"]}}</th>
+                <th>{{row["Chuyền mới"]}}</th>
+                <th>{{row["Phân loại"]}}</th>
+                <th>{{row["Ngày thực hiện"]}}</th>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+    
+    </script>
+</div>
+{% endblock content %}

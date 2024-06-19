@@ -1,0 +1,94 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td , button{
+    font-size: 11px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    <form method="GET" action="/muc7_1_4">
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="mst">MST:</label>
+                <input id="mst" name="mst" class="form-control" type="text" onchange="this.form.submit()"></input>
+            </div>
+            <div class="col-md-4">
+                <label for="chuyen">Chuyền:</label>
+                <select id="chuyen" name="chuyen" class="form-control" onchange="this.form.submit()">
+                    <option value="">Tất cả</option>
+                    <!-- Add options dynamically from the server -->
+                    {% for chuyen in danh_sach_chuyen %}
+                    <option value="{{ chuyen }}" {% if chuyen == request.args.get('chuyen') %}selected{% endif %}>{{ chuyen }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="phongban">Phòng ban:</label>
+                <select id="phongban" name="phongban" class="form-control" onchange="this.form.submit()">
+                    <option value="">Tất cả</option>
+                    <!-- Add options dynamically from the server -->
+                    {% for phongban in danhsachphongban %}
+                    <option value="{{ phongban }}" {% if phongban == request.args.get('phongban') %}selected{% endif %}>{{ phongban }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+    </form>
+    <form method="POST" action="/export_dsddb">
+        <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+        <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+        <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+        <button type="submit" class="btn btn-primary mb-3">Export Excel</button>
+    </form>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>Mã số thẻ</th>
+                <th>Họ tên</th>
+                <th>Chức vụ</th>
+                <th>Chuyền tổ</th>
+                <th>Phòng ban</th>
+                <th>Loại điểm danh</th>
+                <th>Ngày</th>                    
+                <th>Giờ</th>
+                <th>Lý do</th> 
+                <th>Trạng thái</th>
+            </tr>
+        </thead>
+      
+        <tbody>
+            {% for row in danhsach_diemdanh_bu %}
+                <td>{{row[1]}}</td>
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[5]}}</td>
+                <td>{{row[6]}}</td>
+                <td>{{row[7]}}</td>
+                <td>{{row[8][:5]}}</td>
+                <td>{{row[9]}}</td>
+                {% if row[10]=='Đã phê duyệt'%}
+                <td>{{row[10]}}</td>
+                {% elif row[10]=='Đã phê duyệt' %}
+                <td>{{row[10]}}</td>
+                {% else %}
+                <td>
+                    <form action="/update_diemdanhbu" method="POST">
+                        <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
+                        <input type="hidden" name="mst" value="{{row[1]}}">
+                        <input type="hidden" name="bophan" value="{{row[5]}}">
+                        <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
+                        <input type="hidden" name="ngayduyet" value="{{row[7]}}">
+                        <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
+                        <input type="submit" class="btn btn-warning" value="{{row[10]}}"></input>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>  
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock content %}

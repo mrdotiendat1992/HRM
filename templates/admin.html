@@ -1,0 +1,65 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+th, td {
+    font-size: 10px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <h5>Danh sách người dùng</h5>
+    <form action="/admin" method="GET" id="filter_form">
+        <div class="form-group">
+            <label for="mst">Mã nhân viên</label>
+            <input type="text" id="mst" name="mst" onchange="this.form.submit()">
+            <label for="hoten">Họ tên</label>
+            <input type="text" id="hoten" name="hoten" onchange="this.form.submit()">
+        </div>
+    </form>
+    <br>
+    <table class="table table-hover">
+        <thead>
+            <tr class="table-primary">
+                <th>STT</th>
+                <th>MST</th>
+                <th>Họ tên</th>
+                <th>Công ty</th>
+                <th>Phòng ban</th>
+                <th>Phân quyền</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <form action="/thaydoiphanquyen" method="POST">
+                <tr data-info='{{ user | safe }}'>
+                    <td><input type="hidden" name="id" id="id" value="{{user.id}}"></input>{{user.id}}</td>
+                    <td>{{user.masothe}}</td>
+                    <td>{{user.hoten}}</td>
+                    <td>{{user.macongty}}</td>
+                    <td>{{user.phongban}}</td>
+                    <td>{{user.role}}</td>
+                    <td>
+                        <select name="newrole" id="newrole" onchange="this.form.submit()">
+                        <option value="">Chọn</option>
+                        {% for role in cacrole %}
+                            <option value="{{ role }}">{{ role }}</option>
+                        {% endfor %}
+                        </select>
+                    </td>
+                </tr>
+            </form>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div style="text-align: center;"> 
+        {% if users.has_prev %}
+            <a href="{{ url_for('admin_template', page=users.prev_num) }}">Trang trước</a>
+        {% endif %}
+        {% if users.has_next %}
+            <a href="{{ url_for('admin_template', page=users.next_num) }}">Trang tiếp</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

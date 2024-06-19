@@ -1,0 +1,302 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+    }
+    table {
+        border-collapse: collapse;
+        width: 50%;
+    }
+    th, td {
+        padding: 8px;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    td {
+        text-align: left;
+    }
+    .right th {
+        background-color: #007bff;
+    }
+    .right {
+        background-color: #f0f0f0;
+    }
+    .save-button {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        padding: 8px;
+    }
+    .save-button button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .save-button button:hover {
+        background-color: #0056b3;
+    }
+    select {
+        width: 100%;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    <div class="form-group" style="text-align: center;">
+        <label for="masothe">Mã số thẻ</label>
+        <input type="text" id="masothe" name="masothe">
+    </div>
+    <form action="/muc6_1" method="POST">
+        <input type="hidden" name="mst" id="mst">
+        <div class="container">
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="loaidieuchuyen">Loại điều chuyển</label>
+                        <select id="loaidieuchuyen" name="loaidieuchuyen">
+                            <option value="Chuyển vị trí">Chuyển vị trí</option>
+                            <option value="Nghỉ việc">Nghỉ việc</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="loaidieuchuyen">Ngày điều chuyển</label>
+                        <input type="date" id="ngaydieuchuyen" name="ngaydieuchuyen">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <table>
+                <thead>
+                    <tr>
+                        <th colspan="2" style="background-color: gray;">Trước điều chuyển</th>
+                        <th></th>
+                        <th colspan="2" style="background-color: blue;">Sau điều chuyển</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Detail job title (Vietnamese)*:</td>
+                        <td><input type="text" id="vitricu" name="vitricu" readonly></td>
+                        <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
+                        <td>Detail job title (Vietnamese)*:</td>
+                        <td>
+                            <select id="vitrimoi" name="vitrimoi">
+                            <option value="">Chọn vị trí mới</option>
+                            {% for vitri in cacvitri %}
+                            <option value="{{ vitri }}">{{ vitri }}</option>
+                            {% endfor %}
+                            </option>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Line*:</td>
+                        <td><input type="text" id="chuyencu" name="chuyencu" readonly></td>
+                        <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
+                        <td>Line*:</td>
+                        <td>
+                            <select id="chuyenmoi" name="chuyenmoi">
+                            
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Detail job title (English):</td>
+                        <td><input type="text" id="vitriencu" name="vitriencu" readonly></td>
+                        <td></td>
+                        <td>Detail job title (English):</td>
+                        <td><input type="text" id="vitriengmoi" name="vitriengmoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Grade code:</td>
+                        <td><input type="text" id="gradecodecu" name="gradecodecu" readonly></td>
+                        <td></td>
+                        <td>Grade code:</td>
+                        <td><input type="text" id="gradecodemoi" name="gradecodemoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Section code:</td>
+                        <td><input type="text" id="sectioncodecu" name="sectioncodecu" readonly></td>
+                        <td></td>
+                        <td>Section code:</td>
+                        <td><input type="text" id="sectioncodemoi" name="sectioncodemoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Section description:</td>
+                        <td><input type="text" id="sectiondescriptioncu" name="sectiondescriptioncu" readonly></td>
+                        <td></td>
+                        <td>Section description:</td>
+                        <td><input type="text" id="sectiondescriptionmoi" name="sectiondescriptionmoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>HC category:</td>
+                        <td><input type="text" id="hccategorycu" name="hccategorycu" readonly></td>
+                        <td></td>
+                        <td>HC category:</td>
+                        <td><input type="text" id="hccategorymoi" name="hccategorymoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Department:</td>
+                        <td><input type="text" id="departmentcu" name="departmentcu" readonly></td>
+                        <td></td>
+                        <td>Department:</td>
+                        <td><input type="text" id="departmentmoi" name="departmentmoi" readonly></td>
+                    </tr>
+                    
+                    <tr>
+                        <td>Employee type:</td>
+                        <td><input type="text" id="employeetypecu" name="employeetypecu" readonly></td>
+                        <td></td>
+                        <td>Employee type:</td>
+                        <td><input type="text" id="employeetypemoi" name="employeetypemoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Position code:</td>
+                        <td><input type="text" id="positioncodecu" name="positioncodecu" readonly></td>
+                        <td></td>
+                        <td>Position code description:</td>
+                        <td><input type="text" id="positioncodemoi" name="positioncodemoi" readonly></td>
+                    </tr>
+                    <tr>
+                        <td>Position code description:</td>
+                        <td><input type="text" id="positioncodedescriptioncu" name="positioncodedescriptioncu" readonly></td>
+                        <td></td>
+                        <td>Position code description:</td>
+                        <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" readonly></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="save-button" style="text-align: center;">
+                        <td colspan="4"><input type="submit" class="btn btn-primary" value="Điều chuyển"></input></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+
+    <script>
+        function kiemtrathongtinnld() {
+            axios({
+                method: 'post',
+                url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        document.getElementById("mst").value = data["MST"];
+                        document.getElementById("vitricu").value = data["Job title VN"]; 
+                        document.getElementById("vitriencu").value = data["Job title EN"];
+                        document.getElementById("chuyencu").value = data["Line"]; 
+                        document.getElementById("gradecodecu").value = data["Gradecode"];
+                        document.getElementById("sectioncodecu").value = data["Section code"];
+                        document.getElementById("hccategorycu").value = data["HC category"];
+                        document.getElementById("departmentcu").value = data["Department"];
+                        document.getElementById("sectiondescriptioncu").value = data["Section description"];
+                        document.getElementById("employeetypecu").value = data["Employee type"];
+                        document.getElementById("positioncodecu").value = data["Position code"];
+                        document.getElementById("positioncodedescriptioncu").value = data["Position description"];
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        }
+
+        document.getElementById("masothe").addEventListener("change", function() {
+            kiemtrathongtinnld()
+        })
+
+        document.getElementById("vitrimoi").addEventListener("change", function() {
+            var vitrimoi = document.getElementById("vitrimoi").value
+            axios({
+                method: 'post',
+                url: '/check_line_from_detailjob?vitrimoi=' + vitrimoi
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        if (Array.isArray(data)) {
+                            var select = document.getElementById('chuyenmoi');
+                            select.innerHTML = ''; // Clear existing options
+                            data.forEach(function(item) {
+                                var option = document.createElement('option');
+                                option.value = item; // Assuming item has a 'value' property
+                                option.text = item; // Assuming item has a 'text' property
+                                select.appendChild(option);
+                            });
+                        }
+                        var chuyenmoi=data[0]
+                        axios({
+                            method: 'post',
+                            url: '/check_hcname?vitri=' + vitrimoi+"&line="+chuyenmoi
+                        })
+                        .then(function (response) {
+                            var data = response.data
+                            if (response.data != "") {
+                                console.log(data)
+                                data = response.data
+                                document.getElementById("vitriengmoi").value = data["Detail_job_title_EN"];
+                                document.getElementById("gradecodemoi").value = data["Grade_code"]; // 3
+                                document.getElementById("sectioncodemoi").value = data["Section_code"]; // 4
+                                document.getElementById("hccategorymoi").value = data["HC_category"]; // 5
+                                document.getElementById("departmentmoi").value = data["Department"]; // 6
+                                document.getElementById("sectiondescriptionmoi").value = data["Section_description"]; // 7
+                                document.getElementById("employeetypemoi").value = data["Employee_type"]; // 8
+                                document.getElementById("positioncodemoi").value = data["Position_code"]; // 9
+                                document.getElementById("positioncodedescriptionmoi").value = data["Position_code_description"]; // 10
+                                    }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        })
+
+        document.getElementById("chuyenmoi").addEventListener("change", function() {
+            var vitrimoi = document.getElementById("vitrimoi").value
+            var chuyenmoi = document.getElementById("chuyenmoi").value
+            axios({
+                method: 'post',
+                url: '/check_hcname?vitri=' + vitrimoi+"&line="+chuyenmoi
+            })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    data = response.data
+                    console.log(data)
+                    document.getElementById("gradecodemoi").value = data["Grade_code"]; // 3
+                    document.getElementById("sectioncodemoi").value = data["Section_code"]; // 4
+                    document.getElementById("hccategorymoi").value = data["HC_category"]; // 5
+                    document.getElementById("departmentmoi").value = data["Department"]; // 6
+                    document.getElementById("sectiondescriptionmoi").value = data["Section_description"]; // 7
+                    document.getElementById("employeetypemoi").value = data["Employee_type"]; // 8
+                    document.getElementById("positioncodedescriptionmoi").value = data["Position_code_description"]; // 10
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })
+
+
+    </script>
+</div>
+{% endblock content %}

@@ -1,0 +1,189 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    table, th, td {
+        font-size: 12px;
+    }
+    td {
+        max-width: 300px;
+        word-wrap: break-word;
+    }
+    select {
+        width: 150px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0,0,0);
+        background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 30%;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .content {
+        width: 2000px;
+    }
+</style>
+{% endblock style %}
+{% block content %} 
+<div class="scroll-container">
+    <div class="content">
+        <div style= "display: inline;">
+            <form method="GET" action="/muc2_1">
+                <div class="form-group">
+                    <label for="sdt">Số điện thoại</label>
+                    <input id="sdt" name="sdt" type="text" onchange="this.form.submit()"></input>
+                    <label for="cccd">Căn cước công dân</label>
+                    <input id="cccd" name="cccd" type="text" onchange="this.form.submit()"></input>
+                    <button class="btn btn-primary" onclick="window.location.href='/muc2_1'">Tất cả</button>
+                    
+                </div>
+            </form>
+            <form method="POST" action="/export_dsdktt">
+                <div class="form-group">
+                    <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt')}}></input>
+                    <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd')}}></input>
+                    <button class="btn btn-success">Xuất excel</button>
+                </div>
+            </form>
+        </div>
+        <br>
+        <table class="table table-bordered">
+            <tr class="table-primary">
+                <th>STT</th>
+                <th>Nhà máy</th>
+                <th>Vị trí</th>
+                <th>Họ và tên</th>
+                <th>Số điện thoại</th>
+                <th>Trạng thái</th>
+                <th>CCCD</th>
+                <th>Dân tộc</th>
+                <th>Trình độ</th>
+                <th>Địa chỉ</th>
+                <th>Kinh nghiệm</th>
+                <th>Mức lương</th>
+                <th>Có con nhỏ</th>
+                <th>Ngày nhận việc</th>
+                <th>Ngày gửi</th>
+                <th>Ngày cập nhật</th>
+                <th>Ngày hẹn đi làm</th>
+                <th>Hiệu suất</th>
+                <th>Loại máy</th>
+            </tr>
+            {% for user in users %}
+                <form action="/muc2_1" method="POST">
+                    <tr>
+                        
+                        <td>{{ loop.index }}</td>
+                        <td>{{ user["Nhà máy"] }}</td>
+                        <td>{{ user["Vị trí tuyển dụng"] }}</td>
+                        <td>{{ user["Họ tên"] }}</td>
+                        <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
+                        {% if user["Trạng thái"] == "Đạt" %}
+                        <td style= "background-color: green; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        {% elif user["Trạng thái"] == "Không đạt" %}
+                        <td style= "background-color: black; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        {% else %}
+                        <td><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        {% endif %}
+                        
+                        <td>{{ user["CCCD"] }}</td>
+                        <td>{{ user["Dân tộc"] }}</td>
+                        <td>{{ user["Học vấn"] }}</td>
+                        <td>{{ user["Tạm trú"] }}</td>
+                        <td>{{ user["Kinh nghiệm"] }}</td>
+                        <td>{{ user["Mức lương"] }}</td>
+                        <td>{{ user["Có con nhỏ"] }}</td>
+                        <td>{{ user["Ngày nhận việc"] }}</td>
+                        <td>{{ user["Ngày gửi"] }}</td>
+                        <td>{{ user["Ngày cập nhật"] }}</td>
+                        <td><input type="date" name="ngayhendilam" value="{{ user['Ngày hẹn đi làm'] }}" onchange="this.form.submit()"></td>
+                        <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}" onchange="this.form.submit()"></td>
+                        <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}" onchange="this.form.submit()"></td>
+                    </tr>
+                </form>
+            {% endfor %}
+        </table>
+        <!-- The Modal -->
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <form id="statusForm" onsubmit="submitForm(event)">
+                <input type="hidden" id="phone" name="phone">
+                <label for="newStatus">Trạng thái mới:</label>
+                <select id="newStatus" name="newStatus">
+                    <option value="Đạt">Đạt</option>
+                    <option value="Không đạt">Không đạt</option>
+                </select>
+                <br><br>
+                <button class ="btn btn-primary" type="submit">Cập nhật</button>
+            </form>
+        </div>
+    </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    function openModal(element) {
+        var modal = document.getElementById("myModal");
+        var phone = element.closest("tr").querySelector(".user-phone").innerText;
+        document.getElementById("phone").value = phone;
+        modal.style.display = "block";
+    }
+
+    function closeModal() {
+        var modal = document.getElementById("myModal");
+        modal.style.display = "none";
+    }
+
+    function submitForm(event) {
+        event.preventDefault();
+        var phone = document.getElementById("phone").value;
+        var newStatus = document.getElementById("newStatus").value;
+        var data = { phone: phone, newStatus: newStatus };
+
+        axios({
+            method: 'post',
+            url: '/capnhattrangthaiungvien?sdt=' + phone + '&trangthaimoi=' + newStatus,
+        })
+            .then(function (response) {
+                console.log(response.data);
+                closeModal();
+                location.reload();
+                alert("Cập nhật thành công");
+            })
+            .catch(function (error) {
+                console.log(error);
+                alert("Cập nhật thất bại");
+            });
+    }
+
+</script>
+{% endblock content %}

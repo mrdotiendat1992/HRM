@@ -1,0 +1,138 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td {
+    font-size: 12px;
+}
+h3 {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+input, select, label {
+    margin-left: 10px;
+    width: 160px;
+}
+button {
+    margin-right: 10px;
+}
+
+.col {
+    border-top: 1px solid #dee2e6;
+    border-right: 1px solid #dee2e6;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+}
+.center {
+    padding: 20px;
+}
+
+#filterngay {
+    margin: 10px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="center">
+    <div class="row">
+        <div class="col">
+            <h3><b>Đăng kí theo nhóm</b></h3>
+            <hr />
+            <br>
+            <div class="form-group">
+                <label for="phongban">Phòng ban</label>
+                <input id="phongban" name="phongban" value="{{current_user.phongban}}" readonly>
+            </div>
+            <form action="/taimautangcanhom" method="POST">
+                <input id="phongban" name="phongban" value="{{current_user.phongban}}" hidden >
+                <input class="btn btn-primary" value="Tải xuống file mẫu" type="submit"></input>
+            </form>
+            <br>
+            <form action="/dangkitangcanhom" method="POST"  enctype="multipart/form-data">
+                <input type="file" name="file" >
+                <input class="btn btn-primary" value="Đăng ký"  type="submit"></input>
+            </form>
+        </div>
+        <div class="col">
+            <h3><b>Đăng kí cá nhân</b></h3>
+            <hr />
+            <br>
+            <form action="/dangkitangcacanhan" method="POST">
+                <div class="form-group">
+                    <label for="mst">Nhập mã số thẻ</label>
+                    <input type="text" id="mst" name="mst">
+                </div>
+                <div class="form-group">
+                    <label for="giotangca">Giờ tăng ca(16:30)</label>
+                    <input type="text" id="giotangca" name="giotangca">
+                </div>
+                <div class="form-group">
+                    <label for="giotangcathucte">Giờ tăng ca thực tế(18:30)</label>
+                    <input type="text" id="giotangcathucte" name="giotangcathucte">
+                </div>
+                <div class="form-group">
+                    <label for="ngaytangca">Ngày tăng ca</label>
+                    <input type="date" id="ngaytangca" name="ngaytangca">
+                </div>
+                <input class="btn btn-primary" value="Đăng ký" type="submit"></input>
+            </form>
+        </div>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col">
+            <form action="/muc7_1_6" method="GET" id="filterngay">
+                <div class="form-group">
+                    <label for="mst">MST</label>
+                    <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}">
+                    <label for="phongban">Phòng ban</label>
+                    <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}">
+                    <label for="ngay">Ngày</label>
+                    <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                    <input type="submit" value="Xem" class="btn btn-primary">
+                </div>
+
+            </form>
+            <form action="/muc7_1_6" method="POST" id="filterngay">
+                <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+                <input type="submit" value="Xuất Excel" class="btn btn-success">
+            </form>
+        </div>
+        <div class="col">
+            <h3>
+                <b>Danh sách đăng kí tăng ca ngày</b>
+            </h3>
+        </div>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>STT</th>
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Phòng ban</th>
+                    <th>Ngày</th>
+                    <th>Số giờ tăng ca</th>
+                    <th>Số giờ tăng ca thực tế</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if danhsach %}
+                {% for row in danhsach %}
+                <tr>
+                    <th>{{loop.index}}</th>
+                    <th>{{row[1]}}</th>
+                    <th>{{row[2]}}</th>
+                    <th>{{row[5]}}</th>
+                    <th>{{row[6]}}</th>
+                    <th>{{row[7][:5]}}</th>
+                    <th>{{row[8][:5]}}</th>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

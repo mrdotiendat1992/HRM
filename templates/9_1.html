@@ -1,0 +1,148 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    table, th, td {
+        font-size: 11px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    input, select {
+        margin-left: 10px;
+        width: 150px;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+            Thêm biên bản
+        </button>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Thêm biên bản</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="masothe">Mã số thẻ</label>
+                                    <input type="text" id="masothe" name="masothe" onchange="kiemtrathongtinnld()">
+                                </div>
+                                <form method="POST" action="/muc9_1">
+                                    <div class="form-group">
+                                        <input type="text" id="mst" name="mst" hidden>
+                                        <label for="hoten">Họ tên</label>
+                                        <input type="text" id="hoten" name="hoten" readonly>
+                                        <label for="chucvu">Chức vụ</label>
+                                        <input type="text" id="chucvu" name="chucvu" readonly>
+                                        <label for="bophan">Bộ phận</label>
+                                        <input type="text" id="bophan" name="bophan" readonly>
+                                        <label for="chuyento">Chuyền tổ</label>
+                                        <input type="text" id="chuyento" name="chuyento" readonly>
+                                        <label for="ngayvao">Ngày vào</label>
+                                        <input type="text" id="ngayvao" name="ngayvao" readonly>
+                                        <label for="diadiem">Địa điểm</label>
+                                        <input type="text" id="diadiem" name="diadiem" value="{{current_user.macongty}}" readonly>
+                                        <label for="ngayvipham">Ngày vi phạm</label>
+                                        <input type="date" id="ngayvipham" name="ngayvipham">
+                                        <label for="ngaylapbienban">Ngày lập biên bản</label>
+                                        <input type="date" id="ngaylapbienban" name="ngaylapbienban">
+                                        <label for="noidung">Nội dung vi phạm</label>
+                                        <textarea id="noidung" name="noidung" cols="50"></textarea >
+                                        <label for="bienphap">Biện pháp kỉ luật</label>
+                                        <select id="bienphap" name="bienphap">   
+                                            <option value="Khiển trách">Khiển trách </option>
+                                            <option value="Cách chức">Cách chức</option>
+                                            <option value="Kéo dài thời hạn nâng lương">Kéo dài thời hạn nâng lương</option>
+                                            <option value="Sa thải">Sa thải</option>
+                                        </select>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                    <input type="submit" class="btn btn-primary" value="Lưu"></input>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="table-primary">
+                    <th colspan="7">Thông tin nhân viên</th>
+                    <th rowspan="2">Ngày vi phạm</th>
+                    <th rowspan="2">Ngày lập biên bản</th>
+                    <th rowspan="2">Địa điểm</th>
+                    <th rowspan="2">Nội dung vi phạm</th>
+                    <th rowspan="2">Biện pháp kỉ luật</th>
+                </tr>
+                <tr class="table-info">
+                    <th>STT</th>
+                    <th>MST</th>
+                    <th>Họ tên</th>
+                    <th>Chức vụ</th>
+                    <th>Bộ phận</th>
+                    <th>Tổ</th>
+                    <th>Ngày vào</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                <tr>
+                    <th>{{loop.index}}</th>
+                    <th>{{row[1]}}</th>
+                    <th>{{row[2]}}</th>
+                    <th>{{row[3]}}</th>
+                    <th>{{row[5]}}</th>
+                    <th>{{row[4]}}</th>
+                    <th>{{row[6]}}</th>
+                    <th>{{row[7]}}</th>
+                    <th>{{row[8]}}</th>
+                    <th>{{row[9]}}</th>
+                    <th>{{row[10]}}</th>
+                    <th>{{row[11]}}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+<script>
+    function kiemtrathongtinnld() {
+        axios({
+            method: 'post',
+            url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
+        })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    console.log(data)
+                    document.getElementById("mst").value = data["MST"];
+                    document.getElementById("hoten").value = data["Họ tên"]; 
+                    document.getElementById("chucvu").value = data["Job title VN"];
+                    document.getElementById("chuyento").value = data["Line"];
+                    document.getElementById("bophan").value = data["Department"];
+                    document.getElementById("ngayvao").value = data["Ngày vào"];
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+</script>
+{% endblock content %}

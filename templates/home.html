@@ -1,196 +1,231 @@
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title></title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-        <style>
-            body {
-                color: #0d6efd;
-                font-weight: bold;
-                font-size:12px;
-            }
-            #header {
-                height: 90px;
-                border-style: solid;
-                border-width: 0 0 2px 0;
-            }
-            #user_info {
-                margin: 10px;
-                text-align: right;
-            }
-            #company_info {
-                margin: 10px;
-                text-align: center;
-                width: 700px;
-            }
-            #logo {
-                margin: 20px;
-                height: 70px;
-                width: 140px;
-            }
-            
-            #main_window {
-                border-style: solid #0d6efd;
-                border-width: 1px;
-                height: 100%;
-                width: 100%;
-                margin-top: 10px;
-            }
-            #menu {
-                #0d6efd
-                width: 300px;
-                height: 100%;
-                margin-left: 20px ;
-                border-style: solid;
-                border-width: 0 2px 0 0;
-            }
-            #mst, #company {
-                text-align: center;
-            }
-            #left_window, #right_window {
-                height: 100%;
-                border-style: solid;
-                border-width: 0 2px 0 0;
-            }
-            label {
-                align-content: left;
-                text-align: left;
-                width: 120px;
-            }
-            select,input {
-                width: 100px;
-                margin-right:5px;
-            }
-            #hopdong {
-                width: 400px;
-                margin: 0 auto;
-            }
-            #btn_save {
-                display:fixed;
-                margin-left: 380px;
-                margin-top: 80px;
-                width: 100px;
-                
-            }
-            #subfunction {
-                font-size: 12px;
-                margin-left: 20px;
-            }
-            #subfunction_active {
-                font-size: 12px;
-                margin-left: 20px;
-                color: white;
-                background-color: #0d6efd;
-            }
-        </style>
-    </head>
-    <body>
-        <div id="header">
-            <div class="row">
-                <div class="col">
-                    <img src="static/Logo.png" id="logo" alt="logo">
-                </div>
-                <div class="col">
-                    <div id="company_info">
-                        <h5 id="company"><b>Công ty CPSX Nam Thuận</b></h5>
-                        <h3><b>Phần mềm quản lí nhân sự Nam Thuận</b></h3>
-                    </div>
-                </div>
-                <div class="col">
-                    <div id="user_info">
-                        <p id="mst"><b>MST:12579</b></p>
-                        <p><a class="btn btn-secondary" href="/">Đổi mật khẩu</a>
-                        <a class="btn btn-primary" href="/">Đăng xuất</a></p>
-                    </div>
-                </div>
-            </div>
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td {
+    font-size: 10px;
+}
+input, select , label {
+    margin-left: 10px;
+    width: 100px;
+    font-size: 10px;
+}
+.view-details {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+}
+
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.popup-content {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<br>
+<div class="container-fluid">
+    <h5>Danh sách nhân viên</h5>
+    <form action="/" method="POST" id="filter_form">
+        <div class="form-group">
+            <label for="mst">Mã nhân viên</label>
+            <input type="text" id="mst" name="mst">
+            <label for="hoten">Họ tên</label>
+            <input type="text" id="hoten" name="hoten">
+            <label for="sdt">Số điện thoại</label>
+            <input type="text" id="sdt" name="sdt">
+            <label for="trangthai">Trạng thái</label>
+            <select id="trangthai" name="trangthai">
+                {% for trangthai in cactrangthai %}
+                    <option value="{{ trangthai }}">{{ trangthai }}</option>
+                {% endfor %}
+            </select>
         </div>
-        <div class="container-fluid" id="main_window">
-            <div class="row">
-                <div class="col-3">
-                    <div id="menu">
-                        <ul class="navbar-nav mr-auto">
-                            <li class="nav-item active">
-                                <a class="nav-link" href="/">1.Tuyển dụng</a>
-                                <a class="nav-link" href="/">2.Nhận việc</a>
-                                <a class="nav-link" href="/" id="subfunction_active">2.1.Nhập mới</a>
-                                <a class="nav-link" href="/" id="subfunction">2.2.Sửa thông tin</a>
-                                <a class="nav-link" href="/">3.Đào tạo</a>
-                                <a class="nav-link" href="/">4.Đánh giá hiệu quả làm việc</a>
-                                <a class="nav-link" href="/">5.Phát triển sự nghiệp</a>
-                                <a class="nav-link" href="/">6.Lương thưởng và phúc lợi</a>
-                                <a class="nav-link" href="/">7.Gắn kết</a>
-                                <a class="nav-link" href="/">8.Tuân thủ chính sách</a>
-                                <a class="nav-link" href="/">9.Quản lý nghỉ việc</a>
-                                <a class="nav-link" href="/">10.Kết nối cựu nhân viên</a>
-                            </li>
-                        </ul>
- 
-                    </div>
-                </div>
-                <div class="col" id="left_window">
-                    <div>
-                        <p><label for="scancccd">Scan QR CCCD</label><input type="text"></p>
-                        <p><label for="mst">Mã số thẻ</label><input type="text" > <label for="thechamcong">Thẻ chấm công</label><input type="text" > </p>
-                        <p><label for="hovaten">Họ và tên</label><input type="text" > <label for="gioitinh">Giới tính</label><input type="text" > </p>
-                        <p><label for="ngaysinh">Ngày sinh</label><input type="text" ></p>
-                        <p><label for="thuongtru">Địa chỉ thường trú</label><input type="text" style="width:330px;"></p>
-                        <p><label for="socccd">Số CCCD</label><input type="text" > <label for="ngaycapcccd">Ngày cấp</label><input  > </p>
-                        <p><label for="mst">Quốc tịch</label><select  ></select> <label for="dantoc">Dân tộc</label><select  ></select> </p>
-                        <p><label for="mst">Tình trạng hôn nhân</label><select  ></select> <label for="thechamcong">Tôn giáo</label><select  ></select> </p>
-                        <p><label for="thuongtru">Địa chỉ tạm trú</label><input type="text" style="width: 330px;"></p>
-                        <p><label for="dienthoai">Điện thoại</label><input type="text" ><label for="hocvan">Học vấn</label><select ></select></p>
-                        <p><label for="nganhang">Ngân hàng</label><select type="text" ></select><label for="stk">Số tài khoản</label><input type="text" ></p>
-                        <p><label for="masothue">Mã số thuế</label><input type="text" style="width: 330px;"></p>
-                    </div>
-                </div>
-                    <div class="col" id="right_window">
-                        <div>
-                            <p>
-                                <div class="row">
-                                    <div class="col">
-                                        <label for="mst">Ảnh</label><input type="text" style="width:100px;height:100px;margin-bottom:20px;">
-                                    </div>
-                                    <div class="col" id="hopdong">
-                                        <p><label for="mst">Ngày thử việc</label><select type="text" ></select></p>
-                                        <p><label for="mst">Loại hợp đồng</label><select type="text" ></select></p>
-                                        <p><label for="mst">Ngày chính thức</label><select type="text" ></select></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <p><label for="mst">Chức vụ</label><select type="text" ></select></p>
-                                        <p><label for="mst">Cấp bậc</label><select type="text" ></select></p>
-                                        <p><label for="mst">Công ty</label><select type="text" ></select></p>
-                                        <p><label for="mst">Mã bộ phận</label><select type="text" ></select></p>
-                                        <p><label for="mst">Chức vụ</label><select type="text" ></select></p>
-                                        <p><label for="mst">Mã vị trí</label><select type="text" ></select></p>
-                                    </div>
-                                    <div class="col">
-                                        <p><label for="mst">Chuyền/Tổ</label><select type="text" ></select></p>
-                                        <p><label for="mst">Phân loại HC</label><select type="text" ></select></p>
-                                        <p><label for="mst">Phòng ban</label><select type="text" ></select></p>
-                                        <p><label for="mst">Diễn giải</label><select type="text" ></select></p>
-                                        <p><label for="mst">Loại lao động</label><select type="text" ></select></p>
-                                        <p><label for="mst">Vị trí</label><select type="text" ></select></p>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <a id="btn_save" class="btn btn-primary" href="/">Lưu</a>
-                                </div>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="form-group">
+            <label for="cccd">CCCD</label>
+            <input type="text" id="cccd" name="cccd">
+            <label for="phongban">Phòng ban </label>
+            <select id="phongban" name="phongban">
+                <option value="">Chọn phòng ban</option>
+                {% for phongban in cacphongban %}
+                    <option value="{{ phongban }}">{{ phongban }}</option>
+                {% endfor %}
+            </select>
+            <label for="gioitinh">Giới tính</label>
+            <select id="gioitinh" name="gioitinh">
+                <option value="">Chọn giới tính</option>
+                <option value="Nam">Nam</option>
+                <option value="Nữ">Nữ</option>
+            </select>
+            <label for="hccategory">HC Category</label>
+            <select id="hccategory" name="hccategory">
+                <option value="">Chọn HC Category</option>
+                {% for hccategory in cachccategory %}
+                    <option value="{{ hccategory }}">{{ hccategory }}</option>
+                {% endfor %}
+            </select>
         </div>
-    </body>
-</html>
+        <div class="form-group">
+            <label for="ngaykyhd">Ngày ký HĐ</label>
+            <input type="date" id="ngaykyhd" name="ngaykyhd">
+            <label for="ngayhethanhd">Ngày hết hạn HĐ</label>
+            <input type="date" id="ngayhethanhd" name="ngayhethanhd">
+            <label for="ngayvao">Ngày vào</label>
+            <input type="date" id="ngayvao" name="ngayvao">
+            <label for="ngaynghi">Ngày nghỉ</label>
+            <input type="date" id="ngaynghi" name="ngaynghi">
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Tìm kiếm"></input>
+        </div>
+    </form>
+</div> 
+
+<hr />
+
+<div>
+    <b>Tổng số nhân viên: {{count}}</b>
+</div> 
+
+<div>
+    <form action="/export_dsnv" method="POST">
+        <div class="form-group">
+            <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
+            <input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" hidden>
+            <input type="text" id="sdt" name="sdt" value="{{ request.args.get('sdt', '') }}" hidden>
+            <input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" hidden>
+            <input type="text" id="cccd" name="cccd" value="{{ request.args.get('cccd', '') }}" hidden>
+            <input type="text" id="gioitinh" name="gioitinh" value="{{ request.args.get('gioitinh', '') }}" hidden>
+            <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
+            <input type="text" id="hccategory" name="hccategory" value="{{ request.args.get('hccategory', '') }}" hidden>
+            <input type="date" id="ngaykyhd" name="ngaykyhd" value="{{ request.args.get('ngaykyhd', '') }}" hidden>
+            <input type="date" id="ngayhethanhd" name="ngayhethanhd" value="{{ request.args.get('ngayhethanhd', '') }}" hidden>
+            <input type="date" id="ngayvao" name="ngayvao" value="{{ request.args.get('ngayvao', '') }}" hidden>
+            <input type="date" id="ngaynghi" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" hidden>
+            <input class="btn btn-success" type="submit" value="Xuất Excel"></input>
+        </div>
+    </form>
+</div>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Mã nhân viên</th>
+            <th scope="col">Họ và tên</th>
+            <th scope="col">Ngày vào</th>
+            <th scope="col">Detail job title(VN)</th>
+            <th scope="col">Department</th>
+            <th scope="col">Line</th>
+            <th scope="col">Trạng thái</th>
+            <th scope="col">Xoá</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr data-info='{{ user | tojson | safe }}'>
+                <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
+                <td>{{ user["MST"] }}</td>
+                <td>{{ user["Họ tên"] }}</td>
+                <td>{{ user["Ngày vào"][:10] }}</td>
+                <td>{{ user["Job title VN"] }}</td>
+                <td>{{ user["Department"] }}</td>
+                <td>{{ user["Line"] }}</td>
+                <td>{{ user["Trạng thái"] }}</td>
+                <td><a class="fas fa-fw fa-eye  view-details" href="#" >Xem</a></td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="pagination">{{ pagination.links }}</div>
+
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <span class="close">&times;</span>
+        <p id="employeeInfo"></p>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const popup = document.getElementById('popup');
+        const popupContent = document.getElementById('employeeInfo');
+        const closeBtn = document.getElementsByClassName('close')[0];
+    
+        document.querySelectorAll('.view-details').forEach(item => {
+            item.addEventListener('click', event => {
+                event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+                const row = event.target.closest('tr');
+                const info = JSON.parse(row.dataset.info);
+                console.log(info);
+    
+                popupContent.innerHTML = `
+                    <strong>MST:</strong> ${info["MST"]}<br>
+                    <strong>Họ tên:</strong> ${info["Họ tên"]}<br>
+                    <strong>Thẻ chấm công:</strong> ${info["Thẻ chấm công"]}<br>
+                    <strong>Số điện thoại:</strong> ${info["Số điện thoại"]}<br>
+                    <strong>Ngày sinh:</strong> ${info["Ngày sinh"]}<br>
+                    <strong>Giới tính:</strong> ${info["Giới tính"]}<br>
+                    <strong>CCCD:</strong> ${info["CCCD"]}<br>
+                    <strong>Ngày cấp CCCD:</strong> ${info["Ngày cấp CCCD"]}<br>
+                    <strong>Thường trú:</strong> ${info["Thường trú"]}<br>
+                    <strong>Dân tộc:</strong> ${info["Dân tộc"]}<br>
+                    <strong>Học vấn:</strong> ${info["Học vấn"]}<br>
+                    <strong>Ngày vào:</strong> ${info["Ngày vào"]}<br>
+                    <strong>Job title VN:</strong> ${info["Job title VN"]}<br>
+                    <strong>Department:</strong> ${info["Department"]}<br>
+                    <strong>Line:</strong> ${info["Line"]}<br>
+                    <strong>Người thân:</strong> ${info["Người thân"]}<br>
+                    <strong>SĐT người thân:</strong> ${info["SĐT liên hệ"]}<br>
+                    <strong>Loại hợp đồng:</strong> ${info["Loại hợp đồng"]}<br>
+                    <strong>Trạng thái:</strong> ${info["Trạng thái"]}<br>
+                `;
+    
+                popup.style.display = 'block';
+            });
+        });
+    
+        closeBtn.onclick = function() {
+            popup.style.display = 'none';
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == popup) {
+                popup.style.display = 'none';
+            }
+        }
+    });
+    
+</script>
+
+
+{% endblock content %}

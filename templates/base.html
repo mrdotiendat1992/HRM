@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="vn">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" type="image/x-icon" href="static/img/logo.ico">
+    <title>Phần mềm quản lý nhân sự</title>
+    <!-- Custom fonts for this template-->
+    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+    <!-- Custom styles for this template-->
+    <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
+    {% block style %}
+    {% endblock style %}
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
+                <div class="sidebar-brand-icon">
+                    <i><img src="static/img/logo_white.png" alt="logo" style="width:30%; height:100%"></i>
+                </div>
+            </a>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item active">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>Dashboard</span></a>
+            </li>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+            <!-- Heading -->
+            <div class="sidebar-heading">
+                Mục lục
+            </div>
+            <!-- Nav Item - Tuyen dung Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseZero"
+                    aria-expanded="true" aria-controls="collapseZero">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>1. Sơ đồ tổ chức</span>
+                </a>
+                <div id="collapseZero" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Sơ đồ tổ chức</h6>
+                        <a class="collapse-item" href="#">1.1</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Tuyen dung Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>2. Tuyển dụng</span>
+                </a>
+                <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Tuyển dụng</h6>
+                        <a class="collapse-item" href="/muc2_1">2.1 Danh sách ứng viên</a>
+                        <a class="collapse-item" href="/muc2_2">2.2 Yêu cầu tuyển dụng</a>
+                        <a class="collapse-item" href="/muc2_2_1"><i class="fas fa-fw fa-share"></i>2.2.1 Thêm yêu cầu</a>
+                        <a class="collapse-item" href="/muc2_2_2"><i class="fas fa-fw fa-share"></i>2.2.2 Danh sách yêu cầu</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Nhan viec Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>3. Nhận việc</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Nhận việc</h6>
+                        <a class="collapse-item" href="/muc3_1">3.1. Nhập mới thông tin</a>
+                        <a class="collapse-item" href="/muc3_2">3.2. Chỉnh sửa thông tin</a>
+                        <a class="collapse-item" href="/muc3_3">3.3. Quản lý hợp đồng</a>
+                        <a class="collapse-item" href="/muc3_4">3.4. DS sắp hết hạn HĐ</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Dao tao Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
+                    aria-expanded="true" aria-controls="collapseThree">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>4. Đào tạo</span>
+                </a>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Đào tạo</h6>
+                        <a class="collapse-item" href="#">4.1</a>
+                    </div>
+                </div>
+            </li>
+
+
+            <!-- Nav Item - Danh gia hieu qua Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
+                    aria-expanded="true" aria-controls="collapseFour">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>5. Đánh giá hiệu quả</span>
+                </a>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Đánh giá hiệu quả</h6>
+                        <a class="collapse-item" href="#">5.1</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Phat trien su nghiep Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
+                    aria-expanded="true" aria-controls="collapseFive">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>6. Phát triển sự nghiệp</span>
+                </a>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Phát triển sự nghiệp</h6>
+                        <a class="collapse-item" href="/muc6_1">6.1 Đổi chức vụ, bộ phận</a>
+                        <a class="collapse-item" href="/muc6_2">6.2 Lịch sử công tác</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Luong thuong phuc loi Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSix"
+                    aria-expanded="true" aria-controls="collapseSix">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>7. Lương, thưởng, phúc lợi</span>
+                </a>
+                <div id="collapseSix" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Lương, thưởng</h6>
+                        <p class="collapse-item">7.1 Chấm công</p>
+                        <a class="collapse-item" href="/muc7_1_1"><i class="fas fa-fw fa-share"></i> 7.1.1 Đổi ca làm việc</a>
+                        <a class="collapse-item" href="/muc7_1_2"><i class="fas fa-fw fa-share"></i> 7.1.2 Bảng chấm công</a>
+                        <a class="collapse-item" href="/muc7_1_3"><i class="fas fa-fw fa-share"></i> 7.1.3 DS lỗi chấm công</a>
+                        <a class="collapse-item" href="/muc7_1_4"><i class="fas fa-fw fa-share"></i> 7.1.4 DS điểm danh bù</a>
+                        <a class="collapse-item" href="/muc7_1_5"><i class="fas fa-fw fa-share"></i> 7.1.5 DS xin nghỉ phép</a>
+                        <a class="collapse-item" href="/muc7_1_6"><i class="fas fa-fw fa-share"></i> 7.1.6 Đăng kí tăng ca</a>
+                        <a class="collapse-item" href="/muc7_1_7"><i class="fas fa-fw fa-share"></i> 7.1.7 Báo cơm</a>
+                        <a class="collapse-item" href="/muc7_1_8"><i class="fas fa-fw fa-share"></i> 7.1.8 Báo cáo tổng hợp</a>
+                        <a class="collapse-item" href="/muc7_1_9"><i class="fas fa-fw fa-share"></i> 7.1.9 Xin nghỉ khác</a>
+                        <a class="collapse-item" href="/muc7_2"> 7.2 Bảng công</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Gan ket Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSeven"
+                    aria-expanded="true" aria-controls="collapseSeven">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>8. Gắn kết</span>
+                </a>
+                <div id="collapseSeven" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Gắn kết</h6>
+                        <a class="collapse-item" href="muc8_1">8.1 Ý kiến về nhà máy</a>
+                        <a class="collapse-item" href="muc8_2">8.2 Ý kiến về phần mềm</a>
+                        <a class="collapse-item" href="muc8_3">8.3 Khiếu nại</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Gan ket Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEight"
+                    aria-expanded="true" aria-controls="collapseEight">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>9. Tuân thủ chính sách</span>
+                </a>
+                <div id="collapseEight" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Tuân thủ chính sách</h6>
+                        <a class="collapse-item" href="/muc9_1">9.1 Xử lý kỉ luật</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Gan ket Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNine"
+                    aria-expanded="true" aria-controls="collapseNine">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>10. Quản lý nghỉ việc</span>
+                </a>
+                <div id="collapseNine" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Quản lý nghỉ việc</h6>
+                        <a class="collapse-item" href="/muc10_1">10.1 Cập nhật thông tin</a>
+                        <a class="collapse-item" href="#">10.2 Phỏng vấn nghỉ việc</a>
+                        <a class="collapse-item" href="/muc10_3">10.3 In chấm dứt hợp đồng</a>
+                        <a class="collapse-item" href="#">10.1 Bàn giao</a>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Nav Item - Gan ket Collapse Menu -->
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTen"
+                    aria-expanded="true" aria-controls="collapseTen">
+                    <i class="fas fa-fw fa-cog"></i>
+                    <span>11. Kết nối cựu nhân viên</span>
+                </a>
+                <div id="collapseTen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <h6 class="collapse-header">Kết nối cựu nhân viên</h6>
+                        <a class="collapse-item" href="#">11.1</a>
+                    </div>
+                </div>
+            </li>
+            
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle"></button>
+            </div>
+
+            <!-- Sidebar Message -->
+
+        </ul>
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+                    <div class="d-none d-sm-inline-block" style="margin-left:25%;">
+                        <p style="margin-top:10px;margin-bottom:2px;text-align:center;"><b>{{current_user.tencongty}}</b></p>
+                        <h3 style="margin-bottom:10px;text-align:center;"><b>PHẦN MỀM QUẢN LÝ NHÂN SỰ</b></h3>
+                    </div>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        
+                        <div class="topbar-divider d-none d-sm-block"></div>
+
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.hoten}}</b></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.masothe}}</b></span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.phongban}}</b></span>
+                                <img class="img-profile rounded-circle"
+                                    src="static/img/undraw_profile_1.svg">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
+                                <a class="dropdown-item" href="#">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Đổi mật khẩu
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="/logout" data-toggle="modal" data-target="#logoutModal">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Đăng xuất
+                                </a>
+                                </div>
+                            
+                        </li>
+
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">{{page}}</h1> 
+                    </div>
+                    <!-- End of Page Heading -->
+
+                    <!-- Content Row -->
+                    <div class="row">
+                        {% block content %}
+
+                        {% endblock content %}
+                    </div>
+                    <!-- End of Content Row -->
+                </div>
+                <!-- End of Main Content -->
+            </div>
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; 2024</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Bạn muốn đăng xuất?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Chọn đồng ý để kết thúc phiên làm việc.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Quay lại</button>
+                    <form action="logout" method="POST">
+                        <input type="submit" class="btn btn-primary" value="Đăng xuất"></input>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="static/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+
+</html>
