@@ -2422,9 +2422,10 @@ def export_dstc():
             }
         )
     df = pd.DataFrame(result)
-    df.to_excel("danhsachtangca.xlsx", index=False)
+    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    df.to_excel(f"danhsachtangca_{thoigian}.xlsx", index=False)
     
-    return send_file("danhsachtangca.xlsx", as_attachment=True)
+    return send_file(f"danhsachtangca_{thoigian}.xlsx", as_attachment=True)
     
        
 @app.route("/export_dsnv", methods=["POST"])
