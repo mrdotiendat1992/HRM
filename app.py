@@ -1947,7 +1947,7 @@ def khaibaochamcong():
                                 calamviec=calamviec)
     elif request.method == "POST":
         mst = request.form.get('mst')
-        return redirect(f"/muc7_1_2?mst={mst}")
+        return redirect(f"/muc7_1_1?mst={mst}")
     
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
