@@ -170,19 +170,16 @@ label, input, select {
         </div>
     </div>
     <hr />
-    <div class="row">
+    <div class="row">     
+        <h5>Ca làm việc</h5>
+        <hr />
         <div class="col-3">
-            <h5>Ca làm việc</h5>
-            <hr />
             <form action="/muc7_1_1" method="POST">
                 <div class="form-group">
                     <label for="mst">Mã số thẻ</label>
-                    <input id="mst" name="mst" type="text" onchange="this.form.submit()">
+                    <input id="mst" name="mst" type="text" onchange="this.form.submit()" value="{{request.args.get('mst')}}"></input>
                 </div>
             </form>
-        </div>
-        <div class='col-3'>
-            <h5>{{request.args.get('mst')}}</h5>
         </div>
         <div class='col-3'>
             <h5>{{calamviec}}</h5>
