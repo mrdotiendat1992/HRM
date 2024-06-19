@@ -784,33 +784,21 @@ def laydanhsachbophan():
         result.append(row[0])
     return result
 
-def laydanhsachchamcong(mst=None, tungay=None, denngay=None):
+def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    if mst:
-        if tungay:
-            if denngay: 
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE MST='{mst}' AND '{tungay}' <= Ngay AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE MST='{mst}' AND '{tungay}' <= Ngay AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-        else:
-            if denngay:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE MST='{mst}' AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE MST='{mst}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-    else:
-        if tungay:
-            if denngay: 
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE '{tungay}' <= Ngay AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE '{tungay}' <= Ngay AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-        else:
-            if denngay:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-    # query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
+    query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}'"
+    if mst: 
+        query += f" AND MST='{mst}'"
+    if phongban:
+        query += f" AND Bo_phan = '{phongban}'"
+    if tungay:
+        query += f" AND '{tungay}' <= Ngay"
+    if denngay:
+        query += f" AND Ngay <= '{denngay}'"
+    query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+    print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
     result = []
@@ -818,33 +806,21 @@ def laydanhsachchamcong(mst=None, tungay=None, denngay=None):
         result.append(row)
     return result
 
-def laydanhsachchamcongthucte(mst=None, tungay=None, denngay=None):
+def laydanhsachchamcongthucte(mst=None, phongban=None, tungay=None, denngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    if mst:
-        if tungay:
-            if denngay: 
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE MST='{mst}' AND '{tungay}' <= Ngay AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE MST='{mst}' AND '{tungay}' <= Ngay AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-        else:
-            if denngay:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE MST='{mst}' AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE MST='{mst}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-    else:
-        if tungay:
-            if denngay: 
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE '{tungay}' <= Ngay AND Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE '{tungay}' <= Ngay AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-        else:
-            if denngay:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Ngay <= '{denngay}' AND Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-            else:
-                query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
-    # query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC"
+    query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Nha_may = '{current_user.macongty}'"
+    if mst: 
+        query += f" AND MST='{mst}'"
+    if phongban:
+        query += f" AND Bo_phan = '{phongban}'"
+    if tungay:
+        query += f" AND '{tungay}' <= Ngay"
+    if denngay:
+        query += f" AND Ngay <= '{denngay}'"
+    query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+    print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
     result = []
@@ -1095,8 +1071,37 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         conn.commit()
     except Exception as e:
         print(e)
-    
 
+def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT *  FROM [HR].[dbo].Xin_nghi_khac where Nha_may='{current_user.macongty}' "
+    
+    if mst:
+        query += f"AND MST='{mst}'" 
+    if ngaynghi:
+        query += f"AND Ngay_nghi = '{ngaynghi}'" 
+    if loainghi:
+        query += f"AND Loai_nghi = N'{loainghi}'"
+        
+    query += " ORDER BY Ngay_nghi DESC, MST ASC"
+    print(query)
+    rows = cursor.execute(query).fetchall()
+    conn.close()
+    result =[]
+    for row in rows:
+        result.append(row)
+    return result 
+
+def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"INSERT INTO [HR].[dbo].Xin_nghi_khac VALUES ('{macongty}','{mst}','{ngaynghi}','{tongsophut}',N'{loainghi}')"
+    print(query)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+    
 ######################################################################################################################################################
 """ ALL ROUTE"""
 ######################################################################################################################################################
@@ -1954,14 +1959,25 @@ def khaibaochamcong():
 @roles_required('cong','sa','developer')
 def chamcongtudong():
     
-    mst = request.args.get("masothe")
+    mst = request.args.get("mst")
+    phongban = request.args.get("phongban")
     tungay = request.args.get("tungay")
     denngay = request.args.get("denngay")
-    if not tungay and not denngay:
-        tungay = datetime.now().date()
-        denngay = datetime.now().date()
-    rows = laydanhsachchamcong(mst,tungay,denngay)
-    return render_template("7_1_2.html", page="7.1.2 Chấm công tự động",danhsach=rows)
+    rows = laydanhsachchamcong(mst,phongban,tungay,denngay)
+    count = len(rows)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(rows)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = rows[start:end]
+    danhsachphongban = laycacphongban()
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("7_1_2.html", page="7.1.2 Chấm công tự động",
+                           danhsach=paginated_rows, 
+                           pagination=pagination,
+                           count=count,
+                           danhsachphongban=danhsachphongban)
 
 @app.route("/muc7_1_3", methods=["GET","POST"])
 @login_required
@@ -2100,19 +2116,57 @@ def baocaotonghop():
 @login_required
 @roles_required('cong','sa','developer')
 def danhsachxinnghikhac():
-    
-    return render_template("7_1_9.html", page="7.1.9 Danh sách xin nghỉ khác")
-
+    if request.method == "GET":
+        mst = request.args.get("mst")
+        ngaynghi = request.args.get("ngaynghi")
+        loainghi = request.args.get("loainghi")
+        danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
+        return render_template("7_1_9.html", page="7.1.9 Danh sách xin nghỉ khác", danhsach=danhsach)
+    elif request.method == "POST":
+        if 'file' not in request.files:
+            return redirect("/muc7_1_9")
+        file = request.files['file']
+        if file.filename == '':
+            return redirect("/muc7_1_9")
+        if file:
+            thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
+            file.save(filepath)
+            data = pd.read_excel(filepath).to_dict(orient="records")
+            for row in data:
+                themxinnghikhac(
+                    row["Mã công ty"],
+                    row["Mã số thẻ"],
+                    row["Ngày nghỉ"],
+                    row["Tổng số phút"],
+                    row["Loại nghỉ"]
+                )
+        return redirect("/muc7_1_9")
+                
 @app.route("/muc7_2", methods=["GET","POST"])
 @login_required
-@roles_required('sa','developer')
+@roles_required('cong','sa','developer')
 def chamcongtudongthucte():
     
-    mst = request.args.get("masothe")
+    mst = request.args.get("mst")
+    phongban = request.args.get("phongban")
     tungay = request.args.get("tungay")
     denngay = request.args.get("denngay")
-    rows = laydanhsachchamcongthucte(mst,tungay,denngay)
-    return render_template("7_2_1.html", page="7.2 Chấm công tự động thực tế",danhsach=rows)
+    rows = laydanhsachchamcongthucte(mst,phongban,tungay,denngay)
+    count = len(rows)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(rows)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = rows[start:end]
+    danhsachphongban = laycacphongban()
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("7_2.html", page="7.2 Bảng chấm công",
+                           danhsach=paginated_rows, 
+                           pagination=pagination,
+                           count=count,
+                           danhsachphongban=danhsachphongban)
     
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
@@ -2200,10 +2254,9 @@ def inchamduthopdong():
             if file:
                 return send_file(file, as_attachment=True, download_name="chamduthopdong.xlsx")
             else:
-                return redirect("/muc3_3")
+                return redirect("/muc10_3")
         except:
-            return redirect("/muc3_3")  
-
+            return redirect("/muc10_3")  
 
 @app.route("/thaydoiphanquyen", methods=["POST"])
 def thaydoiphanquyen():
@@ -2307,6 +2360,8 @@ def laythongtincccd():
                     "Mã số thuế": employee[12],
                     "Ngân hàng": employee[13],
                     "Số tài khoản": employee[14],
+                    "Tên người thân": employee[15],
+                    "SĐT người thân": employee[16],
                     "Con nhỏ": employee[21],
                     "Tên con 1": employee[22],
                     "Ngày sinh con 1": employee[23],
@@ -2581,8 +2636,84 @@ def laycatheomst():
     return jsonify({
         "Ca": ca
     })
-    
 
+@app.route("/taifilexinnghiphepkhacmau", methods=["POST"])
+def taifilexinnghiphepkhacmau():
+    file = os.path.join(app.config['UPLOAD_FOLDER'], "mauxinnghikhac.xlsx")
+    return send_file(file, as_attachment=True)
+
+@app.route("/export_dscc", methods=["POST"])
+def export_dscc():
+    mst = request.form.get('mst')
+    phongban = request.form.get('phongban')
+    tungay = request.form.get("tungay")
+    denngay = request.form.get("denngay")
+    print(mst,phongban,tungay,denngay)
+    danhsach = laydanhsachchamcong(mst,phongban,tungay,denngay)
+    result = []
+    for row in danhsach:
+        result.append(
+            {
+                'Nhà máy': row[0],
+                'MST': row[1],
+                'Họ tên': row[2],
+                'Chức danh': row[3],
+                'Chuyền': row[4],
+                'Phòng ban': row[5],
+                'Ngày': row[6],
+                'Ca': row[7],
+                'Số giờ làm việc': row[8],
+                'Giờ vào': row[9],
+                'Giờ ra': row[10],
+                'Công HC': row[11],
+                'Công phép': row[12],
+                'Giờ tăng ca 100%': row[13],
+                'Giờ tăng ca 150%': row[14],
+            }
+        )
+    df = pd.DataFrame(result)
+    print(df)
+    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
+    
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route("/export_dscctt", methods=["POST"])
+def export_dscctt():
+    mst = request.form.get('mst')
+    phongban = request.form.get('phongban')
+    tungay = request.form.get("tungay")
+    denngay = request.form.get("denngay")
+    print(mst,phongban,tungay,denngay)
+    danhsach = laydanhsachchamcongthucte(mst,phongban,tungay,denngay)
+    result = []
+    for row in danhsach:
+        result.append(
+            {
+                'Nhà máy': row[0],
+                'MST': row[1],
+                'Họ tên': row[2],
+                'Chức danh': row[3],
+                'Chuyền': row[4],
+                'Phòng ban': row[5],
+                'Ngày': row[6],
+                'Ca': row[7],
+                'Số giờ làm việc': row[8],
+                'Giờ vào': row[9],
+                'Giờ ra': row[10],
+                'Công HC': row[11],
+                'Công phép': row[12],
+                'Giờ tăng ca 100%': row[13],
+                'Giờ tăng ca 150%': row[14],
+            }
+        )
+    df = pd.DataFrame(result)
+    print(df)
+    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
+    
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
+  
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",

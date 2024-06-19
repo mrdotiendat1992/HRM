@@ -6,28 +6,42 @@
     }
     input, select {
         margin-left: 10px;
-        width: 150px;
+        width: 100px;
     }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
-    <div class="container-fluid">
-        <br>          
+    <div class="row">
+        <div class="col">
+            <form action = "/taifilexinnghiphepkhacmau" method = "POST">
+                <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
+            </form>
+        </div>
+        <div class="col">
+            <form action = "/muc7_1_9" method = "POST" enctype = "multipart/form-data">
+                <input type="file" name="file">
+                <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
+                <br>    
+            </form>
+        </div>  
+    </div>  
+    <hr />  
+    <div class="row">
         <table class="table table-hover">
             <thead>
-                <tr class="table-primary">
-                    <th>Nhà máy</th>
-                    <th>Mã số thẻ</th>
-                    <th>Ngày nghỉ</th>
-                    <th>Tổng số phút</th>
-                    <th>Loại nghỉ</th>
-                </tr>
+                <form action = "/muc7_1_9" method = "GET">
+                    <tr class="table-primary">
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()" value="{{request.args.get('ngaynghi')}}"></th>
+                        <th>Tổng số phút</th>
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()" value="{{request.args.get('loainghi')}}"></th>
+                    </tr>
+                </form>
             </thead>
-          
+            
             <tbody>
                 {% for row in danhsach %}
-                    <td>{{row[0]}}</td>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
@@ -36,9 +50,21 @@
                 {% endfor %}
             </tbody>
         </table>
-        <script>
-        
-        </script>
     </div>
+    <script>
+        function taifilemau() {
+            axios({
+                method: 'post',
+                url: '/taifilexinnghiphepkhacmau'
+            })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+            alert("Đã tải file mẫu");
+        }
+    </script>
 </div>
 {% endblock content %}

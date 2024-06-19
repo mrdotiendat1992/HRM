@@ -14,7 +14,7 @@
 <div class="container-fluid">
     <div class="container-fluid">
         <br>
-        <form action="/muc7_1_2" method="GET">
+        <form action="/muc7_2" method="GET">
             <div class="form-group">
                 <label for="mst">Mã số thẻ</label>
                 <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
@@ -34,7 +34,7 @@
                 <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
             </div>
         </form>
-        <form action="/export_dscc" method="POST">
+        <form action="/export_dscctt" method="POST">
             <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
             <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
             <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
