@@ -171,36 +171,22 @@ label, input, select {
     </div>
     <hr />
     <div class="row">
-        <div class="col">
+        <div class="col-3">
             <h5>Ca làm việc</h5>
             <hr />
             <form action="/muc7_1_1" method="POST">
                 <div class="form-group">
-                    <label for="mst">mã số thẻ</label>
+                    <label for="mst">Mã số thẻ</label>
                     <input id="mst" name="mst" type="text" onchange="this.form.submit()">
                 </div>
             </form>
         </div>
-    </div>
-    <div class="row">
-        <table class="table table-hover">
-            <thead>
-                <tr class="table-primary">
-                    <th scope="col">STT</th>
-                    <th scope="col">MST</th>
-                    <th scope="col">Ca làm việc</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in danhsach%}
-                <tr>
-                    <th scope="row">{{loop.index}}</th>
-                    <td>{{row[0]}}</td>
-                    <td>{{row[1]}}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <div class='col-3'>
+            <h5>{{request.args.get('mst')}}</h5>
+        </div>
+        <div class='col-3'>
+            <h5>{{calamviec}}</h5>
+        </div>
     </div>
 
 </div>
