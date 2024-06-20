@@ -2,14 +2,16 @@
 {% block style%}
 <style>
     table, th, td {
-        font-size: 12px;
+        font-size: 10px;
     }
     td {
         max-width: 300px;
         word-wrap: break-word;
     }
-    select {
-        width: 150px;
+    select, input, label, button {
+        width: 120px;
+        padding: 5px;
+        font-size: 12px;
     }
     .modal {
         display: none;
@@ -55,18 +57,17 @@
 {% block content %} 
 <div class="scroll-container">
     <div class="content">
-        <div style= "display: inline;">
-            <form method="GET" action="/muc2_1">
+        <div style="display: flex; align-items: center;">
+            <form method="GET" action="/muc2_1" style="margin-right: 10px;">
                 <div class="form-group">
                     <label for="sdt">Số điện thoại</label>
                     <input id="sdt" name="sdt" type="text" onchange="this.form.submit()"></input>
                     <label for="cccd">Căn cước công dân</label>
                     <input id="cccd" name="cccd" type="text" onchange="this.form.submit()"></input>
                     <button class="btn btn-primary" onclick="window.location.href='/muc2_1'">Tất cả</button>
-                    
                 </div>
             </form>
-            <form method="POST" action="/export_dsdktt">
+            <form method="POST" action="/export_dsdktt" style="margin-left: 10px;">
                 <div class="form-group">
                     <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt')}}></input>
                     <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd')}}></input>
@@ -99,9 +100,9 @@
                 <th>Hiệu suất</th>
                 <th>Loại máy</th>
             </tr>
-            {% for user in users %}
+            {% for user in danhsach %}
                 <form action="/muc2_1" method="POST">
-                    <tr>
+                    <tr data-info='{{ user | safe }}'>
                         
                         <td>{{ loop.index }}</td>
                         <td>{{ user["Nhà máy"] }}</td>
@@ -135,6 +136,7 @@
                 </form>
             {% endfor %}
         </table>
+        <div class="pagination">{{pagination.links}}</div>
         <!-- The Modal -->
     <div id="myModal" class="modal">
         <div class="modal-content">
