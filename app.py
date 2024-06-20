@@ -1063,17 +1063,15 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
     conn.commit()
     conn.close()
 
-def themdoicamoi(mst,cacu,camoi):
+def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     
     conn = pyodbc.connect(used_db)
-    cursor = conn.cursor()
-    ngayhientai = datetime.now().date()
-    ngaybatdau = datetime.now().date() + timedelta(days=1)
-    ngayketthuc = datetime(2054,12,31).date()
-    query = f"UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{ngayhientai}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngayketthuc}'"
-    print(query)
-    cursor.execute(query)
-    conn.commit()
+    cursor = conn.cursor() 
+    # ngaymoc = datetime(2054,12,31).date()
+    # query = f"UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{ngaybatdau-timedelta(days=1)}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngaymoc}'"
+    # print(query)
+    # cursor.execute(query)
+    # conn.commit()
     query1 = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')"
     print(query1)
     cursor.execute(query1)
@@ -1510,7 +1508,7 @@ def nhapthongtinlaodongmoi():
         nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailvn},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N')"             
         if themnhanvienmoi(nhanvienmoi):
             # themnhanvienvaomita(request.form.get("masothe"),request.form.get("hoten"))
-            themdoicamoi(request.form.get("masothe"),None,calamviec)
+            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao,datetime(2024,12,31))
             return redirect("/muc3_1")
         else:
             masothe = int(laymasothemoi())+1
@@ -2778,7 +2776,9 @@ def doicacanhan():
     mst = request.form.get("mst")
     cacu = request.form.get("cacu")
     camoi = request.form.get("camoi")
-    themdoicamoi(mst,cacu,camoi)
+    ngaybatdau = request.form.get("ngaybatdau")
+    ngayketthuc = request.form.get("ngayketthuc")
+    themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
 @app.route("/doicanhom", methods=["POST"])
@@ -2786,9 +2786,11 @@ def doicanhom():
     phongban = request.form.get("phongban")
     cacu = request.form.get("cacu")
     camoi = request.form.get("camoi")
+    ngaybatdau = request.form.get("ngaybatdau")
+    ngayketthuc = request.form.get("ngayketthuc")
     danhsach = laydanhsachusertheophongban(phongban)
     for user in danhsach:
-        themdoicamoi(user['MST'],cacu,camoi)
+        themdoicamoi(user['MST'],cacu,camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
 @app.route("/laycatheomst", methods=["POST"])
