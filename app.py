@@ -25,7 +25,7 @@ login_manager.login_view = 'login'
  
 used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 #used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
-print(used_db)
+# print(used_db)
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -138,7 +138,7 @@ def dichuyennghiviec(mst,
 def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlamhopdong,ngayketthuchopdong,thangketthuchopdong,namketthuchopdong,tennhanvien,ngaysinh,gioitinh,thuongtru,cccd,ngaycapcccd,mucluong,chucvu,bophan):
     
     try:
-        print(kieuhopdong)
+        # print(kieuhopdong)
         if kieuhopdong == "HĐ thử việc":
             if current_user.macongty == "NT1":
                 try:
@@ -160,7 +160,7 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng thử việc_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    print(filepath)
+                    # print(filepath)
                     return filepath
                 except Exception as e:
                     print(e)
@@ -188,7 +188,7 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng thử việc_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    print(filepath)
+                    # print(filepath)
                     return filepath
                 except Exception as e:
                     print(e)
@@ -214,7 +214,7 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng 12 tháng_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    print(filepath)
+                    # print(filepath)
                     return filepath
                 except Exception as e:
                     print(e)
@@ -239,7 +239,7 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng không thời hạn_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    print(filepath)
+                    # print(filepath)
                     return filepath
                 except Exception as e:
                     print(e)
@@ -272,7 +272,7 @@ def inchamduthd(mst,
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Chấm dứt HĐ_{mst}_{thoigian}.xlsx')
             workbook.save(filepath)
-            print(filepath)
+            # print(filepath)
             return filepath
         except Exception as e:
             print(e)
@@ -575,7 +575,7 @@ def layhcname(jobtitle,line):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     query =  f"SELECT * FROM HR.dbo.HC_Name WHERE Detail_job_title_VN = N'{jobtitle}' AND Line = N'{line}' AND Factory = N'{current_user.macongty}'"
-    # print(query)
+    print(query)
     result = cursor.execute(query).fetchone()
     conn.close()
     return result
@@ -1210,18 +1210,18 @@ def register():
             db.session.commit()
         except Exception as e:
             return str(e)
-        print(user)
+        # print(user)
         
         return "OK"
  
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        print(request.form)
+        # print(request.form)
         user = Users.query.filter_by(
             masothe=request.form.get("masothe"),
             macongty=request.form.get("congty")).first()
-        print(user)
+        # print(user)
         if not user:
             return redirect(url_for("login"))
         if user.matkhau == request.form.get("matkhau"):
@@ -1451,7 +1451,7 @@ def nhapthongtinlaodongmoi():
         luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
         tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
         kieuhopdong = request.form.get("kieuhopdong")
-        print(kieuhopdong)
+        # print(kieuhopdong)
         if kieuhopdong == "HĐ thử việc":
             kieuhopdong = "N'HĐ thử việc'"
             ngaybatdauthuviec = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
@@ -1873,7 +1873,7 @@ def inhopdonglaodong():
                                             mucluong,
                                             chucvu,
                                             bophan)
-            print(f"File: {file}")
+            # print(f"File: {file}")
             if file:
                 return send_file(file, as_attachment=True, download_name="hopdonglaodong.xlsx")
             else:
@@ -2384,7 +2384,7 @@ def inchamduthopdong():
                     tennhanvien,
                     chucvu,
                     ngaynghi)
-            print(f"File: {file}")
+            # print(f"File: {file}")
             if file:
                 return send_file(file, as_attachment=True, download_name="chamduthopdong.xlsx")
             else:
@@ -2426,7 +2426,7 @@ def update_xinnghiphep():
         bophan = request.form["bophan"]
         ngayduyet = request.form["ngaynghi"]
         mstduyet = request.form["mstduyet"]
-        print(mstduyet,bophan,ngayduyet,mst)
+        # print(mstduyet,bophan,ngayduyet,mst)
         if laycacbophanduocduyet(mstduyet,bophan):
             capnhat_xinnghiphep(mst,ngayduyet)
         return redirect("/muc7_1_5")
@@ -2457,7 +2457,7 @@ def taimautangcanhom():
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
-    print(request.args)
+    # print(request.args)
     sdt = request.args.get("sdt")
     trangthai = request.args.get("trangthaimoi")
     if sdt and trangthai:
@@ -2556,7 +2556,7 @@ def thaydoithongtin_hopdong():
         try:
             file = thaydoithongtinhopdong(loaihopdong, mst,ngaylamhopdong,thanglamhopdong,namlamhopdong,ngayketthuchopdong,thangketthuchopdong,namketthuchopdong,tennhanvien,ngaysinh,gioitinh,thuongtru,cccd,ngaycapcccd,mucluong,chucvu)
             if file:
-                print(file)
+                # print(file)
                 return send_file(file, as_attachment=True)
             else:
                 return jsonify({"error": "Loi in hop dong"}), 500
@@ -2867,7 +2867,7 @@ def export_dscctt():
             }
         )
     df = pd.DataFrame(result)
-    print(df)
+    # print(df)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
     
