@@ -156,7 +156,6 @@ input, select {
             </select>
             <label for="calamviec">Ca làm việc</label>
             <select type="text" id="calamviec" name="calamviec">
-                <option value="" readonly>Chọn ca</option>
                 {% for ca in cacca %}
                     <option value="{{ ca }}">{{ ca }}</option>
                 {% endfor %}
