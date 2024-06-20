@@ -187,14 +187,15 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     sheet['E21'] = ngaysinh
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
+                    sheet['F23'] = thuongtru
                     sheet['D24'] = f"'{cccd}"
                     sheet['L24'] = ngaycapcccd
                     sheet['B28'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                    sheet['G42'] = f"{mucluong} VNĐ/tháng"    
+                    sheet['G46'] = f"{mucluong} VNĐ/tháng"    
                     sheet['F33'] = chucvu
                     sheet['L33'] = chucvu   
                     sheet['F34'] = bophan
-                    sheet['F35'] = f"'{chucvu}"
+                    sheet['F35'] = f"'{mst}"
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng thử việc_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
