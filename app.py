@@ -155,8 +155,9 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     sheet['L21'] = ngaycapcccd
                     sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                     sheet['G31'] = chucvu
-                    sheet['G42'] = f"{mucluong} VNĐ/tháng"        
-                    filepath = f'NT1 - Hợp đồng thử việc - {mst} - {ngaylamhopdong}{thanglamhopdong}{namlamhopdong}.xlsx'
+                    sheet['G42'] = f"{mucluong} VNĐ/tháng"   
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng thử việc_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                     workbook.save(filepath)
                     print(filepath)
                     return filepath
@@ -183,67 +184,65 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     sheet['L33'] = chucvu   
                     sheet['F34'] = bophan
                     sheet['F35'] = f"'{chucvu}"
-                    filepath = f'NT2 - Hợp đồng thử việc - {mst} - {ngaylamhopdong}{thanglamhopdong}{namlamhopdong}.xlsx'
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng thử việc_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
                     print(filepath)
                     return filepath
                 except Exception as e:
                     print(e)
                     return None
-        elif kieuhopdong == "HĐ có thời hạn 1 năm":
-            try:
-                
-                workbook = openpyxl.load_workbook('HĐLĐ_NT1/HĐLĐ 1 NĂM.xlsx')
-                sheet = workbook.active  # or workbook['SheetName']
+        elif kieuhopdong == "HĐ xác định thời hạn lần 1" or kieuhopdong == "HĐ xác định thời hội lần 2":
+            if current_user.macongty == "NT1":
+                try:
+                    
+                    workbook = openpyxl.load_workbook('HĐLĐ_NT1/HĐLĐ 1 NĂM.xlsx')
+                    sheet = workbook.active  # or workbook['SheetName']
 
-                # Change the value of a specific cell
-                sheet['E4'] = f'Số: LC12/{mst}'
-                sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                sheet['D18'] = tennhanvien
-                sheet['E19'] = ngaysinh
-                sheet['Q19'] = gioitinh
-                sheet['F20'] = thuongtru
-                sheet['B21'] = f"Số CCCD:{cccd}"
-                sheet['L21'] = ngaycapcccd
-                sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                sheet['G38'] = f"{mucluong} VNĐ/tháng"
-                
-                filepath = f'Hợp đồng có thời hạn 12 tháng - {mst} - {ngaylamhopdong}{thanglamhopdong}{namlamhopdong}.xlsx'
-                workbook.save(filepath)
-                print(filepath)
-                return filepath
-            except Exception as e:
-                print(e)
-                return None
+                    # Change the value of a specific cell
+                    sheet['E4'] = f'Số: LC12/{mst}'
+                    sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                    sheet['D18'] = tennhanvien
+                    sheet['E19'] = ngaysinh
+                    sheet['Q19'] = gioitinh
+                    sheet['F20'] = thuongtru
+                    sheet['B21'] = f"Số CCCD:{cccd}"
+                    sheet['L21'] = ngaycapcccd
+                    sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                    sheet['G38'] = f"{mucluong} VNĐ/tháng"
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng 12 tháng_{mst}_{thoigian}.xlsx')
+                    workbook.save(filepath)
+                    print(filepath)
+                    return filepath
+                except Exception as e:
+                    print(e)
+                    return None
         elif kieuhopdong == "HĐ vô thời hạn":
-            try:
-                workbook = openpyxl.load_workbook('HĐLĐ_NT1/HĐLĐ VÔ THỜI HẠN.xlsx')
-                sheet = workbook.active  # or workbook['SheetName']
+            if current_user.macongty == "NT1":
+                try:
+                    workbook = openpyxl.load_workbook('HĐLĐ_NT1/HĐLĐ VÔ THỜI HẠN.xlsx')
+                    sheet = workbook.active  # or workbook['SheetName']
 
-                # Change the value of a specific cell
-                sheet['E4'] = f'Số: LC/{mst}'
-                sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                sheet['D18'] = tennhanvien
-                sheet['E19'] = ngaysinh
-                sheet['Q19'] = gioitinh
-                sheet['F20'] = thuongtru
-                sheet['B21'] = f"Số CCCD:{cccd}"
-                sheet['L21'] = ngaycapcccd
-                sheet['B25'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
-                sheet['G38'] = f"{mucluong} VNĐ/tháng"        
-                filepath = f'Hợp đồng không thời hạn - {mst} - {ngaylamhopdong}{thanglamhopdong}{namlamhopdong}.xlsx'
-                workbook.save(filepath)
-                print(filepath)
-                return filepath
-            except Exception as e:
-                print(e)
-                return None
-        elif kieuhopdong == "Chấm dứt hợp đồng":
-            try:
-                workbook = openpyxl.load_workbook('HĐLĐ_NT1/CHẤM DỨT HĐLĐ.xlsx')
-            except Exception as e:
-                print(e)
-                return None        
+                    # Change the value of a specific cell
+                    sheet['E4'] = f'Số: LC/{mst}'
+                    sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                    sheet['D18'] = tennhanvien
+                    sheet['E19'] = ngaysinh
+                    sheet['Q19'] = gioitinh
+                    sheet['F20'] = thuongtru
+                    sheet['B21'] = f"Số CCCD:{cccd}"
+                    sheet['L21'] = ngaycapcccd
+                    sheet['B25'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
+                    sheet['G38'] = f"{mucluong} VNĐ/tháng"        
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng không thời hạn_{mst}_{thoigian}.xlsx')
+                    workbook.save(filepath)
+                    print(filepath)
+                    return filepath
+                except Exception as e:
+                    print(e)
+                    return None     
     except Exception as e:
         return None
     
@@ -254,28 +253,29 @@ def inchamduthd(mst,
                 tennhanvien,
                 chucvu,
                 ngaynghi):
-    
-    try:
-        workbook = openpyxl.load_workbook(f'HĐLĐ_NT1/CHẤM DỨT HĐ.xlsx')
-        sheet = workbook.active  # or workbook['SheetName']
+    if current_user.macongty == "NT1":
+        try:
+            workbook = openpyxl.load_workbook(f'HĐLĐ_NT1/CHẤM DỨT HĐ.xlsx')
+            sheet = workbook.active  # or workbook['SheetName']
 
-        # Change the value of a specific cell
-        sheet['C4'] = f'{mst}'
-        sheet['H5'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-        sheet['I12'] = f'{mst}'
-        sheet['G16'] = tennhanvien
-        sheet['C21'] = tennhanvien
-        sheet['B26'] = tennhanvien
-        sheet['D19'] = ngaynghi
-        sheet['E22'] = ngaynghi
-        sheet['D17'] = chucvu     
-        filepath = f'Chấm dứt hợp đồng - {mst} - {ngaylamhopdong}{thanglamhopdong}{namlamhopdong}.xlsx'
-        workbook.save(filepath)
-        print(filepath)
-        return filepath
-    except Exception as e:
-        print(e)
-        return None
+            # Change the value of a specific cell
+            sheet['C4'] = f'{mst}'
+            sheet['H5'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+            sheet['I12'] = f'{mst}'
+            sheet['G16'] = tennhanvien
+            sheet['C21'] = tennhanvien
+            sheet['B26'] = tennhanvien
+            sheet['D19'] = ngaynghi
+            sheet['E22'] = ngaynghi
+            sheet['D17'] = chucvu  
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Chấm dứt HĐ_{mst}_{thoigian}.xlsx')
+            workbook.save(filepath)
+            print(filepath)
+            return filepath
+        except Exception as e:
+            print(e)
+            return None
    
 def laylichsucongtac(mst,linemoi,ngay,kieudieuchuyen):
     
@@ -653,13 +653,13 @@ def capnhattrangthai(sdt, trangthai):
     except Exception as e:
         return False
     
-def capnhatthongtinungvien(sdt, ngayhendilam, hieusuat:str, loaimay):
+def capnhatthongtinungvien(sdt,ngayhendilam,hieusuat,loaimay,vitrituyendung,hocvan,diachi):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if not hieusuat.isdigit():
             hieusuat = 0 
-        query = f"UPDATE HR.Dbo.Dang_ky_thong_tin SET Ngay_hen_di_lam = '{ngayhendilam}',Hieu_suat = '{hieusuat}',Loai_may='{loaimay}' WHERE Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"
+        query = f"UPDATE HR.Dbo.Dang_ky_thong_tin SET Ngay_hen_di_lam = '{ngayhendilam}',Hieu_suat = '{hieusuat}',Loai_may='{loaimay}',Vi_tri_ung_tuyen=N'{vitrituyendung}',Trinh_do=N'{hocvan}',Dia_chi_tam_tru=N'{diachi}' WHERE Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"
         print(query)
         cursor.execute(query)
         conn.commit()
@@ -1338,7 +1338,7 @@ def danhsachdangkytuyendung():
         ngayhendilam = request.form.get("ngayhendilam")
         hieusuat = request.form.get("hieusuat")
         loaimay = request.form.get("loaimay")
-        capnhatthongtinungvien(sdt,ngayhendilam,hieusuat,loaimay)
+        capnhatthongtinungvien(sdt,ngayhendilam,hieusuat,loaimay,vitrituyendung,hocvan,diachi)
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2_1", methods=["GET","POST"])
@@ -1399,11 +1399,11 @@ def nhapthongtinlaodongmoi():
         masothe = f"'{request.form.get("masothe")}'"
         thechamcong = "NULL"
         hoten = f"N'{request.form.get("hoten")}'"
-        ngaysinh = f"'{datetime.strptime(request.form.get("ngaysinh"),"%d/%m/%Y").date()}'" if request.form.get("ngaysinh") else "NULL"
+        ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
         gioitinh = f"N'{request.form.get("gioitinh")}'"
         cmt = f"'{request.form.get("cmt")}'"
         cccd = f"'{request.form.get("cccd")}'"
-        ngaycapcccd = f"'{datetime.strptime(request.form.get("ngaycap"),"%d/%m/%Y").date()}'" if request.form.get("ngaycap") else "NULL"
+        ngaycapcccd = f"'{request.form.get("ngaycap")}'" if request.form.get("ngaycap") else "NULL"
         thuongtru = f"N'{request.form.get("thuongtru")}'" if request.form.get("thuongtru") else "NULL"
         noisinh = f"N'{request.form.get("noisinh")}'" if request.form.get("noisinh") else "NULL"
         tamtru = f"N'{request.form.get("tamtru")}'" if request.form.get("tamtru") else "NULL"
@@ -1422,15 +1422,15 @@ def nhapthongtinlaodongmoi():
         masothue = f"'{request.form.get("masothue")}'" if request.form.get("masothue") else 'NULL'
         connho = f"N'{request.form.get("connho")}'" if request.form.get("connho") else 'NULL'
         tencon1 = f"N'{request.form.get("tenconmnho1")}'" if request.form.get("tenconmnho1") else 'NULL'
-        ngaysinhcon1 = f"'{datetime.strptime(request.form.get("ngaysinhcon1"),"%Y-%m-%d").date()}'" if request.form.get("ngaysinhcon1") else 'NULL'
+        ngaysinhcon1 = f"'{request.form.get("ngaysinhcon1")}'" if request.form.get("ngaysinhcon1") else 'NULL'
         tencon2 = f"N'{request.form.get("tenconmnho2")}'" if request.form.get("tenconmnho2") else 'NULL'
-        ngaysinhcon2 = f"'{datetime.strptime(request.form.get("ngaysinhcon2"),"%Y-%m-%d").date()}'" if request.form.get("ngaysinhcon2") else 'NULL'
+        ngaysinhcon2 = f"'{request.form.get("ngaysinhcon2")}'" if request.form.get("ngaysinhcon2") else 'NULL'
         tencon3 = f"N'{request.form.get("tenconmnho3")}'" if request.form.get("tenconmnho3") else 'NULL'
-        ngaysinhcon3 = f"'{datetime.strptime(request.form.get("ngaysinhcon3"),"%Y-%m-%d").date()}'" if request.form.get("ngaysinhcon3") else 'NULL'
+        ngaysinhcon3 = f"'{request.form.get("ngaysinhcon3")}'" if request.form.get("ngaysinhcon3") else 'NULL'
         tencon4 = f"N'{request.form.get("tenconmnho4")}'" if request.form.get("tenconmnho4") else 'NULL'
-        ngaysinhcon4 = f"'{datetime.strptime(request.form.get("ngaysinhcon4"),"%Y-%m-%d").date()}'" if request.form.get("ngaysinhcon4") else 'NULL'
+        ngaysinhcon4 = f"'{request.form.get("ngaysinhcon4")}'" if request.form.get("ngaysinhcon4") else 'NULL'
         tencon5 = f"N'{request.form.get("tenconmnho5")}'" if request.form.get("tenconmnho5") else 'NULL'
-        ngaysinhcon5 = f"'{datetime.strptime(request.form.get("ngaysinhcon5"),"%Y-%m-%d").date()}'" if request.form.get("ngaysinhcon5") else 'NULL'
+        ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
         jobdetailvn = f"N'{request.form.get("vitri")}'"
         line = f"'{request.form.get("line")}'"
         calamviec = request.form.get("calamviec")
@@ -1447,8 +1447,8 @@ def nhapthongtinlaodongmoi():
         positioncodedescription = f"N'{request.form.get("tenvitri")}'"
         nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
         sdtnguoithan = f"N'{request.form.get("sodienthoainguoithan")}'" if request.form.get("sodienthoainguoithan") else 'NULL'
-        luongcoban = f"'{request.form.get("luongcoban")}'" if request.form.get("luongcoban") else 'NULL'
-        tongphucap = f"'{request.form.get("tongphucap")}'" if request.form.get("tongphucap") else 'NULL'
+        luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
+        tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
         kieuhopdong = request.form.get("kieuhopdong")
         print(kieuhopdong)
         if kieuhopdong == "HĐ thử việc":
@@ -1573,8 +1573,8 @@ def thaydoithongtinlaodong():
         kieuhopdong = request.form.get("kieuhopdong")
         ngaybatdau = request.form.get("ngaybatdau")
         ngayketthuc = request.form.get("ngayketthuc")
-        mucluong = request.form.get("mucluong")
-        phucap = request.form.get("phucap")
+        mucluong = request.form.get("mucluong").replace(',','')
+        phucap = request.form.get("phucap").replace(',','')
         tienphucap = request.form.get("tienphucap")
         
         query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
@@ -1817,7 +1817,7 @@ def thaydoithongtinlaodong():
             query += f"Phu_cap = NULL,"
             
         if tienphucap:
-            query += f"Tong_phu_cap = N'{tienphucap}',"
+            query += f"Tong_phu_cap = '{tienphucap}',"
         else:
             query += f"Tong_phu_cap = NULL,"
                
@@ -1851,8 +1851,9 @@ def inhopdonglaodong():
         thuongtru = request.form.get("thuongtru")
         cccd = request.form.get("cccd")
         ngaycapcccd = request.form.get("ngaycapcccd")
-        mucluong = request.form.get("luongcoban")
+        mucluong = request.form.get("luongcoban").replace(',','')
         chucvu = request.form.get("chucvu")
+        
         try:
             file = thaydoithongtinhopdong(kieuhopdong,
                                             mst,
