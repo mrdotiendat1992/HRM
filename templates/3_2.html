@@ -153,6 +153,8 @@ input, select {
             <input type="text" id="jobtitlevn" name="jobtitlevn" class="hanchechinhsua" readonly>
             <label for="line">Line</label>
             <input id="line" name="line" class="hanchechinhsua" readonly>
+            <label for="calamviec">Ca</label>
+            <input id="calamviec" name="calamviec">
         </div>
 
         <div class="form-group">
@@ -274,6 +276,13 @@ input, select {
                 .catch(function (error) {
                     console.log(error);
                 });
+            axios({
+                method: 'post',
+                url: '/laycatheomst?mst=' + document.getElementById('mst').value
+            }).then(function(response) {
+                console.log(response.data)
+                document.getElementById('calamviec').value = response.data['Ca']
+            })
         }
 
     document.getElementById("masothe").addEventListener("change", kiemtrathongtinnld)
