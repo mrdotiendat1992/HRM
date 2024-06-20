@@ -11,6 +11,7 @@ import os
 from werkzeug.utils import secure_filename
 import re
 from functools import wraps
+from waitress import serve
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
@@ -2895,7 +2896,4 @@ def export_dsxnk():
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 if __name__ == "__main__":
-    app.run(
-        host="0.0.0.0",
-        port=81
-    )
+    serve(app, host='0.0.0.0', port=81)
