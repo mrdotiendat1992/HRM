@@ -95,6 +95,16 @@ def dieuchuyennhansu(mst,
     cursor.execute(query2)
     conn.commit()
     conn.close()
+
+def laydanhsachca(mst):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT Ca,Tu_ngay,Den_ngay FROM Dang_ky_ca_lam_viec WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' ORDER BY Tu_ngay DESC"
+    print(query)
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
     
 def dichuyennghiviec(mst,
                     loaidieuchuyen,
@@ -2018,13 +2028,13 @@ def khaibaochamcong():
         danhsachca = laycacca()
         cacchuyen = laycacto()
         mst = request.args.get("mst")
-        calamviec = laycahientai(mst)
+        danhsach = laydanhsachca(mst)
         return render_template("7_1_1.html",
                                 page="7.1.1 Đổi ca làm việc",
                                 danhsachphongban=danhsachphongban,
                                 danhsachca = danhsachca,
                                 cacchuyen=cacchuyen,
-                                calamviec=calamviec)
+                                danhsach=danhsach)
     elif request.method == "POST":
         mst = request.form.get('mst')
         return redirect(f"/muc7_1_1?mst={mst}")
@@ -2431,27 +2441,8 @@ def update_xinnghiphep():
     
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
-    if request.method == "POST":
-        phongban = request.form["phongban"]
-        users = laydanhsachusertheophongban(phongban)
-        result = []
-        ngaydangky = datetime.now().date()
-        for user in users:
-            result.append({
-                "MST": user["MST"],
-                "Họ tên": user["Họ tên"],
-                "Chức vụ": user["Chức vụ"],
-                "Chuyền tổ": user["Line"], 
-                "Phòng ban": user["Department"],
-                "Ngày đăng ký": ngaydangky,
-                "Giờ tăng ca": "18:30",
-                "Giờ tăng ca thực tế":"20:30"
-            })
-        df = pd.DataFrame(result)
-        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{thoigian}.xlsx"), index=False)
-        
-        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{thoigian}.xlsx"), as_attachment=True)  
+    if request.method == "POST":        
+        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"tangcanhom.xlsx"), as_attachment=True)  
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
