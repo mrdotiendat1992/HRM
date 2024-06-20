@@ -18,10 +18,11 @@ input, select, label {
 }
 
 .content {
-    width: 2000px;
+    width: 100%;
 }
 .pagination {
     font-size: 10px;
+    margin-left: 20px;
 }
 </style>
 {% endblock style %}
@@ -32,32 +33,9 @@ input, select, label {
             <form method="GET" action="/muc7_1_3">
                 <div class="form-group">
                     <label for="chuyen">Chuyền:</label>
-                    <select id="chuyen" name="chuyen">
-                        <option value="">Tất cả</option>
-                        {% for chuyen in danh_sach_chuyen %}
-                            {% if chuyen == request.args.get('chuyen') %}
-                            <option value="{{ request.args.get('chuyen')  }}" selected>{{ request.args.get('chuyen')  }}</option>
-                            {% else %}
-                                {% if chuyen != 'None' %}
-                                    <option value="{{ chuyen }}">{{ chuyen }}</option>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+                    <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
                     <label for="bophan">Bộ phận:</label>
-                    <select id="bophan" name="bophan">
-                        <option value="">Tất cả</option>
-                        <!-- Add options dynamically from the server -->
-                        {% for bophan in danh_sach_bophan %}
-                            {% if bophan == request.args.get('bophan') %}
-                            <option value="{{ request.args.get('bophan') }}" selected>{{ request.args.get('bophan') }}</option>
-                            {% else %}
-                                {% if bophan != 'None' %}
-                                <option value="{{ bophan }}">{{ bophan }}</option>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    </select>
+                    <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
                     <label for="ngay">Ngày</label>
                     <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                     <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
@@ -73,7 +51,10 @@ input, select, label {
                 </div>
             </form>
         </div>
-        <h5><b>Tổng: {{count}}</b></h5>
+        <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <div class="pagination">{{ pagination.links }}</div>
+        </div>
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
@@ -112,7 +93,6 @@ input, select, label {
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">{{ pagination.links }}</div>
     </div>
 </div>
 {% endblock content %}

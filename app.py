@@ -277,11 +277,30 @@ def inchamduthd(mst,
         print(e)
         return None
    
-def laylichsucongtactheomst(mst):
+def laylichsucongtac(mst,linemoi,ngay,kieudieuchuyen):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query= f"SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}'"
+    query= f"SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' "
+    if mst:
+        query += f"AND MST = '{mst}' "
+    if linemoi:
+        query += f"AND Line_moi = N'{linemoi}' "
+    if ngay:
+        query += f"AND Ngay_thuc_hien = '{ngay}' "
+    if kieudieuchuyen:
+        query += f"AND Phan_loai = N'{kieudieuchuyen}' "
+    query += "ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC, Line_moi ASC"
+    if not mst and not linemoi and not ngay and not kieudieuchuyen:
+        query = f"""
+            SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' 
+            AND Ngay_thuc_hien = (
+                SELECT MAX(Ngay_thuc_hien)
+                FROM HR.dbo.Lich_su_cong_tac
+                WHERE Nha_may = '{current_user.macongty}'
+            )
+            ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC, Line_moi ASC
+            """
     print(query)
     rows = cursor.execute(query)
     result = []
@@ -1313,6 +1332,9 @@ def danhsachdangkytuyendung():
         
     if request.method == "POST":
         sdt = request.form.get("sdt")
+        vitrituyendung = request.form.get("vitrituyendung")
+        hocvan = request.form.get("hocvan")
+        diachi = request.form.get("diachi")
         ngayhendilam = request.form.get("ngayhendilam")
         hieusuat = request.form.get("hieusuat")
         loaimay = request.form.get("loaimay")
@@ -1977,14 +1999,16 @@ def lichsucongtac():
     
     if request.method == "GET":
         mst = request.args.get("mst")
-        if not mst:
-            mst = request.form.get("mst")
-        print(mst)
-        cacphongban = laycacphongban()
-        danhsach = laylichsucongtactheomst(mst)
-    return render_template("6_2.html", page="6.2 Lịch sử công tác",danhsach=danhsach, mst=mst, cacphongban=cacphongban)
+        limemoi = request.args.get("limemoi")
+        ngay = request.args.get("ngay")
+        kieudieuchuyen = request.args.get("kieudieuchuyen")
+        danhsach = laylichsucongtac(mst,limemoi,ngay,kieudieuchuyen)
+        count=len(danhsach)
+        return render_template("6_2.html", page="6.2 Lịch sử công tác",
+                               danhsach=danhsach, 
+                               mst=mst, 
+                               count=count)
 
-    
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('cong','sa','developer')
@@ -2162,11 +2186,19 @@ def baocom():
             ngayxem = datetime.now().date()
         danhsach = laydanhsachbaocom(chuyen,phongban,ngayxem)
         count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         danhsachchuyen = laycacto()
         danhsachphongban = laycacphongban()
         return render_template("7_1_7.html", 
                             page="7.1.7 Danh sách báo cơm",
-                            danhsach=danhsach,
+                            danhsach=paginated_rows,
+                            pagination=pagination,
                             count=count,
                             danhsachchuyen=danhsachchuyen,
                             danhsachphongban=danhsachphongban)
@@ -2209,7 +2241,19 @@ def danhsachxinnghikhac():
         ngaynghi = request.args.get("ngaynghi")
         loainghi = request.args.get("loainghi")
         danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
-        return render_template("7_1_9.html", page="7.1.9 Danh sách xin nghỉ khác", danhsach=danhsach)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_9.html", 
+                               page="7.1.9 Danh sách xin nghỉ khác", 
+                               danhsach=paginated_rows,
+                                pagination=pagination,
+                                count=count,)
     elif request.method == "POST":
         if 'file' not in request.files:
             return redirect("/muc7_1_9")
@@ -2217,7 +2261,7 @@ def danhsachxinnghikhac():
         if file.filename == '':
             return redirect("/muc7_1_9")
         if file:
-            thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
             file.save(filepath)
             data = pd.read_excel(filepath).to_dict(orient="records")
@@ -2540,7 +2584,7 @@ def dangkitangcanhom():
                 return redirect("/muc7_1_6")
             if file:
                 filename = secure_filename(file.filename)
-                ngaylam = datetime.now().strftime("%d%m%Y_%H%M%S")
+                ngaylam = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath).to_dict(orient="records")
@@ -2576,7 +2620,7 @@ def export_dstc():
             }
         )
     df = pd.DataFrame(result)
-    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(f"danhsachtangca_{thoigian}.xlsx", index=False)
     
     return send_file(f"danhsachtangca_{thoigian}.xlsx", as_attachment=True)
@@ -2647,7 +2691,7 @@ def export_dsddb():
         })
     
     df = pd.DataFrame(result)
-    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
     
     return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
@@ -2764,7 +2808,6 @@ def export_dscc():
     phongban = request.form.get('phongban')
     tungay = request.form.get("tungay")
     denngay = request.form.get("denngay")
-    print(mst,phongban,tungay,denngay)
     danhsach = laydanhsachchamcong(mst,phongban,tungay,denngay)
     result = []
     for row in danhsach:
@@ -2788,8 +2831,7 @@ def export_dscc():
             }
         )
     df = pd.DataFrame(result)
-    print(df)
-    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
@@ -2800,7 +2842,6 @@ def export_dscctt():
     phongban = request.form.get('phongban')
     tungay = request.form.get("tungay")
     denngay = request.form.get("denngay")
-    print(mst,phongban,tungay,denngay)
     danhsach = laydanhsachchamcongthucte(mst,phongban,tungay,denngay)
     result = []
     for row in danhsach:
@@ -2825,11 +2866,33 @@ def export_dscctt():
         )
     df = pd.DataFrame(result)
     print(df)
-    thoigian = datetime.now().strftime("%d%m%Y_%H%M%S")
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
-  
+
+@app.route("/export_dsxnk", methods=["POST"])
+def export_dsxnk():
+    mst = request.form.get('mst')
+    ngaynghi = request.form.get('ngaynghi')
+    loainghi = request.form.get("loainghi")
+    danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
+    result = []
+    for row in danhsach:
+        result.append(
+            {
+                'Nhà máy': row[0],
+                'MST': row[1],
+                'Ngày nghỉ': row[2],
+                'Tổng số phút': row[3],
+                'Loại nghỉ': row[4],
+            }
+        )
+    df = pd.DataFrame(result)
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), index=False)
+    
+    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 if __name__ == "__main__":
     app.run(
         host="0.0.0.0",

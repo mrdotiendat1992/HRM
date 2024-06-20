@@ -1,47 +1,85 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td {
-        font-size: 11px;
+    table, th, td , button{
+        font-size: 10px;
     }
-    input, select {
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: 100%;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:20px;
+    }
+    input {
         margin-left: 10px;
-        width: 100px;
+        font-size: 10px;
     }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container-fluid">
-    <div class="row">
-        <div class="col">
-            <form action = "/taifilexinnghiphepkhacmau" method = "POST">
-                <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
-            </form>
-        </div>
-        <div class="col">
-            <form action = "/muc7_1_9" method = "POST" enctype = "multipart/form-data">
-                <input type="file" name="file">
-                <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
-                <br>    
-            </form>
+<div class="scroll-container">
+    <div class="content">
+        <div class="row">
+            <div class="col">
+                <form action = "/taifilexinnghiphepkhacmau" method = "POST">
+                    <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
+                </form>
+            </div>
+            <div class="col">
+                <form action = "/muc7_1_9" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file">
+                    <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
+                    <br>    
+                </form>
+            </div>  
         </div>  
-    </div>  
-    <hr />  
-    <div class="row">
+        <hr />
+        <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <form method="POST" action="/export_dsxnk">
+                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
+            </form>
+            <div class="pagination">{{ pagination.links }}</div>
+        </div>
+        <br>
         <table class="table table-hover">
             <thead>
                 <form action = "/muc7_1_9" method = "GET">
                     <tr class="table-primary">
+                        {% if request.args.get('mst') %}
                         <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
+                        {% else %}
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()"></th>
+                        {% endif %}
+
+                        {% if request.args.get('ngaynghi') %}
                         <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()" value="{{request.args.get('ngaynghi')}}"></th>
+                        {% else %}
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()"></th>
+                        {% endif %}
+
                         <th>Tổng số phút</th>
+
+                        {% if request.args.get('loainghi') %}
                         <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()" value="{{request.args.get('loainghi')}}"></th>
+                        {% else %}
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()"></th>
+                        {% endif %}
                     </tr>
                 </form>
             </thead>
             
             <tbody>
                 {% for row in danhsach %}
+                <tr data-info='{{ row  | safe }}'>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
@@ -51,20 +89,5 @@
             </tbody>
         </table>
     </div>
-    <script>
-        function taifilemau() {
-            axios({
-                method: 'post',
-                url: '/taifilexinnghiphepkhacmau'
-            })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-            alert("Đã tải file mẫu");
-        }
-    </script>
 </div>
 {% endblock content %}

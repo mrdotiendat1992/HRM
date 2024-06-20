@@ -1,67 +1,79 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td {
+    table, th, td , button{
+        font-size: 10px;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: 100%;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:20px;
+    }
+    input {
+        margin-left: 10px;
         font-size: 10px;
     }
 
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
-    <form action="/muc7_1_7" method="GET" onchange="this.submit()" id="filterngay">
-        <div class="form-group">
-            <label for="ngay">Ngày</label>
-            <input type="date" id="ngay" name="ngay">
-            <label for="phongban">Phòng ban</label>
-            <select id="phongban" name="phongban">
-                <option value="">Tất cả</option>
-                {% for phongban in danhsachphongban %}
-                    <option value="{{ phongban }}" {% if phongban == request.args.get('phongban') %}selected{% endif %}>{{ phongban }}</option>
-                {% endfor %}
-            </select>
-            <label for="chuyen">Chuyền tổ</label>
-            <select id="chuyen" name="chuyen">
-                <option value="">Tất cả</option>
-                {% for chuyen in danhsachchuyen %}
-                    <option value="{{ chuyen }}" {% if chuyen == request.args.get('chuyen') %}selected{% endif %}>{{ chuyen }}</option>
-                {% endfor %}
-            </select>
+<div class="scroll-container">
+    <div class="content">
+        <form action="/muc7_1_7" method="GET">
+            <div class="form-group">
+                <label for="ngay">Ngày</label>
+                <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
+                <label for="phongban">Phòng ban</label>
+                <input type="text" id="phongban" name="phongban" value={{request.args.get('phongban', '')}}>
+                <label for="chuyen">Chuyền tổ</label>
+                <input type="text" id="chuyen" name="chuyen" value={{request.args.get('chuyen', '')}}>
+                <input type="submit" value="Xem" class="btn btn-primary">
+            </div>
+        </form>
+        <div style="display: flex; align-items: center;">
+            <h5>Tổng : {{count}}</h5> 
+            <form action="/muc7_1_7" method="POST" id="filterngay">
+                <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+                <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
+                <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" hidden>
+                <input type="submit" value="Xuất Excel" class="btn btn-success">
+            </form>
+            <div class="pagination">{{pagination.links}}</div>
         </div>
-    </form>
-    <form action="/muc7_1_7" method="POST" id="filterngay">
-        <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
-        <input type="submit" value="Xuất Excel" class="btn btn-success">
-    </form>
-    <br>
-    <h5>Tổng số người: {{count}}</h5>
-    <table class="table table-hover">
-        <thead>
-            <tr class="table-primary">
-                <th>STT</th>
-                <th>Mã số thẻ</th>
-                <th>Họ tên</th>
-                <th>Chuyền</th>
-                <th>Phòng ban</th>
-                <th>Ngày chấm</th>
-                <th>Giờ dập thẻ</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% if danhsach %}
-            {% for row in danhsach %}
-            <tr>
-                <th>{{loop.index}}</th>
-                <th>{{row[1]}}</th>
-                <th>{{row[2]}}</th>
-                <th>{{row[4]}}</th>
-                <th>{{row[5]}}</th>
-                <th>{{row[6]}}</th>
-                <th>{{row[7]}}</th>
-            </tr>
-            {% endfor %}
-            {% endif %}
-        </tbody>
-    </table>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>STT</th>
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chuyền</th>
+                    <th>Phòng ban</th>
+                    <th>Ngày chấm</th>
+                    <th>Giờ dập thẻ</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if danhsach %}
+                {% for row in danhsach %}
+                <tr data-info='{{ row  | safe }}'>
+                    <th>{{loop.index}}</th>
+                    <th>{{row[1]}}</th>
+                    <th>{{row[2]}}</th>
+                    <th>{{row[4]}}</th>
+                    <th>{{row[5]}}</th>
+                    <th>{{row[6]}}</th>
+                    <th>{{row[7]}}</th>
+                </tr>
+                {% endfor %}
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}

@@ -52,6 +52,18 @@
     .content {
         width: 2000px;
     }
+    th.sticky, td.sticky {
+        position: -webkit-sticky; /* for Safari */
+        position: sticky;
+        left: 0;
+        background: #003cb3; /* Background color to distinguish sticky column */
+        color: white;
+        z-index: 1;
+    }
+
+    th.sticky {
+        z-index: 2; /* Ensure header is above other cells */
+    }
 </style>
 {% endblock style %}
 {% block content %} 
@@ -76,12 +88,15 @@
             </form>
         </div>
         <br>
+        <div style="display: flex; align-items: center;">
+            <h5>Tổng: {{count}}</h5>
+            <div class="pagination">{{ pagination.links }}</div>
+        </div>
         <table class="table table-bordered">
             <tr class="table-primary">
-                <th>STT</th>
-                <th>Nhà máy</th>
-                <th>Vị trí</th>
-                <th>Họ và tên</th>
+                <th >STT</th>
+                <th >Họ và tên</th>
+                <th>Vị trí tuyển dụng</th>
                 <th>Số điện thoại</th>
                 <th>Trạng thái</th>
                 <th>CCCD</th>
@@ -99,15 +114,14 @@
                 <th>Ngày hẹn đi làm</th>
                 <th>Hiệu suất</th>
                 <th>Loại máy</th>
+                <th></th>
             </tr>
             {% for user in danhsach %}
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
-                        
-                        <td>{{ loop.index }}</td>
-                        <td>{{ user["Nhà máy"] }}</td>
-                        <td>{{ user["Vị trí tuyển dụng"] }}</td>
-                        <td>{{ user["Họ tên"] }}</td>
+                        <td >{{ loop.index }}</td>
+                        <td class="sticky"><b>{{ user["Họ tên"] }}</b></td>
+                        <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
                         {% if user["Trạng thái"] == "Đạt" %}
                         <td style= "background-color: green; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
@@ -116,11 +130,10 @@
                         {% else %}
                         <td><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% endif %}
-                        
                         <td>{{ user["CCCD"] }}</td>
                         <td>{{ user["Dân tộc"] }}</td>
-                        <td>{{ user["Học vấn"] }}</td>
-                        <td>{{ user["Tạm trú"] }}</td>
+                        <td><input type="text" name="hocvan" id="hocvan" value="{{ user['Học vấn'] }}"></input></td>
+                        <td><input type="text" name="diachi" id="diachi" value="{{ user['Tạm trú'] }}"></input></td>
                         <td>{{ user["Kinh nghiệm"] }}</td>
                         <td>{{ user["Mức lương"] }}</td>
                         <td>{{ user["Có con nhỏ"] }}</td>
@@ -129,14 +142,14 @@
                         <td>{{ user["Ngày nhận việc"] }}</td>
                         <td>{{ user["Ngày gửi"] }}</td>
                         <td>{{ user["Ngày cập nhật"] }}</td>
-                        <td><input type="date" name="ngayhendilam" value="{{ user['Ngày hẹn đi làm'] }}" onchange="this.form.submit()"></td>
-                        <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}" onchange="this.form.submit()"></td>
-                        <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}" onchange="this.form.submit()"></td>
+                        <td><input type="date" name="ngayhendilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
+                        <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
+                        <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}"></td>
+                        <td><input type="submit" value="Lưu" class="btn btn-primary"></input></td>
                     </tr>
                 </form>
             {% endfor %}
         </table>
-        <div class="pagination">{{pagination.links}}</div>
         <!-- The Modal -->
     <div id="myModal" class="modal">
         <div class="modal-content">

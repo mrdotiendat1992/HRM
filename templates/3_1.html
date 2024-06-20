@@ -337,74 +337,73 @@ input, select {
                     document.getElementById("tinhthanhpho").value = diachi_data[3];
                 }
                 document.getElementById("quoctich").value = "Việt Nam";
+                axios({
+                    method: 'post',
+                    url: '/laythongtincccd?cccd=' + document.getElementById("cccd").value
+                })
+                    .then(function(response) {
+                        data = response.data
+                        console.log(data)
+                        alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
+                        document.getElementById("dantoc").value = data["Dân tộc"];
+                        document.getElementById("tongiao").value = data["Tôn giáo"];
+                        document.getElementById("dienthoai").value = data["Số điện thoại"];
+                        document.getElementById("quoctich").value = data["Quốc tịch"];
+                        document.getElementById("hocvan").value = data["Trình độ học vấn"];
+                        document.getElementById("masothue").value = data["Mã số thuế"];
+                        document.getElementById("nganhang").value = data["Ngân hàng"];
+                        document.getElementById("sotaikhoan").value = data["Số tài khoản"];
+                        document.getElementById("connho").value = data["Con nhỏ"];
+                        if (data["Tên con 1"] != null) {
+                            document.getElementById("tenconnho1").value = data["Tên con 1"];
+                        }
+                        if (data["Ngày sinh con 1"]) {
+                            document.getElementById("ngaysinhcon1").value = data["Ngày sinh con 1"];
+                        }
+                        if (data["Tên con 2"]) {
+                            document.getElementById("tenconnho2").value = data["Tên con 2"];
+                        }
+                        if (data["Ngày sinh con 2"]) {
+                            document.getElementById("ngaysinhcon2").value = data["Ngày sinh con 2"];
+                        }
+                        if (data["Tên con 3"]) {
+                            document.getElementById("tenconnho3").value = data["Tên con 3"];
+                        }
+                        if (data["Ngày sinh con 3"]) {
+                            document.getElementById("ngaysinhcon3").value = data["Ngày sinh con 3"];
+                        }
+                        if (data["Tên con 4"]) {
+                            document.getElementById("tenconnho4").value = data["Tên con 4"];
+                        }
+                        if (data["Ngày sinh con 4"]) {
+                            document.getElementById("ngaysinhcon4").value = data["Ngày sinh con 3"];
+                        }
+                        if (data["Tên con 5"]) {
+                            document.getElementById("tenconnho5").value = data["Tên con 5"];
+                        }
+                        if (data["Ngày sinh con 5"]) {
+                            document.getElementById("ngaysinhcon5").value = data["Ngày sinh con 5"];
+                        }
+                        if (data["Nơi sinh"]) {
+                            document.getElementById("noisinh").value = data["Nơi sinh"];
+                        }
+                        if (data["Số BHXH"]) {
+                            document.getElementById("sobhxh").value = data["Số BHXH"];
+                        }
+                        if (data["Tạm trú"]) {
+                            document.getElementById("tamtru").value = data["Tạm trú"];
+                        }
+                        if (data["Tên người thân"]) {
+                            document.getElementById("nguoithan").value = data["Tên người thân"];
+                        }
+                        if (data["SĐT người thân"]) {
+                            document.getElementById("sdtnguoithan").value = data["SĐT người thân"];
+                        }
+                    })
             }
         })
-        
-        document.getElementById("cccd").addEventListener("change", function() {
-            axios({
-                method: 'post',
-                url: '/laythongtincccd?cccd=' + document.getElementById("cccd").value
-            })
-                .then(function(response) {
-                    data = response.data
-                    console.log(data)
-                    alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
-                    document.getElementById("dantoc").value = data["Dân tộc"];
-                    document.getElementById("tongiao").value = data["Tôn giáo"];
-                    document.getElementById("dienthoai").value = data["Số điện thoại"];
-                    document.getElementById("quoctich").value = data["Quốc tịch"];
-                    document.getElementById("hocvan").value = data["Trình độ học vấn"];
-                    document.getElementById("masothue").value = data["Mã số thuế"];
-                    document.getElementById("nganhang").value = data["Ngân hàng"];
-                    document.getElementById("sotaikhoan").value = data["Số tài khoản"];
-                    document.getElementById("connho").value = data["Con nhỏ"];
-                    if (data["Tên con 1"] != null) {
-                        document.getElementById("tenconnho1").value = data["Tên con 1"];
-                    }
-                    if (data["Ngày sinh con 1"]) {
-                        document.getElementById("ngaysinhcon1").value = data["Ngày sinh con 1"];
-                    }
-                    if (data["Tên con 2"]) {
-                        document.getElementById("tenconnho2").value = data["Tên con 2"];
-                    }
-                    if (data["Ngày sinh con 2"]) {
-                        document.getElementById("ngaysinhcon2").value = data["Ngày sinh con 2"];
-                    }
-                    if (data["Tên con 3"]) {
-                        document.getElementById("tenconnho3").value = data["Tên con 3"];
-                    }
-                    if (data["Ngày sinh con 3"]) {
-                        document.getElementById("ngaysinhcon3").value = data["Ngày sinh con 3"];
-                    }
-                    if (data["Tên con 4"]) {
-                        document.getElementById("tenconnho4").value = data["Tên con 4"];
-                    }
-                    if (data["Ngày sinh con 4"]) {
-                        document.getElementById("ngaysinhcon4").value = data["Ngày sinh con 3"];
-                    }
-                    if (data["Tên con 5"]) {
-                        document.getElementById("tenconnho5").value = data["Tên con 5"];
-                    }
-                    if (data["Ngày sinh con 5"]) {
-                        document.getElementById("ngaysinhcon5").value = data["Ngày sinh con 5"];
-                    }
-                    if (data["Nơi sinh"]) {
-                        document.getElementById("noisinh").value = data["Nơi sinh"];
-                    }
-                    if (data["Số BHXH"]) {
-                        document.getElementById("sobhxh").value = data["Số BHXH"];
-                    }
-                    if (data["Tạm trú"]) {
-                        document.getElementById("tamtru").value = data["Tạm trú"];
-                    }
-                    if (data["Tên người thân"]) {
-                        document.getElementById("nguoithan").value = data["Tên người thân"];
-                    }
-                    if (data["SĐT người thân"]) {
-                        document.getElementById("sdtnguoithan").value = data["SĐT người thân"];
-                    }
-                })
-        })
+
+
 
         document.getElementById("vitri").addEventListener("change", function() {
             var vitri = document.getElementById("vitri").value

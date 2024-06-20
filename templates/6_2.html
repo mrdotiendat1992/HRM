@@ -14,31 +14,29 @@ input, select {
 <div class="container-fluid">
     <form action="/muc6_2" method="get">
         <label for="mst">Nhập mã số thẻ:</label>
-        <input type="text" id="mst" name="mst">
+        <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
 
-        <label for="date">Ngày:</label>
-        <input type="date" id="date" name="date">
+        <label for="ngay">Ngày:</label>
+        <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
 
-        <label for="department">Phòng ban:</label>
-        <select id="department" name="department">
-            <option value="ACT">ACT</option>
-            <option value="HRD">HRD</option>
-            <option value="PDN">PDN</option>
-            <option value="PPC">PPC</option>
-        </select>
+        <label for="linemoi">Chuyền mới:</label>
+        <input type="text"id="linemoi" name="linemoi" value={{request.args.get('linemoi', '')}}></input>
+
+        <label for="kieudieuchuyen">Kiểu điều chuyển:</label>
+        <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value={{request.args.get('kieudieuchuyen', '')}}></input>
 
         <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
         <br>
         <!-- Thêm các trường và nút khác nếu cần -->
 
     </form>
-      
+    <br>
+    <h5>Tổng: {{count}}</h5>
     <table class="table table-hover">
         <thead>
             <tr class="table-primary">
                 <th>STT</th> 
                 <th>Mã số thẻ</th>
-                <th>Nhà máy</th>
                 <th>Vị trí cũ</th>
                 <th>Line cũ</th>
                 <th>Vị trí mới</th>
@@ -53,7 +51,6 @@ input, select {
             <tr>
                 <th>{{loop.index}}</th> 
                 <th>{{row["MST"]}}</th>
-                <th>{{row["Nhà máy"]}}</th>
                 <th>{{row["Vị trí cũ"]}}</th>
                 <th>{{row["Chuyền cũ"]}}</th>
                 <th>{{row["Vị trí mới"]}}</th>

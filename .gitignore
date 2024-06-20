@@ -1,8 +1,2 @@
-# Bỏ qua các tệp Excel
-*.xls
-*.xlsx
-*.xlsm
-*.xlsb
-
 # Bỏ qua thư mục __pycache__
 __pycache__/
