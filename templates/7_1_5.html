@@ -2,7 +2,7 @@
 {% block style%}
 <style>
     table, th, td , button{
-        font-size: 10px;
+        font-size: 12px;
     }
     .scroll-container {
         width: 100%;
@@ -17,6 +17,23 @@
     input {
         margin-left: 10px;
         font-size: 10px;
+    }
+    th.sticky, td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+    td.sticky {
+        background-color: gray;
+        color: white;
+        font-weight: bold;
+    }
+    th.sticky {
+        z-index: 2;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:50px;
     }
 </style>
 {% endblock style %}
@@ -37,14 +54,15 @@
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
                 <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
             </form>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
                     <th>Mã số thẻ</th>
-                    <th>Họ tên</th>
-                    <th>Chức vụ</th>
+                    <th class="sticky">Họ tên</th>
+                    <th>Chức danh</th>
                     <th>Chuyền tổ</th>
                     <th>Phòng ban</th>
                     <th>Ngày nghỉ</th>                    
@@ -54,15 +72,15 @@
                 </tr>
                 <tr class="table-secondary">
                     <form action="/muc7_1_5" method="get">
-                        <th><input type="text" name="mst" id="mst" value="{{ request.args.get('mst', '') }}"></th>
-                        <th><input type="text" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}"></th>
-                        <th><input type="text" name="chucvu" id="chucvu" value="{{ request.args.get('chucvu', '') }}"></th>
-                        <th><input type="text" name="chuyen" id="chuyen" value="{{ request.args.get('chuyen', '') }}"></th>
-                        <th><input type="text" name="bophan" id="bophan" value="{{ request.args.get('bophan', '') }}"></th>
-                        <th><input type="date" name="ngaynghi" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}"></th>                    
+                        <th><input type="text" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th class="sticky"><input type="text" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" name="chucvu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" name="chuyen" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" name="bophan" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="date" name="ngaynghi" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
                         <th></th>
-                        <th><input type="text" name="lydo" id="lydo" value="{{ request.args.get('lydo', '') }}"></th> 
-                        <th><input type="text" name="trangthai" id="trangthai" value="{{ request.args.get('trangthai', '') }}"></th>
+                        <th><input type="text" name="lydo" id="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                        <th><input type="text" name="trangthai" id="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
                     </form>
                 </tr>
             </thead>
@@ -71,7 +89,7 @@
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
                     <td>{{row[1]}}</td>
-                    <td>{{row[2]}}</td>
+                    <td class="sticky">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
@@ -97,7 +115,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">{{ pagination.links }}</div>
+        
     </div>
 </div>
 {% endblock content %}

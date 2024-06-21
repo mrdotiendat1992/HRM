@@ -924,6 +924,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         query += f"AND Trang_thai = N'{trangthai}'"   
          
     query += " ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
+    
     print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
@@ -959,12 +960,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                     SELECT *
                     FROM HR.dbo.Xin_nghi_phep
                     WHERE Nha_may = '{current_user.macongty}'
-                    AND Ngay_nghi_phep = (
-                        SELECT MAX(Ngay_nghi_phep)
-                        FROM HR.dbo.Xin_nghi_phep
-                        WHERE Nha_may = '{current_user.macongty}'
-                    )
-                    ORDER BY Ngay_nghi_phep DESC;
+                    ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC;
                 """
     print(query)
     rows = cursor.execute(query).fetchall()
@@ -1103,20 +1099,44 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
     conn.close()
 
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
-    
-    conn = pyodbc.connect(used_db)
-    cursor = conn.cursor() 
-    # ngaymoc = datetime(2054,12,31).date()
-    # query = f"UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{ngaybatdau-timedelta(days=1)}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngaymoc}'"
-    # print(query)
-    # cursor.execute(query)
-    # conn.commit()
-    query1 = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')"
-    print(query1)
-    cursor.execute(query1)
-    conn.commit()
-    conn.close()
+    if cacu != camoi:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        if ngayketthuc:
+            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
+            ngaymoc = datetime(2054,12,31)
+            query = f"""
+                        UPDATE HR.dbo.Dang_ky_ca_lam_viec
+                        SET Den_ngay = '{ngayketthuccacu}'
+                        WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
+                        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                        VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
+
+                        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                        VALUES ('{mst}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
+                    """
+            print(query)
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+        else:
+            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            ngaymoc = datetime(2054,12,31)
+            query = f"""
+                        UPDATE HR.dbo.Dang_ky_ca_lam_viec
+                        SET Den_ngay = '{ngayketthuccacu}'
+                        WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
+
+                        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                        VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
+                    """
+            print(query)
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            
 def laycahientai(mst):
     
     conn = pyodbc.connect(used_db)
@@ -2066,14 +2086,12 @@ def khaibaochamcong():
     if request.method == "GET":
         danhsachphongban = laycacphongban()
         danhsachca = laycacca()
-        cacchuyen = laycacto()
         mst = request.args.get("mst")
         danhsach = laydanhsachca(mst)
         return render_template("7_1_1.html",
                                 page="7.1.1 Đổi ca làm việc",
                                 danhsachphongban=danhsachphongban,
                                 danhsachca = danhsachca,
-                                cacchuyen=cacchuyen,
                                 danhsach=danhsach)
     elif request.method == "POST":
         mst = request.form.get('mst')
@@ -2170,14 +2188,14 @@ def diemdanhbu():
 def xinnghiphep():
     
         mst = request.args.get("mst")
-        chuyen = request.args.get("chuyen")
-        bophan = request.args.get("bophan")
         hoten = request.args.get("hoten")
         chucvu = request.args.get("chucvu")
-        ngaynghi = request.args.get("ngaynghi")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        ngay = request.args.get("ngaynghi")
         lydo = request.args.get("lydo")
-        trangthai = request.args.get("ngayngtrangthaihi")
-        danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai)
+        trangthai = request.args.get("trangthai")
+        danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2202,7 +2220,20 @@ def dangkytangca():
         phongban = request.args.get("phongban")
         ngayxem = request.args.get("ngay")
         danhsach = laydanhsachtangca(mst,phongban,ngayxem)
-        return render_template("7_1_6.html", page="7.1.6 Đăng ký tăng ca",danhsach=danhsach)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_6.html", 
+                               page="7.1.6 Đăng ký tăng ca",
+                               danhsach=paginated_rows,
+                               pagination=pagination,
+                               count=count
+                               )
     elif request.method == "POST":
         ngayxem = request.form.get("ngay")
         data = []
@@ -2731,14 +2762,33 @@ def export_dsddb():
 def export_dsxnp():
     
     mst = request.form.get("mst")
+    hoten = request.form.get("hoten")
+    chucvu = request.form.get("chucvu")
     chuyen = request.form.get("chuyen")
     bophan = request.form.get("bophan")
-    rows = laydanhsachxinnghiphep(mst, chuyen, bophan)
+    ngay = request.form.get("ngaynghi")
+    lydo = request.form.get("lydo")
+    trangthai = request.form.get("trangthai")
+    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
+    result = []
+    for row in danhsach:
+        result.append({
+            'Mã công ty': row[0],
+            'Mã số thẻ': row[1],
+            'Họ tên': row[2],
+            'Chức vụ': row[3],
+            'Chuyền tổ': row[4],
+            'Phòng ban': row[5],
+            'Ngày nghỉ phép': row[6],
+            'Tổng số phút': row[7],
+            'Lý do': row[8],
+            'Trạng thái': row[9]
+        })
+    df = pd.DataFrame(result)
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep.xlsx"), index=False)
     
-    df = pd.DataFrame(rows)
-    df.to_excel("xinnghiphep.xlsx", index=False)
-    
-    return send_file("xinnghiphep.xlsx", as_attachment=True)  
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep.xlsx"), as_attachment=True) 
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
@@ -2809,11 +2859,13 @@ def doicacanhan():
     camoi = request.form.get("camoi")
     ngaybatdau = request.form.get("ngaybatdau")
     ngayketthuc = request.form.get("ngayketthuc")
+    print(ngaybatdau,ngayketthuc)
     themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
 @app.route("/doicanhom", methods=["POST"])
 def doicanhom():
+    canhamay = request.form.get("canhamay")
     phongban = request.form.get("phongban")
     cacu = request.form.get("cacu")
     camoi = request.form.get("camoi")
@@ -2929,4 +2981,4 @@ def export_dsxnk():
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 if __name__ == "__main__":
-    serve(app, host='0.0.0.0', port=81, threads=8)
+    serve(app, host='0.0.0.0', port=81, threads=16)

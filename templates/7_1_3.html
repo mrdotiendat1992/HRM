@@ -33,9 +33,17 @@ input, select, label {
             <form method="GET" action="/muc7_1_3">
                 <div class="form-group">
                     <label for="chuyen">Chuyền:</label>
+                    {% if request.args.get('chuyen') %}
                     <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
+                    {% else %}
+                    <input id="chuyen" name="chuyen"></input>
+                    {% endif %}
                     <label for="bophan">Bộ phận:</label>
+                    {% if request.args.get('bophan') %}
                     <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
+                    {% else %}
+                    <input id="bophan" name="bophan"></input>
+                    {% endif %}
                     <label for="ngay">Ngày</label>
                     <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                     <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>

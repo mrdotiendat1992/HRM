@@ -1,6 +1,12 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
+    table{
+        width: 500px;
+    }
+    table, th, td {
+        font-size: 12px;
+    }
 .col {
     border-right: 1px solid #dee2e6;
     text-align: center;
@@ -28,35 +34,17 @@ label, input, select {
                 <div class="form-group">
                     <label for="cacongty">Cả công ty</label>
                     <select id="cacongty" name="cacongty">
-                        <option value="">Không</option>
+                        <option value="">Chọn</option>
                         <option value="Có">Có</option>                        
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="phongban">Phòng ban</label>
-                    <select id="phongban" name="phongban">
-                        <option value="">Chọn</option>
-                        {% for phongban in danhsachphongban %}
-                        <option value={{phongban}}>{{phongban}}</option>
-                        {% endfor %}
-                    </select>
+                    <input id="phongban" name="phongban"></input>
                 </div>
                 <div class="form-group">
                     <label for="chuyento">Chuyền tổ</label>
-                    <select id="chuyento" name="chuyento">
-                        <option value="">Chọn</option>
-                        {% for chuyen in cacchuyen %}
-                        <option value={{chuyen}}>{{chuyen}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="cacunhom">Ca cũ</label>
-                    <select id="cacunhom" name="cacunhom">
-                        {% for ca in danhsachca %}
-                        <option value={{ca}}>{{ca}}</option>
-                        {% endfor %}
-                    </select>
+                    <input id="chuyento" name="chuyento"></input>
                 </div>
                 <div class="form-group">
                     <label for="camoinhom">Ca mới</label>
@@ -74,7 +62,6 @@ label, input, select {
                     <label for="ngayketthuc">Ngày kết thúc</label>
                     <input id="ngayketthuc" name="ngayketthuc" type="date">
                 </div>
-                <br>
                 <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
             </form>
         </div>
@@ -170,31 +157,42 @@ label, input, select {
         </div>
     </div>
     <hr />  
-    <h5>Lịch sử ca làm việc</h5>
-    <form action="/muc7_1_1" method="POST">
-        <div class="form-group">
-            <label for="mst">Mã số thẻ</label>
-            <input id="mst" name="mst" type="text" onchange="this.form.submit()" value="{{request.args.get('mst')}}"></input>
+    <div class="row">
+        <div class="col">
+            <h5>Lịch sử đổi ca làm việc</h5>
+            <form action="/muc7_1_1" method="POST">
+                <div class="form-group">
+                    <label for="mst">Mã số thẻ</label>
+                    {% if request.args.get('mst') %}
+                    <input id="mst" name="mst" type="text" onchange="this.form.submit()" value="{{request.args.get('mst')}}">
+                    {% else %}
+                    <input id="mst" name="mst" type="text" onchange="this.form.submit()"></input>
+                    {% endif %}
+                </div>
+            </form>
         </div>
-    </form>
-    <table class="table table-hover">
-        <thead>
-            <tr class="table-primary">
-                <th>Ca</th=>
-                <th>Từ ngày</th=>
-                <th>Đến ngày</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in danhsach %}
-            <tr>
-                <td>{{row[0]}}</td>
-                <td>{{row[1]}}</td>
-                <td>{{row[2]}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+        <div class="col">
+            <table class="table table-hover">
+                <thead>
+                    <tr class="table-primary">
+                        <th>Ca</th=>
+                        <th>Từ ngày</th=>
+                        <th>Đến ngày</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in danhsach %}
+                    <tr>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
     <script>
         document.getElementById('mst').addEventListener("change", function(event) {
             axios({

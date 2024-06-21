@@ -13,10 +13,24 @@
     }
     .pagination {
         font-size: 10px;
+        margin-left:50px;
     }
     input {
         margin-left: 10px;
         font-size: 10px;
+    }
+    th.sticky, td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+    td.sticky {
+        background-color: gray;
+        color: white;
+        font-weight: bold;
+    }
+    th.sticky {
+        z-index: 2;
     }
 </style>
 {% endblock style %}
@@ -37,13 +51,14 @@
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
                 <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
             </form>
+            <div class="pagination">{{pagination.links}}</div>
         </div>
         <br>
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
                     <th>Mã số thẻ</th>
-                    <th>Họ tên</th>
+                    <th class="sticky">Họ tên</th>
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
                     <th>Phòng ban</th>
@@ -53,10 +68,10 @@
                     <th>Lý do</th> 
                     <th>Trạng thái</th>
                 </tr>
-                <tr class="table-secondary">
+                <tr>
                     <form action = "/muc7_1_4" method = "GET">
                         <th><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                        <th class="sticky"><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
@@ -73,7 +88,7 @@
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
                     <td>{{row[1]}}</td>
-                    <td>{{row[2]}}</td>
+                    <td class="sticky">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
@@ -102,7 +117,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {{pagination.links}}
+        
     </div>
 </div>
 {% endblock content %}

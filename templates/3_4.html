@@ -1,141 +1,99 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-label {
-    width:150px;
-    margin-left: 10px;
-}
-input, select {
-    margin-left: 10px;
-    width: 150px;
-    readonly;
-}
+    table, th, td , button{
+        font-size: 10px;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
+    .content {
+        width: 2000px;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+    input {
+        margin-left: 10px;
+        font-size: 10px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="content">
-    
-    <div class="form-group">
-        <label for="masothe">Mã số thẻ</label>
-        {% if mst %}
-        <input type="text" id="masothe" name="masothe" value="{{mst}}">
-        {% else %}
-        <input type="text" id="masothe" name="masothe">
-        {% endif %}
-        <input type="submit" value="Kiểm tra" class="btn btn-primary" onclick="kiemtrathongtinnld()">
-    </div>
-
-    <hr />
-    <form method="post" action="/muc3_3">
-        <div class="form-group">
-            <label for="mst">Mã số thẻ</label>
-            <input type="text" id="mst" name="mst" readonly>
-            <label for="hoten">Họ tên</label>
-            <input type="text" id="hoten" name="hoten" readonly>
-            <label for="gioitinh">Giới tính</label>
-            <input type="text" id="gioitinh" name="gioitinh" readonly>
+<div class="scroll-container">
+    <div class="content">
+        <div style="display: flex;">
+            <h5>Tổng: {{count}}</h5>
+            <form method="POST" action="/export_dshhhd">
+                
+            </form>
         </div>
-
-        <div class="form-group">
-            <label for="ngaysinh">Ngày sinh</label>
-            <input type="text" id="ngaysinh" name="ngaysinh" readonly>
-            <label for="diachi">Địa chỉ</label>
-            <input type="text" id="diachi" name="diachi" readonly>
-            <label for="quoctich">Quốc tịch</label>
-            <input type="text" id="quoctich" name="quoctich" readonly>
-            
-        </div>
-
-        <div class="form-group">
-            <label for="cccd">CCCD</label>
-            <input type="text" id="cccd" name="cccd" readonly>
-            <label for="ngaybatdau">Ngày bắt đầu</label>
-            <input type="text" id="ngaybatdau" name="ngaybatdau" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="ngaycapcccd">Ngày cấp CCCD</label>
-            <input type="text" id="ngaycapcccd" name="ngaycapcccd" readonly>
-            <label for="ngayketthuc">Ngày kết thúc</label>
-            <input type="text" id="ngayketthuc" name="ngayketthuc" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="loaihopdong">Loại hợp đồng</label>
-            <input type="text" id="loaihopdong" name="loaihopdong" readonly>
-            <label for="chucvu">Chức vụ</label>
-            <input type="text" id="chucvu" name="chucvu" readonly>
-            <label for="bophan">Phòng ban</label>
-            <input type="text" id="bophan" name="bophan" readonly>
-        </div>
-
-        <div class="form-group">
-            <label for="luongcoban">Mức lương cơ bản</label>
-            <input type="text" id="luongcoban" name="luongcoban" readonly>
-            <label for="phucap">Các loại phụ cấp</label>
-            <input type="text" id="phucap" name="phucap" readonly>
-            <label for="tienphucap">Phụ cấp</label>
-            <input type="text" id="tienphucap" name="tienphucap" readonly>
-        </div>
-
-        <hr />
-        <div class="form-group">
-            <label for="kieuhopdong">Loại HĐ muốn in</label>
-            <select id="kieuhopdong" name="kieuhopdong">
-                <option value="HĐ thử việc">HĐ thử việc</option>
-                <option value="HĐ có thời hạn 1 năm">HĐ có thời hạn 1 năm</option>
-                <option value="HĐ vô thời hạn">HĐ vô thời hạn</option>
-            </select>
-            <input class="btn btn-primary" value="In hợp đồng" type="submit"></select>
-        </div>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chức danh</th>
+                    <th>Chuyền tổ</th>
+                    <th>Phòng ban</th>
+                    <th>Loại điểm danh</th>
+                    <th>Ngày</th>                    
+                    <th>Giờ</th>
+                    <th>Lý do</th> 
+                    <th>Trạng thái</th>
+                </tr>
+                <tr class="table-secondary">
+                    <form action = "/muc7_1_4" method = "GET">
+                        <th><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
+                        <th></th>  
+                        <th><input type="text" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                        <th><input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
+                    </form>
+                </tr>
+            </thead>
         
-
-    <script>
-        function strtodate(str) {
-            let day = str.substring(0, 2);
-            let month = str.substring(2, 4);
-            let year = str.substring(4, 8);
-
-            // Tạo đối tượng Date
-            let date = new Date(year, month - 1, day);
-
-            // Định dạng ngày tháng
-            let options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-            let formattedDate = date.toLocaleDateString('vi-VN', options);
-            return formattedDate
-        }
-        function kiemtrathongtinnld() {
-            axios({
-                method: 'post',
-                url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
-            })
-                .then(function (response) {
-                    var data = response.data
-                    if (response.data != "") {
-                        console.log(data)
-                        document.getElementById("mst").value = data["MST"]; // 1
-                        document.getElementById("ngaysinh").value = data["Ngày sinh"]; //2
-                        document.getElementById("hoten").value = data["Họ tên"]; //3
-                        document.getElementById("gioitinh").value = data["Giới tính"]; //4
-                        document.getElementById("quoctich").value = data["Quốc tịch"]; //5
-                        document.getElementById("cccd").value = data["CCCD"]; //6
-                        document.getElementById("ngaycapcccd").value = data["Ngày cấp CCCD"]; //7
-                        document.getElementById("diachi").value = data["Thường trú"]; //10
-                        document.getElementById("ngaybatdau").value = data["Ngày ký HĐ"]; //11
-                        document.getElementById("ngayketthuc").value = data["Ngày hết hạn"]; //12
-                        document.getElementById("loaihopdong").value = data["Loại hợp đồng"]; //13
-                        document.getElementById("chucvu").value = data["Chức vụ"]; //14
-                        document.getElementById("luongcoban").value = data["Lương cơ bản"]; //15
-                        document.getElementById("phucap").value = data["Phụ cấp"]; //16
-                        document.getElementById("tienphucap").value = data["Tiền phụ cấp"]; //17
-                        document.getElementById("bophan").value = data["Department"]; //17
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        }
-
-    </script>
+            <tbody>
+                {% for row in danhsach %}
+                <tr data-info='{{ row  | safe }}'>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td>{{row[7]}}</td>
+                    <td>{{row[8][:5]}}</td>
+                    <td>{{row[9]}}</td>
+                    {% if row[10]=='Đã phê duyệt'%}
+                    <td>{{row[10]}}</td>
+                    {% elif row[10]=='Đã phê duyệt' %}
+                    <td>{{row[10]}}</td>
+                    {% else %}
+                    <td>
+                        <form action="/update_diemdanhbu" method="POST">
+                            <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
+                            <input type="hidden" name="mst" value="{{row[1]}}">
+                            <input type="hidden" name="bophan" value="{{row[5]}}">
+                            <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
+                            <input type="hidden" name="ngayduyet" value="{{row[7]}}">
+                            <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
+                            <input type="submit" class="btn btn-warning" value="{{row[10]}}"></input>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>  
+                {% endfor %}
+            </tbody>
+        </table>
+        {{pagination.links}}
+    </div>
 </div>
 {% endblock content %}

@@ -1,17 +1,9 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    body {
-        font-family: Arial, sans-serif;
-    }
-    .container {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-    }
+
     table {
         border-collapse: collapse;
-        width: 50%;
     }
     th, td {
         padding: 8px;
@@ -23,168 +15,177 @@
     td {
         text-align: left;
     }
-    .right th {
-        background-color: #007bff;
+    select, input {
+        width: 120px;
     }
-    .right {
-        background-color: #f0f0f0;
-    }
-    .save-button {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding: 8px;
-    }
-    .save-button button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-    }
-    .save-button button:hover {
-        background-color: #0056b3;
-    }
-    select {
-        width: 100%;
+    input {
+        margin-top:0;
     }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
-    <div class="form-group" style="text-align: center;">
-        <label for="masothe">Mã số thẻ</label>
-        <input type="text" id="masothe" name="masothe">
-    </div>
+    
     <form action="/muc6_1" method="POST">
+        
         <input type="hidden" name="mst" id="mst">
-        <div class="container">
-            <div class="form-group">
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="loaidieuchuyen">Loại điều chuyển</label>
-                        <select id="loaidieuchuyen" name="loaidieuchuyen">
-                            <option value="Chuyển vị trí">Chuyển vị trí</option>
-                            <option value="Nghỉ việc">Nghỉ việc</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="loaidieuchuyen">Ngày điều chuyển</label>
-                        <input type="date" id="ngaydieuchuyen" name="ngaydieuchuyen">
-                    </div>
+        <div class="row">
+            <div class="col-3">
+                <div class="form-group">
+                    <label for="masothe">Mã số thẻ</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="masothe" name="masothe">
+                </div>
+                <div class="form-group">
+                    <label for="loaidieuchuyen">Loại điều chuyển</label>
+                </div>
+                <div class="form-group">
+                    <select id="loaidieuchuyen" name="loaidieuchuyen">
+                        <option value="Chuyển vị trí">Chuyển vị trí</option>
+                        <option value="Nghỉ việc">Nghỉ việc</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ngaydieuchuyen">Ngày điều chuyển</label>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="ngaydieuchuyen" name="ngaydieuchuyen">
+                </div>
+                <div class="form-group">
+                    <label for="loainghiviec">Loại nghỉ việc</label>
+                </div>
+                <div class="form-group">
+                    <select type="text" id="loainghiviec" name="loainghiviec">
+                        <option value="">Chọn</option>
+                        <option value="Nghỉ thai sản">Nghỉ thai sản</option>
+                        <option value="Nghỉ việc">Nghỉ việc</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ghichu">Ghi chú</label>
+                </div>
+                <div class="form-group">
+                    <select type="text" id="ghichu" name="loainghghichuiviec">
+                        <option value="">Chọn</option>
+                        <option value="Đánh giá không đạt">Đánh giá không đạt</option>
+                        <option value="Rút hồ sơ">Rút hồ sơ</option>
+                        <option value="Chuyển công tác">Chuyển công tác</option>
+                        <option value="Nghỉ tự do">Nghỉ tự do</option>
+                        <option value="Sa thải">Sa thải</option>
+                    </select>
                 </div>
             </div>
-        </div>
 
-        <div class="container">
-            <table>
-                <thead>
-                    <tr>
-                        <th colspan="2" style="background-color: gray;">Trước điều chuyển</th>
-                        <th></th>
-                        <th colspan="2" style="background-color: blue;">Sau điều chuyển</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Detail job title (Vietnamese)*:</td>
-                        <td><input type="text" id="vitricu" name="vitricu" readonly></td>
-                        <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
-                        <td>Detail job title (Vietnamese)*:</td>
-                        <td>
-                            <select id="vitrimoi" name="vitrimoi">
-                            <option value="">Chọn vị trí mới</option>
-                            {% for vitri in cacvitri %}
-                            <option value="{{ vitri }}">{{ vitri }}</option>
-                            {% endfor %}
-                            </option>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Line*:</td>
-                        <td><input type="text" id="chuyencu" name="chuyencu" readonly></td>
-                        <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
-                        <td>Line*:</td>
-                        <td>
-                            <select id="chuyenmoi" name="chuyenmoi">
-                            
-                            </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Detail job title (English):</td>
-                        <td><input type="text" id="vitriencu" name="vitriencu" readonly></td>
-                        <td></td>
-                        <td>Detail job title (English):</td>
-                        <td><input type="text" id="vitriengmoi" name="vitriengmoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Grade code:</td>
-                        <td><input type="text" id="gradecodecu" name="gradecodecu" readonly></td>
-                        <td></td>
-                        <td>Grade code:</td>
-                        <td><input type="text" id="gradecodemoi" name="gradecodemoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Section code:</td>
-                        <td><input type="text" id="sectioncodecu" name="sectioncodecu" readonly></td>
-                        <td></td>
-                        <td>Section code:</td>
-                        <td><input type="text" id="sectioncodemoi" name="sectioncodemoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Section description:</td>
-                        <td><input type="text" id="sectiondescriptioncu" name="sectiondescriptioncu" readonly></td>
-                        <td></td>
-                        <td>Section description:</td>
-                        <td><input type="text" id="sectiondescriptionmoi" name="sectiondescriptionmoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>HC category:</td>
-                        <td><input type="text" id="hccategorycu" name="hccategorycu" readonly></td>
-                        <td></td>
-                        <td>HC category:</td>
-                        <td><input type="text" id="hccategorymoi" name="hccategorymoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Department:</td>
-                        <td><input type="text" id="departmentcu" name="departmentcu" readonly></td>
-                        <td></td>
-                        <td>Department:</td>
-                        <td><input type="text" id="departmentmoi" name="departmentmoi" readonly></td>
-                    </tr>
-                    
-                    <tr>
-                        <td>Employee type:</td>
-                        <td><input type="text" id="employeetypecu" name="employeetypecu" readonly></td>
-                        <td></td>
-                        <td>Employee type:</td>
-                        <td><input type="text" id="employeetypemoi" name="employeetypemoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Position code:</td>
-                        <td><input type="text" id="positioncodecu" name="positioncodecu" readonly></td>
-                        <td></td>
-                        <td>Position code description:</td>
-                        <td><input type="text" id="positioncodemoi" name="positioncodemoi" readonly></td>
-                    </tr>
-                    <tr>
-                        <td>Position code description:</td>
-                        <td><input type="text" id="positioncodedescriptioncu" name="positioncodedescriptioncu" readonly></td>
-                        <td></td>
-                        <td>Position code description:</td>
-                        <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" readonly></td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr class="save-button" style="text-align: center;">
-                        <td colspan="4"><input type="submit" class="btn btn-primary" value="Điều chuyển"></input></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
-    </form>
+            <div class="col">
+                <table>
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="background-color: gray;">Trước điều chuyển</th>
+                            <th></th>
+                            <th colspan="2" style="background-color: blue;">Sau điều chuyển</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Detail job title (Vietnamese)*:</td>
+                            <td><input type="text" id="vitricu" name="vitricu" readonly></td>
+                            <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
+                            <td>Detail job title (Vietnamese)*:</td>
+                            <td>
+                                <select id="vitrimoi" name="vitrimoi">
+                                <option value="">Chọn vị trí mới</option>
+                                {% for vitri in cacvitri %}
+                                <option value="{{ vitri }}">{{ vitri }}</option>
+                                {% endfor %}
+                                </option>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Line*:</td>
+                            <td><input type="text" id="chuyencu" name="chuyencu" readonly></td>
+                            <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
+                            <td>Line*:</td>
+                            <td>
+                                <select id="chuyenmoi" name="chuyenmoi">
+                                
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Detail job title (English):</td>
+                            <td><input type="text" id="vitriencu" name="vitriencu" readonly></td>
+                            <td></td>
+                            <td>Detail job title (English):</td>
+                            <td><input type="text" id="vitriengmoi" name="vitriengmoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Grade code:</td>
+                            <td><input type="text" id="gradecodecu" name="gradecodecu" readonly></td>
+                            <td></td>
+                            <td>Grade code:</td>
+                            <td><input type="text" id="gradecodemoi" name="gradecodemoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Section code:</td>
+                            <td><input type="text" id="sectioncodecu" name="sectioncodecu" readonly></td>
+                            <td></td>
+                            <td>Section code:</td>
+                            <td><input type="text" id="sectioncodemoi" name="sectioncodemoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Section description:</td>
+                            <td><input type="text" id="sectiondescriptioncu" name="sectiondescriptioncu" readonly></td>
+                            <td></td>
+                            <td>Section description:</td>
+                            <td><input type="text" id="sectiondescriptionmoi" name="sectiondescriptionmoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>HC category:</td>
+                            <td><input type="text" id="hccategorycu" name="hccategorycu" readonly></td>
+                            <td></td>
+                            <td>HC category:</td>
+                            <td><input type="text" id="hccategorymoi" name="hccategorymoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Department:</td>
+                            <td><input type="text" id="departmentcu" name="departmentcu" readonly></td>
+                            <td></td>
+                            <td>Department:</td>
+                            <td><input type="text" id="departmentmoi" name="departmentmoi" readonly></td>
+                        </tr>
+                        
+                        <tr>
+                            <td>Employee type:</td>
+                            <td><input type="text" id="employeetypecu" name="employeetypecu" readonly></td>
+                            <td></td>
+                            <td>Employee type:</td>
+                            <td><input type="text" id="employeetypemoi" name="employeetypemoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Position code:</td>
+                            <td><input type="text" id="positioncodecu" name="positioncodecu" readonly></td>
+                            <td></td>
+                            <td>Position code description:</td>
+                            <td><input type="text" id="positioncodemoi" name="positioncodemoi" readonly></td>
+                        </tr>
+                        <tr>
+                            <td>Position code description:</td>
+                            <td><input type="text" id="positioncodedescriptioncu" name="positioncodedescriptioncu" readonly></td>
+                            <td></td>
+                            <td>Position code description:</td>
+                            <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" readonly></td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr class="save-button" style="text-align: center;">
+                            <td colspan="4"><input type="submit" class="btn btn-primary" value="Điều chuyển"></input></td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </form>
+    </div>
 
     <script>
         function kiemtrathongtinnld() {
