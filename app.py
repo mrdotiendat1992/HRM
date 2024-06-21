@@ -1023,7 +1023,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giobatdau,giokett
         chucvu = 'Không'
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giobatdau}','{gioketthuc}')"
+    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giobatdau}','{gioketthuc}', NULL)"
     print(query)
     try:
         cursor.execute(query)
