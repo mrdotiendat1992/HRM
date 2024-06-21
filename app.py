@@ -59,12 +59,27 @@ def roles_required(*roles):
     return decorator
 
 def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
+    if not trangthaiyeucau:
+        trangthaiyeucau = "NULL"
+    else:
+        trangthaiyeucau = f"N'{trangthaiyeucau}'"
+        
+    if not trangthaithuchien:
+        trangthaithuchien = "NULL"
+    else:
+        trangthaithuchien = f"N'{trangthaithuchien}'"
+        
+    if not ghichu:
+        ghichu = "NULL"
+    else:
+        ghichu = f"N'{ghichu}'"
+    
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     query = f"""
         UPDATE HR.dbo.Yeu_cau_tuyen_dung
-        SET Trang_thai_yeu_cau = N'{trangthaiyeucau}', Trang_thai_thuc_hien = N'{trangthaithuchien}', Ghi_chu = N'{ghichu}'
-        WHERE Bo_phan = '{bophan}' AND Vi_tri = '{vitri}' AND So_luong = '{soluong}' AND JD = '{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = '{phanloai}'
+        SET Trang_thai_yeu_cau = {trangthaiyeucau}, Trang_thai_thuc_hien = {trangthaithuchien}, Ghi_chu = {ghichu}
+        WHERE Bo_phan = '{bophan}' AND Vi_tri = N'{vitri}' AND So_luong = '{soluong}' AND JD = N'{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = N'{phanloai}'
     """
     print(query)
     cursor.execute(query)
@@ -1398,9 +1413,9 @@ def pheduyettuyendung():
         mota = request.form.get("mota")
         thoigian = request.form.get("thoigian")
         phanloai = request.form.get("phanloai")
-        trangthaiyeucau = request.form.get("trangthaiyeucau")
-        trangthaithuchien = request.form.get("trangthaithuchien")
-        ghichu = request.form.get("ghichu")
+        trangthaiyeucau = request.form.get("trangthaiyeucau") if request.form.get("trangthaiyeucau") else None
+        trangthaithuchien = request.form.get("trangthaithuchien") if request.form.get("trangthaithuchien") else None
+        ghichu = request.form.get("ghichu") if request.form.get("ghichu") else None
         capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu)
         return redirect("/muc2_2_2")
     
