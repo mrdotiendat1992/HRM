@@ -23,8 +23,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
  
-# used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+# used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
 # print(used_db)
 
 class Users(UserMixin, db.Model):
@@ -3115,4 +3115,5 @@ def export_dsxnk():
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 if __name__ == "__main__":
+    print("HUMAN RESOURCE MANAGEMENT SYSYTEM")
     serve(app, host='0.0.0.0', port=81, threads=16)
