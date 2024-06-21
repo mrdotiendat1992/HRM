@@ -23,8 +23,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
  
-used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-# used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+# used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
 # print(used_db)
 
 class Users(UserMixin, db.Model):
@@ -45,7 +45,7 @@ with app.app_context():
  
 @login_manager.user_loader
 def loader_user(user_id):
-    return Users.query.get(int(user_id))
+    return db.session.get(Users, int(user_id))
 
 # Role-based decorator
 def roles_required(*roles):
@@ -158,21 +158,65 @@ def dichuyennghiviec(mst,
                     positioncodemoi,
                     vitriencu,
                     vitrienmoi,
-                    ngaydieuchuyen
+                    ngaydieuchuyen,
+                    ghichu
                    ):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}')"   
-    print(query1)
-    cursor.execute(query1)
-    query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = NULL, Line = NULL, Headcount_category = NULL, Department = NULL, Section_description = NULL, Emp_type = NULL, Position_code_description = NULL, Section_code = NULL, Grade_code = NULL, Position_code = NULL, Job_title_EN = NULL, Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
-    print(query2)
-    cursor.execute(query2)
+    ngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') + timedelta(days=1)
+    query = f"""
+        INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}')
+        UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = NULL, Line = NULL, Headcount_category = NULL, Department = NULL, Section_description = NULL, Emp_type = NULL, Position_code_description = NULL, Section_code = NULL, Grade_code = NULL, Position_code = NULL, Job_title_EN = NULL, Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
+        UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{ngaydieuchuyen}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
+        INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaynghiviec}','2054-12-31',N'Nghỉ việc')
+        """
+    print(query)
+    cursor.execute(query)
     conn.commit()
     conn.close()
 
-
+def dichuyennghithaisan(mst,
+                            loaidieuchuyen,
+                            vitricu,
+                            vitrimoi,
+                            chuyencu,
+                            chuyenmoi,
+                            gradecodecu,
+                            gradecodemoi,
+                            sectioncodecu,
+                            sectioncodemoi,
+                            hccategorycu,
+                            hccategorymoi,
+                            departmentcu,
+                            departmentmoi,
+                            sectiondescriptioncu,
+                            sectiondescriptionmoi,
+                            employeetypecu,
+                            employeetypemoi,
+                            positioncodedescriptioncu,
+                            positioncodedescriptionmoi,
+                            positioncodecu,
+                            positioncodemoi,
+                            vitriencu,
+                            vitrienmoi,
+                            ngaydieuchuyen,
+                            ghichu
+                            ):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    ngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') + timedelta(days=1)
+    query = f"""
+        INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}')
+        UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ thai sản' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
+        UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{ngaydieuchuyen}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
+        INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaynghiviec}','2054-12-31',N'Nghỉ thai sản')
+        """
+    print(query)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+    
 def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlamhopdong,ngayketthuchopdong,thangketthuchopdong,namketthuchopdong,tennhanvien,ngaysinh,gioitinh,thuongtru,cccd,ngaycapcccd,mucluong,chucvu,bophan):
     
     try:
@@ -465,7 +509,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, ngayvao, ngaynghi, ngaykyhd
     if hccategory:
         query += f" AND Headcount_category = '{hccategory}'"
     print(query)
-    query += " ORDER BY CAST(mst AS INT) ASC"
+    query += " ORDER BY CAST(mst AS INT) DESC"
     users = cursor.execute(query).fetchall()
     conn.close()
     result = []
@@ -1602,10 +1646,10 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdcthl2 = "NULL"
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
-        nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailvn},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N')"             
+        nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailvn},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
         if themnhanvienmoi(nhanvienmoi):
             # themnhanvienvaomita(request.form.get("masothe"),request.form.get("hoten"))
-            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao.replace("'",""),datetime(2024,12,31))
+            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao.replace("'",""),datetime(2054,12,31))
             themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc')
             return redirect("/muc3_1")
         else:
@@ -2047,13 +2091,14 @@ def dieuchuyen():
                                 positioncodemoi,
                                 vitriencu,
                                 vitrienmoi,
-                                ngaydieuchuyen
+                                ngaydieuchuyen,
+                                ghichu
                                 )
             except Exception as e:
                 print(e)
                 return redirect(f"/muc6_2?mst={mst}")
             
-        else:
+        elif loaidieuchuyen == "Nghỉ việc":
             try:
                 dichuyennghiviec(mst,
                             loaidieuchuyen,
@@ -2079,7 +2124,40 @@ def dieuchuyen():
                             positioncodemoi,
                             vitriencu,
                             vitrienmoi,
-                            ngaydieuchuyen
+                            ngaydieuchuyen,
+                            ghichu
+                            )
+            except Exception as e:
+                print(e)
+                return redirect(f"/muc6_2?mst={mst}")
+        else:
+            try:
+                dichuyennghithaisan(mst,
+                            loaidieuchuyen,
+                            vitricu,
+                            vitrimoi,
+                            chuyencu,
+                            chuyenmoi,
+                            gradecodecu,
+                            gradecodemoi,
+                            sectioncodecu,
+                            sectioncodemoi,
+                            hccategorycu,
+                            hccategorymoi,
+                            departmentcu,
+                            departmentmoi,
+                            sectiondescriptioncu,
+                            sectiondescriptionmoi,
+                            employeetypecu,
+                            employeetypemoi,
+                            positioncodedescriptioncu,
+                            positioncodedescriptionmoi,
+                            positioncodecu,
+                            positioncodemoi,
+                            vitriencu,
+                            vitrienmoi,
+                            ngaydieuchuyen,
+                            ghichu
                             )
             except Exception as e:
                 print(e)
