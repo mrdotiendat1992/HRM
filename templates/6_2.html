@@ -4,34 +4,38 @@
 table, th, td {
     font-size: 10px;
 }
-input, select {
-    margin-left: 10px;
+input, select, label {
     width: 150px;
+    font-size: 12px;
+    text-align: right;
+}
+.pagination {
+    font-size: 10px;
+    margin-left: 50px;
 }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
     <form action="/muc6_2" method="get">
-        <label for="mst">Nhập mã số thẻ:</label>
-        <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
+        <div class="form-group">
+            <label for="mst">Nhập mã số thẻ:</label>
+            <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
 
-        <label for="ngay">Ngày:</label>
-        <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
+            <label for="ngay">Ngày:</label>
+            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
 
-        <label for="linemoi">Chuyền mới:</label>
-        <input type="text"id="linemoi" name="linemoi" value={{request.args.get('linemoi', '')}}></input>
-
-        <label for="kieudieuchuyen">Kiểu điều chuyển:</label>
-        <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value={{request.args.get('kieudieuchuyen', '')}}></input>
-
-        <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+            <label for="kieudieuchuyen">Kiểu điều chuyển:</label>
+            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value={{request.args.get('kieudieuchuyen', '')}}></input>
+        </div>
         <br>
-        <!-- Thêm các trường và nút khác nếu cần -->
-
-    </form>
-    <br>
-    <h5>Tổng: {{count}}</h5>
+        
+    <div style="display: flex; align-items: center;">
+            <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+        </form>
+        <h5 style="margin-left: 20px">Tổng: {{count}}</h5>
+        <div class="pagination">{{pagination.links}}</div>
+    </div>
     <table class="table table-hover">
         <thead>
             <tr class="table-primary">
@@ -48,7 +52,7 @@ input, select {
       
         <tbody>
             {% for row in danhsach %}
-            <tr>
+            <tr data-info='{{ row  | safe }}'>
                 <th>{{loop.index}}</th> 
                 <th>{{row["MST"]}}</th>
                 <th>{{row["Vị trí cũ"]}}</th>

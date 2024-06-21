@@ -23,8 +23,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
  
-used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-#used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+# used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
 # print(used_db)
 
 class Users(UserMixin, db.Model):
@@ -317,28 +317,21 @@ def inchamduthd(mst,
             print(e)
             return None
    
-def laylichsucongtac(mst,linemoi,ngay,kieudieuchuyen):
+def laylichsucongtac(mst,ngay,kieudieuchuyen):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     query= f"SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' "
     if mst:
         query += f"AND MST = '{mst}' "
-    if linemoi:
-        query += f"AND Line_moi = N'{linemoi}' "
     if ngay:
         query += f"AND Ngay_thuc_hien = '{ngay}' "
     if kieudieuchuyen:
         query += f"AND Phan_loai = N'{kieudieuchuyen}' "
     query += "ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC, Line_moi ASC"
-    if not mst and not linemoi and not ngay and not kieudieuchuyen:
+    if not mst and not ngay and not kieudieuchuyen:
         query = f"""
             SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' 
-            AND Ngay_thuc_hien = (
-                SELECT MAX(Ngay_thuc_hien)
-                FROM HR.dbo.Lich_su_cong_tac
-                WHERE Nha_may = '{current_user.macongty}'
-            )
             ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC, Line_moi ASC
             """
     print(query)
@@ -519,6 +512,19 @@ def laydanhsachtheomst(mst):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+    print(query)
+    users = cursor.execute(query).fetchall()
+    conn.close()
+    result = []
+    for user in users:
+        result.append(lay_user(user))
+    return result
+
+def laydanhsachusercacongty(macongty):
+    
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE Factory = '{macongty}' ORDER BY CAST(mst AS INT) ASC"
     print(query)
     users = cursor.execute(query).fetchall()
     conn.close()
@@ -745,6 +751,15 @@ def themnhanvienvaomita(mst,hoten):
     cursor = conn.cursor()
     tenchamcong = xoadautrongten(hoten)
     query = f"INSERT INTO MITACOSQL.Dbo.NHANVIEN (MaNhanVien,TenNhanVien,MaChamCong,TenChamCong) VALUES ('{mst}','{tenchamcong}','{mst}','{tenchamcong}')"
+    print(query)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+
+def themlichsutrangthai(mst,tungay,denngay,trangthai):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"INSERT INTO [HR].[dbo].[Lich_su_trang_thai_lam_viec] VALUES ('{mst}','{current_user.macongty}','{tungay}','{denngay}',N'{trangthai}')"
     print(query)
     cursor.execute(query)
     conn.commit()
@@ -1103,8 +1118,14 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if ngayketthuc:
-            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
-            ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
+            if type(ngaybatdau) == str:
+                ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            else:
+                ngayketthuccacu = ngaybatdau - timedelta(days=1)
+            if type(ngayketthuc) == str:
+                ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
+            else:
+                ngayvecamacdinh = ngayketthuc + timedelta(days=1)
             ngaymoc = datetime(2054,12,31)
             query = f"""
                         UPDATE HR.dbo.Dang_ky_ca_lam_viec
@@ -1122,7 +1143,10 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             conn.commit()
             conn.close()
         else:
-            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            if type(ngaybatdau) == str:
+                ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            else:
+                ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngaymoc = datetime(2054,12,31)
             query = f"""
                         UPDATE HR.dbo.Dang_ky_ca_lam_viec
@@ -1162,10 +1186,10 @@ def laydanhsachykienphanmem():
         result.append(row)
     return result 
 
-def laydanhsachyeucautuyendung():
+def laydanhsachyeucautuyendung(maso):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung"
+    query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Bo_phan LIKE '{maso}%'"
     print(query)
     rows = cursor.execute(query).fetchall()
     result =[]
@@ -1404,7 +1428,9 @@ def danhsachdangkytuyendung():
 @roles_required('tbp','developer','sa','nhansu')
 def dangkytuyendung():
     if request.method == "GET":
-        danhsach = laydanhsachyeucautuyendung()
+        maso = current_user.macongty[-1]
+        danhsach = laydanhsachyeucautuyendung(maso)
+        
         return render_template("2_2_1.html", page="2.2.1 Thêm yêu cầu tuyển dụng",danhsach=danhsach)
     elif request.method == "POST":
         bophan = request.form.get("bophan")
@@ -1424,7 +1450,8 @@ def dangkytuyendung():
 @roles_required('tbp','developer','sa','nhansu')
 def pheduyettuyendung():   
     if request.method == "GET":
-        danhsach = laydanhsachyeucautuyendung()
+        maso = current_user.macongty[-1]
+        danhsach = laydanhsachyeucautuyendung(maso)
         return render_template("2_2_2.html", page="2.2.2 Phê duyệt yêu cầu tuyển dụng",danhsach=danhsach)
     elif request.method == "POST":
         bophan = request.form.get("bophan")
@@ -1466,7 +1493,7 @@ def nhapthongtinlaodongmoi():
 
         anh = f"N'{request.form.get("anh")}'"
         masothe = f"'{request.form.get("masothe")}'"
-        thechamcong = "NULL"
+        thechamcong = f"'{request.form.get("masothe")}'"
         hoten = f"N'{request.form.get("hoten")}'"
         ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
         gioitinh = f"N'{request.form.get("gioitinh")}'"
@@ -1578,7 +1605,8 @@ def nhapthongtinlaodongmoi():
         nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailvn},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N')"             
         if themnhanvienmoi(nhanvienmoi):
             # themnhanvienvaomita(request.form.get("masothe"),request.form.get("hoten"))
-            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao,datetime(2024,12,31))
+            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao.replace("'",""),datetime(2024,12,31))
+            themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc')
             return redirect("/muc3_1")
         else:
             masothe = int(laymasothemoi())+1
@@ -2069,13 +2097,21 @@ def lichsucongtac():
     
     if request.method == "GET":
         mst = request.args.get("mst")
-        limemoi = request.args.get("limemoi")
         ngay = request.args.get("ngay")
         kieudieuchuyen = request.args.get("kieudieuchuyen")
-        danhsach = laylichsucongtac(mst,limemoi,ngay,kieudieuchuyen)
-        count=len(danhsach)
+        rows = laylichsucongtac(mst,ngay,kieudieuchuyen)
+        count = len(rows)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(rows)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = rows[start:end]
+        danhsachphongban = laycacphongban()
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("6_2.html", page="6.2 Lịch sử công tác",
-                               danhsach=danhsach, 
+                               danhsach=paginated_rows, 
+                               pagination=pagination,
                                mst=mst, 
                                count=count)
 
@@ -2645,7 +2681,6 @@ def dangkitangcanhom():
             if file.filename == '':
                 return redirect("/muc7_1_6")
             if file:
-                filename = secure_filename(file.filename)
                 ngaylam = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
                 file.save(filepath)
@@ -2786,9 +2821,9 @@ def export_dsxnp():
         })
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep.xlsx"), index=False)
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep.xlsx"), as_attachment=True) 
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True) 
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
@@ -2865,15 +2900,35 @@ def doicacanhan():
 
 @app.route("/doicanhom", methods=["POST"])
 def doicanhom():
-    canhamay = request.form.get("canhamay")
-    phongban = request.form.get("phongban")
-    cacu = request.form.get("cacu")
-    camoi = request.form.get("camoi")
-    ngaybatdau = request.form.get("ngaybatdau")
-    ngayketthuc = request.form.get("ngayketthuc")
-    danhsach = laydanhsachusertheophongban(phongban)
-    for user in danhsach:
-        themdoicamoi(user['MST'],cacu,camoi,ngaybatdau,ngayketthuc)
+    cacongty = request.form.get("cacongty")
+    if cacongty:
+        danhsach = laydanhsachusercacongty(current_user.macongty)
+    else:
+        phongban = request.form.get("phongban")
+        if phongban:
+            danhsach = laydanhsachusertheophongban(phongban)
+        else:
+            chuyen = request.form.get("chuyento")   
+            if chuyen: 
+                danhsach = laydanhsachusertheoline(chuyen)
+            else:
+                file = request.files.get("file")
+                print(file)
+                if file:
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"doicanhom_{thoigian}.xlsx")
+                    file.save(filepath)
+                    data = pd.read_excel(filepath).to_dict(orient="records")
+                    for row in data:
+                        themdoicamoi(row['Mã số thẻ'],'A1',row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
+                danhsach = None
+    if danhsach:
+        camoi = request.form.get("camoinhom")
+        ngaybatdau = request.form.get("ngaybatdau")
+        ngayketthuc = request.form.get("ngayketthuc")
+        
+        for user in danhsach:
+            themdoicamoi(user['MST'],'A1',camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
 @app.route("/laycatheomst", methods=["POST"])

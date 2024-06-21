@@ -29,35 +29,33 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="POST" action="/muc2_2">
+                <form method="POST" action="/muc2_2_1">
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
                             <div class="col-sm-6">
-                                
-                                    <div class="form-group">
-                                        <label for="bophan">Bộ phận</label>
-                                        <input type="text" id="bophan" name="bophan" value="{{current_user.phongban}}" readonly>
-                                        <label for="vitri">Vị trí</label>
-                                        <input type="text" id="vitri" name="vitri" >
-                                        <label for="soluong">Số lượng</label>
-                                        <input type="text" id="soluong" name="soluong" >
-                                        <label for="mota">Mô tả công việc</label>
-                                        <textarea class="form-control" id="mota" name="mota" rows="3"></textarea>
-                                        <label for="thoigiandukien">Thời gian dự kiến</label>
-                                        <input type="date" id="thoigiandukien" name="thoigiandukien" >
-                                        <label for="phanloai">Phân loại</label>
-                                        <select id="phanloai" name="phanloai">   
-                                            <option value="Tuyển mới">Tuyển mới</option>
-                                            <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
-                                            <option value="Thay thế thai sản">Thay thế thai sản</option>
-                                            <option value="Ngắn hạn">Ngắn hạn</option>
-                                        </select>
-                                        <label for="mucluong">Mức lương (Triệu đồng)</label>
-                                        <input type="text" id="mucluongtu" name="mucluongtu" >
-                                        <input type="text" id="mucluongden" name="mucluongden" >
-                                    </div>
-                                
+                                <div class="form-group">
+                                    <label for="bophan">Bộ phận</label>
+                                    <input type="text" id="bophan" name="bophan" >
+                                    <label for="vitri">Vị trí</label>
+                                    <input type="text" id="vitri" name="vitri" >
+                                    <label for="soluong">Số lượng</label>
+                                    <input type="text" id="soluong" name="soluong" >
+                                    <label for="mota">Mô tả công việc</label>
+                                    <textarea class="form-control" id="mota" name="mota" rows="3"></textarea>
+                                    <label for="thoigiandukien">Thời gian dự kiến</label>
+                                    <input type="date" id="thoigiandukien" name="thoigiandukien" >
+                                    <label for="phanloai">Phân loại</label>
+                                    <select id="phanloai" name="phanloai">   
+                                        <option value="Tuyển mới">Tuyển mới</option>
+                                        <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
+                                        <option value="Thay thế thai sản">Thay thế thai sản</option>
+                                        <option value="Ngắn hạn">Ngắn hạn</option>
+                                    </select>
+                                    <label for="mucluong">Mức lương (Triệu đồng)</label>
+                                    <input type="text" id="mucluongtu" name="mucluongtu" >
+                                    <input type="text" id="mucluongden" name="mucluongden" >
+                                </div>
                             </div>
                         </div>
                     </div>

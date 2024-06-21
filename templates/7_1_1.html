@@ -30,7 +30,7 @@ label, input, select {
             <h5>Cập nhật theo nhóm</h5>
             <hr />
             <br>
-            <form action="/doicanhom" method="POST">
+            <form action="/doicanhom" method="POST" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="cacongty">Cả công ty</label>
                     <select id="cacongty" name="cacongty">
@@ -61,6 +61,10 @@ label, input, select {
                 <div class="form-group">
                     <label for="ngayketthuc">Ngày kết thúc</label>
                     <input id="ngayketthuc" name="ngayketthuc" type="date">
+                </div>
+                <div class="form-group">
+                    <label for="file">Cập nhật theo file</label>
+                    <input id="file" name="file" type="file">
                 </div>
                 <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
             </form>
