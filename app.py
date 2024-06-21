@@ -3115,5 +3115,5 @@ def export_dsxnk():
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 if __name__ == "__main__":
-    print("HUMAN RESOURCE MANAGEMENT SYSYTEM")
+    print("HUMAN RESOURCE MANAGEMENT SYSTEM")
     serve(app, host='0.0.0.0', port=81, threads=16)
