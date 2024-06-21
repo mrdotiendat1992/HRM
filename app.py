@@ -64,7 +64,7 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
     query = f"""
         UPDATE HR.dbo.Yeu_cau_tuyen_dung
         SET Trang_thai_yeu_cau = N'{trangthaiyeucau}', Trang_thai_thuc_hien = N'{trangthaithuchien}', Ghi_chu = N'{ghichu}'
-        WHERE Bophan = '{bophan}' AND Vi_tri = '{vitri}' AND So_luong = '{soluong}' AND JD = '{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = '{phanloai}'
+        WHERE Bo_phan = '{bophan}' AND Vi_tri = '{vitri}' AND So_luong = '{soluong}' AND JD = '{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = '{phanloai}'
     """
     print(query)
     cursor.execute(query)
