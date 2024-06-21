@@ -58,6 +58,19 @@ def roles_required(*roles):
         return decorated_function
     return decorator
 
+def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"""
+        UPDATE HR.dbo.Yeu_cau_tuyen_dung
+        SET Trang_thai_yeu_cau = N'{trangthaiyeucau}', Trang_thai_thuc_hien = N'{trangthaithuchien}', Ghi_chu = N'{ghichu}'
+        WHERE Bophan = '{bophan}' AND Vi_tri = '{vitri}' AND So_luong = '{soluong}' AND JD = '{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = '{phanloai}'
+    """
+    print(query)
+    cursor.execute(query)
+    conn.commit()
+    conn.close()
+    
 def dieuchuyennhansu(mst,
                     loaidieuchuyen,
                     vitricu,
@@ -1378,7 +1391,18 @@ def pheduyettuyendung():
     if request.method == "GET":
         danhsach = laydanhsachyeucautuyendung()
         return render_template("2_2_2.html", page="2.2.2 Phê duyệt yêu cầu tuyển dụng",danhsach=danhsach)
-    
+    elif request.method == "POST":
+        bophan = request.form.get("bophan")
+        vitri = request.form.get("vitri")
+        soluong = request.form.get("soluong")
+        mota = request.form.get("mota")
+        thoigian = request.form.get("thoigian")
+        phanloai = request.form.get("phanloai")
+        trangthaiyeucau = request.form.get("trangthaiyeucau")
+        trangthaithuchien = request.form.get("trangthaithuchien")
+        ghichu = request.form.get("ghichu")
+        capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu)
+        return redirect("/muc2_2_2")
     
 @app.route("/muc3_1", methods=["GET","POST"])
 @login_required

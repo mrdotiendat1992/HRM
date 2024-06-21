@@ -39,29 +39,44 @@
                 {% for row in danhsach %}
                 <form action="/muc2_2_2" method="post">
                     <tr>
-                        <th>{{loop.index}}</th>
-                        <th>{{row[0]}}</th>
-                        <th>{{row[1]}}</th>
-                        <th>{{row[2]}}</th>
-                        <th>{{row[3]}}</th>
-                        <th>{{row[4]}}</th>
-                        <th>{{row[5]}}</th>
-                        <th>{{row[6]}}</th>
-                        <th>
-                            <select id="trangthaipheduyet" name="trangthaipheduyet">
-                                <option value="Chờ phê duyệt">Chờ phê duyệt</option>
-                                <option value="Đã phê duyệt">Đã phê duyệt</option>
-                                <option value="Bị từ chối">Bị từ chối</option>
-                            </select>
-                        </th>
-                        <th>
-                            <select id="trangthaituyendung" name="trangthaituyendung">
-                                <option value="Đang tuyển">Đang tuyển</option>
-                                <option value="Đã tuyển">Đã tuyển</option>
-                            </select>
-                        </th>
-                        <th><input type="text" id="ghichu" name="ghichu"></th>
-                        <th><button type="submit" class="btn btn-primary">Lưu</button></th>
+                        <form action="/muc2_2_2" method="post">
+                            <th>{{loop.index}}</th>
+                            <th><input type="text" id="bophan" name="bophan" value="{{row[0]}}" hidden>{{row[0]}}</th>
+                            <th><input type="text" id="vitri" name="vitri" value="{{row[1]}}" hidden>{{row[1]}}</th>
+                            <th><input type="text" id="soluong" name="soluong" value="{{row[2]}}" hidden>{{row[2]}}</th>
+                            <th><input type="text" id="mota" name="mota" value="{{row[3]}}" hidden>{{row[3]}}</th>
+                            <th><input type="date" id="thoigian" name="thoigian" value="{{row[4]}}" hidden>{{row[4]}}</th>
+                            <th><input type="date" id="phanloai" name="phanloai" value="{{row[5]}}" hidden>{{row[5]}}</th>
+                            <th>{{row[6]}}</th>
+                            <th>
+                                <select id="trangthaiyeucau" name="trangthaiyeucau">
+                                    {% if row[7] %}
+                                    <option value="{{row[7]}}">{{row[7]}}</option>
+                                    <option value="Chờ phê duyệt">Chờ phê duyệt</option>
+                                    <option value="Đã phê duyệt">Đã phê duyệt</option>
+                                    <option value="Bị từ chối">Bị từ chối</option>
+                                    {% else %}
+                                    <option value="">Chọn</option>
+                                    <option value="Chờ phê duyệt">Chờ phê duyệt</option>
+                                    <option value="Đã phê duyệt">Đã phê duyệt</option>
+                                    <option value="Bị từ chối">Bị từ chối</option>
+                                    {% endif %}
+                                </select>
+                            </th>
+                            <th>
+                                <select id="trangthaithuchien" name="trangthaithuchien">
+                                    {% if row[8] %}<option value="{{row[8]}}">{{row[8]}}</option>
+                                    <option value="Đang tuyển">Đang tuyển</option>
+                                    <option value="Đã tuyển">Đã tuyển</option>
+                                    {% else %}
+                                    <option value="">Chọn</option>
+                                    <option value="Đang tuyển">Đang tuyển</option>
+                                    <option value="Đã tuyển">Đã tuyển</option>
+                                    {% endif %}
+                                </select>
+                            </th>
+                            <th><input type="text" id="ghichu" name="ghichu" value="{{row[9]}}"></th>
+                            <th><input type="submit" class="btn btn-primary" value="Lưu"></input></th>
                     </tr>
                 </form>
                 {% endfor %}
