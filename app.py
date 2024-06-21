@@ -23,8 +23,8 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
  
-# used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+# used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
 # print(used_db)
 
 class Users(UserMixin, db.Model):
@@ -1986,6 +1986,7 @@ def dieuchuyen():
         mst = request.form["mst"]
         loaidieuchuyen = request.form["loaidieuchuyen"]
         ngaydieuchuyen = request.form.get("ngaydieuchuyen")
+        ghichu = request.form.get("ghichu")
         
         vitricu = request.form.get("vitricu")
         vitrimoi = request.form.get("vitrimoi")
