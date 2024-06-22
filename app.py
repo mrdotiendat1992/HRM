@@ -1090,7 +1090,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giobatdau,giokett
         print(e)
         conn.close()
         
-def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None):
+def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=None,denngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
@@ -1104,6 +1104,10 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None):
         query += f"AND Chuyen_to = '{chuyen}' "
     if ngayxem:
         query += f"AND Ngay_dang_ky = '{ngayxem}'"
+    if tungay:
+        query += f"AND Ngay_dang_ky >= '{tungay}'"
+    if denngay:
+        query += f"AND Ngay_dang_ky <= '{denngay}'"
     query += f" ORDER BY Ngay_dang_ky desc, CAST(MST as INT) asc"
     print(query)
     rows = cursor.execute(query).fetchall()
@@ -1296,6 +1300,10 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
     cursor.execute(query)
     conn.commit()
     conn.close()
+
+def doimatkhautaikhoan(macongty,mst,matkhau):
+    current_user.matkhau = matkhau
+    db.session.commit()
     
 ######################################################################################################################################################
 #          MAIN ROUTES
@@ -1370,10 +1378,19 @@ def login():
             return redirect(url_for("login"))
     return render_template("login.html")
 
-@app.route("/logout", methods=["GET", "POST"])
+@app.route("/logout", methods=["POST"])
 def logout():
     logout_user()
     return redirect(url_for("login"))
+
+@app.route("/doimatkhau", methods=['POST'])
+def doimatkhau():
+    macongty = request.form.get("macongty")
+    masothe = request.form.get("masothe")
+    matkhaumoi = request.form.get("matkhaumoi")
+    doimatkhautaikhoan(macongty,masothe,matkhaumoi)
+    return redirect(url_for("home"))
+
 
 @app.route("/home", methods=['GET','POST'])
 @login_required
@@ -2347,8 +2364,10 @@ def dangkytangca():
         mst = request.args.get("mst")
         phongban = request.args.get("phongban")
         chuyen = request.args.get("chuyen")
-        ngayxem = request.args.get("ngay")
-        danhsach = laydanhsachtangca(mst,phongban,chuyen,ngayxem)
+        ngay = request.args.get("ngay")
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = laydanhsachtangca(mst,phongban,chuyen,ngay,tungay,denngay)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2379,9 +2398,10 @@ def dangkytangca():
                 "Giờ tăng ca thực tế": row[8]
             })
         df = pd.DataFrame(data)
-        df.to_excel("tangca.xlsx", index=False)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), index=False)
 
-        return send_file("tangca.xlsx", as_attachment=True)
+        return send_file(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
