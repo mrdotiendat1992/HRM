@@ -11,7 +11,7 @@ h3 {
 }
 input, select, label {
     margin-left: 10px;
-    width: 160px;
+    width: 100px;
     font-size: 10px;
 }
 button {
@@ -33,7 +33,9 @@ button {
 #filterngay {
     margin: 10px;
 }
-
+.pagination {
+    margin-left: 20px;
+}
 </style>
 {% endblock style %}
 {% block content %}
@@ -44,7 +46,7 @@ button {
             <hr />
             <br>
             <form action="/taimautangcanhom" method="POST">
-                <input class="btn btn-primary" value="Tải xuống file mẫu" type="submit"></input>
+                <input class="btn btn-primary" value="Tải mẫu" type="submit"></input>
             </form>
             <br>
             <form action="/dangkitangcanhom" method="POST"  enctype="multipart/form-data">
@@ -86,9 +88,16 @@ button {
                     <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}">
                     <label for="phongban">Phòng ban</label>
                     <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}">
+                </div>
+                <div class="form-group">
+                    <label for="chuyen">Chuyền tổ</label>
+                    <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                     <label for="ngay">Ngày</label>
                     <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                </div>
+                <div style="display: flex; align-items: center;">
                     <input type="submit" value="Xem" class="btn btn-primary">
+                    <div class="pagination">{{pagination.links}}</div>
                 </div>
 
             </form>
@@ -107,7 +116,7 @@ button {
                     <input type="submit" value="Xuất Excel" class="btn btn-success">
                 </form>
             </div>
-            <div class="pagination">{{pagination.links}}</div>
+            
         </div>
         <br>
         <table class="table table-hover">

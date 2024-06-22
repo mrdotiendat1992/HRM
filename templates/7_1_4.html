@@ -4,25 +4,14 @@
     table, th, td , button{
         font-size: 10px;
     }
-    th, td {
-        width: 120px;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
-    }
     .scroll-container {
         width: 100%;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
     .content {
-        width: 2000px;
+        width: 1500px;
     }
     .pagination {
-        font-size: 10px;
-        margin-left:50px;
-    }
-    input {
-        margin-left: 10px;
         font-size: 10px;
     }
     th.sticky, td.sticky {
@@ -31,12 +20,22 @@
         z-index: 1;
     }
     td.sticky {
-        background-color: gray;
+        background-color: #4e73df;
         color: white;
         font-weight: bold;
     }
     th.sticky {
         z-index: 2;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:50px;
+    }
+    h5 {
+        margin-right: 20px;
+    }
+    #mst_col {
+        width: 60px;
     }
 </style>
 {% endblock style %}
@@ -63,7 +62,7 @@
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th>Mã số thẻ</th>
+                    <th id="mst_col">Mã số thẻ</th>
                     <th class="sticky">Họ tên</th>
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
@@ -76,7 +75,7 @@
                 </tr>
                 <tr>
                     <form action = "/muc7_1_4" method = "GET">
-                        <th><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th id="mst_col"><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
                         <th class="sticky"><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
@@ -93,7 +92,7 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td>{{row[1]}}</td>
+                    <td id="mst_col">{{row[1]}}</td>
                     <td class="sticky">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
@@ -102,11 +101,7 @@
                     <td>{{row[7]}}</td>
                     <td>{{row[8][:5]}}</td>
                     <td>{{row[9]}}</td>
-                    {% if row[10]=='Đã phê duyệt'%}
-                    <td>{{row[10]}}</td>
-                    {% elif row[10]=='Đã phê duyệt' %}
-                    <td>{{row[10]}}</td>
-                    {% else %}
+                    {% if row[10]=='Đã kiểm tra'%}
                     <td>
                         <form action="/update_diemdanhbu" method="POST">
                             <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
@@ -115,9 +110,11 @@
                             <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
                             <input type="hidden" name="ngayduyet" value="{{row[7]}}">
                             <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
-                            <input type="submit" class="btn btn-warning" value="{{row[10]}}"></input>
+                            <input type="submit" class="btn btn-outline-success btn-sm" value="{{row[10]}}"></input>
                         </form>
                     </td>
+                    {% else %}
+                    <td><b>{{row[10]}}</b></td>
                     {% endif %}
                 </tr>  
                 {% endfor %}

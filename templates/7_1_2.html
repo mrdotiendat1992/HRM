@@ -1,12 +1,15 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td {
-        font-size: 11px;
+    table, th, td, .pagination {
+        font-size: 10px;
     }
-    input, select {
-        margin-left: 10px;
-        width: 150px;
+    input, label {
+        width: 100px;
+        font-size: 10px;
+    }
+    .pagination, h5, input {
+        margin-left: 20px;
     }
 </style>
 {% endblock style %}
@@ -19,30 +22,28 @@
                 <label for="mst">Mã số thẻ</label>
                 <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
                 <label for="phongban">Phòng ban</label>
-                <select id="phongban" name="phongban">
-                    <option value="">Tất cả</option>
-                    {% for phongban in danhsachphongban %}
-                        {% if phongban == request.args.get('phongban') %}
-                            <option value="{{ phongban }}" selected>{{ phongban }}</option>
-                        {% else %}
-                            <option value="{{ phongban }}">{{ phongban }}</option>
-                        {% endif %}
-                    {% endfor %}
-                </select>
-                <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
-                <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
-                <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+                <input type="text" id="phongban" name="phongban" value={{request.args.get('phongban', '')}}></input>.
             </div>
-        </form>
-        <form action="/export_dscc" method="POST">
-            <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
-            <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
-            <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
-            <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
-            <input type="submit" value="Xuất Excel" class="btn btn-success">
-        </form>
-        <br>
-        <h5>Tổng: {{count}}</h5>
+            <div class="form-group">
+                <label for="tungay">Từ ngày</label>
+                <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
+                <label for="denngay">Đến ngày</label>
+                <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
+            </div>
+        <div style="display: flex; align-items: center;">
+            <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+            </form>
+            <form action="/export_dscc" method="POST">
+                <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
+                <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
+                <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
+                <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
+                <input type="submit" value="Xuất Excel" class="btn btn-success">
+            </form>
+            <br>
+            <h5>Tổng: {{count}}</h5>
+            <div class="pagination">{{ pagination.links }}</div>
+        </div>
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
@@ -88,7 +89,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        <div class="pagination">{{ pagination.links }}</div>
+        
         <script>
         
         </script>

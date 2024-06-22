@@ -837,7 +837,7 @@ def laymasothemoi():
         return result[0]
     return 0
 
-def laydanhsachloithe(chuyen=None, bophan=None, ngay=None):
+def laydanhsachloithe(chuyen=None, bophan=None, phanloai=None, ngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
@@ -848,22 +848,24 @@ def laydanhsachloithe(chuyen=None, bophan=None, ngay=None):
         query += f"AND Chuyen_to = '{chuyen}' "
     if bophan:
         query += f"AND Bo_phan = '{bophan}' "
+    if phanloai:
+        query += f"AND Phan_loai = N'{phanloai}' "
     if ngay:
         query += f"AND NgayCham = '{ngay}' "
     
     query += "ORDER BY CAST(MST AS INT) ASC, NgayCham DESC"
-    if not chuyen and not bophan and not ngay:
-        query = f"""
-                    SELECT *
-                    FROM HR.dbo.Danh_sach_loi_the
-                    WHERE Nha_may = '{current_user.macongty}'
-                    AND NgayCham = (
-                        SELECT MAX(NgayCham)
-                        FROM HR.dbo.Danh_sach_loi_the
-                        WHERE Nha_may = '{current_user.macongty}'
-                    )
-                    ORDER BY NgayCham DESC;
-                """
+    # if not chuyen and not bophan and not ngay:
+    #     query = f"""
+    #                 SELECT *
+    #                 FROM HR.dbo.Danh_sach_loi_the
+    #                 WHERE Nha_may = '{current_user.macongty}'
+    #                 AND NgayCham = (
+    #                     SELECT MAX(NgayCham)
+    #                     FROM HR.dbo.Danh_sach_loi_the
+    #                     WHERE Nha_may = '{current_user.macongty}'
+    #                 )
+    #                 ORDER BY NgayCham DESC;
+    #             """
     print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
@@ -886,6 +888,17 @@ def laydanhsachloithe(chuyen=None, bophan=None, ngay=None):
            "Phân loại": row[13],
            "Số phút thiếu": row[14]
         })
+    return result
+
+def laydanhsachphanloailoithe():
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT DISTINCT Phan_loai FROM HR.dbo.Danh_sach_loi_the"
+    rows = cursor.execute(query).fetchall()
+    conn.close()
+    result = []
+    for row in rows:
+        result.append(row[0])
     return result
 
 def laydanhsachchuyen():
@@ -974,7 +987,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     if bophan:
         query += f"AND Bo_phan = N'{bophan}'"
     if loaidiemdanh:
-        query += f"AND Loai_diem_danh = '{loaidiemdanh}'"
+        query += f"AND Loai_diem_danh = N'{loaidiemdanh}'"
     if ngaydiemdanh:
         query += f"AND Ngay_diem_danh = '{ngaydiemdanh}'"    
     if lido:
@@ -1077,7 +1090,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giobatdau,giokett
         print(e)
         conn.close()
         
-def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
+def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
@@ -1087,12 +1100,13 @@ def laydanhsachtangca(mst=None,phongban=None,ngayxem=None):
         query += f"AND MST = '{mst}' "
     if phongban:
         query += f"AND Bo_phan = '{phongban}' "
+    if chuyen:
+        query += f"AND Chuyen_to = '{chuyen}' "
     if ngayxem:
         query += f"AND Ngay_dang_ky = '{ngayxem}'"
     query += f" ORDER BY Ngay_dang_ky desc, CAST(MST as INT) asc"
     print(query)
     rows = cursor.execute(query).fetchall()
-    # print(rows)
     conn.close()
     result = []
     for row in rows:
@@ -2244,10 +2258,10 @@ def loichamcong():
     
     chuyen = request.args.get("chuyen")
     bophan = request.args.get("bophan")
+    phanloai = request.args.get("phanloai")
     ngay = request.args.get("ngay")
-    danh_sach_chuyen = laydanhsachchuyen()
-    danh_sach_bophan = laydanhsachbophan()
-    danhsach = laydanhsachloithe(chuyen,bophan,ngay)
+    danhsachphanloai = laydanhsachphanloailoithe()
+    danhsach = laydanhsachloithe(chuyen,bophan,phanloai,ngay)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -2261,8 +2275,7 @@ def loichamcong():
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count,
-                            danh_sach_chuyen=danh_sach_chuyen,
-                            danh_sach_bophan=danh_sach_bophan)
+                            danhsachphanloai=danhsachphanloai)
 
 @app.route("/muc7_1_4", methods=["GET"])
 @login_required
@@ -2333,8 +2346,9 @@ def dangkytangca():
     if request.method == "GET":
         mst = request.args.get("mst")
         phongban = request.args.get("phongban")
+        chuyen = request.args.get("chuyen")
         ngayxem = request.args.get("ngay")
-        danhsach = laydanhsachtangca(mst,phongban,ngayxem)
+        danhsach = laydanhsachtangca(mst,phongban,chuyen,ngayxem)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2392,7 +2406,7 @@ def baocom():
         danhsachchuyen = laycacto()
         danhsachphongban = laycacphongban()
         return render_template("7_1_7.html", 
-                            page="7.1.7 Danh sách báo cơm",
+                            page="7.1.7 Dữ liệu chấm công buổi sáng",
                             danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
@@ -2828,13 +2842,33 @@ def export_dslt():
     
     chuyen = request.form.get("chuyen")
     bophan = request.form.get("bophan")
+    phanloai = request.form.get("phanloai")
     ngay = request.form.get("ngay")
-    rows = laydanhsachloithe(chuyen, bophan, ngay)
+    rows = laydanhsachloithe(chuyen, bophan, phanloai, ngay)
+    result = []
+    for row in rows:
+        result.append({
+            "Mã công ty": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Số điện thoại": row[3],
+            "Chức danh": row[4],
+            "Chuyền tổ": row[5],
+            "Bộ phận": row[6],
+            "Ngày chấm": row[7],
+            "Giờ vào": row[8],
+            "Giờ ra": row[9],
+            "Ca": row[10],
+            "Bắt đầu ca": row[11],
+            "Kết thúc ca": row[12],
+            "Phân loại": row[13],
+            "Số phút thiếu": row[14]
+        })
+    df = pd.DataFrame(result)
+    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), index=False)
     
-    df = pd.DataFrame(rows)
-    df.to_excel("loithe.xlsx", index=False)
-    
-    return send_file("loithe.xlsx", as_attachment=True)  
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
 
 @app.route("/export_dsddb", methods=["POST"])
 def export_dsddb():

@@ -9,7 +9,7 @@ label {
 }
 input, select, label {
     margin-left: 10px;
-    width: 120px;
+    width: 100px;
     font-size: 12px;
 }
 .scroll-container {
@@ -29,7 +29,7 @@ input, select, label {
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <div style="display: flex; align-items: center;">
+        
             <form method="GET" action="/muc7_1_3">
                 <div class="form-group">
                     <label for="chuyen">Chuyền:</label>
@@ -44,24 +44,35 @@ input, select, label {
                     {% else %}
                     <input id="bophan" name="bophan"></input>
                     {% endif %}
+                    <label for="phanloai">Phân loại:</label>
+                    <select id="phanloai" name="phanloai">
+                        <option value=""></option>
+                        {% for phanloai in danhsachphanloai %}
+                            {% if request.args.get('phanloai') == phanloai %}
+                            <option value='{{ phanloai }}' selected>{{ phanloai }}</option>
+                            {% else %}
+                            <option value='{{ phanloai }}'>{{ phanloai }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
                     <label for="ngay">Ngày</label>
                     <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                     <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
                 </div>
             </form>
             <br>
+            <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <div class="pagination">{{ pagination.links }}</div>
             <form method="POST" action="/export_dslt">
                 <div class="form-group">
                     <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                     <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                    <input type="hidden" name="phanloai" value="{{ request.args.get('phanloai', '') }}">
                     <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
                     <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
                 </div>
             </form>
-        </div>
-        <div style="display: flex; align-items: center;">
-            <h5><b>Tổng: {{count}}</b></h5>
-            <div class="pagination">{{ pagination.links }}</div>
         </div>
         <table class="table table-hover">
             <thead>

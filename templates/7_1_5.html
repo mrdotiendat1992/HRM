@@ -2,20 +2,16 @@
 {% block style%}
 <style>
     table, th, td , button{
-        font-size: 12px;
+        font-size: 10px;
     }
     .scroll-container {
         width: 100%;
-        overflow-x: scroll;
+        overflow-x: auto;
     }
     .content {
-        width: 2000px;
+        width: 1500px;
     }
     .pagination {
-        font-size: 10px;
-    }
-    input {
-        margin-left: 10px;
         font-size: 10px;
     }
     th.sticky, td.sticky {
@@ -24,7 +20,7 @@
         z-index: 1;
     }
     td.sticky {
-        background-color: gray;
+        background-color: #4e73df;
         color: white;
         font-weight: bold;
     }
@@ -35,12 +31,18 @@
         font-size: 10px;
         margin-left:50px;
     }
+    h5 {
+        margin-right: 20px;
+    }
+    #mst_col {
+        width: 60px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <div style="display: flex;">
+        <div style="display: flex; align-items: center;">
             <h5>Tổng: {{count}}</h5>
 
             <form method="POST" action="/export_dsxnp">
@@ -60,7 +62,7 @@
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th>Mã số thẻ</th>
+                    <th id="mst_col">Mã số thẻ</th>
                     <th class="sticky">Họ tên</th>
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
@@ -70,9 +72,9 @@
                     <th>Lý do</th> 
                     <th>Trạng thái</th>
                 </tr>
-                <tr class="table-secondary">
+                <tr class="table-light">
                     <form action="/muc7_1_5" method="get">
-                        <th><input type="text" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th id="mst_col"><input type="text" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
                         <th class="sticky"><input type="text" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" name="chucvu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
                         <th><input type="text" name="chuyen" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
@@ -88,7 +90,7 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td>{{row[1]}}</td>
+                    <td id="mst_col">{{row[1]}}</td>
                     <td class="sticky">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
@@ -96,20 +98,18 @@
                     <td>{{row[6]}}</td>
                     <td>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
-                    {% if row[9]=='Đã phê duyệt'%}
-                    <td>{{row[9]}}</td>
-                    {% elif row[9]=='Đã phê duyệt' %}
-                    <td>{{row[9]}}</td>
-                    {% else %}
+                    {% if row[9]=='Đã kiểm tra' %}
                     <td>
                         <form action="/update_xinnghiphep" method="POST">
                             <input type="hidden" name="mst" value="{{row[1]}}">
                             <input type="hidden" name="bophan" value="{{row[5]}}">
                             <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
                             <input type="hidden" name="ngaynghi" value="{{row[6]}}">
-                            <input type="submit" class="btn btn-warning" value="{{row[9]}}"></input>
+                            <input type="submit" class="btn btn-outline-success btn-sm" value="{{row[9]}}"></input>
                         </form>
                     </td>
+                    {% else %}
+                    <td><b>{{row[9]}}</b></td>
                     {% endif %}
                 </tr>  
                 {% endfor %}
