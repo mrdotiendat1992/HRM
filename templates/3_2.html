@@ -278,7 +278,7 @@ input, select {
                 });
             axios({
                 method: 'post',
-                url: '/laycatheomst?mst=' + document.getElementById('mst').value
+                url: '/laycatheomst?mst=' + document.getElementById('masothe').value
             }).then(function(response) {
                 console.log(response.data)
                 document.getElementById('calamviec').value = response.data['Ca']
