@@ -6,7 +6,6 @@ import pyodbc
 import openpyxl
 import pandas as pd
 from datetime import datetime, timedelta
-from database import *
 import os
 from werkzeug.utils import secure_filename
 import re
@@ -15,7 +14,7 @@ from waitress import serve
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
-app.config["SECRET_KEY"] = "abc"
+app.config["SECRET_KEY"] = "hrm_system_NT"
 app.config['UPLOAD_FOLDER'] = r'./static/uploads'
 db = SQLAlchemy()
  
@@ -25,7 +24,6 @@ login_manager.login_view = 'login'
  
 used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 # used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
-# print(used_db)
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -217,10 +215,25 @@ def dichuyennghithaisan(mst,
     conn.commit()
     conn.close()
     
-def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlamhopdong,ngayketthuchopdong,thangketthuchopdong,namketthuchopdong,tennhanvien,ngaysinh,gioitinh,thuongtru,cccd,ngaycapcccd,mucluong,chucvu,bophan):
+def thaydoithongtinhopdong(kieuhopdong,
+                           mst,
+                           ngaylamhopdong,
+                           thanglamhopdong,
+                           namlamhopdong,
+                           ngayketthuchopdong,
+                           thangketthuchopdong,
+                           namketthuchopdong,
+                           tennhanvien,
+                           ngaysinh,
+                           gioitinh,
+                           thuongtru,
+                           cccd,
+                           ngaycapcccd,
+                           mucluong,
+                           chucvu,
+                           bophan):   
     
     try:
-        # print(kieuhopdong)
         if kieuhopdong == "HĐ thử việc":
             if current_user.macongty == "NT1":
                 try:
@@ -302,6 +315,32 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                 except Exception as e:
                     print(e)
                     return None
+            elif current_user.macongty == "NT2":
+                try:
+                    
+                    workbook = openpyxl.load_workbook('HĐLĐ_NT2/HĐLĐ 1 NĂM.xlsx')
+                    sheet = workbook.active  # or workbook['SheetName']
+
+                    # Change the value of a specific cell
+                    sheet['E4'] = f'Số: LC12/{mst}'
+                    sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                    sheet['D19'] = tennhanvien
+                    sheet['E21'] = ngaysinh
+                    sheet['E20'] = gioitinh
+                    sheet['F22'] = thuongtru
+                    sheet['F23'] = thuongtru
+                    sheet['D24'] = f"Số CCCD:{cccd}"
+                    sheet['L24'] = ngaycapcccd
+                    sheet['F32'] = bophan
+                    sheet['F33'] = mst
+                    sheet['G43'] = f"{mucluong} VNĐ/tháng"
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng 12 tháng_{mst}_{thoigian}.xlsx')
+                    workbook.save(filepath)
+                    return filepath
+                except Exception as e:
+                    print(e)
+                    return None
         elif kieuhopdong == "HĐ vô thời hạn":
             if current_user.macongty == "NT1":
                 try:
@@ -326,7 +365,32 @@ def thaydoithongtinhopdong(kieuhopdong,mst,ngaylamhopdong,thanglamhopdong,namlam
                     return filepath
                 except Exception as e:
                     print(e)
-                    return None     
+                    return None   
+            if current_user.macongty == "NT2":
+                try:
+                    workbook = openpyxl.load_workbook('HĐLĐ_NT2/HĐLĐ VÔ THỜI HẠN.xlsx')
+                    sheet = workbook.active  # or workbook['SheetName']
+
+                    # Change the value of a specific cell
+                    sheet['E4'] = f'Số: LC/{mst}'
+                    sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                    sheet['D19'] = tennhanvien
+                    sheet['E21'] = ngaysinh
+                    sheet['E20'] = gioitinh
+                    sheet['F22'] = thuongtru
+                    sheet['F23'] = thuongtru
+                    sheet['D24'] = {cccd}
+                    sheet['L24'] = ngaycapcccd
+                    sheet['B28'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
+                    sheet['G43'] = f"{mucluong} VNĐ/tháng"        
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng không thời hạn_{mst}_{thoigian}.xlsx')
+                    workbook.save(filepath)
+                    # print(filepath)
+                    return filepath
+                except Exception as e:
+                    print(e)
+                    return None  
     except Exception as e:
         return None
     

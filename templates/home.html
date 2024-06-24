@@ -73,36 +73,17 @@ input, select , label {
                         <label for="sdt">Số điện thoại</label>
                         <input type="text" id="sdt" name="sdt">
                         <label for="trangthai">Trạng thái</label>
-                        <select id="trangthai" name="trangthai">
-                            <option value=""></option>
-                            {% for trangthai in cactrangthai %}
-                                <option value="{{ trangthai }}">{{ trangthai }}</option>
-                            {% endfor %}
-                        </select>
+                        <input id="trangthai" name="trangthai"></input>
                     </div>
                     <div class="form-group">
                         <label for="cccd">CCCD</label>
                         <input type="text" id="cccd" name="cccd">
                         <label for="phongban">Phòng ban</label>
-                        <select id="phongban" name="phongban">
-                            <option value=""></option>
-                            {% for phongban in cacphongban %}
-                                <option value="{{ phongban }}">{{ phongban }}</option>
-                            {% endfor %}
-                        </select>
+                        <input id="phongban" name="phongban"></input>
                         <label for="gioitinh">Giới tính</label>
-                        <select id="gioitinh" name="gioitinh">
-                            <option value=""></option>
-                            <option value="Nam">Nam</option>
-                            <option value="Nữ">Nữ</option>
-                        </select>
+                        <input id="gioitinh" name="gioitinh"></input>
                         <label for="hccategory">HC Category</label>
-                        <select id="hccategory" name="hccategory">
-                            <option value=""></option>
-                            {% for hccategory in cachccategory %}
-                                <option value="{{ hccategory }}">{{ hccategory }}</option>
-                            {% endfor %}
-                        </select>
+                        <input id="hccategory" name="hccategory"></input>
                     </div>
                     <div class="form-group">
                         <label for="ngaykyhd">Ngày ký HĐ</label>

@@ -24,7 +24,7 @@ def put_nt1():
             cccd = row[6]
             ngaycapcccd = f"'{row[7]}'" if row[7] else 'NULL'
             noicapcccd = row[8]
-            cmt = 'NULL'
+            cmt = f"'{row[9]}'" if row[9] else 'NULL' 
             thuongtru = row[10]
             thonxom = row[11]
             phuongxa = row[12]
@@ -41,11 +41,11 @@ def put_nt1():
             nganhang = row[23]
             sotaikhoan = row[24]
             connho = row[25]
-            tencon1 = f"'{row[26]}'" if row[26] else 'NULL'
-            tencon2 = f"'{row[28]}'" if row[27] else 'NULL'
-            tencon3 = f"'{row[30]}'" if row[28] else 'NULL'
-            tencon4 = f"'{row[32]}'" if row[29] else 'NULL'
-            tencon5 = f"'{row[34]}'" if row[30] else 'NULL'
+            tencon1 = f"N'{row[26]}'" if row[26] else 'NULL'
+            tencon2 = f"N'{row[28]}'" if row[27] else 'NULL'
+            tencon3 = f"N'{row[30]}'" if row[28] else 'NULL'
+            tencon4 = f"N'{row[32]}'" if row[29] else 'NULL'
+            tencon5 = f"N'{row[34]}'" if row[30] else 'NULL'
             ngaysinhcon1 = f"'{row[27]}'" if row[31] else 'NULL'
             ngaysinhcon2 = f"'{row[29]}'" if row[32] else 'NULL'
             ngaysinhcon3 = f"'{row[31]}'" if row[33] else 'NULL'
@@ -88,85 +88,12 @@ def put_nt1():
             truongbophan = f"'{row[70]}'"
             ghichu = row[71]
             query=f"""
-                    INSERT INTO HR.dbo.Danh_sach_CBCNV
-                    VALUES
-                    (
-                        '{mst}'
-                        ,'{thechamcong}'
-                        ,N'{hoten}'
-                        ,'{sdt}'
-                        ,{ngaysinh}
-                        ,N'{gioitinh}'
-                        ,'{cccd}'
-                        ,{ngaycapcccd}
-                        ,N'{noicapcccd}'
-                        ,N'{cmt}'
-                        ,N'{thuongtru}'
-                        ,N'{thonxom}'
-                        ,N'{phuongxa}'
-                        ,N'{quanhuyen}'
-                        ,N'{thanhpho}'
-                        ,{dantoc}
-                        ,N'{quoctich}'
-                        ,N'{tongiao}'
-                        ,N'{trinhdo}'
-                        ,N'{noisinh}'
-                        ,N'{tamtru}'
-                        ,N'{sobhxh}'
-                        ,N'{masothue}'
-                        ,N'{nganhang}'
-                        ,N'{sotaikhoan}'
-                        ,N'{connho}'
-                        ,{tencon1}
-                        ,{ngaysinhcon1}
-                        ,{tencon2}
-                        ,{ngaysinhcon2}
-                        ,{tencon3}
-                        ,{ngaysinhcon3}
-                        ,{tencon4}
-                        ,{ngaysinhcon4}
-                        ,{tencon5}
-                        ,{ngaysinhcon5}
-                        ,N'{anh}'
-                        ,N'{nguoithan}'
-                        ,'{sdtnguoithan}'
-                        ,N'{loaihopdong}'
-                        ,{ngaykyhd}
-                        ,{ngayhethanhd}
-                        ,N'{jobtitlevn}'
-                        ,N'{hccategory}'
-                        ,N'{gradecode}'
-                        ,N'{factory}'
-                        ,N'{department}'
-                        ,N'{chucvu}'
-                        ,N'{sectioncode}'
-                        ,N'{sectiondescription}'
-                        ,N'{line}'
-                        ,N'{emp_type}'
-                        ,N'{jobtitleen}'
-                        ,N'{positioncode}'
-                        ,N'{positiondescription}'
-                        ,'{luongcoban}'
-                        ,N'{phucap}'
-                        ,'{tienphucap}'
-                        ,'{ngayvao}'
-                        ,{ngaynghi}
-                        ,N'{trangthai}'
-                        ,{ngayvaonoithamnien}
-                        ,'{matkhau}'
-                        ,{ngaykihdtv}
-                        ,{ngayhethanhdtv}
-                        ,{ngaykihdcthl1}
-                        ,{ngayhethanhdcthl1}
-                        ,{ngaykihdcthl2}
-                        ,{ngayhethanhdcthl2}
-                        ,{ngaykihdvthl}
-                        ,'N'
-                        ,N'{ghichu}'
-                    )
+            UPDATE HR.dbo.Danh_sach_CBCNV
+            SET CMT={cmt}, Ten_con_nho_1 = {tencon1}, Ten_con_nho_2 = {tencon2}, Ten_con_nho_3 = {tencon3}, Ten_con_nho_4 = {tencon4}, Ten_con_nho_5 = {tencon5}
+            WHERE MST='{mst}'AND Factory = 'NT2'
                 """
             print(mst)
-            if factory == 'NT2' and int(mst)>2965:
+            if factory == 'NT2':
                 try:
                     print(cursor.execute(query))
                     conn.commit()
