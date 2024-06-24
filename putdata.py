@@ -87,15 +87,20 @@ def put_nt1():
             ngaykihdvthl = f"'{row[69]}'" if row[69] else 'NULL'
             truongbophan = f"'{row[70]}'"
             ghichu = row[71]
+            
+            danhsach=cursor.execute("""select MST from Danh_sach_CBCNV where Ghi_chu='None' and Factory='NT1'""").fetchall()
+            danhsachmst = [x[0] for x in danhsach]
+            
             query=f"""
             UPDATE HR.dbo.Danh_sach_CBCNV
-            SET CMT={cmt}, Ten_con_nho_1 = {tencon1}, Ten_con_nho_2 = {tencon2}, Ten_con_nho_3 = {tencon3}, Ten_con_nho_4 = {tencon4}, Ten_con_nho_5 = {tencon5}
-            WHERE MST='{mst}'AND Factory = 'NT2'
+            SET Trang_thai_lam_viec = N'{trangthai}'
+            WHERE MST='{mst}'AND Factory = 'NT1'
                 """
             print(mst)
-            if factory == 'NT2':
+            if factory == 'NT1':
+                print(mst)
                 try:
-                    print(cursor.execute(query))
+                    cursor.execute(query)
                     conn.commit()
                     conn.close()
                 except Exception as e:

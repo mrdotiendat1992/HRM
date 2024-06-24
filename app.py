@@ -522,7 +522,7 @@ def lay_user(user):
             "Tên con 5": user[34],
             "Ngày sinh con 5": user[35],
             "Ảnh chân dung": user[36],
-            "Người thân": user[39],
+            "Người thân": user[37],
             "SĐT liên hệ": user[38],
             "Loại hợp đồng": user[39],
             "Ngày ký HĐ": user[40],
@@ -548,11 +548,18 @@ def lay_user(user):
             "Trạng thái": user[60],
             "Ngày vào nối thâm niên": user[61],
             "Mật khẩu": user[62],
+            "Ngày kí HĐ Thử việc": user[63],
+            "Ngày hết hạn HĐ Thử việc": user[64],
+            "Ngày kí HĐ xác định thời hạn lần 1": user[65],
+            "Ngày hết hạn HĐ xác định thời hạn lần 1": user[66],
+            "Ngày kí HĐ HĐ xác định thời hạn lần 2": user[67],
+            "Ngày hết hạn HĐ xác định thời hạn lần 2": user[68],
+            "Ngày kí HĐ không thời hạn": user[69]
         }
     else:
         return None
 
-def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, ngayvao, ngaynghi, ngaykyhd, ngayhethanhd, phongban, trangthai, hccategory):
+def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory,chucvu):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
@@ -567,22 +574,24 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, ngayvao, ngaynghi, ngaykyhd
         query += f" AND CCCD = '{cccd}'"
     if gioitinh:
         query += f" AND Gioi_tinh = N'{gioitinh}'"
-    if ngayvao:
-        query += f" AND Ngay_vao = '{ngayvao}'"
-    if ngaynghi:
-        query += f" AND Ngay_nghi = '{ngaynghi}'"
-    if ngaykyhd:
-        query += f" AND Ngay_ky_HD = '{ngaykyhd}'"
-    if ngayhethanhd:
-        query += f" AND Ngay_het_han_HD = '{ngayhethanhd}'"
+    if vaotungay:
+        query += f" AND Ngay_vao >= '{vaotungay}'"
+    if vaodenngay:
+        query += f" AND Ngay_vao <= '{vaodenngay}'"
+    if nghitungay:
+        query += f" AND Ngay_nghi >= '{nghitungay}'"
+    if nghidenngay:
+        query += f" AND Ngay_nghi <= '{nghidenngay}'"
     if phongban:
-        query += f" AND Department = '{phongban}'"
+        query += f" AND Department like N'%{phongban}%'"
     if trangthai:
-        query += f" AND Trang_thai_lam_viec = N'{trangthai}'"
+        query += f" AND Trang_thai_lam_viec like N'%{trangthai}%'"
     if hccategory:
         query += f" AND Headcount_category = '{hccategory}'"
+    if chucvu:
+        query += f" AND Chuc_vu like N'%{chucvu}%'"
     print(query)
-    query += " ORDER BY CAST(mst AS INT) DESC"
+    query += " ORDER BY CAST(mst AS INT) ASC"
     users = cursor.execute(query).fetchall()
     conn.close()
     result = []
@@ -1513,49 +1522,22 @@ def index():
 @app.route("/", methods=['GET','POST'])
 @login_required
 def home():
-    if request.method == "POST":
-        mst = request.form.get("mst")
-        hoten = request.form.get("hoten")
-        sdt = request.form.get("sdt")
-        cccd = request.form.get("cccd")
-        gioitinh = request.form.get("gioitinh")
-        ngayvao = request.form.get("ngayvao")
-        ngaynghi = request.form.get("ngaynghi")
-        ngaykyhd = request.form.get("ngaykyhd")
-        ngayhethanhd = request.form.get("ngayhethanhd")
-        phongban = request.form.get("phongban")
-        trangthai = request.form.get("trangthai")
-        hccategory = request.form.get("hccategory")
-        return redirect(url_for('home', 
-                                mst=mst, 
-                                hoten=hoten, 
-                                sdt=sdt, 
-                                cccd=cccd, 
-                                gioitinh=gioitinh, 
-                                ngayvao=ngayvao, 
-                                ngaynghi=ngaynghi, 
-                                ngaykyhd=ngaykyhd, 
-                                ngayhethanhd=ngayhethanhd, 
-                                phongban=phongban,
-                                trangthai=trangthai,
-                                hccategory=hccategory
-                                ))
-            
-    elif request.method == "GET":
-        mst = request.args.get("mst")
-        hoten = request.args.get("hoten")
-        sdt = request.args.get("sdt")
-        cccd = request.args.get("cccd")
-        gioitinh = request.args.get("gioitinh")
-        ngayvao = request.args.get("ngayvao")
-        ngaynghi = request.args.get("ngaynghi")
-        ngaykyhd = request.args.get("ngaykyhd")
-        ngayhethanhd = request.args.get("ngayhethanhd")
-        phongban = request.args.get("phongban")
-        trangthai = request.args.get("trangthai")
-        hccategory = request.args.get("hccategory")
+    if request.method == "GET":
+        mst = request.args.get("Mã số thẻ")
+        hoten = request.args.get("Họ tên")
+        sdt = request.args.get("Số điện thoại")
+        cccd = request.args.get("Căn cước công dân")
+        gioitinh = request.args.get("Giới tính")
+        vaotungay = request.args.get("Vào từ ngày")
+        vaodenngay = request.args.get("Vào đến ngày")
+        nghitungay = request.args.get("Nghỉ từ ngày")
+        nghidenngay = request.args.get("Nghỉ đến ngày")
+        phongban = request.args.get("Phòng ban")
+        chucvu = request.args.get("Chức danh")
+        trangthai = request.args.get("Trạng thái")
+        hccategory = request.args.get("Headcount Category")
         
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, ngayvao, ngaynghi, ngaykyhd, ngayhethanhd, phongban, trangthai, hccategory)   
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)   
         count = len(users)
         cacphongban = laycacphongban()
         cacto = laycacto()

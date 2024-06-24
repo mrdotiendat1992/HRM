@@ -26,7 +26,7 @@ input, select, label {
             <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
 
             <label for="kieudieuchuyen">Kiểu điều chuyển:</label>
-            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value={{request.args.get('kieudieuchuyen', '')}}></input>
+            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value='{{request.args.get('kieudieuchuyen', '')}}'></input>
         </div>
         <br>
         

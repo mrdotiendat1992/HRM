@@ -1,222 +1,246 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-table, th, td {
-    font-size: 10px;
-}
-input, select , label {
-    margin-left: 10px;
-    width: 100px;
-    font-size: 10px;
-}
-.view-details {
-    cursor: pointer;
-    color: blue;
-    text-decoration: underline;
-}
-
-.popup {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-    padding-top: 60px;
-}
-
-.popup-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-
-.close {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-    cursor: pointer;
-}
-.dropdown-menu {
-    padding:10px;
-}
+    table, th, td, .pagination {
+        font-size: 10px;
+    }
+    .pagination {
+        margin-left: 50px;
+    }
+    input,select{
+        width: 150px;
+        font-size: 12px;
+    }
+    view-details {
+        cursor: pointer;
+        color: blue;
+        text-decoration: underline;
+    }
+    
+    .popup {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.4);
+        padding-top: 60px;
+    }
+    
+    .popup-content {
+        background-color: #fff;
+        margin: 5% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+    }
+    
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <br>
 <div class="container-fluid">
     <h5>Danh sách nhân viên</h5>
-    <div style="display: flex; align-items: center;">
-        <div class="droright">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Tìm kiếm
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <form action="/" method="POST" id="filter_form">
-                    <div class="form-group">
-                        <label for="mst">Mã nhân viên</label>
-                        <input type="text" id="mst" name="mst">
-                        <label for="hoten">Họ tên</label>
-                        <input type="text" id="hoten" name="hoten">
-                        <label for="sdt">Số điện thoại</label>
-                        <input type="text" id="sdt" name="sdt">
-                        <label for="trangthai">Trạng thái</label>
-                        <input id="trangthai" name="trangthai"></input>
-                    </div>
-                    <div class="form-group">
-                        <label for="cccd">CCCD</label>
-                        <input type="text" id="cccd" name="cccd">
-                        <label for="phongban">Phòng ban</label>
-                        <input id="phongban" name="phongban"></input>
-                        <label for="gioitinh">Giới tính</label>
-                        <input id="gioitinh" name="gioitinh"></input>
-                        <label for="hccategory">HC Category</label>
-                        <input id="hccategory" name="hccategory"></input>
-                    </div>
-                    <div class="form-group">
-                        <label for="ngaykyhd">Ngày ký HĐ</label>
-                        <input type="date" id="ngaykyhd" name="ngaykyhd">
-                        <label for="ngayhethanhd">Ngày hết hạn HĐ</label>
-                        <input type="date" id="ngayhethanhd" name="ngayhethanhd">
-                        <label for="ngayvao">Ngày vào</label>
-                        <input type="date" id="ngayvao" name="ngayvao">
-                        <label for="ngaynghi">Ngày nghỉ</label>
-                        <input type="date" id="ngaynghi" name="ngaynghi">
-                    </div>
-                    <div class="form-group">
-                        <input class="btn btn-primary" type="submit" value="Tìm kiếm"></input>
-                    </div>
-                </form>
-            </div>
-        </div>
-
-    <div>
-        <b>Tổng số nhân viên: {{count}}</b>
-    </div> 
-
-    <div>
-        <form action="/export_dsnv" method="POST">
-            <div class="form-group">
-                <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
-                <input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" hidden>
-                <input type="text" id="sdt" name="sdt" value="{{ request.args.get('sdt', '') }}" hidden>
-                <input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" hidden>
-                <input type="text" id="cccd" name="cccd" value="{{ request.args.get('cccd', '') }}" hidden>
-                <input type="text" id="gioitinh" name="gioitinh" value="{{ request.args.get('gioitinh', '') }}" hidden>
-                <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
-                <input type="text" id="hccategory" name="hccategory" value="{{ request.args.get('hccategory', '') }}" hidden>
-                <input type="date" id="ngaykyhd" name="ngaykyhd" value="{{ request.args.get('ngaykyhd', '') }}" hidden>
-                <input type="date" id="ngayhethanhd" name="ngayhethanhd" value="{{ request.args.get('ngayhethanhd', '') }}" hidden>
-                <input type="date" id="ngayvao" name="ngayvao" value="{{ request.args.get('ngayvao', '') }}" hidden>
-                <input type="date" id="ngaynghi" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" hidden>
-                <input class="btn btn-success" type="submit" value="Xuất Excel"></input>
-            </div>
+    <br>
+    <div class="searchbar">
+        <select name="kieuloc" id = "kieuloc">
+            <option value=""></option>
+            <option value="Mã số thẻ">Mã số thẻ</option>
+            <option value="Họ tên">Họ tên</option>
+            <option value="Căn cước công dân">Căn cước công dân</option>
+            <option value="Số điện thoại">Số điện thoại</option>
+            <option value="Chức danh">Chức danh</option>
+            <option value="Phòng ban">Phòng ban</option>
+            <option value="Giới tính">Giới tính</option>
+            <option value="Trạng thái">Trạng thái</option>
+            <option value="Headcount Category">Headcount Category</option>
+            <option value="Vào từ ngày">Vào từ ngày</option>
+            <option value="Vào đến ngày">Vào đến ngày</option>
+            <option value="Nghỉ từ ngày">Nghỉ từ ngày</option>
+            <option value="Nghỉ đến ngày">Nghỉ đến ngày</option>
+        </select>
+        <input name="tutimkiem" placeholder="Nội dung tìm kiếm..." value="{{ request.args.get('tutimkiem', '') }}">
+        <button class="btn btn-primary" onclick="themdieukiemloc()" title="Thêm điều kiện lọc"><i class="fas fa-plus"></i></button>
+        <button class="btn btn-primary" onclick="timkiem()" title="Tìm kiếm"><i class="fas fa-search"></i></button>
+        <button class="btn btn-primary" onclick="xoaboloc()" title="Xóa các điều kiện lọc"><i class="fas fa-times"></i></button>
+    </div>
+    <br>
+    <div id="dieukienloc">
+        <form action="/" method="GET" id="formdieukienloc">
+            {% for key, value in request.args.items() %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+                <p style="color: red; font-size: 12px; margin-left: 10px;font-weight: bold;">{{key}}: {{value}}</p>
+            {% endfor %}
         </form>
     </div>
-</div>
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Mã nhân viên</th>
-            <th scope="col">Họ và tên</th>
-            <th scope="col">Ngày vào</th>
-            <th scope="col">Detail job title(VN)</th>
-            <th scope="col">Department</th>
-            <th scope="col">Line</th>
-            <th scope="col">Trạng thái</th>
-            <th scope="col">Xoá</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for user in users %}
-            <tr data-info='{{ user | tojson | safe }}'>
-                <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
-                <td>{{ user["MST"] }}</td>
-                <td>{{ user["Họ tên"] }}</td>
-                <td>{{ user["Ngày vào"] }}</td>
-                <td>{{ user["Job title VN"] }}</td>
-                <td>{{ user["Department"] }}</td>
-                <td>{{ user["Line"] }}</td>
-                <td>{{ user["Trạng thái"] }}</td>
-                <td><a class="fas fa-fw fa-eye  view-details" href="#" >Xem</a></td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<div class="pagination">{{ pagination.links }}</div>
-
-<div id="popup" class="popup">
-    <div class="popup-content">
-        <span class="close">&times;</span>
-        <p id="employeeInfo"></p>
+    <div style="display: flex; align-items: center;">
+        <h5>Tổng: {{count}}</h5>
+        <div class="pagination">{{ pagination.links }}</div>
     </div>
-</div>
+    <table class="table table-hove table-bordered">
+        <thead>
+            <tr class="table-primary">
+                <th></th>
+                <th>Mã số thẻ</th>
+                <th>Họ tên</th>
+                <th>Chức danh</th>
+                <th>Chuyền tổ</th>
+                <th>Phòng ban</th>
+                <th>Trạng thái</th>
+                <th>Ghi chú</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+                <tr data-info='{{ user | tojson | safe }}'>
+                    <td><a class="fas fa-fw fa-eye  view-details" href="#" >Xem</a></td>
+                    <td>{{ user["MST"] }}</td>
+                    <td>{{ user["Họ tên"] }}</td>
+                    <td>{{ user["Job title VN"] }}</td>
+                    <td>{{ user["Department"] }}</td>
+                    <td>{{ user["Line"] }}</td>
+                    <td>{{ user["Trạng thái"] }}</td>
+                    <td>{{ user["Ghi chú"] }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div id="popup" class="popup">
+        <div class="popup-content">
+            <span class="close">&times;</span>
+            <p id="employeeInfo"></p>
+        </div>
+    </div>
+    
+    <script>
+        function changeFormatDate(date){
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
 
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const popup = document.getElementById('popup');
-        const popupContent = document.getElementById('employeeInfo');
-        const closeBtn = document.getElementsByClassName('close')[0];
-    
-        document.querySelectorAll('.view-details').forEach(item => {
-            item.addEventListener('click', event => {
-                event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
-                const row = event.target.closest('tr');
-                const info = JSON.parse(row.dataset.info);
-                console.log(info);
-    
-                popupContent.innerHTML = `
-                    <strong>MST:</strong> ${info["MST"]}<br>
-                    <strong>Họ tên:</strong> ${info["Họ tên"]}<br>
-                    <strong>Thẻ chấm công:</strong> ${info["Thẻ chấm công"]}<br>
-                    <strong>Số điện thoại:</strong> ${info["Số điện thoại"]}<br>
-                    <strong>Ngày sinh:</strong> ${info["Ngày sinh"]}<br>
-                    <strong>Giới tính:</strong> ${info["Giới tính"]}<br>
-                    <strong>CCCD:</strong> ${info["CCCD"]}<br>
-                    <strong>Ngày cấp CCCD:</strong> ${info["Ngày cấp CCCD"]}<br>
-                    <strong>Thường trú:</strong> ${info["Thường trú"]}<br>
-                    <strong>Dân tộc:</strong> ${info["Dân tộc"]}<br>
-                    <strong>Học vấn:</strong> ${info["Học vấn"]}<br>
-                    <strong>Ngày vào:</strong> ${info["Ngày vào"]}<br>
-                    <strong>Job title VN:</strong> ${info["Job title VN"]}<br>
-                    <strong>Department:</strong> ${info["Department"]}<br>
-                    <strong>Line:</strong> ${info["Line"]}<br>
-                    <strong>Người thân:</strong> ${info["Người thân"]}<br>
-                    <strong>SĐT người thân:</strong> ${info["SĐT liên hệ"]}<br>
-                    <strong>Loại hợp đồng:</strong> ${info["Loại hợp đồng"]}<br>
-                    <strong>Trạng thái:</strong> ${info["Trạng thái"]}<br>
-                `;
-    
-                popup.style.display = 'block';
-            });
-        });
-    
-        closeBtn.onclick = function() {
-            popup.style.display = 'none';
+        function themdieukiemloc(){
+            var kieuloc = document.getElementById("kieuloc").value;
+            var tutimkiem = document.getElementsByName("tutimkiem")[0].value;
+            const form = document.getElementById("formdieukienloc");
+
+            inputkieuloc = document.createElement("input");
+            inputkieuloc.setAttribute("type", "hidden");
+            inputkieuloc.setAttribute("id", kieuloc);
+            inputkieuloc.setAttribute("name", kieuloc);
+            inputkieuloc.setAttribute("value", tutimkiem);
+            form.appendChild(inputkieuloc);
+            tutimkiemmoi = document.createElement("p");
+            tutimkiemmoi.style = "color: red; font-size: 12px; margin-left: 10px;font-weight: bold;";
+            if (kieuloc == "Vào từ ngày" || kieuloc == "Vào đến ngày" || kieuloc == "Nghỉ từ ngày" || kieuloc == "Nghỉ đến ngày") {
+                tutimkiemmoi.innerHTML = kieuloc + ": " + changeFormatDate(tutimkiem);
+            } else {
+                tutimkiemmoi.innerHTML = kieuloc + ": " + tutimkiem;
+            }
+
+            form.appendChild(tutimkiemmoi);
         }
-    
-        window.onclick = function(event) {
-            if (event.target == popup) {
+        function timkiem(){
+            const form = document.getElementById("formdieukienloc");
+            form.submit();
+        }
+        document.getElementById("kieuloc").addEventListener("change", function() {
+            var kieuloc = document.getElementById("kieuloc").value;
+            var tutimkiem = document.getElementsByName("tutimkiem");
+            if (kieuloc == "Vào từ ngày" || kieuloc == "Vào đến ngày" || kieuloc == "Nghỉ từ ngày" || kieuloc == "Nghỉ đến ngày") {
+                tutimkiem[0].setAttribute("type", "date");
+            } else {
+                tutimkiem[0].setAttribute("type", "text");
+            }
+        });
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const popup = document.getElementById('popup');
+            const popupContent = document.getElementById('employeeInfo');
+            const closeBtn = document.getElementsByClassName('close')[0];
+        
+            document.querySelectorAll('.view-details').forEach(item => {
+                item.addEventListener('click', event => {
+                    event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
+                    const row = event.target.closest('tr');
+                    const info = JSON.parse(row.dataset.info);
+                    console.log(info);
+                    var ngaysinh = changeFormatDate(info["Ngày sinh"]);
+                    var ngaycapcccd = changeFormatDate(info["Ngày cấp CCCD"]);
+                    var ngayvao = changeFormatDate(info["Ngày vào"]);
+                    var ngaynghi = changeFormatDate(info["Ngày nghỉ"]);
+                    var ngaykyhd = changeFormatDate(info["Ngày ký HĐ"]);
+                    var ngayhethd = changeFormatDate(info["Ngày hết hạn"]);
+
+                    popupContent.innerHTML = `                    
+                    <div style='display: flex; align-items: top;'>
+                        <table class='table-hover' width='50%'>
+                            <tr><th scope="row"><strong>Ảnh:</strong></th><td><div style='width:100px; height: 100px; justify-content: center;'><img src="static/img/undraw_profile.svg" width="100px" height="100px" alt="Avatar"></div></td></tr>
+                            <tr><th><strong>MST:</strong></th><td> ${info["MST"]}</td></tr>
+                            <tr><th><strong>Họ tên:</strong></th><td> ${info["Họ tên"]}</td></tr>
+                            <tr><th><strong>Thẻ chấm công:</strong></th><td> ${info["Thẻ chấm công"]}</td></tr>
+                            <tr><th><strong>Số điện thoại:</strong></th><td> ${info["Số điện thoại"]}</td></tr>
+                            <tr><th><strong>Ngày sinh:</strong></th><td> ${ngaysinh}</td></tr>
+                            <tr><th><strong>Giới tính:</strong></th><td> ${info["Giới tính"]}</td></tr>
+                            <tr><th><strong>CCCD:</strong></th><td> ${info["CCCD"]}</td></tr>
+                            <tr><th><strong>Ngày cấp CCCD:</strong></th><td> ${ngaycapcccd}</td></tr>
+                            <tr><th><strong>Thường trú:</strong></th><td> ${info["Thường trú"]}</td></tr>
+                            <tr><th><strong>Nơi sinh:</strong></th><td> ${info["Nơi sinh"]}</td></tr>
+                            <tr><th><strong>Tạm trú:</strong></th><td> ${info["Tạm trú"]}</td></tr>
+                            <tr><th><strong>Dân tộc:</strong></th><td> ${info["Dân tộc"]}</td></tr>
+                            <tr><th><strong>Học vấn:</strong></th><td> ${info["Học vấn"]}</td></tr>                            
+                        </table>
+                        <table table class='table-hover' width='50%'>
+                            <tr><th><strong>Ngày vào:</strong></th><td> ${ngayvao}</td></tr>
+                            <tr><th><strong>Ngày nghỉ:</strong></th><td> ${ngaynghi}</td></tr>
+                            <tr><th><strong>Chức danh:</strong></th><td> ${info["Job title VN"]}</td></tr>
+                            <tr><th><strong>Phòng ban:</strong></th><td> ${info["Department"]}</td></tr>
+                            <tr><th><strong>Chuyền tổ:</strong></th><td> ${info["Line"]}</td></tr>
+                            <tr><th><strong>Headcount category:</strong></th><td> ${info["HC category"]}</td></tr>
+                            <tr><th><strong>Cấp bậc:</strong></th><td> ${info["Gradecode"]}</td></tr>
+                            <tr><th><strong>Người thân:</strong></th><td> ${info["Người thân"]}</td></tr>
+                            <tr><th><strong>SĐT người thân:</strong></th><td> ${info["SĐT liên hệ"]}</td></tr>
+                            <tr><th><strong>Loại hợp đồng:</strong></th><td> ${info["Loại hợp đồng"]}</td></tr>
+                            <tr><th><strong>Trạng thái:</strong></th><td> ${info["Trạng thái"]}</td></tr>
+                            <tr><th><strong>Ngày kí hợp đồng:</strong></th><td> ${ngaykyhd}</td></tr>
+                            <tr><th><strong>Ngày hết hạn hợp đồng:</strong></th><td> ${ngayhethd}</td></tr>
+                        </table>
+                    </div>
+                    `;
+        
+                    popup.style.display = 'block';
+                });
+            });
+            closeBtn.onclick = function() {
                 popup.style.display = 'none';
             }
-        }
-    });
-    
-</script>
-
+        
+            window.onclick = function(event) {
+                if (event.target == popup) {
+                    popup.style.display = 'none';
+                }
+            }
+        });
+    function xoaboloc() {
+        form = document.getElementById("formdieukienloc");
+        form.innerHTML = '';
+    }
+    </script>
 </div>
 {% endblock content %}
