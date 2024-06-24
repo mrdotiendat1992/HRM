@@ -56,6 +56,15 @@ def roles_required(*roles):
         return decorated_function
     return decorator
 
+def laydanhsachsaphethanhopdong():
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT * FROM Sap_het_han_HDLD WHERE Factory='{current_user.macongty}' ORDER BY MST ASC"
+    print(query)
+    rows = cursor.execute(query).fetchall()
+    conn.close()
+    return rows
+
 def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
     if not trangthaiyeucau:
         trangthaiyeucau = "NULL"
@@ -2155,6 +2164,24 @@ def inhopdonglaodong():
                 return redirect("/muc3_3")
         except:
             return redirect("/muc3_3")   
+
+@app.route("/muc3_4", methods=["GET","POST"])
+@login_required
+@roles_required('nhansu','sa','developer')
+def danhsachsaphethanhopdong():
+    if request.method == "GET":
+        danhsach = laydanhsachsaphethanhopdong()
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("/3_4.html",
+                               danhsach=paginated_rows,
+                               pagination=pagination,
+                               total = total)
 
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required

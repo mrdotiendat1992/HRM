@@ -9,7 +9,7 @@
         overflow-x: scroll;
     }
     .content {
-        width: 2000px;
+        width: 100%;
     }
     .pagination {
         font-size: 10px;
@@ -23,11 +23,12 @@
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <div style="display: flex;">
+        <div style="display: flex; align-items: center;">
             <h5>Tổng: {{count}}</h5>
-            <form method="POST" action="/export_dshhhd">
-                
+            <form method="total">
+                <input type="submit" class="btn btn-success" value="Xuất excel">
             </form>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
         <table class="table table-hover">
@@ -38,62 +39,28 @@
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
                     <th>Phòng ban</th>
-                    <th>Loại điểm danh</th>
-                    <th>Ngày</th>                    
-                    <th>Giờ</th>
-                    <th>Lý do</th> 
+                    <th>Ngày kí HĐ</th>                    
+                    <th>Ngày hết hạn HĐ</th>
                     <th>Trạng thái</th>
-                </tr>
-                <tr class="table-secondary">
-                    <form action = "/muc7_1_4" method = "GET">
-                        <th><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
-                        <th></th>  
-                        <th><input type="text" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
-                        <th><input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
-                    </form>
                 </tr>
             </thead>
         
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td>{{row[1]}}</td>
+                    <td>{{row[0]}}</td>
                     <td>{{row[2]}}</td>
-                    <td>{{row[3]}}</td>
-                    <td>{{row[4]}}</td>
-                    <td>{{row[5]}}</td>
-                    <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
-                    <td>{{row[8][:5]}}</td>
-                    <td>{{row[9]}}</td>
-                    {% if row[10]=='Đã phê duyệt'%}
-                    <td>{{row[10]}}</td>
-                    {% elif row[10]=='Đã phê duyệt' %}
-                    <td>{{row[10]}}</td>
-                    {% else %}
-                    <td>
-                        <form action="/update_diemdanhbu" method="POST">
-                            <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
-                            <input type="hidden" name="mst" value="{{row[1]}}">
-                            <input type="hidden" name="bophan" value="{{row[5]}}">
-                            <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
-                            <input type="hidden" name="ngayduyet" value="{{row[7]}}">
-                            <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
-                            <input type="submit" class="btn btn-warning" value="{{row[10]}}"></input>
-                        </form>
-                    </td>
-                    {% endif %}
+                    <td>{{row[42]}}</td>
+                    <td>{{row[50]}}</td>
+                    <td>{{row[46]}}</td>
+                    <td>{{row[40]}}</td>
+                    <td>{{row[41]}}</td>
+                    <td>{{row[60]}}</td>
                 </tr>  
                 {% endfor %}
             </tbody>
         </table>
-        {{pagination.links}}
+        
     </div>
 </div>
 {% endblock content %}
