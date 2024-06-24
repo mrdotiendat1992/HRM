@@ -1557,6 +1557,27 @@ def home():
                             page="Trang chủ", pagination=pagination,
                             cactrangthai=cactrangthai,count=count,
                             cachccategory=cachccategory)
+    else:
+        mst = request.form.get("Mã số thẻ")
+        hoten = request.form.get("Họ tên")
+        sdt = request.form.get("Số điện thoại")
+        cccd = request.form.get("Căn cước công dân")
+        gioitinh = request.form.get("Giới tính")
+        vaotungay = request.form.get("Vào từ ngày")
+        vaodenngay = request.form.get("Vào đến ngày")
+        nghitungay = request.form.get("Nghỉ từ ngày")
+        nghidenngay = request.form.get("Nghỉ đến ngày")
+        phongban = request.form.get("Phòng ban")
+        chucvu = request.form.get("Chức danh")
+        trangthai = request.form.get("Trạng thái")
+        hccategory = request.form.get("Headcount Category")
+            
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)      
+        df = pd.DataFrame(users)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachnhanvien_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
@@ -2113,11 +2134,11 @@ def inhopdonglaodong():
         thangketthuchopdong = request.form.get("ngayketthuc")[5:7]
         namketthuchopdong = request.form.get("ngayketthuc")[:4]
         tennhanvien = request.form.get("hoten")
-        ngaysinh = request.form.get("ngaysinh")
+        ngaysinh = datetime.strptime(request.form.get("ngaysinh"), "%Y-%m-%d").strftime("%d/%m/%Y")
         gioitinh = request.form.get("gioitinh")
         thuongtru = request.form.get("thuongtru")
         cccd = request.form.get("cccd")
-        ngaycapcccd = request.form.get("ngaycapcccd")
+        ngaycapcccd = datetime.strptime(request.form.get("ngaycapcccd"), "%Y-%m-%d").strftime("%d/%m/%Y")
         mucluong = request.form.get("luongcoban").replace(',','')
         chucvu = request.form.get("chucvu")
         
@@ -2952,19 +2973,21 @@ def export_dstc():
 @app.route("/export_dsnv", methods=["POST"])
 def export_dsnv():
     
-    mst = request.form.get("mst")
-    hoten = request.form.get("hoten")
-    sdt = request.form.get("sdt")
-    cccd = request.form.get("cccd")
-    gioitinh = request.form.get("gioitinh")
-    ngayvao = request.form.get("ngayvao")
-    ngaynghi = request.form.get("ngaynghi")
-    ngaykyhd = request.form.get("ngaykyhd")
-    ngayhethanhd = request.form.get("ngayhethanhd")
-    phongban = request.form.get("phongban")
-    trangthai = request.form.get("trangthai")
-    hccategory = request.form.get("hccategory")
-    users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, ngayvao, ngaynghi, ngaykyhd, ngayhethanhd, phongban, trangthai, hccategory)    
+    mst = request.form.get("Mã số thẻ")
+    hoten = request.form.get("Họ tên")
+    sdt = request.form.get("Số điện thoại")
+    cccd = request.form.get("Căn cước công dân")
+    gioitinh = request.form.get("Giới tính")
+    vaotungay = request.form.get("Vào từ ngày")
+    vaodenngay = request.form.get("Vào đến ngày")
+    nghitungay = request.form.get("Nghỉ từ ngày")
+    nghidenngay = request.form.get("Nghỉ đến ngày")
+    phongban = request.form.get("Phòng ban")
+    chucvu = request.form.get("Chức danh")
+    trangthai = request.form.get("Trạng thái")
+    hccategory = request.form.get("Headcount Category")
+        
+    users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)      
     df = pd.DataFrame(users)
     df.to_excel("danhsach.xlsx", index=False)
     
