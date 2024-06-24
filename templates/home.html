@@ -21,7 +21,7 @@ input, select , label {
     z-index: 1000;
     left: 0;
     top: 0;
-    width: 50%;
+    width: 100%;
     height: 100%;
     overflow: auto;
     background-color: rgba(0,0,0,0.4);
@@ -49,91 +49,101 @@ input, select , label {
     text-decoration: none;
     cursor: pointer;
 }
+.dropdown-menu {
+    padding:10px;
+}
 </style>
 {% endblock style %}
 {% block content %}
 <br>
 <div class="container-fluid">
     <h5>Danh sách nhân viên</h5>
-    <form action="/" method="POST" id="filter_form">
-        <div class="form-group">
-            <label for="mst">Mã nhân viên</label>
-            <input type="text" id="mst" name="mst">
-            <label for="hoten">Họ tên</label>
-            <input type="text" id="hoten" name="hoten">
-            <label for="sdt">Số điện thoại</label>
-            <input type="text" id="sdt" name="sdt">
-            <label for="trangthai">Trạng thái</label>
-            <select id="trangthai" name="trangthai">
-                {% for trangthai in cactrangthai %}
-                    <option value="{{ trangthai }}">{{ trangthai }}</option>
-                {% endfor %}
-            </select>
+    <div style="display: flex; align-items: center;">
+        <div class="droright">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Tìm kiếm
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <form action="/" method="POST" id="filter_form">
+                    <div class="form-group">
+                        <label for="mst">Mã nhân viên</label>
+                        <input type="text" id="mst" name="mst">
+                        <label for="hoten">Họ tên</label>
+                        <input type="text" id="hoten" name="hoten">
+                        <label for="sdt">Số điện thoại</label>
+                        <input type="text" id="sdt" name="sdt">
+                        <label for="trangthai">Trạng thái</label>
+                        <select id="trangthai" name="trangthai">
+                            <option value=""></option>
+                            {% for trangthai in cactrangthai %}
+                                <option value="{{ trangthai }}">{{ trangthai }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="cccd">CCCD</label>
+                        <input type="text" id="cccd" name="cccd">
+                        <label for="phongban">Phòng ban</label>
+                        <select id="phongban" name="phongban">
+                            <option value=""></option>
+                            {% for phongban in cacphongban %}
+                                <option value="{{ phongban }}">{{ phongban }}</option>
+                            {% endfor %}
+                        </select>
+                        <label for="gioitinh">Giới tính</label>
+                        <select id="gioitinh" name="gioitinh">
+                            <option value=""></option>
+                            <option value="Nam">Nam</option>
+                            <option value="Nữ">Nữ</option>
+                        </select>
+                        <label for="hccategory">HC Category</label>
+                        <select id="hccategory" name="hccategory">
+                            <option value=""></option>
+                            {% for hccategory in cachccategory %}
+                                <option value="{{ hccategory }}">{{ hccategory }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ngaykyhd">Ngày ký HĐ</label>
+                        <input type="date" id="ngaykyhd" name="ngaykyhd">
+                        <label for="ngayhethanhd">Ngày hết hạn HĐ</label>
+                        <input type="date" id="ngayhethanhd" name="ngayhethanhd">
+                        <label for="ngayvao">Ngày vào</label>
+                        <input type="date" id="ngayvao" name="ngayvao">
+                        <label for="ngaynghi">Ngày nghỉ</label>
+                        <input type="date" id="ngaynghi" name="ngaynghi">
+                    </div>
+                    <div class="form-group">
+                        <input class="btn btn-primary" type="submit" value="Tìm kiếm"></input>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="form-group">
-            <label for="cccd">CCCD</label>
-            <input type="text" id="cccd" name="cccd">
-            <label for="phongban">Phòng ban </label>
-            <select id="phongban" name="phongban">
-                <option value="">Chọn phòng ban</option>
-                {% for phongban in cacphongban %}
-                    <option value="{{ phongban }}">{{ phongban }}</option>
-                {% endfor %}
-            </select>
-            <label for="gioitinh">Giới tính</label>
-            <select id="gioitinh" name="gioitinh">
-                <option value="">Chọn giới tính</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-            </select>
-            <label for="hccategory">HC Category</label>
-            <select id="hccategory" name="hccategory">
-                <option value="">Chọn HC Category</option>
-                {% for hccategory in cachccategory %}
-                    <option value="{{ hccategory }}">{{ hccategory }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="ngaykyhd">Ngày ký HĐ</label>
-            <input type="date" id="ngaykyhd" name="ngaykyhd">
-            <label for="ngayhethanhd">Ngày hết hạn HĐ</label>
-            <input type="date" id="ngayhethanhd" name="ngayhethanhd">
-            <label for="ngayvao">Ngày vào</label>
-            <input type="date" id="ngayvao" name="ngayvao">
-            <label for="ngaynghi">Ngày nghỉ</label>
-            <input type="date" id="ngaynghi" name="ngaynghi">
-        </div>
-        <div class="form-group">
-            <input class="btn btn-primary" type="submit" value="Tìm kiếm"></input>
-        </div>
-    </form>
-</div> 
 
-<hr />
+    <div>
+        <b>Tổng số nhân viên: {{count}}</b>
+    </div> 
 
-<div>
-    <b>Tổng số nhân viên: {{count}}</b>
-</div> 
-
-<div>
-    <form action="/export_dsnv" method="POST">
-        <div class="form-group">
-            <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
-            <input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" hidden>
-            <input type="text" id="sdt" name="sdt" value="{{ request.args.get('sdt', '') }}" hidden>
-            <input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" hidden>
-            <input type="text" id="cccd" name="cccd" value="{{ request.args.get('cccd', '') }}" hidden>
-            <input type="text" id="gioitinh" name="gioitinh" value="{{ request.args.get('gioitinh', '') }}" hidden>
-            <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
-            <input type="text" id="hccategory" name="hccategory" value="{{ request.args.get('hccategory', '') }}" hidden>
-            <input type="date" id="ngaykyhd" name="ngaykyhd" value="{{ request.args.get('ngaykyhd', '') }}" hidden>
-            <input type="date" id="ngayhethanhd" name="ngayhethanhd" value="{{ request.args.get('ngayhethanhd', '') }}" hidden>
-            <input type="date" id="ngayvao" name="ngayvao" value="{{ request.args.get('ngayvao', '') }}" hidden>
-            <input type="date" id="ngaynghi" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" hidden>
-            <input class="btn btn-success" type="submit" value="Xuất Excel"></input>
-        </div>
-    </form>
+    <div>
+        <form action="/export_dsnv" method="POST">
+            <div class="form-group">
+                <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
+                <input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" hidden>
+                <input type="text" id="sdt" name="sdt" value="{{ request.args.get('sdt', '') }}" hidden>
+                <input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" hidden>
+                <input type="text" id="cccd" name="cccd" value="{{ request.args.get('cccd', '') }}" hidden>
+                <input type="text" id="gioitinh" name="gioitinh" value="{{ request.args.get('gioitinh', '') }}" hidden>
+                <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
+                <input type="text" id="hccategory" name="hccategory" value="{{ request.args.get('hccategory', '') }}" hidden>
+                <input type="date" id="ngaykyhd" name="ngaykyhd" value="{{ request.args.get('ngaykyhd', '') }}" hidden>
+                <input type="date" id="ngayhethanhd" name="ngayhethanhd" value="{{ request.args.get('ngayhethanhd', '') }}" hidden>
+                <input type="date" id="ngayvao" name="ngayvao" value="{{ request.args.get('ngayvao', '') }}" hidden>
+                <input type="date" id="ngaynghi" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" hidden>
+                <input class="btn btn-success" type="submit" value="Xuất Excel"></input>
+            </div>
+        </form>
+    </div>
 </div>
 
 <table class="table table-hover">
@@ -227,5 +237,5 @@ input, select , label {
     
 </script>
 
-
+</div>
 {% endblock content %}

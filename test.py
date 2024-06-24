@@ -1,12 +1,28 @@
 import pyodbc
-
-
-used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-conn = pyodbc.connect(used_db)
+conn = pyodbc.connect("Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;")
 cursor = conn.cursor()
-
-for row in cursor.execute("SELECT MST FROM dbo.DANH_SACH_CBCNV WHERE Factory = 'NT2'").fetchall():
-    # print(row)
-    cursor.execute(f"INSERT INTO dbo.Dang_ky_ca_lam_viec VALUES ('{row[0]}','NT2','2024-05-01','2054-12-31','A1')")
-conn.commit()
+query = f"""
+SELECT 
+    Danh_sach_CBCNV.Factory AS Nha_may,
+    Danh_sach_CBCNV.MST,
+    Danh_sach_CBCNV.Line AS Line,
+    Danh_sach_CBCNV.Department AS Department,
+    Check_In_Out.NgayCham AS Ngay,
+    Check_In_Out.GioCham
+FROM 
+    Danh_sach_CBCNV
+JOIN 
+    Check_In_Out 
+ON 
+    Danh_sach_CBCNV.Factory = Check_In_Out.Nha_may
+AND
+    Danh_sach_CBCNV.MST = Check_In_Out.MaChamCong
+WHERE
+    Nha_may = 'NT1'
+ORDER BY Ngay DESC, CAST(MST AS INT) ASC, Line ASC, Department ASC
+"""
+# print(query)
+rows = cursor.execute(query).fetchall()
 conn.close()
+for row in rows:
+    print(row)

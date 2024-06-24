@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-file2 = r"DS CBCNV NT2.xlsx"
-file1 = r"DS CBCNV NT1.xlsx"
+
+file1 = r"c:\Users\Khanh\Downloads\Book1.xlsx"
 
 import openpyxl
 import pyodbc
@@ -11,26 +11,26 @@ def put_nt1():
 
     for row in sheet.iter_rows(values_only=True):
         if row[0] != 'MST':
-            conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-G635SF6;DATABASE=HR;TRUSTED_CONNECTION=yes;')
-            # conn = pyodbc.connect("Driver={SQL Server}; Server=172.16.60.100; Database=HR; UID=huynguyen; PWD=Namthuan@123;")
+            # conn = pyodbc.connect('DRIVER={SQL Server};SERVER=DESKTOP-G635SF6;DATABASE=HR;TRUSTED_CONNECTION=yes;')
+            conn = pyodbc.connect("Driver={SQL Server}; Server=172.16.60.100; Database=HR; UID=huynguyen; PWD=Namthuan@123;")
             cursor = conn.cursor()
             
             mst = row[0]
-            thechamcong = int(mst)
+            thechamcong = int(row[1])
             hoten = row[2]
             sdt = row[3]
-            ngaysinh = row[4]
+            ngaysinh = f"'{row[4]}'" if row[4] else 'NULL'
             gioitinh = row[5]
             cccd = row[6]
-            ngaycapcccd = f"{row[7]}" if row[7] else 'NULL'
+            ngaycapcccd = f"'{row[7]}'" if row[7] else 'NULL'
             noicapcccd = row[8]
-            cmt = f'{row[9]}' if row[9] else 'NULL'
+            cmt = 'NULL'
             thuongtru = row[10]
             thonxom = row[11]
             phuongxa = row[12]
             quanhuyen = row[13]
             thanhpho = row[14]
-            dantoc = f"N'{row[15]}'" if row[15] else f"N'Kinh'"
+            dantoc = f"N'{row[15]}'"
             quoctich = row[16]
             tongiao = row[17]
             trinhdo = row[18]
@@ -42,14 +42,14 @@ def put_nt1():
             sotaikhoan = row[24]
             connho = row[25]
             tencon1 = f"'{row[26]}'" if row[26] else 'NULL'
-            tencon2 = f"'{row[27]}'" if row[27] else 'NULL'
-            tencon3 = f"'{row[28]}'" if row[28] else 'NULL'
-            tencon4 = f"'{row[29]}'" if row[29] else 'NULL'
-            tencon5 = f"'{row[30]}'" if row[30] else 'NULL'
-            ngaysinhcon1 = f"'{row[31]}'" if row[31] else 'NULL'
-            ngaysinhcon2 = f"'{row[32]}'" if row[32] else 'NULL'
-            ngaysinhcon3 = f"'{row[33]}'" if row[33] else 'NULL'
-            ngaysinhcon4 = f"'{row[34]}'" if row[34] else 'NULL'
+            tencon2 = f"'{row[28]}'" if row[27] else 'NULL'
+            tencon3 = f"'{row[30]}'" if row[28] else 'NULL'
+            tencon4 = f"'{row[32]}'" if row[29] else 'NULL'
+            tencon5 = f"'{row[34]}'" if row[30] else 'NULL'
+            ngaysinhcon1 = f"'{row[27]}'" if row[31] else 'NULL'
+            ngaysinhcon2 = f"'{row[29]}'" if row[32] else 'NULL'
+            ngaysinhcon3 = f"'{row[31]}'" if row[33] else 'NULL'
+            ngaysinhcon4 = f"'{row[33]}'" if row[34] else 'NULL'
             ngaysinhcon5 = f"'{row[35]}'" if row[35] else 'NULL'
             anh = row[36]
             nguoithan = row[37]
@@ -85,8 +85,8 @@ def put_nt1():
             ngaykihdcthl2 = f"'{row[67]}'" if row[67] else 'NULL'
             ngayhethanhdcthl2 = f"'{row[68]}'" if row[68] else 'NULL'
             ngaykihdvthl = f"'{row[69]}'" if row[69] else 'NULL'
-            truongbophan = row[70]
-
+            truongbophan = f"'{row[70]}'"
+            ghichu = row[71]
             query=f"""
                     INSERT INTO HR.dbo.Danh_sach_CBCNV
                     VALUES
@@ -95,10 +95,10 @@ def put_nt1():
                         ,'{thechamcong}'
                         ,N'{hoten}'
                         ,'{sdt}'
-                        ,'{ngaysinh}'
+                        ,{ngaysinh}
                         ,N'{gioitinh}'
                         ,'{cccd}'
-                        ,'{ngaycapcccd}'
+                        ,{ngaycapcccd}
                         ,N'{noicapcccd}'
                         ,N'{cmt}'
                         ,N'{thuongtru}'
@@ -117,15 +117,15 @@ def put_nt1():
                         ,N'{nganhang}'
                         ,N'{sotaikhoan}'
                         ,N'{connho}'
-                        ,N'{tencon1}'
+                        ,{tencon1}
                         ,{ngaysinhcon1}
-                        ,N'{tencon2}'
+                        ,{tencon2}
                         ,{ngaysinhcon2}
-                        ,N'{tencon3}'
+                        ,{tencon3}
                         ,{ngaysinhcon3}
-                        ,N'{tencon4}'
+                        ,{tencon4}
                         ,{ngaysinhcon4}
-                        ,N'{tencon5}'
+                        ,{tencon5}
                         ,{ngaysinhcon5}
                         ,N'{anh}'
                         ,N'{nguoithan}'
@@ -162,9 +162,11 @@ def put_nt1():
                         ,{ngayhethanhdcthl2}
                         ,{ngaykihdvthl}
                         ,'N'
+                        ,N'{ghichu}'
                     )
                 """
-            if factory == 'NT1':
+            print(mst)
+            if factory == 'NT2' and int(mst)>2965:
                 try:
                     print(cursor.execute(query))
                     conn.commit()
@@ -173,8 +175,7 @@ def put_nt1():
                     print(query)
                     print(e)
                     conn.close()
-                    continue
-            
+                    break            
         
 # def put_nt2():
 #     book = openpyxl.load_workbook(file2)

@@ -1074,13 +1074,13 @@ def capnhat_xinnghiphep(mst,ngay):
     conn.commit()
     conn.close()
 
-def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giobatdau,gioketthuc):
+def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca,giotangcathucte):
     
     if chucvu=='nan':
         chucvu = 'Không'
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giobatdau}','{gioketthuc}', NULL)"
+    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giotangca}','{giotangcathucte}', NULL, NULL, NULL, NULL)"
     print(query)
     try:
         cursor.execute(query)
@@ -1304,7 +1304,47 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
 def doimatkhautaikhoan(macongty,mst,matkhau):
     current_user.matkhau = matkhau
     db.session.commit()
-    
+
+def laydulieuchamcong(mst=None,chuyen=None,phongban=None,ngay=None,tungay=None,denngay=None):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"""
+    SELECT 
+        Danh_sach_CBCNV.Factory AS Nha_may,
+        Danh_sach_CBCNV.MST,
+        Danh_sach_CBCNV.Line AS Line,
+        Danh_sach_CBCNV.Department AS Department,
+        Check_In_Out.NgayCham AS Ngay,
+        Check_In_Out.GioCham
+    FROM 
+        Danh_sach_CBCNV
+    JOIN 
+        Check_In_Out 
+    ON 
+        Danh_sach_CBCNV.Factory = Check_In_Out.Nha_may
+    AND
+        Danh_sach_CBCNV.MST = Check_In_Out.MaChamCong
+    WHERE
+        Nha_may = '{current_user.macongty}'
+    ORDER BY Ngay DESC, MST ASC, Line ASC, Department ASC
+    """
+    if mst:
+        query += f" AND MST='{mst}'"
+    if chuyen:
+        query += f" AND Line = '{chuyen}'"
+    if phongban:
+        query += f" AND Department = '{phongban}'"
+    if ngay:
+        query += f" AND Ngay = '{ngay}'"
+    if tungay:
+        query += f" AND '{tungay}' <= Ngay"
+    if denngay:
+        query += f" AND Ngay <= '{denngay}'"
+    print(query)
+    rows = cursor.execute(query).fetchall()
+    conn.close()
+    return rows        
+  
 ######################################################################################################################################################
 #          MAIN ROUTES
 ######################################################################################################################################################
@@ -3168,6 +3208,20 @@ def export_dsxnk():
     df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), index=False)
     
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route('/laydulieuchamcong', methods=['GET'])
+def laydulieuchamcongthucte():
+    danhsach=laydulieuchamcong()
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(danhsach)
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_users = danhsach[start:end]
+    
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("chamcong.html",danhsach=paginated_users,pagination=pagination,total=total)
+
 if __name__ == "__main__":
     print("HUMAN RESOURCE MANAGEMENT SYSTEM")
     serve(app, host='0.0.0.0', port=81, threads=16)

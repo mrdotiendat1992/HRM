@@ -1,0 +1,34 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    table, th, td,pagination {
+        font-size: 10px;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+{{total}}
+{{pagination.links}}
+<table class="table table-bordered">
+    <thead>
+        <tr class="table-primary">
+            <th>Mã số thẻ</th>
+            <th>Chuyền</th>
+            <th>Bộ phận</th>
+            <th>Ngày</th>
+            <th>Giờ </th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in danhsach %}
+        <tr>
+            <td>{{ item[1] }}</td>
+            <td>{{ item[2] }}</td>
+            <td>{{ item[3] }}</td>
+            <td>{{ item[5].date() }}</td>
+            <td>{{ item[5].time() }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock content %}
