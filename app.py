@@ -329,7 +329,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
                     sheet['F23'] = thuongtru
-                    sheet['D24'] = f"Số CCCD:{cccd}"
+                    sheet['D24'] = cccd
                     sheet['L24'] = ngaycapcccd
                     sheet['F32'] = bophan
                     sheet['F33'] = mst
