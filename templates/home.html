@@ -6,6 +6,7 @@
     }
     .pagination {
         margin-left: 50px;
+        margin-right: 50px;
     }
     input,select{
         width: 150px;
@@ -84,14 +85,33 @@
     <div id="dieukienloc">
         <form action="/" method="GET" id="formdieukienloc">
             {% for key, value in request.args.items() %}
+                {% if key == 'page' %}
+                {% else %}
                 <input type="hidden" name="{{ key }}" value="{{ value }}">
                 <p style="color: red; font-size: 12px; margin-left: 10px;font-weight: bold;">{{key}}: {{value}}</p>
+                {% endif %}
             {% endfor %}
         </form>
     </div>
     <div style="display: flex; align-items: center;">
         <h5>Tổng: {{count}}</h5>
         <div class="pagination">{{ pagination.links }}</div>
+        <form action="/" method="POST">
+            <input type="text" id="Mã số thẻ" name="Mã số thẻ" hidden value={{request.args.get('Mã số thẻ', '')}}>
+            <input type="text" id="Họ tên" name="Họ tên" hidden value={{request.args.get('Họ tên', '')}}>
+            <input type="text" id="Căn cước công dân" name="Căn cước công dân" hidden value={{request.args.get('Căn cước công dân', '')}}>
+            <input type="text" id="Số điện thoại" name="Số điện thoại" hidden value={{request.args.get('Số điện thoại', '')}}>
+            <input type="text" id="Chức danh" name="Chức danh" hidden value={{request.args.get('Chức danh', '')}}>
+            <input type="text" id="Phòng ban" name="Phòng ban" hidden value={{request.args.get('Phần ban', '')}}>
+            <input type="text" id="Giới tính" name="Giới tính" hidden value={{request.args.get('Giểu tính', '')}}>
+            <input type="text" id="Trạng thái" name="Trạng thái" hidden value={{request.args.get('Trạng thái', '')}}>
+            <input type="text" id="Headcount Category" name="Headcount Category" hidden value={{request.args.get('Headcount Category', '')}}>
+            <input type="text" id="Vào từ ngày" name="Vào từ ngày" hidden value={{request.args.get('Vào từ ngày', '')}}>
+            <input type="text" id="Vào đến ngày" name="Vào đến ngày" hidden value={{request.args.get('Vào đến ngày', '')}}>
+            <input type="text" id="Nghỉ từ ngày" name="Nghỉ từ ngày" hidden value={{request.args.get('Nghỉ từ ngày', '')}}>
+            <input type="text" id="Nghỉ đến ngày" name="Nghỉ đến ngày" hidden value={{request.args.get('Nghỉ đến ngày', '')}}>
+            <input type="submit" class="btn btn-success" value="Xuất excel">
+        </form>
     </div>
     <table class="table table-hove table-bordered">
         <thead>
