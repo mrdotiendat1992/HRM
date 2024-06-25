@@ -68,10 +68,6 @@ button {
                     <input type="text" id="giotangca" name="giotangca">
                 </div>
                 <div class="form-group">
-                    <label for="giotangcathucte">Giờ tăng ca thực tế(18:30)</label>
-                    <input type="text" id="giotangcathucte" name="giotangcathucte">
-                </div>
-                <div class="form-group">
                     <label for="ngaytangca">Ngày tăng ca</label>
                     <input type="date" id="ngaytangca" name="ngaytangca">
                 </div>
@@ -137,7 +133,6 @@ button {
                     <th>Phòng ban</th>
                     <th>Ngày</th>
                     <th>Giờ tăng ca</th>
-                    <th>Giờ tăng ca thực tế</th>
                 </tr>
             </thead>
             <tbody>
@@ -150,11 +145,6 @@ button {
                     <th>{{row[6]}}</th>
                     {% if row[7] %}
                     <th>{{row[7][:5]}}</th>
-                    {% else %}
-                    <th></th>
-                    {% endif %}
-                    {% if row[8] %}
-                    <th>{{row[8][:5]}}</th>
                     {% else %}
                     <th></th>
                     {% endif %}

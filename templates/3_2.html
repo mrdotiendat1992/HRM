@@ -72,8 +72,7 @@ input, select {
             <input type="text" id="tinhthanhpho" name="tinhthanhpho">
             <label for="sobhxh">Số BHXH</label>
             <input type="text" id="sobhxh" name="sobhxh">
-            <label for="masothue">Mã số thuế</label>
-            <input type="text" id="masothue" name="masothue">
+
         </div>
         <div class="form-group">
             <label for="dantoc">Dân tộc</label>
@@ -251,6 +250,8 @@ input, select {
                         document.getElementById("ngaysinhcon3").value = data["Ngày sinh con 3"];
                         document.getElementById("ngaysinhcon4").value = data["Ngày sinh con 4"];
                         document.getElementById("ngaysinhcon5").value = data["Ngày sinh con 5"];
+                        document.getElementById("nguoithan").value = data["Người thân"];
+                        document.getElementById("sdtnguoithan").value = data["SĐT liên hệ"];
                         document.getElementById("jobtitlevn").value = data["Job title VN"];
                         document.getElementById("jobtitleen").value = data["Job title EN"];
                         document.getElementById("positioncode").value = data["Position code"];

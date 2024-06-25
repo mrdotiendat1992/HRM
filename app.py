@@ -59,7 +59,7 @@ def roles_required(*roles):
 def laydanhsachsaphethanhopdong():
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"SELECT * FROM Sap_het_han_HDLD WHERE Factory='{current_user.macongty}' ORDER BY MST ASC"
+    query = f"SELECT * FROM Sap_het_han_HDLD WHERE Factory='{current_user.macongty}' ORDER BY Ngay_het_han_HD ASC, Department ASC, Line ASC, CAST(MST AS INT) ASC"
     print(query)
     rows = cursor.execute(query).fetchall()
     conn.close()
@@ -933,9 +933,9 @@ def laydanhsachloithe(chuyen=None, bophan=None, phanloai=None, ngay=None):
     if phanloai:
         query += f"AND Phan_loai = N'{phanloai}' "
     if ngay:
-        query += f"AND NgayCham = '{ngay}' "
+        query += f"AND Ngay = '{ngay}' "
     
-    query += "ORDER BY CAST(MST AS INT) ASC, NgayCham DESC"
+    query += "ORDER BY CAST(MST AS INT) ASC, Ngay DESC"
     # if not chuyen and not bophan and not ngay:
     #     query = f"""
     #                 SELECT *
@@ -957,18 +957,20 @@ def laydanhsachloithe(chuyen=None, bophan=None, phanloai=None, ngay=None):
            "Nhà máy": row[0],
            "MST": row[1],
            "Họ tên": row[2],
-           "Số điện thoại": row[3],
-           "Chức vụ": row[4],
-           "Chuyền tổ": row[5],
-           "Bộ phận": row[6],
-           "Ngày chấm": row[7],
-           "Giờ vào": row[8],
-           "Giờ ra": row[9],
-           "Ca": row[10],
-           "Bắt đầu": row[11],
-           "Kết thúc": row[12],
-           "Phân loại": row[13],
-           "Số phút thiếu": row[14]
+           "Chức danh": row[3],
+           "Chuyền tổ": row[4],
+           "Bộ phận": row[5],
+           "Cấp bậc": row[6],
+           "Ngày": row[7],
+           "Ca": row[8],
+           "Giờ vào": row[9],
+           "Giờ ra": row[10],
+           "Phút HC": row[11],
+           "Phút nghỉ phép": row[12],
+           "Số phút thiếu": row[13],
+           "Phép tồn": row[14],
+           "Phút nghỉ không lương": row[15],
+           "Phân loại": row[16]
         })
     return result
 
@@ -1156,13 +1158,13 @@ def capnhat_xinnghiphep(mst,ngay):
     conn.commit()
     conn.close()
 
-def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca,giotangcathucte):
+def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     
     if chucvu=='nan':
         chucvu = 'Không'
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giotangca}','{giotangcathucte}', NULL, NULL, NULL, NULL)"
+    query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giotangca}',NULL, NULL, NULL, NULL, NULL)"
     print(query)
     try:
         cursor.execute(query)

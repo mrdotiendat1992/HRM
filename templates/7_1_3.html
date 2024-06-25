@@ -18,11 +18,24 @@ input, select, label {
 }
 
 .content {
-    width: 100%;
+    width: 1500px;
 }
 .pagination {
     font-size: 10px;
     margin-left: 20px;
+}
+th.sticky, td.sticky {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+}
+td.sticky {
+    background-color: #4e73df;
+    color: white;
+    font-weight: bold;
+}
+th.sticky {
+    z-index: 2;
 }
 </style>
 {% endblock style %}
@@ -77,41 +90,64 @@ input, select, label {
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th>Nhà máy</th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
                     <th>Chuyền tổ</th>
-                    <th>Chức vụ</th>
-                    <th>Ngày điểm danh</th>
+                    <th>Chức danh</th>
+                    <th>Ngày</th>
                     <th>Giờ vào</th>
                     <th>Giờ ra</th>
                     <th>Ca</th>
-                    <th>Bắt đầu</th>
-                    <th>Kết thúc</th>
-                    <th>Phân loại</th>
+                    <th>Phút HC</th>
+                    <th>Phút nghỉ phép</th>
                     <th>Số phút thiếu</th>
+                    <th>Phép tồn</th>
+                    <th>Phút nghỉ không lương</th>
+                    <th>Phân loại</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <th>{{row["Nhà máy"]}}</th>
-                    <th>{{row["MST"]}}</th>
-                    <th>{{row["Họ tên"]}}</th>
-                    <th>{{row["Chuyền tổ"]}}</th>
-                    <th>{{row["Chức vụ"]}}</th>
-                    <th>{{row["Ngày chấm"]}}</th>
-                    <th>{{row["Giờ vào"]}}</th>
-                    <th>{{row["Giờ ra"]}}</th>
-                    <th>{{row["Ca"]}}</th>
-                    <th>{{row["Bắt đầu"]}}</th>
-                    <th>{{row["Kết thúc"]}}</th>
-                    <th>{{row["Phân loại"]}}</th>
-                    <th>{{row["Số phút thiếu"]}}</th>
+                    <td>{{row["MST"]}}</td>
+                    <td class="sticky">{{row["Họ tên"]}}</td>
+                    <td>{{row["Chuyền tổ"]}}</td>
+                    <td>{{row["Chức danh"]}}</td>
+                    <td class="date_en">{{row["Ngày"]}}</td>
+                    {% if row["Giờ vào"] %}
+                    <td>{{row["Giờ vào"]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% if row["Giờ ra"] %}
+                    <td>{{row["Giờ ra"]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td>{{row["Ca"]}}</td>
+                    <td>{{row["Phút HC"]}}</td>
+                    <td>{{row["Phút nghỉ phép"]}}</td>
+                    <td>{{row["Số phút thiếu"]}}</td>
+                    <td>{{row["Phép tồn"]}}</td>
+                    <td>{{row["Phút nghỉ không lương"]}}</td>
+                    <td>{{row["Phân loại"]}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
+<script>
+    function changeFormatDate(date){
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
 {% endblock content %}
