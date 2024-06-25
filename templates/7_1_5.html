@@ -9,51 +9,42 @@
         overflow-x: auto;
     }
     .content {
-        width: 1500px;
+        width: 100%;
     }
     .pagination {
         font-size: 10px;
+        margin-left:20px;
     }
-    th.sticky, td.sticky {
-        position: sticky;
-        left: 0;
-        z-index: 1;
-    }
-    td.sticky {
-        background-color: #4e73df;
-        color: white;
-        font-weight: bold;
-    }
-    th.sticky {
-        z-index: 2;
-    }
-    .pagination {
+    input {
+        margin-left: 10px;
         font-size: 10px;
-        margin-left:50px;
-    }
-    h5 {
-        margin-right: 20px;
-    }
-    #mst_col {
-        width: 60px;
     }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div class="content">
+        <div class="row">
+            <div class="col">
+                <form action = "/taifilexinnghiphepkhacmau" method = "POST">
+                    <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
+                </form>
+            </div>
+            <div class="col">
+                <form action = "/muc7_1_5" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file">
+                    <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
+                    <br>    
+                </form>
+            </div>  
+        </div>  
+        <hr />
         <div style="display: flex; align-items: center;">
-            <h5>Tổng: {{count}}</h5>
-
-            <form method="POST" action="/export_dsxnp">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <form method="POST" action="/export_dsxnk">
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
-                <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
-                <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
-                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
                 <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
@@ -61,61 +52,42 @@
         <br>
         <table class="table table-hover">
             <thead>
-                <tr class="table-primary">
-                    <th id="mst_col">Mã số thẻ</th>
-                    <th class="sticky">Họ tên</th>
-                    <th>Chức danh</th>
-                    <th>Chuyền tổ</th>
-                    <th>Phòng ban</th>
-                    <th>Ngày nghỉ</th>                    
-                    <th>Tổng số phút</th>
-                    <th>Lý do</th> 
-                    <th>Trạng thái</th>
-                </tr>
-                <tr class="table-light">
-                    <form action="/muc7_1_5" method="get">
-                        <th id="mst_col"><input type="text" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
-                        <th class="sticky"><input type="text" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="chucvu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="chuyen" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="bophan" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="date" name="ngaynghi" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
-                        <th></th>
-                        <th><input type="text" name="lydo" id="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
-                        <th><input type="text" name="trangthai" id="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
-                    </form>
-                </tr>
+                <form action = "/muc7_1_9" method = "GET">
+                    <tr class="table-primary">
+                        {% if request.args.get('mst') %}
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
+                        {% else %}
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()"></th>
+                        {% endif %}
+
+                        {% if request.args.get('ngaynghi') %}
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()" value="{{request.args.get('ngaynghi')}}"></th>
+                        {% else %}
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()"></th>
+                        {% endif %}
+
+                        <th>Tổng số phút</th>
+
+                        {% if request.args.get('loainghi') %}
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()" value="{{request.args.get('loainghi')}}"></th>
+                        {% else %}
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()"></th>
+                        {% endif %}
+                    </tr>
+                </form>
             </thead>
-        
+            
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td id="mst_col">{{row[1]}}</td>
-                    <td class="sticky">{{row[2]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
-                    <td>{{row[5]}}</td>
-                    <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
-                    <td>{{row[8]}}</td>
-                    {% if row[9]=='Đã kiểm tra' %}
-                    <td>
-                        <form action="/update_xinnghiphep" method="POST">
-                            <input type="hidden" name="mst" value="{{row[1]}}">
-                            <input type="hidden" name="bophan" value="{{row[5]}}">
-                            <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
-                            <input type="hidden" name="ngaynghi" value="{{row[6]}}">
-                            <input type="submit" class="btn btn-outline-success btn-sm" value="{{row[9]}}"></input>
-                        </form>
-                    </td>
-                    {% else %}
-                    <td><b>{{row[9]}}</b></td>
-                    {% endif %}
                 </tr>  
                 {% endfor %}
             </tbody>
         </table>
-        
     </div>
 </div>
 {% endblock content %}

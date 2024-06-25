@@ -1,106 +1,153 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    .container {
-        width: 100%;
-        overflow-x: auto;
-        white-space: nowrap;
-        display: inline-block;
-        margin: 10px;
+    table, th, td, .pagination {
+        font-size: 10px;
     }
-    input, select, label {
+    input, label {
+        width: 100px;
+        font-size: 10px;
+    }
+    .pagination, h5, input {
         margin-left: 20px;
     }
-    table, th, td {
-        font-size: 8px;
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
     }
-    #chudoc {
-        writing-mode: vertical-rl;
-        text-orientation: mixed;
+    .content {
+        width: 2500px;
+    }
+    .phanloailoi {
+        background-color: yellow;
+        font-weight: bold;
+        color: red;
+    }
+    th.sticky, td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+    td.sticky {
+        background-color: #4e73df;
+        color: white;
+        font-weight: bold;
+    }
+    th.sticky {
+        z-index: 2;
     }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <div class="form-group">
-            <label for="thang">Tháng</label>
-            <select id="thang" name="thang">
-                <option value="1">Tháng 1</option>
-                <option value="2">Tháng 2</option>
-                <option value="3">Tháng 3</option>
-                <option value="4">Tháng 4</option>
-                <option value="5">Tháng 5</option>
-                <option value="6">Tháng 6</option>
-                <option value="7">Tháng 7</option>
-                <option value="8">Tháng 8</option>
-                <option value="9">Tháng 9</option>
-                <option value="10">Tháng 10</option>
-                <option value="11">Tháng 11</option>
-                <option value="12">Tháng 12</option>
-            </select>
-            <label for="phongban">Phòng ban</label>
-            <select id="phongban" name="phongban">
-                <option value="ALL">Tất cả</option>
-                <option value="ACT">ACT</option>
-                <option value="HRD">HRD</option>
-                <option value="PDN">PDN</option>
-                <option value="PPC">PPC</option>
-            </select>
-            <label for="mst">Nhập mã số thẻ</label>
-            <input type="text" id="mst" name="mst">
+<div class="scroll-container">
+    <div class="content">
+        <br>
+        <form action="/muc7_1_7" method="GET">
+            <div class="form-group">
+                <label for="mst">Mã số thẻ</label>
+                <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
+                <label for="phongban">Phòng ban</label>
+                <input type="text" id="phongban" name="phongban" value={{request.args.get('phongban', '')}}>
+                <label for="phanloai">Phân loại</label>
+                <input type="text" id="phanloai" name="phanloai" value={{request.args.get('phanloai', '')}}>
+            </div>
+            <div class="form-group">
+                <label for="tungay">Từ ngày</label>
+                <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
+                <label for="denngay">Đến ngày</label>
+                <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
+            </div>
+        <div style="display: flex; align-items: center;">
+            <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+            </form>
+            <form action="/export_dscc" method="POST">
+                <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
+                <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
+                <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
+                <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
+                <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
+                <input type="submit" value="Xuất Excel" class="btn btn-success">
+            </form>
+            <br>
+            <h5>Tổng: {{count}}</h5>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
-        <button class="btn btn-primary">Xuất excel</button>
+        <br>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>#</th>
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chức danh</th>
+                    <th>Chuyền tổ</th>
+                    <th>Phòng ban</th>
+                    <th>Cấp bậc</th>
+                    <th>Ngày</th>                    
+                    <th>Ca</th>
+                    <th>Giờ vào</th>
+                    <th>Giờ ra</th>
+                    <th>Phút HC</th>
+                    <th>Phút nghỉ phép</th>
+                    <th>Phút tăng ca 100%</th>   
+                    <th>Phút tăng ca 150%</th> 
+                    <th>Phút tăng ca đêm</th>
+                    <th>Phút nghỉ không lương</th>
+                    <th>Phân loại</th> 
+                </tr>
+            </thead>
+          
+            <tbody>
+                {% for row in danhsach %}
+                {% if row[18] ==  'OK' %}
+                <tr data-info='{{ row  | safe }}'>
+                {% else %}
+                <tr class="phanloailoi" data-info='{{ row  | safe }}'>
+                {% endif %}
+                    <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
+                    <td>{{row[1]}}</td>
+                    <td class="sticky">{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td class="date_en">{{row[7]}}</td>
+                    <td>{{row[8]}}</td>
+                    {% if row[10] %}
+                    <td>{{row[10]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% if row[11] %}
+                    <td>{{row[11]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    <td>{{row[12]}}</td>
+                    <td>{{row[13]}}</td>
+                    <td>{{row[14]}}</td>
+                    <td>{{row[15]}}</td>
+                    <td>{{row[16]}}</td>
+                    <td>{{row[17]}}</td>
+                    <td>{{row[18]}}</td>   
+                </tr>  
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <script>
+        function changeFormatDate(date){
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+        });
+        </script>
     </div>
-    <table class="table table-bordered">
-        <thead>
-            <tr class="table-primary">
-                <th colspan="8" rowspan="2">Thông tin nhân viên</th>
-                <th colspan="5" rowspan="2">Ngày làm việc</th>
-                <th colspan="22">Thông tin chấm công tháng</th>
-            </tr>
-            <tr class="table-info">
-                <th colspan="2">Tổng số ngày làm việc</th>
-                <th colspan="2">Tổng số ngày làm việc</th>
-                <th rowspan="2" id="chudoc">Số ngày nghỉ phép</th>
-                <th rowspan="2" id="chudoc">Số ngày nghỉ không lương</th>
-                <th colspan="2">Tổng số ngày nghỉ quốc lễ</th>
-                <th rowspan="2" id="chudoc">Số ngày nghỉ hưởng BHXH</th>
-                <th rowspan="2" id="chudoc">Số ngày chưa nhận việc</th>
-                <th colspan="2">Số ngày nghỉ được hưởng lương</th>
-                <th rowspan="2" id="chudoc">Số ngày nghỉ không lương, tự do</th>
-                <th rowspan="2" id="chudoc">Số ngày nghỉ việc</th>
-                <th rowspan="2" id="chudoc">Tổng số công đi muộn, về sớm</th>
-                <th rowspan="2" id="chudoc">Số lần đi muộn</th>
-                <th rowspan="2" id="chudoc">Số lần về sớm</th>
-                <th rowspan="2" id="chudoc">Số giờ về sớm</th>
-                <th rowspan="2" id="chudoc">Số lần ra ngoài việc riêng</th>
-                <th rowspan="2" id="chudoc">Số giờ ra ngoài</th>
-                <th rowspan="2" id="chudoc">Tổng ngày công</th>
-            </tr>
-            <tr class="table-info">
-                <th id="chudoc">STT</th>
-                <th id="chudoc">Mã số thẻ</th>
-                <th id="chudoc">Họ tên</th>
-                <th id="chudoc">Chức vụ</th>
-                <th id="chudoc">Bộ phận</th>
-                <th id="chudoc">Tổ</th>
-                <th id="chudoc">Ngày thử việc</th>
-                <th id="chudoc">Ngày làm chính thức</th>
-                <th>1</th>
-                <th>2</th>
-                <th>3</th>
-                <th>...</th>
-                <th>26</th>
-                <th id="chudoc">Hành chính</th>
-                <th id="chudoc">Chủ nhật</th>
-                <th id="chudoc">Thử việc</th>
-                <th id="chudoc">Chính thức</th>
-                <th id="chudoc">Thử việc</th>   
-                <th id="chudoc">Chính thức</th>
-                <th id="chudoc">Thử việc</th>    
-            </tr>
-        </thead>
-    </table>
 </div>
 {% endblock content %}

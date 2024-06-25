@@ -440,7 +440,7 @@ def laylichsucongtac(mst,ngay,kieudieuchuyen):
     cursor = conn.cursor()
     query= f"SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' "
     if mst:
-        query += f"AND MST = '{mst}' "
+        query += f"AND MST LIKE '%{mst}%' "
     if ngay:
         query += f"AND Ngay_thuc_hien = '{ngay}' "
     if kieudieuchuyen:
@@ -565,15 +565,15 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
     cursor = conn.cursor()
     query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE Factory = '{current_user.macongty}'"
     if mst:
-        query += f" AND MST = '{mst}'"
+        query += f" AND MST LIKE '%{mst}%'"
     if hoten:
-        query += f" AND Ho_ten like N'%{hoten}%'"
+        query += f" AND Ho_ten LIKE N'%{hoten}%'"
     if sdt:
-        query += f" AND SDT = '{sdt}'"
+        query += f" AND SDT LIKE '%{sdt}%'"
     if cccd:
-        query += f" AND CCCD = '{cccd}'"
+        query += f" AND CCCD LIKE '%{cccd}%'"
     if gioitinh:
-        query += f" AND Gioi_tinh = N'{gioitinh}'"
+        query += f" AND Gioi_tinh LIKE N'%{gioitinh}%'"
     if vaotungay:
         query += f" AND Ngay_vao >= '{vaotungay}'"
     if vaodenngay:
@@ -583,13 +583,13 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
     if nghidenngay:
         query += f" AND Ngay_nghi <= '{nghidenngay}'"
     if phongban:
-        query += f" AND Department like N'%{phongban}%'"
+        query += f" AND Department LIKE N'%{phongban}%'"
     if trangthai:
-        query += f" AND Trang_thai_lam_viec like N'%{trangthai}%'"
+        query += f" AND Trang_thai_lam_viec LIKE N'%{trangthai}%'"
     if hccategory:
         query += f" AND Headcount_category = '{hccategory}'"
     if chucvu:
-        query += f" AND Chuc_vu like N'%{chucvu}%'"
+        query += f" AND Chuc_vu LIKE N'%{chucvu}%'"
     print(query)
     query += " ORDER BY CAST(mst AS INT) ASC"
     users = cursor.execute(query).fetchall()
@@ -758,11 +758,11 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
     if not sdt and not cccd:
         query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}'"
     elif sdt and not cccd:
-        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt = '{sdt}'"
+        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt LIKE '%{sdt}%'"
     elif not sdt and cccd:
-        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND CCCD = '{cccd}'"
+        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND CCCD LIKE '%{cccd}%'"
     else:
-        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt = '{sdt}' AND CCCD = '{cccd}'"
+        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt LIKE '%{sdt}%' AND CCCD LIKE '%{cccd}%'"
     query+= " ORDER BY Ngay_gui_thong_tin DESC"
     print(query)
     rows =  cursor.execute(query).fetchall()
@@ -872,15 +872,15 @@ def xoadautrongten(s):
     s = re.sub(r'[đ]', 'd', s)
     return s
 
-def themnhanvienvaomita(mst,hoten):
-    conn = pyodbc.connect(mcc_db)
-    cursor = conn.cursor()
-    tenchamcong = xoadautrongten(hoten)
-    query = f"INSERT INTO MITACOSQL.Dbo.NHANVIEN (MaNhanVien,TenNhanVien,MaChamCong,TenChamCong) VALUES ('{mst}','{tenchamcong}','{mst}','{tenchamcong}')"
-    print(query)
-    cursor.execute(query)
-    conn.commit()
-    conn.close()
+# def themnhanvienvaomita(mst,hoten):
+#     conn = pyodbc.connect(mcc_db)
+#     cursor = conn.cursor()
+#     tenchamcong = xoadautrongten(hoten)
+#     query = f"INSERT INTO MITACOSQL.Dbo.NHANVIEN (MaNhanVien,TenNhanVien,MaChamCong,TenChamCong) VALUES ('{mst}','{tenchamcong}','{mst}','{tenchamcong}')"
+#     print(query)
+#     cursor.execute(query)
+#     conn.commit()
+#     conn.close()
 
 def themlichsutrangthai(mst,tungay,denngay,trangthai):
     conn = pyodbc.connect(used_db)
@@ -927,11 +927,11 @@ def laydanhsachloithe(chuyen=None, bophan=None, phanloai=None, ngay=None):
     query = f"SELECT * FROM HR.dbo.Danh_sach_loi_the WHERE Nha_may = '{current_user.macongty}'"
     
     if chuyen:
-        query += f"AND Chuyen_to = '{chuyen}' "
+        query += f"AND Chuyen_to LIKE '%{chuyen}%' "
     if bophan:
-        query += f"AND Bo_phan = '{bophan}' "
+        query += f"AND Bo_phan LIKE '%{bophan}%' "
     if phanloai:
-        query += f"AND Phan_loai = N'{phanloai}' "
+        query += f"AND Phan_loai LIKE N'%{phanloai}%' "
     if ngay:
         query += f"AND Ngay = '{ngay}' "
     
@@ -1011,19 +1011,21 @@ def laydanhsachbophan():
         result.append(row[0])
     return result
 
-def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None):
+def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, phanloai=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}'"
+    query = f"SELECT * FROM HR.dbo.Bang_cham_cong_tu_dong WHERE Nha_may = '{current_user.macongty}'"
     if mst: 
-        query += f" AND MST='{mst}'"
+        query += f" AND MST LIKE '%{mst}%'"
     if phongban:
-        query += f" AND Bo_phan = '{phongban}'"
+        query += f" AND Bo_phan LIKE N'%{phongban}%'"
     if tungay:
         query += f" AND '{tungay}' <= Ngay"
     if denngay:
         query += f" AND Ngay <= '{denngay}'"
+    if phanloai:
+        query += f" AND Phan_loai LIKE N'%{phanloai}%'"
     query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
     print(query)
     rows = cursor.execute(query).fetchall()
@@ -1033,15 +1035,15 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None):
         result.append(row)
     return result
 
-def laydanhsachchamcongthucte(mst=None, phongban=None, tungay=None, denngay=None):
+def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"SELECT * FROM HR.dbo.Bang_cham_cong_thuc_te WHERE Nha_may = '{current_user.macongty}'"
+    query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}'"
     if mst: 
-        query += f" AND MST='{mst}'"
+        query += f" AND MST LIKE '%{mst}%'"
     if phongban:
-        query += f" AND Bo_phan = '{phongban}'"
+        query += f" AND Bo_phan LIKE '%{phongban}%'"
     if tungay:
         query += f" AND '{tungay}' <= Ngay"
     if denngay:
@@ -1061,23 +1063,23 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     cursor = conn.cursor()
     query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
     if mst:
-        query += f"AND MST='{mst}'"
+        query += f"AND MST LIKE '%{mst}%'"
     if hoten:
-        query += f"AND Ho_ten = N'{hoten}'"
+        query += f"AND Ho_ten LIKE N'%{hoten}%'"
     if chucvu:
-        query += f"AND Chuc_vu = N'{chucvu}'"
+        query += f"AND Chuc_vu LIKE N'%{chucvu}%'"
     if chuyen:
-        query += f"AND Line = N'{chuyen}'"
+        query += f"AND Line LIKE N'%{chuyen}%'"
     if bophan:
-        query += f"AND Bo_phan = N'{bophan}'"
+        query += f"AND Bo_phan LIKE N'%{bophan}%'"
     if loaidiemdanh:
-        query += f"AND Loai_diem_danh = N'{loaidiemdanh}'"
+        query += f"AND Loai_diem_danh LIKE N'%{loaidiemdanh}%'"
     if ngaydiemdanh:
         query += f"AND Ngay_diem_danh = '{ngaydiemdanh}'"    
     if lido:
-        query += f"AND Ly_do = N'{lido}'"   
+        query += f"AND Ly_do LIKE N'%{lido}%'"   
     if trangthai:
-        query += f"AND Trang_thai = N'{trangthai}'"   
+        query += f"AND Trang_thai LIKE N'%{trangthai}%'"   
          
     query += " ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
     
@@ -1095,21 +1097,21 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
     cursor = conn.cursor()
     query = f"SELECT * FROM HR.dbo.Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
     if mst:
-        query += f"AND MST='{mst}'"
+        query += f"AND MST LIKE '%{mst}%'"
     if hoten:
-        query += f"AND Ho_ten = N'{hoten}'"
+        query += f"AND Ho_ten LIKE N'%{hoten}%'"
     if chucvu:
-        query += f"AND Chuc_vu = N'{chucvu}'"
+        query += f"AND Chuc_vu LIKE N'%{chucvu}%'"
     if chuyen:
-        query += f"AND Line = N'{chuyen}'"
+        query += f"AND Line LIKE N'%{chuyen}%'"
     if bophan:
-        query += f"AND Bo_phan = N'{bophan}'"
+        query += f"AND Bo_phan LIKE N'%{bophan}%'"
     if ngaynghi:
         query += f"AND Ngay_nghi_phep = '{ngaynghi}'"    
     if lydo:
-        query += f"AND Ly_do = N'{lydo}'"
+        query += f"AND Ly_do LIKE N'%{lydo}%'"
     if trangthai:
-        query += f"AND Trang_thai = N'{trangthai}'"
+        query += f"AND Trang_thai LIKE N'%{trangthai}%'"
     query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC"
     if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not lydo and not trangthai:
         query = f"""
@@ -1454,7 +1456,7 @@ def admin_template():
         hoten = request.args.get('hoten', None, type=str)
         if hoten:
             search_pattern = f"%{hoten}%"
-            users_paginated = Users.query.filter(Users.hoten.like(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
+            users_paginated = Users.query.filter(Users.hoten.LIKE(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
     cacrole= ['sa','user','tuyendung','cong','luong','nhansu','developer']
@@ -2378,33 +2380,8 @@ def khaibaochamcong():
     elif request.method == "POST":
         mst = request.form.get('mst')
         return redirect(f"/muc7_1_1?mst={mst}")
-    
-@app.route("/muc7_1_2", methods=["GET","POST"])
-@login_required
-@roles_required('cong','sa','developer')
-def chamcongtudong():
-    
-    mst = request.args.get("mst")
-    phongban = request.args.get("phongban")
-    tungay = request.args.get("tungay")
-    denngay = request.args.get("denngay")
-    rows = laydanhsachchamcong(mst,phongban,tungay,denngay)
-    count = len(rows)
-    current_page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
-    total = len(rows)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    paginated_rows = rows[start:end]
-    danhsachphongban = laycacphongban()
-    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_2.html", page="7.1.2 Chấm công tự động",
-                           danhsach=paginated_rows, 
-                           pagination=pagination,
-                           count=count,
-                           danhsachphongban=danhsachphongban)
 
-@app.route("/muc7_1_3", methods=["GET","POST"])
+@app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
 @roles_required('cong','sa','developer')
 def loichamcong():
@@ -2423,14 +2400,14 @@ def loichamcong():
     end = start + per_page
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_3.html",
-                            page="7.1.3 Danh sách lỗi chấm công",
+    return render_template("7_1_2.html",
+                            page="7.1.2 Danh sách lỗi chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count,
                             danhsachphanloai=danhsachphanloai)
 
-@app.route("/muc7_1_4", methods=["GET"])
+@app.route("/muc7_1_3", methods=["GET"])
 @login_required
 @roles_required('cong','sa','developer')
 def diemdanhbu():
@@ -2455,15 +2432,15 @@ def diemdanhbu():
     end = start + per_page
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_4.html",
-                        page="7.1.4 Danh sách điểm danh bù",
+    return render_template("7_1_3.html",
+                        page="7.1.3 Danh sách điểm danh bù",
                         danhsach=paginated_rows, 
                         pagination=pagination,
                         count=count,
                         danh_sach_chuyen=danh_sach_chuyen,
                         danh_sach_bophan=danh_sach_bophan)
  
-@app.route("/muc7_1_5", methods=["GET"])
+@app.route("/muc7_1_4", methods=["GET"])
 @login_required
 @roles_required('cong','sa','developer')
 def xinnghiphep():
@@ -2485,11 +2462,54 @@ def xinnghiphep():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_5.html",
-                            page="7.1.5 Danh sách xin nghỉ phép",
+        return render_template("7_1_4.html",
+                            page="7.1.4 Danh sách xin nghỉ phép",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count)
+
+@app.route("/muc7_1_5", methods=["GET","POST"])
+@login_required
+@roles_required('cong','sa','developer')
+def danhsachxinnghikhac():
+    if request.method == "GET":
+        mst = request.args.get("mst")
+        ngaynghi = request.args.get("ngaynghi")
+        loainghi = request.args.get("loainghi")
+        danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_5.html", 
+                               page="7.1.5 Danh sách xin nghỉ khác", 
+                               danhsach=paginated_rows,
+                                pagination=pagination,
+                                count=count,)
+    elif request.method == "POST":
+        if 'file' not in request.files:
+            return redirect("/muc7_1_5")
+        file = request.files['file']
+        if file.filename == '':
+            return redirect("/muc7_1_5")
+        if file:
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
+            file.save(filepath)
+            data = pd.read_excel(filepath).to_dict(orient="records")
+            for row in data:
+                themxinnghikhac(
+                    row["Mã công ty"],
+                    row["Mã số thẻ"],
+                    row["Ngày nghỉ"],
+                    row["Tổng số phút"],
+                    row["Loại nghỉ"]
+                )
+        return redirect("/muc7_1_5")
 
 @app.route("/muc7_1_6", methods=["GET","POST"])
 @login_required
@@ -2538,119 +2558,99 @@ def dangkytangca():
         df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), index=False)
 
         return send_file(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), as_attachment=True)
-        
+
 @app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
 @roles_required('cong','sa','developer')
-def baocom():
-    
-    if request.method == "GET":
-        chuyen = request.args.get("chuyen")
-        phongban = request.args.get("phongban")
-        ngayxem = request.args.get("ngay")
-        if not ngayxem:
-            ngayxem = datetime.now().date()
-        danhsach = laydanhsachbaocom(chuyen,phongban,ngayxem)
-        count = len(danhsach)
-        current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
-        total = len(danhsach)
-        start = (current_page - 1) * per_page
-        end = start + per_page
-        paginated_rows = danhsach[start:end]
-        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        danhsachchuyen = laycacto()
-        danhsachphongban = laycacphongban()
-        return render_template("7_1_7.html", 
-                            page="7.1.7 Dữ liệu chấm công buổi sáng",
-                            danhsach=paginated_rows,
-                            pagination=pagination,
-                            count=count,
-                            danhsachchuyen=danhsachchuyen,
-                            danhsachphongban=danhsachphongban)
-    elif request.method == "POST":
-        chuyen = request.form.get("chuyen")
-        phongban = request.form.get("phongban")
-        ngayxem = request.form.get("ngay")
-        danhsach = laydanhsachbaocom(chuyen,phongban,ngayxem)
-        data = []
-        for row in danhsach:
-            data.append({
-                "Nhà máy": row[0],
-                "MST": row[1],
-                "Họ tên": row[2],
-                "Chức vụ": row[3],
-                "Chuyền tổ": row[4], 
-                "Phòng ban": row[5],
-                "Ngày chấm": row[6],
-                "Giờ vào": row[7],
-            })
-        df = pd.DataFrame(data)
-        df.to_excel("baocom.xlsx", index=False)
-
-        return send_file("baocom.xlsx", as_attachment=True)
-    
-@app.route("/muc7_1_8", methods=["GET","POST"])
-@login_required
-@roles_required('cong','sa','developer')
-def baocaotonghop():
-    
-    return render_template("7_1_8.html", page="7.1.8 Báo cáo tổng hợp")
-
-    
-@app.route("/muc7_1_9", methods=["GET","POST"])
-@login_required
-@roles_required('cong','sa','developer')
-def danhsachxinnghikhac():
-    if request.method == "GET":
-        mst = request.args.get("mst")
-        ngaynghi = request.args.get("ngaynghi")
-        loainghi = request.args.get("loainghi")
-        danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
-        count = len(danhsach)
-        current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
-        total = len(danhsach)
-        start = (current_page - 1) * per_page
-        end = start + per_page
-        paginated_rows = danhsach[start:end]
-        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_9.html", 
-                               page="7.1.9 Danh sách xin nghỉ khác", 
-                               danhsach=paginated_rows,
-                                pagination=pagination,
-                                count=count,)
-    elif request.method == "POST":
-        if 'file' not in request.files:
-            return redirect("/muc7_1_9")
-        file = request.files['file']
-        if file.filename == '':
-            return redirect("/muc7_1_9")
-        if file:
-            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
-            file.save(filepath)
-            data = pd.read_excel(filepath).to_dict(orient="records")
-            for row in data:
-                themxinnghikhac(
-                    row["Mã công ty"],
-                    row["Mã số thẻ"],
-                    row["Ngày nghỉ"],
-                    row["Tổng số phút"],
-                    row["Loại nghỉ"]
-                )
-        return redirect("/muc7_1_9")
-                
-@app.route("/muc7_2", methods=["GET","POST"])
-@login_required
-@roles_required('cong','sa','developer')
-def chamcongtudongthucte():
+def chamcongtudong():
     
     mst = request.args.get("mst")
     phongban = request.args.get("phongban")
     tungay = request.args.get("tungay")
     denngay = request.args.get("denngay")
-    rows = laydanhsachchamcongthucte(mst,phongban,tungay,denngay)
+    phanloai = request.args.get("phanloai")
+    rows = laydanhsachchamcong(mst,phongban,tungay,denngay,phanloai)
+    count = len(rows)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(rows)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = rows[start:end]
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("7_1_7.html", page="7.1.7 Bảng công 5 ngày gần nhất",
+                           danhsach=paginated_rows, 
+                           pagination=pagination,
+                           count=count)
+          
+# @app.route("/muc7_1_7", methods=["GET","POST"])
+# @login_required
+# @roles_required('cong','sa','developer')
+# def baocom():
+    
+#     if request.method == "GET":
+#         chuyen = request.args.get("chuyen")
+#         phongban = request.args.get("phongban")
+#         ngayxem = request.args.get("ngay")
+#         if not ngayxem:
+#             ngayxem = datetime.now().date()
+#         danhsach = laydanhsachbaocom(chuyen,phongban,ngayxem)
+#         count = len(danhsach)
+#         current_page = request.args.get(get_page_parameter(), type=int, default=1)
+#         per_page = 10
+#         total = len(danhsach)
+#         start = (current_page - 1) * per_page
+#         end = start + per_page
+#         paginated_rows = danhsach[start:end]
+#         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+#         danhsachchuyen = laycacto()
+#         danhsachphongban = laycacphongban()
+#         return render_template("7_1_7.html", 
+#                             page="7.1.7 Dữ liệu chấm công buổi sáng",
+#                             danhsach=paginated_rows,
+#                             pagination=pagination,
+#                             count=count,
+#                             danhsachchuyen=danhsachchuyen,
+#                             danhsachphongban=danhsachphongban)
+#     elif request.method == "POST":
+#         chuyen = request.form.get("chuyen")
+#         phongban = request.form.get("phongban")
+#         ngayxem = request.form.get("ngay")
+#         danhsach = laydanhsachbaocom(chuyen,phongban,ngayxem)
+#         data = []
+#         for row in danhsach:
+#             data.append({
+#                 "Nhà máy": row[0],
+#                 "MST": row[1],
+#                 "Họ tên": row[2],
+#                 "Chức vụ": row[3],
+#                 "Chuyền tổ": row[4], 
+#                 "Phòng ban": row[5],
+#                 "Ngày chấm": row[6],
+#                 "Giờ vào": row[7],
+#             })
+#         df = pd.DataFrame(data)
+#         df.to_excel("baocom.xlsx", index=False)
+
+#         return send_file("baocom.xlsx", as_attachment=True)
+    
+# @app.route("/muc7_1_8", methods=["GET","POST"])
+# @login_required
+# @roles_required('cong','sa','developer')
+# def baocaotonghop():
+    
+#     return render_template("7_1_8.html", page="7.1.8 Báo cáo tổng hợp")
+                
+@app.route("/muc7_1_8", methods=["GET","POST"])
+@login_required
+@roles_required('cong','sa','developer')
+def chamcongtudongchot():
+    
+    mst = request.args.get("mst")
+    phongban = request.args.get("phongban")
+    tungay = request.args.get("tungay")
+    denngay = request.args.get("denngay")
+    rows = laydanhsachchamcongchot(mst,phongban,tungay,denngay)
     count = len(rows)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -2660,7 +2660,7 @@ def chamcongtudongthucte():
     paginated_rows = rows[start:end]
     danhsachphongban = laycacphongban()
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_2.html", page="7.2 Bảng chấm công",
+    return render_template("7_1_8.html", page="7.1.8 Bảng chấm công chốt",
                            danhsach=paginated_rows, 
                            pagination=pagination,
                            count=count,
@@ -3202,7 +3202,8 @@ def export_dscc():
     phongban = request.form.get('phongban')
     tungay = request.form.get("tungay")
     denngay = request.form.get("denngay")
-    danhsach = laydanhsachchamcong(mst,phongban,tungay,denngay)
+    phanloai = request.form.get("phanloai")
+    danhsach = laydanhsachchamcong(mst,phongban,tungay,denngay,phanloai)
     result = []
     for row in danhsach:
         result.append(
@@ -3213,15 +3214,19 @@ def export_dscc():
                 'Chức danh': row[3],
                 'Chuyền': row[4],
                 'Phòng ban': row[5],
-                'Ngày': row[6],
-                'Ca': row[7],
-                'Số giờ làm việc': row[8],
-                'Giờ vào': row[9],
-                'Giờ ra': row[10],
-                'Công HC': row[11],
-                'Công phép': row[12],
-                'Giờ tăng ca 100%': row[13],
-                'Giờ tăng ca 150%': row[14],
+                'Cấp bậc': row[6],
+                'Ngày': row[7],
+                'Ca': row[8],
+                'Số giờ làm việc': row[9],
+                'Giờ vào': row[10],
+                'Giờ ra': row[11],
+                'Phút HC': row[12],
+                'Phút nghỉ phép': row[13],
+                'Phút tăng ca 100%': row[14],
+                'Phút tăng ca 150%': row[15],
+                'Phút tăng ca đêm': row[16],
+                'Phút nghỉ không lương': row[17],
+                'Phân loại': row[18]
             }
         )
     df = pd.DataFrame(result)

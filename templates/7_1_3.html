@@ -1,153 +1,150 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-table, th, td {
-    font-size: 10px;
-}
-label {
-    text-align: right;
-}
-input, select, label {
-    margin-left: 10px;
-    width: 100px;
-    font-size: 12px;
-}
-.scroll-container {
-    width: 100%;
-    overflow-x: scroll;
-}
-
-.content {
-    width: 1500px;
-}
-.pagination {
-    font-size: 10px;
-    margin-left: 20px;
-}
-th.sticky, td.sticky {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-}
-td.sticky {
-    background-color: #4e73df;
-    color: white;
-    font-weight: bold;
-}
-th.sticky {
-    z-index: 2;
-}
+    table, th, td , button{
+        font-size: 10px;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: 1500px;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+    th.sticky, td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+    td.sticky {
+        background-color: #4e73df;
+        color: white;
+        font-weight: bold;
+    }
+    th.sticky {
+        z-index: 2;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:50px;
+    }
+    h5 {
+        margin-right: 20px;
+    }
+    #mst_col {
+        width: 60px;
+    }
+    .row_dakiemtra {
+        background-color: #b3ff66;
+    }
+    .row_chuapheduyet {
+        background-color: #ffffb3;
+    }
+    .row_bituchoi {
+        background-color: #ccd9ff;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        
-            <form method="GET" action="/muc7_1_3">
-                <div class="form-group">
-                    <label for="chuyen">Chuyền:</label>
-                    {% if request.args.get('chuyen') %}
-                    <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
-                    {% else %}
-                    <input id="chuyen" name="chuyen"></input>
-                    {% endif %}
-                    <label for="bophan">Bộ phận:</label>
-                    {% if request.args.get('bophan') %}
-                    <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
-                    {% else %}
-                    <input id="bophan" name="bophan"></input>
-                    {% endif %}
-                    <label for="phanloai">Phân loại:</label>
-                    <select id="phanloai" name="phanloai">
-                        <option value=""></option>
-                        {% for phanloai in danhsachphanloai %}
-                            {% if request.args.get('phanloai') == phanloai %}
-                            <option value='{{ phanloai }}' selected>{{ phanloai }}</option>
-                            {% else %}
-                            <option value='{{ phanloai }}'>{{ phanloai }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
-                    <label for="ngay">Ngày</label>
-                    <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
-                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
-                </div>
+        <div style="display: flex;">
+            <h5>Tổng: {{count}}</h5>
+            <form method="POST" action="/export_dsddb">
+                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
+                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
+                <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                <input type="hidden" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}">
+                <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
             </form>
-            <br>
-            <div style="display: flex; align-items: center;">
-            <h5><b>Tổng: {{count}}</b></h5>
-            <div class="pagination">{{ pagination.links }}</div>
-            <form method="POST" action="/export_dslt">
-                <div class="form-group">
-                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                    <input type="hidden" name="phanloai" value="{{ request.args.get('phanloai', '') }}">
-                    <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
-                    <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
-                </div>
-            </form>
+            <div class="pagination">{{pagination.links}}</div>
         </div>
+        <br>
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th>Mã số thẻ</th>
-                    <th>Họ tên</th>
-                    <th>Chuyền tổ</th>
+                    <th id="mst_col">Mã số thẻ</th>
+                    <th class="sticky">Họ tên</th>
                     <th>Chức danh</th>
-                    <th>Ngày</th>
-                    <th>Giờ vào</th>
-                    <th>Giờ ra</th>
-                    <th>Ca</th>
-                    <th>Phút HC</th>
-                    <th>Phút nghỉ phép</th>
-                    <th>Số phút thiếu</th>
-                    <th>Phép tồn</th>
-                    <th>Phút nghỉ không lương</th>
-                    <th>Phân loại</th>
+                    <th>Chuyền tổ</th>
+                    <th>Phòng ban</th>
+                    <th>Loại điểm danh</th>
+                    <th>Ngày</th>                    
+                    <th>Giờ</th>
+                    <th>Lý do</th> 
+                    <th>Trạng thái</th>
+                </tr>
+                <tr>
+                    <form action = "/muc7_1_3" method = "GET">
+                        <th id="mst_col"><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th class="sticky"><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
+                        <th></th>  
+                        <th><input type="text" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                        <th><input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
+                    </form>
                 </tr>
             </thead>
+        
             <tbody>
                 {% for row in danhsach %}
-                <tr data-info='{{ row  | safe }}'>
-                    <td>{{row["MST"]}}</td>
-                    <td class="sticky">{{row["Họ tên"]}}</td>
-                    <td>{{row["Chuyền tổ"]}}</td>
-                    <td>{{row["Chức danh"]}}</td>
-                    <td class="date_en">{{row["Ngày"]}}</td>
-                    {% if row["Giờ vào"] %}
-                    <td>{{row["Giờ vào"]}}</td>
-                    {% else %}
-                    <td></td>
+                    {% if row[10] == 'Đã kiểm tra' %}
+                    <tr data-info='{{ row  | safe }}'>
+                    {% elif row[10] == 'Đã phê duyệt' %}
+                    <tr data-info='{{ row  | safe }}' class="row_dakiemtra">
+                    {% elif row[10] == 'Chờ phê duyệt' %}
+                    <tr data-info='{{ row  | safe }}' class="row_chuapheduyet">
+                    {% elif (row[10] == 'Bị từ chối bởi người kiểm tra') or (row[10] == 'Bị từ chối bởi người phê duyệt') %}
+                    <tr data-info='{{ row  | safe }}' class="row_bituchoi">   
                     {% endif %}
-                    {% if row["Giờ ra"] %}
-                    <td>{{row["Giờ ra"]}}</td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
-                    <td>{{row["Ca"]}}</td>
-                    <td>{{row["Phút HC"]}}</td>
-                    <td>{{row["Phút nghỉ phép"]}}</td>
-                    <td>{{row["Số phút thiếu"]}}</td>
-                    <td>{{row["Phép tồn"]}}</td>
-                    <td>{{row["Phút nghỉ không lương"]}}</td>
-                    <td>{{row["Phân loại"]}}</td>
-                </tr>
+                        <td id="mst_col">{{row[1]}}</td>
+                        <td class="sticky">{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[5]}}</td>
+                        <td>{{row[6]}}</td>
+                        <td>{{row[7]}}</td>
+                        <td>{{row[8][:5]}}</td>
+                        {% if row[9] %}
+                        <td>{{row[9]}}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        {% if row[10]=='Đã kiểm tra'%}
+                        <td>
+                            <div style="display: flex; align-items: center;">
+                                <b>{{row[10]}}</b>
+                                <form action="/update_diemdanhbu" method="POST" style="margin-left: 10px;">
+                                    <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
+                                    <input type="hidden" name="mst" value="{{row[1]}}">
+                                    <input type="hidden" name="bophan" value="{{row[5]}}">
+                                    <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
+                                    <input type="hidden" name="ngayduyet" value="{{row[7]}}">
+                                    <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
+                                    <input type="submit" class="btn btn-outline-success btn-sm" value="Phê duyệt"></input>
+                                </form>
+                            </div>
+                        </td>
+                        {% else %}
+                        <td><b>{{row[10]}}</b></td>
+                        {% endif %}
+                    </tr>  
                 {% endfor %}
             </tbody>
         </table>
+        
     </div>
 </div>
-<script>
-    function changeFormatDate(date){
-        try{
-            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-        } catch {
-            return "";    
-    }}
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('.date_en').forEach((element) => {
-            element.textContent = changeFormatDate(element.textContent);
-        });
-    });
-</script>
 {% endblock content %}
