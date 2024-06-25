@@ -825,13 +825,58 @@ def capnhattrangthai(sdt, trangthai):
     except Exception as e:
         return False
     
-def capnhatthongtinungvien(sdt,ngayhendilam,hieusuat,loaimay,vitrituyendung,hocvan,diachi):
+def capnhatthongtinungvien(sdt,
+                               ngayhendilam,
+                               hieusuat,
+                               loaimay,
+                               vitrituyendung,
+                               hocvan,
+                               diachi,
+                               dantoc,
+                               connho,
+                               tencon1,
+                               ngaysinhcon1,
+                               tencon2,
+                               ngaysinhcon2,
+                               tencon3,
+                               ngaysinhcon3,
+                               tencon4,
+                               ngaysinhcon4,
+                               tencon5,
+                               ngaysinhcon5,
+                               nguoithan,
+                               sdtnguoithan
+                               ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if not hieusuat.isdigit():
             hieusuat = 0 
-        query = f"UPDATE HR.Dbo.Dang_ky_thong_tin SET Ngay_hen_di_lam = '{ngayhendilam}',Hieu_suat = '{hieusuat}',Loai_may='{loaimay}',Vi_tri_ung_tuyen=N'{vitrituyendung}',Trinh_do=N'{hocvan}',Dia_chi_tam_tru=N'{diachi}' WHERE Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"
+        query = f"""
+        UPDATE HR.Dbo.Dang_ky_thong_tin 
+        SET 
+        Ngay_hen_di_lam = '{ngayhendilam}',
+        Hieu_suat = '{hieusuat}',
+        Loai_may = N'{loaimay}',
+        Vi_tri_ung_tuyen=N'{vitrituyendung}',
+        Trinh_do=N'{hocvan}',
+        Dia_chi_tam_tru=N'{diachi}', 
+        Dan_toc = N'{dantoc}',
+        Con_nho = N'{connho}',
+        Ho_ten_con_1 = N'{tencon1}',
+        Ngay_sinh_con_1 = '{ngaysinhcon1}',
+        Ho_ten_con_2 = N'{tencon2}',
+        Ngay_sinh_con_2 = '{ngaysinhcon2}',
+        Ho_ten_con_3 = N'{tencon3}',
+        Ngay_sinh_con_3 = '{ngaysinhcon3}',
+        Ho_ten_con_4 = N'{tencon4}',
+        Ngay_sinh_con_4 = '{ngaysinhcon4}',
+        Ho_ten_con_5 = N'{tencon5}',
+        Ngay_sinh_con_5 = '{ngaysinhcon5}',
+        Nguoi_than = N'{nguoithan}',
+        SDT_nguoi_than = '{sdtnguoithan}',
+        WHERE 
+        Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
         print(query)
         cursor.execute(query)
         conn.commit()
@@ -1036,7 +1081,7 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
         result.append(row)
     return result
 
-def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None):
+def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
@@ -1049,6 +1094,8 @@ def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None):
         query += f" AND '{tungay}' <= Ngay"
     if denngay:
         query += f" AND Ngay <= '{denngay}'"
+    if phanloai:
+        query += f" AND Phan_loai LIKE N'%{phanloai}%'"
     query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
     print(query)
     rows = cursor.execute(query).fetchall()
@@ -1616,7 +1663,43 @@ def danhsachdangkytuyendung():
         ngayhendilam = request.form.get("ngayhendilam")
         hieusuat = request.form.get("hieusuat")
         loaimay = request.form.get("loaimay")
-        capnhatthongtinungvien(sdt,ngayhendilam,hieusuat,loaimay,vitrituyendung,hocvan,diachi)
+        cccd = request.form.get("cccd")
+        dantoc = request.form.get("dantoc")
+        connho = request.form.get("connho")
+        tencon1 = request.form.get("tencon1")
+        ngaysinhcon1 = request.form.get("ngaysinhcon1")
+        tencon2 = request.form.get("tencon2")
+        ngaysinhcon2 = request.form.get("ngaysinhcon2")
+        tencon3 = request.form.get("tencon3")
+        ngaysinhcon3 = request.form.get("ngaysinhcon3")
+        tencon4 = request.form.get("tencon4")
+        ngaysinhcon4 = request.form.get("ngaysinhcon4")
+        tencon5 = request.form.get("tencon5")
+        ngaysinhcon5 = request.form.get("ngaysinhcon5")
+        nguoithan = request.form.get("nguoithan")
+        sdtnguoithan = request.form.get("sdtnguoithan")
+        capnhatthongtinungvien(sdt,
+                               ngayhendilam,
+                               hieusuat,
+                               loaimay,
+                               vitrituyendung,
+                               hocvan,
+                               diachi,
+                               dantoc,
+                               connho,
+                               tencon1,
+                               ngaysinhcon1,
+                               tencon2,
+                               ngaysinhcon2,
+                               tencon3,
+                               ngaysinhcon3,
+                               tencon4,
+                               ngaysinhcon4,
+                               tencon5,
+                               ngaysinhcon5,
+                               nguoithan,
+                               sdtnguoithan
+                               )
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2_1", methods=["GET","POST"])
@@ -2651,7 +2734,8 @@ def chamcongtudongchot():
     phongban = request.args.get("phongban")
     tungay = request.args.get("tungay")
     denngay = request.args.get("denngay")
-    rows = laydanhsachchamcongchot(mst,phongban,tungay,denngay)
+    phanloai = request.args.get("phanloai")
+    rows = laydanhsachchamcongchot(mst,phongban,tungay,denngay,phanloai)
     count = len(rows)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -3227,7 +3311,9 @@ def export_dscc():
                 'Phút tăng ca 150%': row[15],
                 'Phút tăng ca đêm': row[16],
                 'Phút nghỉ không lương': row[17],
-                'Phân loại': row[18]
+                'Phút nghỉ khác': row[18],
+                'Loại nghỉ khác': row[19],
+                'Phân loại': row[20]
             }
         )
     df = pd.DataFrame(result)
@@ -3242,7 +3328,8 @@ def export_dscctt():
     phongban = request.form.get('phongban')
     tungay = request.form.get("tungay")
     denngay = request.form.get("denngay")
-    danhsach = laydanhsachchamcongthucte(mst,phongban,tungay,denngay)
+    phanloai = request.form.get("phanloai")
+    danhsach = laydanhsachchamcongchot(mst,phongban,tungay,denngay,phanloai)
     result = []
     for row in danhsach:
         result.append(
@@ -3253,15 +3340,21 @@ def export_dscctt():
                 'Chức danh': row[3],
                 'Chuyền': row[4],
                 'Phòng ban': row[5],
-                'Ngày': row[6],
-                'Ca': row[7],
-                'Số giờ làm việc': row[8],
-                'Giờ vào': row[9],
-                'Giờ ra': row[10],
-                'Công HC': row[11],
-                'Công phép': row[12],
-                'Giờ tăng ca 100%': row[13],
-                'Giờ tăng ca 150%': row[14],
+                'Cấp bậc': row[6],
+                'Ngày': row[7],
+                'Ca': row[8],
+                'Số giờ làm việc': row[9],
+                'Giờ vào': row[10],
+                'Giờ ra': row[11],
+                'Phút HC': row[12],
+                'Phút nghỉ phép': row[13],
+                'Phút tăng ca 100%': row[14],
+                'Phút tăng ca 150%': row[15],
+                'Phút tăng ca đêm': row[16],
+                'Phút nghỉ không lương': row[17],
+                'Phút nghỉ khác': row[18],
+                'Loại nghỉ khác': row[19],
+                'Phân loại': row[20]
             }
         )
     df = pd.DataFrame(result)

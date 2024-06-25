@@ -93,13 +93,15 @@
                     <th>Phút tăng ca 150%</th> 
                     <th>Phút tăng ca đêm</th>
                     <th>Phút nghỉ không lương</th>
+                    <th>Phút nghỉ khác</th>
+                    <th>Loại nghỉ khác</th>
                     <th>Phân loại</th> 
                 </tr>
             </thead>
           
             <tbody>
                 {% for row in danhsach %}
-                {% if row[18] ==  'OK' %}
+                {% if row[20] ==  'OK' %}
                 <tr data-info='{{ row  | safe }}'>
                 {% else %}
                 <tr class="phanloailoi" data-info='{{ row  | safe }}'>
@@ -129,7 +131,9 @@
                     <td>{{row[15]}}</td>
                     <td>{{row[16]}}</td>
                     <td>{{row[17]}}</td>
-                    <td>{{row[18]}}</td>   
+                    <td>{{row[18]}}</td>  
+                    <td>{{row[19]}}</td>
+                    <td>{{row[20]}}</td>                     
                 </tr>  
                 {% endfor %}
             </tbody>
@@ -137,6 +141,7 @@
         
         <script>
         function changeFormatDate(date){
+            if(date == 'None') return "";
             try{
                 return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
             } catch {

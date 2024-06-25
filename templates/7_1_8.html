@@ -49,7 +49,7 @@
                 <label for="phongban">Phòng ban</label>
                 <input type="text" id="phongban" name="phongban" value={{request.args.get('phongban', '')}}>
                 <label for="phanloai">Phân loại</label>
-                <input type="text" id="phanloai" name="phanloai" value={{request.args.get('phanloai', '')}}>
+                <input type="text" id="phanloai" name="phanloai" value='{{request.args.get("phanloai", '')}}'>
             </div>
             <div class="form-group">
                 <label for="tungay">Từ ngày</label>
@@ -137,6 +137,7 @@
         
         <script>
         function changeFormatDate(date){
+            if(date == 'None') return "";
             try{
                 return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
             } catch {

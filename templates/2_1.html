@@ -11,7 +11,7 @@
     select, input, label, button {
         width: 120px;
         padding: 5px;
-        font-size: 12px;
+        font-size: 10px;
     }
     .modal {
         display: none;
@@ -50,26 +50,30 @@
     }
 
     .content {
-        width: 2000px;
+        width: auto;
     }
     th.sticky, td.sticky {
         position: -webkit-sticky; /* for Safari */
         position: sticky;
         left: 0;
-        background: #003cb3; /* Background color to distinguish sticky column */
+        background: #003cb3;
         color: white;
         z-index: 1;
     }
 
     th.sticky {
-        z-index: 2; /* Ensure header is above other cells */
+        z-index: 2;
+    }
+    .pagination {
+        margin-left: 50px;
+        font-size: 10px;
     }
 </style>
 {% endblock style %}
 {% block content %} 
 <div class="scroll-container">
     <div class="content">
-        <div style="display: flex; align-items: center;">
+        <div style="display: fixed; align-items: center;">
             <form method="GET" action="/muc2_1" style="margin-right: 10px;">
                 <div class="form-group">
                     <label for="sdt">Số điện thoại</label>
@@ -95,7 +99,7 @@
         <table class="table table-bordered">
             <tr class="table-primary">
                 <th >STT</th>
-                <th >Họ và tên</th>
+                <th  class="sticky">Họ và tên</th>
                 <th>Vị trí tuyển dụng</th>
                 <th>Số điện thoại</th>
                 <th>Trạng thái</th>
@@ -106,6 +110,16 @@
                 <th>Kinh nghiệm</th>
                 <th>Mức lương</th>
                 <th>Có con nhỏ</th>
+                <th>Tên con nhỏ 1</th>
+                <th>Ngày sinh con nhỏ 1</th>
+                <th>Tên con nhỏ 2</th>
+                <th>Ngày sinh con nhỏ 2</th>
+                <th>Tên con nhỏ 3</th>
+                <th>Ngày sinh con nhỏ 3</th>
+                <th>Tên con nhỏ 4</th>
+                <th>Ngày sinh con nhỏ 4</th>
+                <th>Tên con nhỏ 5</th>
+                <th>Ngày sinh con nhỏ 5</th>
                 <th>Người thân</th>
                 <th>SĐT người thân</th>
                 <th>Ngày nhận việc</th>
@@ -128,23 +142,41 @@
                         {% elif user["Trạng thái"] == "Không đạt" %}
                         <td style= "background-color: black; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% else %}
-                        <td><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        <td><b class="status" onclick="openModal(this)">Không</b></td>
                         {% endif %}
-                        <td>{{ user["CCCD"] }}</td>
-                        <td>{{ user["Dân tộc"] }}</td>
+                        <td><input type="text" name="cccd" id="cccd" value="{{ user['CCCD'] }}"></input></td>
+                        <td><input type="text" name="dantoc" id="dantoc" value="{{ user['Dân tộc'] }}"></input></td>
                         <td><input type="text" name="hocvan" id="hocvan" value="{{ user['Học vấn'] }}"></input></td>
                         <td><input type="text" name="diachi" id="diachi" value="{{ user['Tạm trú'] }}"></input></td>
                         <td>{{ user["Kinh nghiệm"] }}</td>
                         <td>{{ user["Mức lương"] }}</td>
-                        <td>{{ user["Có con nhỏ"] }}</td>
-                        <td>{{ user["Tên người thân"] }}</td>
-                        <td>{{ user["SĐT người thân"] }}</td>
-                        <td>{{ user["Ngày nhận việc"] }}</td>
-                        <td>{{ user["Ngày gửi"] }}</td>
-                        <td>{{ user["Ngày cập nhật"] }}</td>
+                        <td><input type="text" name="connho" value="{{ user['Có con nhỏ'] }}"></td>
+                        <td><input type="text" name="tenconnho1" value="{{ user['Tên con 1'] }}"></td>
+                        <td><input type="text" name="ngaysinhcon1" value="{{ user['Ngày sinh con 1'] }}"></td>
+                        <td><input type="text" name="tenconnho2" value="{{ user['Tên con 2'] }}"></td>
+                        <td><input type="text" name="ngaysinhcon2" value="{{ user['Ngày sinh con 2'] }}"></td>
+                        <td><input type="text" name="tenconnho3" value="{{ user['Tên con 3'] }}"></td>
+                        <td><input type="text" name="ngaysinhcon3" value="{{ user['Ngày sinh con 3'] }}"></td>
+                        <td><input type="text" name="tenconnho4" value="{{ user['Tên con 4'] }}"></td>
+                        <td><input type="text" name="ngaysinhcon4" value="{{ user['Ngày sinh con 4'] }}"></td>
+                        <td><input type="text" name="tenconnho5" value="{{ user['Tên con 5'] }}"></td>
+                        <td><input type="text" name="ngaysinhcon5" value="{{ user['Ngày sinh con 5'] }}"></td>
+                        <td><input type="text" name="nguoithan" value="{{ user["Tên người thân"] }}"></td>
+                        <td><input type="text" name="sdtnguoithan" value="{{ user["SĐT người thân"] }}"></td>
+                        <td  class="date_en">{{ user["Ngày nhận việc"] }}</td>
+                        <td  class="date_en">{{ user["Ngày gửi"] }}</td>
+                        <td  class="date_en">{{ user["Ngày cập nhật"] }}</td>
                         <td><input type="date" name="ngayhendilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
+                        {% if user["Hiệu suất"] %}
                         <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
+                        {% else %}
+                        <td><input type="text" name="hieusuat"></td>
+                        {% endif %}
+                        {% if user["Loại máy"] %}
                         <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}"></td>
+                        {% else %}
+                        <td><input type="text" name="loaimay"></td>
+                        {% endif %}
                         <td><input type="submit" value="Lưu" class="btn btn-primary"></input></td>
                     </tr>
                 </form>
@@ -203,6 +235,17 @@
                 alert("Cập nhật thất bại");
             });
     }
-
+    function changeFormatDate(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
 </script>
 {% endblock content %}
