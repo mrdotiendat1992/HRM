@@ -3003,26 +3003,7 @@ def export_dslt():
     phanloai = request.form.get("phanloai")
     ngay = request.form.get("ngay")
     rows = laydanhsachloithe(chuyen, bophan, phanloai, ngay)
-    result = []
-    for row in rows:
-        result.append({
-            "Mã công ty": row[0],
-            "Mã số thẻ": row[1],
-            "Họ tên": row[2],
-            "Số điện thoại": row[3],
-            "Chức danh": row[4],
-            "Chuyền tổ": row[5],
-            "Bộ phận": row[6],
-            "Ngày chấm": row[7],
-            "Giờ vào": row[8],
-            "Giờ ra": row[9],
-            "Ca": row[10],
-            "Bắt đầu ca": row[11],
-            "Kết thúc ca": row[12],
-            "Phân loại": row[13],
-            "Số phút thiếu": row[14]
-        })
-    df = pd.DataFrame(result)
+    df = pd.DataFrame(rows)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), index=False)
     
