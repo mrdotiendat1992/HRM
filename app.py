@@ -919,13 +919,14 @@ def laymasothemoi():
         return result[0]
     return 0
 
-def laydanhsachloithe(chuyen=None, bophan=None, phanloai=None, ngay=None):
+def laydanhsachloithe(mst=None,chuyen=None, bophan=None, phanloai=None, ngay=None):
     
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     
     query = f"SELECT * FROM HR.dbo.Danh_sach_loi_the WHERE Nha_may = '{current_user.macongty}'"
-    
+    if mst:
+        query += f"AND MST LIKE '%{mst}%' "
     if chuyen:
         query += f"AND Chuyen_to LIKE '%{chuyen}%' "
     if bophan:
@@ -2385,13 +2386,13 @@ def khaibaochamcong():
 @login_required
 @roles_required('cong','sa','developer')
 def loichamcong():
-    
+    mst = request.args.get("mst")
     chuyen = request.args.get("chuyen")
     bophan = request.args.get("bophan")
     phanloai = request.args.get("phanloai")
     ngay = request.args.get("ngay")
     danhsachphanloai = laydanhsachphanloailoithe()
-    danhsach = laydanhsachloithe(chuyen,bophan,phanloai,ngay)
+    danhsach = laydanhsachloithe(mst,chuyen,bophan,phanloai,ngay)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -2781,7 +2782,7 @@ def update_diemdanhbu():
         loaidiemdanh = request.form["loaidiemdanh"]
         if laycacbophanduocduyet(mstduyet,bophan):
             capnhat_diemdanhbu(mst,ngayduyet,loaidiemdanh)
-        return redirect("/muc7_1_4")
+        return redirect("/muc7_1_3")
     
 @app.route("/update_xinnghiphep", methods=["POST"])
 def update_xinnghiphep():
@@ -2793,7 +2794,7 @@ def update_xinnghiphep():
         # print(mstduyet,bophan,ngayduyet,mst)
         if laycacbophanduocduyet(mstduyet,bophan):
             capnhat_xinnghiphep(mst,ngayduyet)
-        return redirect("/muc7_1_5")
+        return redirect("/muc7_1_4")
     
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():

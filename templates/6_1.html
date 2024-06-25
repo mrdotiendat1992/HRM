@@ -80,12 +80,20 @@
                     <tbody>
                         <tr>
                             <td>Detail job title (Vietnamese)*:</td>
-                            <td><input type="text" id="vitricu" name="vitricu" readonly></td>
+                            <td>
+                                <select id="vitricu" name="vitricu" >
+                                    <option value=""></option>
+                                    {% for vitri in cacvitri %}
+                                    <option value="{{ vitri }}">{{ vitri }}</option>
+                                    {% endfor %}
+                                    </option>
+                                </select>
+                            </td>
                             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
                             <td>Detail job title (Vietnamese)*:</td>
                             <td>
                                 <select id="vitrimoi" name="vitrimoi">
-                                <option value="">Chọn vị trí mới</option>
+                                <option value=""></option>
                                 {% for vitri in cacvitri %}
                                 <option value="{{ vitri }}">{{ vitri }}</option>
                                 {% endfor %}
@@ -94,78 +102,74 @@
                         </tr>
                         <tr>
                             <td>Line*:</td>
-                            <td><input type="text" id="chuyencu" name="chuyencu" readonly></td>
+                            <td><select id="chuyencu" name="chuyencu" ></select></td>
                             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
                             <td>Line*:</td>
-                            <td>
-                                <select id="chuyenmoi" name="chuyenmoi">
-                                
-                                </select>
-                            </td>
+                            <td><select id="chuyenmoi" name="chuyenmoi"></select></td>
                         </tr>
                         <tr>
                             <td>Detail job title (English):</td>
-                            <td><input type="text" id="vitriencu" name="vitriencu" readonly></td>
+                            <td><input type="text" id="vitriencu" name="vitriencu" ></td>
                             <td></td>
                             <td>Detail job title (English):</td>
-                            <td><input type="text" id="vitriengmoi" name="vitriengmoi" readonly></td>
+                            <td><input type="text" id="vitriengmoi" name="vitriengmoi" ></td>
                         </tr>
                         <tr>
                             <td>Grade code:</td>
-                            <td><input type="text" id="gradecodecu" name="gradecodecu" readonly></td>
+                            <td><input type="text" id="gradecodecu" name="gradecodecu" ></td>
                             <td></td>
                             <td>Grade code:</td>
-                            <td><input type="text" id="gradecodemoi" name="gradecodemoi" readonly></td>
+                            <td><input type="text" id="gradecodemoi" name="gradecodemoi" ></td>
                         </tr>
                         <tr>
                             <td>Section code:</td>
-                            <td><input type="text" id="sectioncodecu" name="sectioncodecu" readonly></td>
+                            <td><input type="text" id="sectioncodecu" name="sectioncodecu" ></td>
                             <td></td>
                             <td>Section code:</td>
-                            <td><input type="text" id="sectioncodemoi" name="sectioncodemoi" readonly></td>
+                            <td><input type="text" id="sectioncodemoi" name="sectioncodemoi" ></td>
                         </tr>
                         <tr>
                             <td>Section description:</td>
-                            <td><input type="text" id="sectiondescriptioncu" name="sectiondescriptioncu" readonly></td>
+                            <td><input type="text" id="sectiondescriptioncu" name="sectiondescriptioncu" ></td>
                             <td></td>
                             <td>Section description:</td>
-                            <td><input type="text" id="sectiondescriptionmoi" name="sectiondescriptionmoi" readonly></td>
+                            <td><input type="text" id="sectiondescriptionmoi" name="sectiondescriptionmoi" ></td>
                         </tr>
                         <tr>
                             <td>HC category:</td>
-                            <td><input type="text" id="hccategorycu" name="hccategorycu" readonly></td>
+                            <td><input type="text" id="hccategorycu" name="hccategorycu" ></td>
                             <td></td>
                             <td>HC category:</td>
-                            <td><input type="text" id="hccategorymoi" name="hccategorymoi" readonly></td>
+                            <td><input type="text" id="hccategorymoi" name="hccategorymoi" ></td>
                         </tr>
                         <tr>
                             <td>Department:</td>
-                            <td><input type="text" id="departmentcu" name="departmentcu" readonly></td>
+                            <td><input type="text" id="departmentcu" name="departmentcu" ></td>
                             <td></td>
                             <td>Department:</td>
-                            <td><input type="text" id="departmentmoi" name="departmentmoi" readonly></td>
+                            <td><input type="text" id="departmentmoi" name="departmentmoi" ></td>
                         </tr>
                         
                         <tr>
                             <td>Employee type:</td>
-                            <td><input type="text" id="employeetypecu" name="employeetypecu" readonly></td>
+                            <td><input type="text" id="employeetypecu" name="employeetypecu" ></td>
                             <td></td>
                             <td>Employee type:</td>
-                            <td><input type="text" id="employeetypemoi" name="employeetypemoi" readonly></td>
+                            <td><input type="text" id="employeetypemoi" name="employeetypemoi" ></td>
                         </tr>
                         <tr>
                             <td>Position code:</td>
-                            <td><input type="text" id="positioncodecu" name="positioncodecu" readonly></td>
+                            <td><input type="text" id="positioncodecu" name="positioncodecu" ></td>
                             <td></td>
                             <td>Position code description:</td>
-                            <td><input type="text" id="positioncodemoi" name="positioncodemoi" readonly></td>
+                            <td><input type="text" id="positioncodemoi" name="positioncodemoi" ></td>
                         </tr>
                         <tr>
                             <td>Position code description:</td>
-                            <td><input type="text" id="positioncodedescriptioncu" name="positioncodedescriptioncu" readonly></td>
+                            <td><input type="text" id="positioncodedescriptioncu" name="positioncodedescriptioncu" ></td>
                             <td></td>
                             <td>Position code description:</td>
-                            <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" readonly></td>
+                            <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" ></td>
                         </tr>
                     </tbody>
                     <tfoot>
@@ -281,6 +285,82 @@
                     document.getElementById("sectiondescriptionmoi").value = data["Section_description"]; // 7
                     document.getElementById("employeetypemoi").value = data["Employee_type"]; // 8
                     document.getElementById("positioncodedescriptionmoi").value = data["Position_code_description"]; // 10
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })
+
+        document.getElementById("vitricu").addEventListener("change", function() {
+            var vitrimoi = document.getElementById("vitricu").value
+            axios({
+                method: 'post',
+                url: '/check_line_from_detailjob?vitrimoi=' + vitricu
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        if (Array.isArray(data)) {
+                            var select = document.getElementById('chuyencu');
+                            select.innerHTML = ''; // Clear existing options
+                            data.forEach(function(item) {
+                                var option = document.createElement('option');
+                                option.value = item; // Assuming item has a 'value' property
+                                option.text = item; // Assuming item has a 'text' property
+                                select.appendChild(option);
+                            });
+                        }
+                        var chuyencu=data[0]
+                        axios({
+                            method: 'post',
+                            url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
+                        })
+                        .then(function (response) {
+                            var data = response.data
+                            if (response.data != "") {
+                                console.log(data)
+                                data = response.data
+                                document.getElementById("vitriengcu").value = data["Detail_job_title_EN"];
+                                document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
+                                document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
+                                document.getElementById("hccategorycu").value = data["HC_category"]; // 5
+                                document.getElementById("departmentcu").value = data["Department"]; // 6
+                                document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
+                                document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
+                                document.getElementById("positioncodecu").value = data["Position_code"]; // 9
+                                document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
+                                    }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        })
+        document.getElementById("chuyencu").addEventListener("change", function() {
+            var vitrimoi = document.getElementById("vitricu").value
+            var chuyenmoi = document.getElementById("chuyencu").value
+            axios({
+                method: 'post',
+                url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
+            })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    data = response.data
+                    console.log(data)
+                    document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
+                    document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
+                    document.getElementById("hccategorycu").value = data["HC_category"]; // 5
+                    document.getElementById("departmentcu").value = data["Department"]; // 6
+                    document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
+                    document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
+                    document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
                 }
             })
             .catch(function (error) {

@@ -6,11 +6,12 @@ table, th, td {
 }
 label {
     text-align: right;
-}
-input, select, label {
-    margin-left: 10px;
-    width: 100px;
     font-size: 12px;
+}
+input, select {
+    margin-left: 10px;
+    font-size: 12px;
+    width: 100px;
 }
 .scroll-container {
     width: 100%;
@@ -37,6 +38,7 @@ td.sticky {
 th.sticky {
     z-index: 2;
 }
+
 </style>
 {% endblock style %}
 {% block content %}
@@ -45,6 +47,12 @@ th.sticky {
         
             <form method="GET" action="/muc7_1_2">
                 <div class="form-group">
+                    <label for="mst">Mã số thẻ:</label>
+                    {% if request.args.get('mst') %}
+                    <input id="mst" name="mst" value="{{ request.args.get('mst')  }}"></input>
+                    {% else %}
+                    <input id="mst" name="mst"></input>
+                    {% endif %}
                     <label for="chuyen">Chuyền:</label>
                     {% if request.args.get('chuyen') %}
                     <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
