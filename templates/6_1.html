@@ -80,20 +80,12 @@
                     <tbody>
                         <tr>
                             <td>Detail job title (Vietnamese)*:</td>
-                            <td>
-                                <select id="vitricu" name="vitricu" >
-                                    <option value=""></option>
-                                    {% for vitri in cacvitri %}
-                                    <option value="{{ vitri }}">{{ vitri }}</option>
-                                    {% endfor %}
-                                    </option>
-                                </select>
-                            </td>
+                            <td><input type="text" id="vitricu" name="vitricu" ></td>
                             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
                             <td>Detail job title (Vietnamese)*:</td>
                             <td>
                                 <select id="vitrimoi" name="vitrimoi">
-                                <option value=""></option>
+                                <option value="">Chọn vị trí mới</option>
                                 {% for vitri in cacvitri %}
                                 <option value="{{ vitri }}">{{ vitri }}</option>
                                 {% endfor %}
@@ -102,10 +94,14 @@
                         </tr>
                         <tr>
                             <td>Line*:</td>
-                            <td><select id="chuyencu" name="chuyencu" ></select></td>
+                            <td><input type="text" id="chuyencu" name="chuyencu" ></td>
                             <td><i class="fa fa-arrow-right" aria-hidden="true"></i></td>
                             <td>Line*:</td>
-                            <td><select id="chuyenmoi" name="chuyenmoi"></select></td>
+                            <td>
+                                <select id="chuyenmoi" name="chuyenmoi">
+                                
+                                </select>
+                            </td>
                         </tr>
                         <tr>
                             <td>Detail job title (English):</td>
@@ -285,82 +281,6 @@
                     document.getElementById("sectiondescriptionmoi").value = data["Section_description"]; // 7
                     document.getElementById("employeetypemoi").value = data["Employee_type"]; // 8
                     document.getElementById("positioncodedescriptionmoi").value = data["Position_code_description"]; // 10
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        })
-
-        document.getElementById("vitricu").addEventListener("change", function() {
-            var vitrimoi = document.getElementById("vitricu").value
-            axios({
-                method: 'post',
-                url: '/check_line_from_detailjob?vitrimoi=' + vitricu
-            })
-                .then(function (response) {
-                    var data = response.data
-                    if (response.data != "") {
-                        console.log(data)
-                        if (Array.isArray(data)) {
-                            var select = document.getElementById('chuyencu');
-                            select.innerHTML = ''; // Clear existing options
-                            data.forEach(function(item) {
-                                var option = document.createElement('option');
-                                option.value = item; // Assuming item has a 'value' property
-                                option.text = item; // Assuming item has a 'text' property
-                                select.appendChild(option);
-                            });
-                        }
-                        var chuyencu=data[0]
-                        axios({
-                            method: 'post',
-                            url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
-                        })
-                        .then(function (response) {
-                            var data = response.data
-                            if (response.data != "") {
-                                console.log(data)
-                                data = response.data
-                                document.getElementById("vitriengcu").value = data["Detail_job_title_EN"];
-                                document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
-                                document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
-                                document.getElementById("hccategorycu").value = data["HC_category"]; // 5
-                                document.getElementById("departmentcu").value = data["Department"]; // 6
-                                document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
-                                document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
-                                document.getElementById("positioncodecu").value = data["Position_code"]; // 9
-                                document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
-                                    }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
-                    }
-                })
-                .catch(function (error) {
-                    console.log(error);
-                });
-        })
-        document.getElementById("chuyencu").addEventListener("change", function() {
-            var vitrimoi = document.getElementById("vitricu").value
-            var chuyenmoi = document.getElementById("chuyencu").value
-            axios({
-                method: 'post',
-                url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
-            })
-            .then(function (response) {
-                var data = response.data
-                if (response.data != "") {
-                    data = response.data
-                    console.log(data)
-                    document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
-                    document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
-                    document.getElementById("hccategorycu").value = data["HC_category"]; // 5
-                    document.getElementById("departmentcu").value = data["Department"]; // 6
-                    document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
-                    document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
-                    document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
                 }
             })
             .catch(function (error) {
