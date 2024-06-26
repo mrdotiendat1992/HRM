@@ -21,6 +21,10 @@
     input {
         margin-top:0;
     }
+    h4 {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -31,9 +35,11 @@
         <input type="hidden" name="mst" id="mst">
         <div class="row">
             <div class="col-3">
+                <h4 id="hoten"></h4>
                 <div class="form-group">
                     <label for="masothe">Mã số thẻ</label>
                 </div>
+                
                 <div class="form-group">
                     <input type="text" id="masothe" name="masothe">
                 </div>
@@ -109,7 +115,7 @@
                             <td><input type="text" id="vitriencu" name="vitriencu" ></td>
                             <td></td>
                             <td>Detail job title (English):</td>
-                            <td><input type="text" id="vitriengmoi" name="vitriengmoi" ></td>
+                            <td><input type="text" id="vitrienmoi" name="vitrienmoi" ></td>
                         </tr>
                         <tr>
                             <td>Grade code:</td>
@@ -190,6 +196,7 @@
                     if (response.data != "") {
                         console.log(data)
                         document.getElementById("mst").value = data["MST"];
+                        document.getElementById("hoten").innerHTML = data["Họ tên"];
                         document.getElementById("vitricu").value = data["Job title VN"]; 
                         document.getElementById("vitriencu").value = data["Job title EN"];
                         document.getElementById("chuyencu").value = data["Line"]; 
@@ -242,7 +249,7 @@
                             if (response.data != "") {
                                 console.log(data)
                                 data = response.data
-                                document.getElementById("vitriengmoi").value = data["Detail_job_title_EN"];
+                                document.getElementById("vitrienmoi").value = data["Detail_job_title_EN"];
                                 document.getElementById("gradecodemoi").value = data["Grade_code"]; // 3
                                 document.getElementById("sectioncodemoi").value = data["Section_code"]; // 4
                                 document.getElementById("hccategorymoi").value = data["HC_category"]; // 5
@@ -289,6 +296,75 @@
             });
         })
 
+        document.getElementById("vitricu").addEventListener("change", function() {
+            var vitricu = document.getElementById("vitricu").value
+            axios({
+                method: 'post',
+                url: '/check_line_from_detailjob?vitrimoi=' + vitricu
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        if (Array.isArray(data)) {
+                            document.getElementById('chuyencu').value = data[0];
+                        }
+                        var chuyencu=data[0]
+                        axios({
+                            method: 'post',
+                            url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
+                        })
+                        .then(function (response) {
+                            var data = response.data
+                            if (response.data != "") {
+                                console.log(data)
+                                data = response.data
+                                document.getElementById("vitriencu").value = data["Detail_job_title_EN"];
+                                document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
+                                document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
+                                document.getElementById("hccategorycu").value = data["HC_category"]; // 5
+                                document.getElementById("departmentcu").value = data["Department"]; // 6
+                                document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
+                                document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
+                                document.getElementById("positioncodecu").value = data["Position_code"]; // 9
+                                document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
+                                    }
+                        })
+                        .catch(function (error) {
+                            console.log(error);
+                        });
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+        })
+
+        document.getElementById("chuyencu").addEventListener("change", function() {
+            var vitrimoi = document.getElementById("vitricu").value
+            var chuyencu = document.getElementById("chuyencu").value
+            axios({
+                method: 'post',
+                url: '/check_hcname?vitri=' + vitricu+"&line="+chuyencu
+            })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    data = response.data
+                    console.log(data)
+                    document.getElementById("gradecodecu").value = data["Grade_code"]; // 3
+                    document.getElementById("sectioncodecu").value = data["Section_code"]; // 4
+                    document.getElementById("hccategorycu").value = data["HC_category"]; // 5
+                    document.getElementById("departmentcu").value = data["Department"]; // 6
+                    document.getElementById("sectiondescriptioncu").value = data["Section_description"]; // 7
+                    document.getElementById("employeetypecu").value = data["Employee_type"]; // 8
+                    document.getElementById("positioncodedescriptioncu").value = data["Position_code_description"]; // 10
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })
 
     </script>
 </div>

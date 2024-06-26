@@ -1,2 +1,6 @@
 # Bỏ qua thư mục __pycache__
 __pycache__/
+
+db.sqlite
+
+app.log

@@ -4,12 +4,12 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "hrm_system_NT"
 app.config['UPLOAD_FOLDER'] = r'./static/uploads'
+
 db = SQLAlchemy()
  
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
-
 
 used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 # used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
@@ -1529,6 +1529,22 @@ def roles_required(*roles):
 #          MAIN ROUTES           #
 ##################################
 
+if __name__ != '__main__':
+    gunicorn_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers = gunicorn_logger.handlers
+    app.logger.setLevel(gunicorn_logger.level)
+
+if __name__ == '__main__':
+    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+    handler.setLevel(logging.INFO)
+    formatter = logging.Formatter(
+        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+    )
+    handler.setFormatter(formatter)
+    app.logger.addHandler(handler)
+    app.logger.setLevel(logging.INFO)
+
+
 @app.route('/unauthorized')
 def unauthorized():
     return "Bạn không có quyền truy cập vui lòng chọn mục khác", 401
@@ -1589,6 +1605,7 @@ def login():
             return redirect(url_for("login"))
         if user.matkhau == request.form.get("matkhau"):
             login_user(user)
+            app.logger.info(f"User {user.masothe} {user.macongty} logged in")
             return redirect(url_for("home"))
         else:
             return redirect(url_for("login"))

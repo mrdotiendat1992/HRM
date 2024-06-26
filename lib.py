@@ -11,3 +11,5 @@ from werkzeug.utils import secure_filename
 import re
 from functools import wraps
 from waitress import serve
+import logging
+from logging.handlers import RotatingFileHandler
