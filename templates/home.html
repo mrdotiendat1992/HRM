@@ -75,6 +75,7 @@
             <option value="Vào đến ngày">Vào đến ngày</option>
             <option value="Nghỉ từ ngày">Nghỉ từ ngày</option>
             <option value="Nghỉ đến ngày">Nghỉ đến ngày</option>
+            <option value="Ghi chú">Ghi chú</option>
         </select>
         <input name="tutimkiem" placeholder="Nội dung tìm kiếm..." value="{{ request.args.get('tutimkiem', '') }}">
         <button class="btn btn-primary" onclick="themdieukiemloc()" title="Thêm điều kiện lọc"><i class="fas fa-plus"></i></button>
@@ -110,6 +111,7 @@
             <input type="text" id="Vào đến ngày" name="Vào đến ngày" hidden value={{request.args.get('Vào đến ngày', '')}}>
             <input type="text" id="Nghỉ từ ngày" name="Nghỉ từ ngày" hidden value={{request.args.get('Nghỉ từ ngày', '')}}>
             <input type="text" id="Nghỉ đến ngày" name="Nghỉ đến ngày" hidden value={{request.args.get('Nghỉ đến ngày', '')}}>
+            <input type="text" id="ghichu" name="ghichu" hidden value={{request.args.get('ghichu', '')}}>
             <input type="submit" class="btn btn-success" value="Xuất excel">
         </form>
     </div>
@@ -133,8 +135,8 @@
                     <td>{{ user["MST"] }}</td>
                     <td>{{ user["Họ tên"] }}</td>
                     <td>{{ user["Job title VN"] }}</td>
-                    <td>{{ user["Department"] }}</td>
                     <td>{{ user["Line"] }}</td>
+                    <td>{{ user["Department"] }}</td>
                     <td>{{ user["Trạng thái"] }}</td>
                     {% if user["Ghi chú"] %}
                     <td>{{ user["Ghi chú"] }}</td>

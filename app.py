@@ -489,10 +489,10 @@ def lay_user(user):
             "Thẻ chấm công": user[1],
             "Họ tên": user[2],
             "Số điện thoại": user[3],
-            "Ngày sinh": user[4],
+            "Ngày sinh": datetime.strptime(user[4], '%Y-%m-%d').strftime("%d/%m/%Y") if user[4] else None,
             "Giới tính": user[5],
             "CCCD": user[6],
-            "Ngày cấp CCCD": user[7],
+            "Ngày cấp CCCD": datetime.strptime(user[7], '%Y-%m-%d').strftime("%d/%m/%Y") if user[7] else None ,
             "Nơi cấp": user[8],
             "CMT": user[9],
             "Thường trú": user[10],
@@ -525,8 +525,8 @@ def lay_user(user):
             "Người thân": user[37],
             "SĐT liên hệ": user[38],
             "Loại hợp đồng": user[39],
-            "Ngày ký HĐ": user[40],
-            "Ngày hết hạn": user[41],
+            "Ngày ký HĐ": datetime.strptime(user[40], '%Y-%m-%d').strftime("%d/%m/%Y") if user[40] else None,
+            "Ngày hết hạn": datetime.strptime(user[41], '%Y-%m-%d').strftime("%d/%m/%Y") if user[41] else None,
             "Job title VN": user[42],
             "HC category": user[43],
             "Gradecode": user[44],
@@ -543,19 +543,19 @@ def lay_user(user):
             "Lương cơ bản": user[55],
             "Phụ cấp": user[56],
             "Tiền phụ cấp": user[57],
-            "Ngày vào": user[58],
-            "Ngày nghỉ": user[59],
+            "Ngày vào": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y"),
+            "Ngày nghỉ": datetime.strptime(user[59], '%Y-%m-%d').strftime("%d/%m/%Y") if user[59] else None,
             "Trạng thái": user[60],
-            "Ngày vào nối thâm niên": user[61],
+            "Ngày vào nối thâm niên": datetime.strptime(user[61], '%Y-%m-%d').strftime("%d/%m/%Y") if user[61] else None,
             "Mật khẩu": user[62],
-            "Ngày kí HĐ Thử việc": user[63],
-            "Ngày hết hạn HĐ Thử việc": user[64],
-            "Ngày kí HĐ xác định thời hạn lần 1": user[65],
-            "Ngày hết hạn HĐ xác định thời hạn lần 1": user[66],
-            "Ngày kí HĐ HĐ xác định thời hạn lần 2": user[67],
-            "Ngày hết hạn HĐ xác định thời hạn lần 2": user[68],
-            "Ngày kí HĐ không thời hạn": user[69],
-            "Ghi chú": user[71]
+            "Ngày kí HĐ Thử việc": datetime.strptime(user[63], '%Y-%m-%d').strftime("%d/%m/%Y") if user[63] else None,
+            "Ngày hết hạn HĐ Thử việc": datetime.strptime(user[64], '%Y-%m-%d').strftime("%d/%m/%Y") if user[64] else None,
+            "Ngày kí HĐ xác định thời hạn lần 1": datetime.strptime(user[65], '%Y-%m-%d').strftime("%d/%m/%Y") if user[65] else None,
+            "Ngày hết hạn HĐ xác định thời hạn lần 1": datetime.strptime(user[66], '%Y-%m-%d').strftime("%d/%m/%Y") if user[66] else None,
+            "Ngày kí HĐ HĐ xác định thời hạn lần 2": datetime.strptime(user[67], '%Y-%m-%d').strftime("%d/%m/%Y") if user[67] else None,
+            "Ngày hết hạn HĐ xác định thời hạn lần 2": datetime.strptime(user[68], '%Y-%m-%d').strftime("%d/%m/%Y") if user[68] else None,
+            "Ngày kí HĐ không thời hạn": datetime.strptime(user[69], '%Y-%m-%d').strftime("%d/%m/%Y") if user[69] else None,
+            "Ghi chú": user[71] if user[71] else None
         }
     else:
         return None
@@ -1668,8 +1668,9 @@ def home():
         chucvu = request.form.get("Chức danh")
         trangthai = request.form.get("Trạng thái")
         hccategory = request.form.get("Headcount Category")
+        ghichu = request.form.get("Ghi chú")
             
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)      
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu,ghichu)      
         df = pd.DataFrame(users)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
