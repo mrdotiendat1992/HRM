@@ -795,14 +795,11 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        if not sdt and not cccd:
-            query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}'"
-        elif sdt and not cccd:
-            query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt LIKE '%{sdt}%'"
-        elif not sdt and cccd:
-            query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND CCCD LIKE '%{cccd}%'"
-        else:
-            query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}' AND Sdt LIKE '%{sdt}%' AND CCCD LIKE '%{cccd}%'"
+        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}'"
+        if sdt:
+            query += f"AND Sdt LIKE '{sdt}'"
+        if cccd:
+            query += f"AND CCCD LIKE '{cccd}'"
         query+= " ORDER BY Ngay_gui_thong_tin DESC"
         print(query)
         rows =  cursor.execute(query).fetchall()
@@ -830,7 +827,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
                 "Kênh tuyển dụng": row[17],
                 "Kinh nghiệm": row[18],
                 "Mức lương": row[19],
-                "Ngày nhận việc": row[20],
+                "Ngày nhận việc": datetime.strptime(row[20], '%Y-%m-%d').strftime("%d/%m/%Y") if row[20] else None,
                 "Có con nhỏ": row[21],
                 "Tên con 1": row[22],
                 "Ngày sinh con 1": row[23],
@@ -842,10 +839,10 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
                 "Ngày sinh con 4": row[29],
                 "Tên con 5": row[30],
                 "Ngày sinh con 5": row[31],
-                "Ngày gửi": row[32],
+                "Ngày gửi": datetime.strptime(row[32], '%Y-%m-%d').strftime("%d/%m/%Y") if row[32] else None,
                 "Trạng thái": row[33],
-                "Ngày cập nhật": row[34],
-                "Ngày hẹn đi làm": row[35],
+                "Ngày cập nhật": datetime.strptime(row[34], '%Y-%m-%d').strftime("%d/%m/%Y") if row[34] else None,
+                "Ngày hẹn đi làm": datetime.strptime(row[35], '%Y-%m-%d').strftime("%d/%m/%Y") if row[35] else None,
                 "Hiệu suất": row[36],
                 "Loại máy": row[37]
             })
@@ -2316,7 +2313,89 @@ def danhsachsaphethanhopdong():
                                danhsach=paginated_rows,
                                pagination=pagination,
                                total = total)
-
+    if request.method == "POST":
+        danhsach = laydanhsachsaphethanhopdong()
+        result = []
+        for user in danhsach:
+            result.append({
+                "MST": user[0],
+            "Thẻ chấm công": user[1],
+            "Họ tên": user[2],
+            "Số điện thoại": user[3],
+            "Ngày sinh": datetime.strptime(user[4], '%Y-%m-%d').strftime("%d/%m/%Y") if user[4] else None,
+            "Giới tính": user[5],
+            "CCCD": user[6],
+            "Ngày cấp CCCD": datetime.strptime(user[7], '%Y-%m-%d').strftime("%d/%m/%Y") if user[7] else None ,
+            "Nơi cấp": user[8],
+            "CMT": user[9],
+            "Thường trú": user[10],
+            "Thôn xóm": user[11],
+            "Phường xã": user[12],
+            "Quận huyện": user[13],
+            "Tỉnh thành phố": user[14],
+            "Dân tộc": user[15],
+            "Quốc tịch": user[16],
+            "Tôn giáo": user[17],
+            "Học vấn": user[18],
+            "Nơi sinh": user[19],
+            "Tạm trú": user[20],
+            "Số BHXH": user[21],
+            "Mã số thuế": user[22],
+            "Ngân hàng": user[23],
+            "Số tài khoản": user[24],
+            "Con nhỏ": user[25],
+            "Tên con 1": user[26],
+            "Ngày sinh con 1": user[27],
+            "Tên con 2": user[28],
+            "Ngày sinh con 2": user[29],
+            "Tên con 3": user[30],
+            "Ngày sinh con 3": user[31],
+            "Tên con 4": user[32],
+            "Ngày sinh con 4": user[33],
+            "Tên con 5": user[34],
+            "Ngày sinh con 5": user[35],
+            "Ảnh chân dung": user[36],
+            "Người thân": user[37],
+            "SĐT liên hệ": user[38],
+            "Loại hợp đồng": user[39],
+            "Ngày ký HĐ": datetime.strptime(user[40], '%Y-%m-%d').strftime("%d/%m/%Y") if user[40] else None,
+            "Ngày hết hạn": datetime.strptime(user[41], '%Y-%m-%d').strftime("%d/%m/%Y") if user[41] else None,
+            "Job title VN": user[42],
+            "HC category": user[43],
+            "Gradecode": user[44],
+            "Factory": user[45],
+            "Department": user[46],
+            "Chức vụ": user[47],
+            "Section code": user[48],
+            "Section description": user[49],
+            "Line": user[50],
+            "Employee type": user[51],
+            "Job title EN": user[52],
+            "Position code": user[53],
+            "Position description": user[54],
+            "Lương cơ bản": user[55],
+            "Phụ cấp": user[56],
+            "Tiền phụ cấp": user[57],
+            "Ngày vào": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y"),
+            "Ngày nghỉ": datetime.strptime(user[59], '%Y-%m-%d').strftime("%d/%m/%Y") if user[59] else None,
+            "Trạng thái": user[60],
+            "Ngày vào nối thâm niên": datetime.strptime(user[61], '%Y-%m-%d').strftime("%d/%m/%Y") if user[61] else None,
+            "Mật khẩu": user[62],
+            "Ngày kí HĐ Thử việc": datetime.strptime(user[63], '%Y-%m-%d').strftime("%d/%m/%Y") if user[63] else None,
+            "Ngày hết hạn HĐ Thử việc": datetime.strptime(user[64], '%Y-%m-%d').strftime("%d/%m/%Y") if user[64] else None,
+            "Ngày kí HĐ xác định thời hạn lần 1": datetime.strptime(user[65], '%Y-%m-%d').strftime("%d/%m/%Y") if user[65] else None,
+            "Ngày hết hạn HĐ xác định thời hạn lần 1": datetime.strptime(user[66], '%Y-%m-%d').strftime("%d/%m/%Y") if user[66] else None,
+            "Ngày kí HĐ HĐ xác định thời hạn lần 2": datetime.strptime(user[67], '%Y-%m-%d').strftime("%d/%m/%Y") if user[67] else None,
+            "Ngày hết hạn HĐ xác định thời hạn lần 2": datetime.strptime(user[68], '%Y-%m-%d').strftime("%d/%m/%Y") if user[68] else None,
+            "Ngày kí HĐ không thời hạn": datetime.strptime(user[69], '%Y-%m-%d').strftime("%d/%m/%Y") if user[69] else None,
+            "Ghi chú": user[71] if user[71] else None
+            })
+        df = pd.DataFrame(result)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"saphethan_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"saphethan_{thoigian}.xlsx"), as_attachment=True)
+        
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
 @roles_required('nhansu','sa','developer')

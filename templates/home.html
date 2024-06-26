@@ -207,12 +207,12 @@
                     const row = event.target.closest('tr');
                     const info = JSON.parse(row.dataset.info);
                     console.log(info);
-                    var ngaysinh = changeFormatDate(info["Ngày sinh"]);
-                    var ngaycapcccd = changeFormatDate(info["Ngày cấp CCCD"]);
-                    var ngayvao = changeFormatDate(info["Ngày vào"]);
-                    var ngaynghi = changeFormatDate(info["Ngày nghỉ"]);
-                    var ngaykyhd = changeFormatDate(info["Ngày ký HĐ"]);
-                    var ngayhethd = changeFormatDate(info["Ngày hết hạn"]);
+                    var ngaysinh = info["Ngày sinh"];
+                    var ngaycapcccd = info["Ngày cấp CCCD"];
+                    var ngayvao = info["Ngày vào"];
+                    var ngaynghi = info["Ngày nghỉ"];
+                    var ngaykyhd = info["Ngày ký HĐ"];
+                    var ngayhethd = info["Ngày hết hạn"];
 
                     popupContent.innerHTML = `                    
                     <div style='display: flex; align-items: top;'>
