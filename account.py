@@ -1,38 +1,37 @@
-import requests
-import pyodbc
+# import sqlite3
+# import pyodbc
 
-conn = pyodbc.connect("Driver={SQL Server};"
-    "Server=172.16.60.100;"
-    "Database=HR;"
-    "UID=huynguyen;"
-    "PWD=Namthuan@123;")
-
-cursor = conn.cursor()
-rows = cursor.execute("SELECT MST,Ho_ten,Department,Factory,Mat_khau FROM dbo.DANH_SACH_CBCNV").fetchall()
-conn.close()
-
-for row in rows:
-    if row[1] and row[2] and row[3] and row[4]:
-        requests.post(f"http://127.0.0.1:5000/register?masothe={row[0]}&hoten={row[1]}&phongban={row[2]}&macongty={row[3]}&matkhau={row[4]}")
-
-# conn1 = pyodbc.connect('DRIVER={SQL Server};SERVER=10.0.0.252/SQLEXPRESS;DATABASE=MITACOSQL;UID=sa;PWD=Namthuan1;')
-# cursor1 = conn1.cursor()
-# rows1 = cursor1.execute("SELECT MaChamCong,MaThe FROM dbo.NHANVIEN").fetchall()
-# conn1.close()
-
-# conn2 = pyodbc.connect("Driver={SQL Server};"
+# conn = pyodbc.connect("Driver={SQL Server};"
 #     "Server=172.16.60.100;"
 #     "Database=HR;"
 #     "UID=huynguyen;"
 #     "PWD=Namthuan@123;")
 
-# cursor2 = conn2.cursor()
-    
-# for row1 in rows1:
-#     cursor2.execute(f"UPDATE Danh_sach_CBCNV SET The_cham_cong = '{row1[1]}' WHERE MST = '{row1[0]}' AND Factory = 'NT1'")
-#     conn2.commit()
-    
-# conn2.close()
+# cursor = conn.cursor()
+# rows = cursor.execute("SELECT MST,Ho_ten,Department,Factory,Mat_khau FROM dbo.DANH_SACH_CBCNV").fetchall()
+# conn.close()
+# x=1
+# for row in rows:
+#     mst = row[0]
+#     hoten = row[1]
+#     phongban = row[2]
+#     macongty = row[3]
+#     if macongty == "NT1":
+#         tencongty = "Công ty cổ phần sản xuất Nam Thuận"
+#     elif macongty == "NT2":
+#         tencongty = "Công ty cổ phần Nam Thuận Nghệ An"
+#     elif macongty == "NT0":
+#         tencongty = "Công ty cổ phần tập đoàn Nam Thuận"
+#     matkhau = "1"
+#     role = "sa"
+#     conn1 = sqlite3.connect('instance/db.sqlite')
+#     cursor1 = conn1.cursor()
+
+#     rows = cursor1.execute(f"""INSERT INTO users VALUES ({x}, '{mst}','{hoten}','{macongty}','{tencongty}','{phongban}','{matkhau}','{role}')""")
+#     conn1.commit()
+#     conn1.close()
+#     x+=1
+
 
 # import sqlite3
 
@@ -40,9 +39,7 @@ for row in rows:
 # conn = sqlite3.connect('instance/db.sqlite')
 # cursor = conn.cursor()
 
-# # Thêm cột 'role' vào bảng 'users'
-# rows = cursor.execute('SELECT * FROM users').fetchall()
+# rows = cursor.execute("DELETE FROM users WHERE phongban = 'None'")
 
-# for row in rows:
-#     cursor.execute(f"UPDATE users SET role = 'sa' WHERE id = '{row[0]}'")
 # conn.commit()
+# conn.close()
