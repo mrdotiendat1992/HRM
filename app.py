@@ -2962,10 +2962,9 @@ def thaydoithongtin_hopdong():
 def dangkitangcacanhan():
     mst = request.form.get("mst")
     giotangca = request.form.get("giotangca")
-    giotangcathucte = request.form.get("giotangcathucte")
     ngaytangca = request.form.get("ngaytangca")
     thongtin = laydanhsachtheomst(mst)[0]
-    insert_tangca(current_user.macongty,mst,thongtin['Họ tên'],thongtin['Chức vụ'],thongtin['Line'],thongtin['Department'],ngaytangca,giotangca, giotangcathucte)
+    insert_tangca(current_user.macongty,mst,thongtin['Họ tên'],thongtin['Chức vụ'],thongtin['Line'],thongtin['Department'],ngaytangca,giotangca)
     return redirect(f"/muc7_1_6?ngay={ngaytangca}")
     
     
