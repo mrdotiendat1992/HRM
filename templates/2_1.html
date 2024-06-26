@@ -74,21 +74,17 @@
 <div class="scroll-container">
     <div class="content">
         <div style="display: fixed; align-items: center;">
-            <form method="GET" action="/muc2_1" style="margin-right: 10px;">
-                <div class="form-group">
-                    <label for="sdt">Số điện thoại</label>
-                    <input id="sdt" name="sdt" type="text" onchange="this.form.submit()"></input>
-                    <label for="cccd">Căn cước công dân</label>
-                    <input id="cccd" name="cccd" type="text" onchange="this.form.submit()"></input>
-                    <button class="btn btn-primary" onclick="window.location.href='/muc2_1'">Tất cả</button>
-                </div>
+            <form method="GET" action="/muc2_1" style="display: inline;">
+                <label for="sdt">Số điện thoại</label>
+                <input id="sdt" name="sdt" type="text" onchange="this.form.submit()">
+                <label for="cccd">Căn cước công dân</label>
+                <input id="cccd" name="cccd" type="text" onchange="this.form.submit()">
+                <input class="btn btn-primary" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
-            <form method="POST" action="/export_dsdktt" style="margin-left: 10px;">
-                <div class="form-group">
-                    <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt')}}></input>
-                    <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd')}}></input>
-                    <button class="btn btn-success">Xuất excel</button>
-                </div>
+            <form method="POST" action="/export_dsdktt" style="display: inline;">
+                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt')}}>
+                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd')}}>
+                <input class="btn btn-success" value="Xuất excel">
             </form>
         </div>
         <br>

@@ -3,6 +3,7 @@
 <style>
     table, th, td, .pagination {
         font-size: 10px;
+        width: auto;
     }
     input, label {
         width: 100px;
@@ -93,13 +94,15 @@
                     <th>Phút tăng ca 150%</th> 
                     <th>Phút tăng ca đêm</th>
                     <th>Phút nghỉ không lương</th>
+                    <th>Phút nghỉ khác</th>
+                    <th>Loại nghỉ khác</th>
                     <th>Phân loại</th> 
                 </tr>
             </thead>
           
             <tbody>
                 {% for row in danhsach %}
-                {% if row[18] ==  'OK' %}
+                {% if row[20] ==  'OK' %}
                 <tr data-info='{{ row  | safe }}'>
                 {% else %}
                 <tr class="phanloailoi" data-info='{{ row  | safe }}'>
@@ -111,7 +114,7 @@
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td >{{row[7]}}</td>
+                    <td  class='date_en'>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
                     {% if row[10] %}
                     <td>{{row[10]}}</td>
@@ -130,6 +133,8 @@
                     <td>{{row[16]}}</td>
                     <td>{{row[17]}}</td>
                     <td>{{row[18]}}</td>   
+                    <td>{{row[19]}}</td>
+                    <td>{{row[20]}}</td>   
                 </tr>  
                 {% endfor %}
             </tbody>

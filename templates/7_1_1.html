@@ -27,7 +27,12 @@ label, input, select {
 <div class="container">
     <div class="row">
         <div class="col">
-            <h5>Cập nhật theo nhóm</h5>
+            <div style="display: flex; align-items: center;">
+            <h5>Cập nhật theo nhóm </h5>
+            <form action='/taimaudoicanhom' method="POST">
+                <input class="btn btn-primary" value="Tải mẫu" type="submit" style="font-size:12px;"></input>
+            </form>
+            </div>
             <hr />
             <br>
             <form action="/doicanhom" method="POST" enctype="multipart/form-data">
@@ -188,8 +193,8 @@ label, input, select {
                     {% for row in danhsach %}
                     <tr>
                         <td>{{row[0]}}</td>
-                        <td>{{row[1]}}</td>
-                        <td>{{row[2]}}</td>
+                        <td class="date_en">{{row[1]}}</td>
+                        <td class="date_en">{{row[2]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -207,6 +212,20 @@ label, input, select {
                 document.getElementById('cacu').value = response.data['Ca']
             })
         })
+
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+        });
+
     </script>
 </div>
 {% endblock content %}

@@ -142,7 +142,7 @@ button {
                     <th>{{row[1]}}</th>
                     <th>{{row[2]}}</th>
                     <th>{{row[5]}}</th>
-                    <th>{{row[6]}}</th>
+                    <th class="date_en">{{row[6]}}</th>
                     {% if row[7] %}
                     <th>{{row[7][:5]}}</th>
                     {% else %}
@@ -163,6 +163,19 @@ button {
                 document.getElementById("denngay").disabled = false;
             }
         })
+
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+        });
     </script>
 </div>
 {% endblock content %}

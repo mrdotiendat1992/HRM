@@ -3,6 +3,7 @@
 <style>
     table, th, td, .pagination {
         font-size: 10px;
+        width: auto;
     }
     input, label {
         width: 100px;
@@ -113,7 +114,7 @@
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td >{{row[7]}}</td>
+                    <td class='date_en'>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
                     {% if row[10] %}
                     <td>{{row[10]}}</td>
@@ -140,18 +141,18 @@
         </table>
         
         <script>
-        function changeFormatDate(date){
-            if(date == 'None') return "";
-            try{
-                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-            } catch {
-                return "";    
-        }}
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('.date_en').forEach((element) => {
-                element.textContent = changeFormatDate(element.textContent);
+            function changeFormatDate(date){
+                if(date == 'None') return "";
+                try{
+                    return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+                } catch {
+                    return "";    
+            }}
+            document.addEventListener('DOMContentLoaded', (event) => {
+                document.querySelectorAll('.date_en').forEach((element) => {
+                    element.textContent = changeFormatDate(element.textContent);
+                });
             });
-        });
         </script>
     </div>
 </div>

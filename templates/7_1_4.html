@@ -3,6 +3,7 @@
 <style>
     table, th, td , button{
         font-size: 10px;
+        width: auto;
     }
     .scroll-container {
         width: 100%;
@@ -112,7 +113,7 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
-                    <td>{{row[6]}}</td>
+                    <td class='date_en'>{{row[6]}}</td>
                     <td>{{row[7]}}</td>
                     {% if row[8] %}
                     <td>{{row[8]}}</td>
@@ -142,4 +143,18 @@
         
     </div>
 </div>
+<script>
+    function changeFormatDate(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
 {% endblock content %}

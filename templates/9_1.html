@@ -24,7 +24,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="myModalLabel">Thêm biên bản</h5>
+                    <h5 class="modal-title" id="myModalLabel">Biên bản kỉ luật</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -104,18 +104,18 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr>
-                    <th>{{loop.index}}</th>
-                    <th>{{row[1]}}</th>
-                    <th>{{row[2]}}</th>
-                    <th>{{row[3]}}</th>
-                    <th>{{row[5]}}</th>
-                    <th>{{row[4]}}</th>
-                    <th>{{row[6]}}</th>
-                    <th>{{row[7]}}</th>
-                    <th>{{row[8]}}</th>
-                    <th>{{row[9]}}</th>
-                    <th>{{row[10]}}</th>
-                    <th>{{row[11]}}</th>
+                    <td>{{loop.index}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td class='date_en'>{{row[6]}}</td>
+                    <td class='date_en'>{{row[7]}}</td>
+                    <td class='date_en'>{{row[8]}}</td>
+                    <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
+                    <td>{{row[11]}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -143,6 +143,17 @@
                 console.log(error);
             });
     }
-
+    function changeFormatDate(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
 </script>
 {% endblock content %}
