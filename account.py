@@ -1,19 +1,19 @@
 import requests
 import pyodbc
 
-# conn = pyodbc.connect("Driver={SQL Server};"
-#     "Server=172.16.60.100;"
-#     "Database=HR;"
-#     "UID=huynguyen;"
-#     "PWD=Namthuan@123;")
+conn = pyodbc.connect("Driver={SQL Server};"
+    "Server=172.16.60.100;"
+    "Database=HR;"
+    "UID=huynguyen;"
+    "PWD=Namthuan@123;")
 
-# cursor = conn.cursor()
-# rows = cursor.execute("SELECT MST,Ho_ten,Department,Factory,Mat_khau FROM dbo.DANH_SACH_CBCNV").fetchall()
-# conn.close()
+cursor = conn.cursor()
+rows = cursor.execute("SELECT MST,Ho_ten,Department,Factory,Mat_khau FROM dbo.DANH_SACH_CBCNV").fetchall()
+conn.close()
 
-# for row in rows:
-#     if row[1] and row[2] and row[3] and row[4]:
-#         requests.post(f"http://127.0.0.1:5000/register?masothe={row[0]}&hoten={row[1]}&phongban={row[2]}&macongty={row[3]}&matkhau={row[4]}")
+for row in rows:
+    if row[1] and row[2] and row[3] and row[4]:
+        requests.post(f"http://127.0.0.1:5000/register?masothe={row[0]}&hoten={row[1]}&phongban={row[2]}&macongty={row[3]}&matkhau={row[4]}")
 
 # conn1 = pyodbc.connect('DRIVER={SQL Server};SERVER=10.0.0.252/SQLEXPRESS;DATABASE=MITACOSQL;UID=sa;PWD=Namthuan1;')
 # cursor1 = conn1.cursor()
@@ -34,15 +34,15 @@ import pyodbc
     
 # conn2.close()
 
-import sqlite3
+# import sqlite3
 
-# Kết nối đến cơ sở dữ liệu SQLite
-conn = sqlite3.connect('instance/db.sqlite')
-cursor = conn.cursor()
+# # Kết nối đến cơ sở dữ liệu SQLite
+# conn = sqlite3.connect('instance/db.sqlite')
+# cursor = conn.cursor()
 
-# Thêm cột 'role' vào bảng 'users'
-rows = cursor.execute('SELECT * FROM users').fetchall()
+# # Thêm cột 'role' vào bảng 'users'
+# rows = cursor.execute('SELECT * FROM users').fetchall()
 
-for row in rows:
-    cursor.execute(f"UPDATE users SET role = 'sa' WHERE id = '{row[0]}'")
-conn.commit()
+# for row in rows:
+#     cursor.execute(f"UPDATE users SET role = 'sa' WHERE id = '{row[0]}'")
+# conn.commit()

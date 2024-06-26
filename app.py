@@ -1187,6 +1187,20 @@ def laycacbophanduocduyet(mst,bophan):
         return True
     else:
         return False
+    
+def kiemtrathuki(mst,chuyen):
+    
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"SELECT COUNT(*) FROM HR.dbo.Phan_quyen_thu_ky WHERE Nha_may = '{current_user.macongty}' AND MST = '{mst}' AND Chuyen_to = '{chuyen}'"
+    print(query)
+    result = cursor.execute(query).fetchone()
+    conn.close()
+    print(result[0])
+    if result[0] > 0:
+        return True
+    else:
+        return False
 
 def capnhat_diemdanhbu(mst,ngay,loaidiemdanh):
     
@@ -2758,22 +2772,22 @@ def ykiemnhamay():
 
     return render_template("8_1.html", page="8.1 Ý kiến đóng góp nhà máy")
     
-@app.route("/muc8_2", methods=["GET","POST"])
-@login_required
-@roles_required('user','developer','nhansu','cong','sa','luong','tuyendung')
-def ykienphanmem():
+# @app.route("/muc8_2", methods=["GET","POST"])
+# @login_required
+# @roles_required('user','developer','nhansu','cong','sa','luong','tuyendung')
+# def ykienphanmem():
     
-    danhsach = laydanhsachykienphanmem()
-    return render_template("8_2.html",
-                            page="8.2 Ý kiến đóng góp phần mềm",
-                            danhsach=danhsach)
+#     danhsach = laydanhsachykienphanmem()
+#     return render_template("8_2.html",
+#                             page="8.2 Ý kiến đóng góp phần mềm",
+#                             danhsach=danhsach)
 
-@app.route("/muc8_3", methods=["GET","POST"])
-@login_required
-@roles_required('user','developer','nhansu','cong','sa','luong','tuyendung')
-def ykienkhieunai():
+# @app.route("/muc8_1", methods=["GET","POST"])
+# @login_required
+# @roles_required('user','developer','nhansu','cong','sa','luong','tuyendung')
+# def ykienkhieunai():
     
-    return render_template("8_3.html", page="8.3 Ý kiến khiếu nại")
+    return render_template("8_1.html", page="8.1 Ý kiến khiếu nại")
     
 @app.route("/muc9_1", methods=["GET","POST"])
 @login_required
@@ -3009,22 +3023,21 @@ def dangkitangcanhom():
     
     if request.method == "POST":
         try:
-            if 'file' not in request.files:
-                return redirect("/muc7_1_6")
             file = request.files['file']
-            if file.filename == '':
-                return redirect("/muc7_1_6")
             if file:
                 ngaylam = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath).to_dict(orient="records")
                 for row in data:
-                    try:
-                        insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"], row["Giờ tăng ca thực tế"])
-                    except Exception as e:
-                        print(e)                
-                return redirect("/muc7_1_6")
+                    kiemtra = kiemtrathuki(current_user.masothe,row["Chuyền tổ"])
+                    if kiemtra:
+                        print(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
+                        try:
+                            insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"])
+                        except Exception as e:
+                            print(e)                
+            return redirect("/muc7_1_6")
         except Exception as e:
             print(e)
             return redirect("/muc7_1_6")
@@ -3034,7 +3047,9 @@ def export_dstc():
     mst = request.form.get("mst")
     phongban = request.form.get("phongban")
     ngay = request.form.get("ngay")
-    danhsach = laydanhsachtangca(mst,phongban,ngay)
+    tungay = request.form.get("tungay")
+    denngay = request.form.get("denngay")
+    danhsach = laydanhsachtangca(mst,phongban,ngay,tungay,denngay)
     result = []
     for row in danhsach:
         result.append(
@@ -3047,14 +3062,13 @@ def export_dstc():
                 'Phòng ban': row[5],
                 'Ngày đăng ký': row[6],
                 'Giờ tăng ca': row[7],
-                'Giờ tăng ca thực tế': row[8],
             }
         )
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(f"danhsachtangca_{thoigian}.xlsx", index=False)
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsach_{thoigian}.xlsx"), index=False)
     
-    return send_file(f"danhsachtangca_{thoigian}.xlsx", as_attachment=True)
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsach_{thoigian}.xlsx"), as_attachment=True)
     
        
 @app.route("/export_dsnv", methods=["POST"])
@@ -3076,9 +3090,9 @@ def export_dsnv():
         
     users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)      
     df = pd.DataFrame(users)
-    df.to_excel("danhsach.xlsx", index=False)
+    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], "danhsach.xlsx"), index=False)
     
-    return send_file("danhsach.xlsx", as_attachment=True)  
+    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], "danhsach.xlsx"),  as_attachment=True)  
 
 @app.route("/export_dslt", methods=["POST"])
 def export_dslt():
