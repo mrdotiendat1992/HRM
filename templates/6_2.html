@@ -22,6 +22,9 @@ input, select, label {
             <label for="mst">Nhập mã số thẻ:</label>
             <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
 
+            <label for="hoten">Họ tên:</label>
+            <input type="text" id="hoten" name="hoten" value='{{request.args.get('hoten', '')}}'>
+
             <label for="ngay">Ngày:</label>
             <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
 
@@ -36,11 +39,12 @@ input, select, label {
         <h5 style="margin-left: 20px">Tổng: {{count}}</h5>
         <div class="pagination">{{pagination.links}}</div>
     </div>
+    <br>
     <table class="table table-hover">
         <thead>
             <tr class="table-primary">
-                <th>STT</th> 
-                <th>Mã số thẻ</th>
+                <th>Mã số thẻ</th> 
+                <th>Họ tên</th>
                 <th>Vị trí cũ</th>
                 <th>Line cũ</th>
                 <th>Vị trí mới</th>
@@ -53,20 +57,31 @@ input, select, label {
         <tbody>
             {% for row in danhsach %}
             <tr data-info='{{ row  | safe }}'>
-                <th>{{loop.index}}</th> 
-                <th>{{row["MST"]}}</th>
+                <th>{{row["MST"]}}</th> 
+                <th>{{row["Họ tên"]}}</th>
                 <th>{{row["Vị trí cũ"]}}</th>
                 <th>{{row["Chuyền cũ"]}}</th>
                 <th>{{row["Vị trí mới"]}}</th>
                 <th>{{row["Chuyền mới"]}}</th>
                 <th>{{row["Phân loại"]}}</th>
-                <th>{{row["Ngày thực hiện"]}}</th>
+                <th class='date_en'>{{row["Ngày thực hiện"]}}</th>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <script>
-    
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+        });
     </script>
 </div>
 {% endblock content %}

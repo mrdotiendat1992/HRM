@@ -136,7 +136,11 @@
                     <td>{{ user["Department"] }}</td>
                     <td>{{ user["Line"] }}</td>
                     <td>{{ user["Trạng thái"] }}</td>
+                    {% if user["Ghi chú"] %}
                     <td>{{ user["Ghi chú"] }}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
                 </tr>
             {% endfor %}
         </tbody>
@@ -240,6 +244,7 @@
                             <tr><th><strong>Trạng thái:</strong></th><td> ${info["Trạng thái"]}</td></tr>
                             <tr><th><strong>Ngày kí hợp đồng:</strong></th><td> ${ngaykyhd}</td></tr>
                             <tr><th><strong>Ngày hết hạn hợp đồng:</strong></th><td> ${ngayhethd}</td></tr>
+                            <tr><th><strong>Ghi chú:</strong></th><td> ${info["Ghi chú"]} </td></tr>
                         </table>
                     </div>
                     `;
