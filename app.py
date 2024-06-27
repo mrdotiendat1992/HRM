@@ -2747,13 +2747,19 @@ def danhsachxinnghikhac():
             file.save(filepath)
             data = pd.read_excel(filepath).to_dict(orient="records")
             for row in data:
-                themxinnghikhac(
-                    row["Mã công ty"],
-                    row["Mã số thẻ"],
-                    row["Ngày nghỉ"],
-                    int(row["Tổng số phút"]),
-                    row["Loại nghỉ"]
-                )
+                print(row)
+                if row["Mã số thẻ"]!='nan':
+                    try:
+                        themxinnghikhac(
+                            row["Mã công ty"],
+                            int(row["Mã số thẻ"]),
+                            row["Ngày nghỉ"],
+                            int(row["Tổng số phút"]),
+                            row["Loại nghỉ"]
+                        )
+                    except Exception as e:
+                        print(e)
+                        break
         return redirect("/muc7_1_5")
 
 @app.route("/muc7_1_6", methods=["GET","POST"])
