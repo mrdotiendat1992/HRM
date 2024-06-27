@@ -210,6 +210,18 @@ input, select {
         <input type="submit" value="Lưu" class="btn btn-primary"/>
     </form>
     <script>
+        function changeDateFormat(dateString) {
+            if (!dateString) {
+                return '';
+            }
+            // Tách các thành phần ngày, tháng, năm từ định dạng d/m/y
+            let [day, month, year] = dateString.split('/');
+            
+            // Chuyển đổi thành định dạng Y-m-d
+            let newFormat = `${year}-${month}-${day}`;
+            
+            return newFormat;
+        }
         function kiemtrathongtinnld() {
             axios({
                 method: 'post',
@@ -222,8 +234,8 @@ input, select {
                         document.getElementById("mst").value = data["MST"]
                         document.getElementById("trangthai").value = data["Trạng thái"];
                         document.getElementById("cccd").value = data["CCCD"];
-                        document.getElementById("ngaycapcccd").value = data["Ngày cấp CCCD"];
-                        document.getElementById("ngaysinh").value = data["Ngày sinh"];
+                        document.getElementById("ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]);
+                        document.getElementById("ngaysinh").value = changeDateFormat(data["Ngày sinh"]);
                         document.getElementById("hoten").value = data["Họ tên"];
                         document.getElementById("gioitinh").value = data["Giới tính"];
                         document.getElementById("quoctich").value = data["Quốc tịch"];
@@ -266,8 +278,8 @@ input, select {
                         document.getElementById("gradecode").value = data["Gradecode"];
                         document.getElementById("factory").value = data["Factory"];
                         document.getElementById("kieuhopdong").value = data["Loại hợp đồng"];
-                        document.getElementById("ngaybatdau").value = data["Ngày ký HĐ"];
-                        document.getElementById("ngayketthuc").value = data["Ngày hết hạn"];
+                        document.getElementById("ngaybatdau").value = changeDateFormat(data["Ngày ký HĐ"]);
+                        document.getElementById("ngayketthuc").value = changeDateFormat(data["Ngày hết hạn"]);
                         document.getElementById("mucluong").value = data["Lương cơ bản"];
                         document.getElementById("phucap").value = data["Phụ cấp"];
                         document.getElementById("tongphucap").value = data["Tiền phụ cấp"];
