@@ -2747,7 +2747,6 @@ def danhsachxinnghikhac():
             file.save(filepath)
             data = pd.read_excel(filepath).to_dict(orient="records")
             for row in data:
-                app.logger.info(row)
                 if row["Mã số thẻ"]!=np.nan:
                     try:
                         themxinnghikhac(
