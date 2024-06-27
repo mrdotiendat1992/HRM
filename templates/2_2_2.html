@@ -6,7 +6,7 @@
         overflow-x: scroll;
     }
     .content {
-        width: 2000px;
+        width: 1500px;
     }
     table, th, td {
         font-size: 11px;
@@ -55,21 +55,7 @@
                                 <th><input type="date" id="thoigian" name="thoigian" value="{{row[4]}}" hidden>{{row[4]}}</th>
                                 <th><input type="text" id="phanloai" name="phanloai" value="{{row[5]}}" hidden>{{row[5]}}</th>
                                 <th>{{row[6]}}</th>
-                                <th>
-                                    <select id="trangthaiyeucau" name="trangthaiyeucau">
-                                        {% if row[7] %}
-                                        <option value="{{row[7]}}">{{row[7]}}</option>
-                                        <option value="Chờ phê duyệt">Chờ phê duyệt</option>
-                                        <option value="Đã phê duyệt">Đã phê duyệt</option>
-                                        <option value="Bị từ chối">Bị từ chối</option>
-                                        {% else %}
-                                        <option value="">Chọn</option>
-                                        <option value="Chờ phê duyệt">Chờ phê duyệt</option>
-                                        <option value="Đã phê duyệt">Đã phê duyệt</option>
-                                        <option value="Bị từ chối">Bị từ chối</option>
-                                        {% endif %}
-                                    </select>
-                                </th>
+                                <th>{{row[7]}}</th>
                                 <th>
                                     <select id="trangthaithuchien" name="trangthaithuchien">
                                         {% if row[8] %}

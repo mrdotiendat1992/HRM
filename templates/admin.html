@@ -2,13 +2,14 @@
 {% block style%}
 <style>
 th, td {
-    font-size: 10px;
+    font-size: 12px;
 }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container">
-    <h5>Danh sách người dùng</h5>
+    <h3>Danh sách người dùng</h3>
+    <br>
     <form action="/admin" method="GET" id="filter_form">
         <div class="form-group">
             <label for="mst">Mã nhân viên</label>
@@ -21,8 +22,8 @@ th, td {
     <table class="table table-hover">
         <thead>
             <tr class="table-primary">
-                <th>STT</th>
-                <th>MST</th>
+                <th>#</th>
+                <th>Mã số thẻ</th>
                 <th>Họ tên</th>
                 <th>Công ty</th>
                 <th>Phòng ban</th>
@@ -53,7 +54,7 @@ th, td {
             {% endfor %}
         </tbody>
     </table>
-    <div style="text-align: center;"> 
+    <div> 
         {% if users.has_prev %}
             <a href="{{ url_for('admin_template', page=users.prev_num) }}">Trang trước</a>
         {% endif %}

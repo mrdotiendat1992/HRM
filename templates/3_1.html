@@ -530,6 +530,36 @@ input, select {
                     console.log(error);
                 });
         })
+
+        document.getElementById("line").addEventListener("change", function() {
+            var vitri = document.getElementById("vitri").value
+            var chuyen = document.getElementById("line").value
+            axios({
+                method: 'post',
+                url: '/check_hcname?vitri=' + vitri+"&line="+chuyen
+            })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    data = response.data
+                    console.log(data)
+                    document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                    document.getElementById("gradecode").value = data["Grade_code"]; // 3
+                    document.getElementById("mabophan").value = data["Section_code"]; // 4
+                    document.getElementById("hccategory").value = data["HC_category"]; // 5
+                    document.getElementById("phongban").value = data["Department"]; // 6
+                    document.getElementById("bophan").value = data["Section_description"]; // 7
+                    document.getElementById("loailaodong").value = data["Employee_type"]; // 8
+                    document.getElementById("mavitri").value = data["Position_code"]; // 9
+                    document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
+                    document.getElementById("chucvu").value = data["Detail_job_title_VN"]; // 11
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })
+
         // Function to format the number with commas as thousand separators
         function formatNumberWithCommas(number) {
             // Split the value into integer and decimal parts if there's a decimal point
@@ -573,6 +603,7 @@ input, select {
             // Set the formatted value back to the input field
             e.target.value = formattedValue;
         });
+
     </script>
 </div>
 {% endblock content %}

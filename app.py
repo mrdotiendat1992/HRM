@@ -12,7 +12,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 used_db = "Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-# used_db = "Driver={SQL Server}; Server=DESKTOP-G635SF6; Database=HR; Trusted_Connection=yes;"
+mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -1035,7 +1035,7 @@ def laymasothemoi():
         app.logger.info(f"{query}\n{e}")
         return 0
 
-def laydanhsachloithe(mst=None,chuyen=None, bophan=None, phanloai=None, ngay=None):
+def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1047,8 +1047,6 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, phanloai=None, ngay=Non
             query += f"AND Chuyen_to LIKE '%{chuyen}%' "
         if bophan:
             query += f"AND Bo_phan LIKE '%{bophan}%' "
-        if phanloai:
-            query += f"AND Phan_loai LIKE N'%{phanloai}%' "
         if ngay:
             query += f"AND Ngay = '{ngay}' "
         
@@ -1087,24 +1085,14 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, phanloai=None, ngay=Non
             "Số phút thiếu": row[13],
             "Phép tồn": row[14],
             "Phút nghỉ không lương": row[15],
-            "Phân loại": row[16]
+            "Phút nghỉ khác": row[16],
+            "Email thư ký": row[17],
+            "Email trưởng bộ phận": row[18]
             })
         return result
     except Exception as e:
         app.logger.info(f"{query}\n{e}")
         return []
-    
-def laydanhsachphanloailoithe():
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"SELECT DISTINCT Phan_loai FROM HR.dbo.Danh_sach_loi_the"
-        rows = cursor.execute(query).fetchall()
-        conn.close()
-        return rows
-    except Exception as e:
-        app.logger.info(f"{query}\n{e}")
-        return False
 
 def laydanhsachchuyen():
     try:
@@ -1352,40 +1340,19 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         app.logger.info(f"{query}\n{e}")   
         return [] 
     
-def laydanhsachbaocom(chuyen=None,phongban=None,ngayxem=None):
+def laydanhsachphepton(mst=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        if chuyen:
-            if phongban:
-                if ngayxem:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Chuyen_to = '{chuyen}' AND Bo_phan = '{phongban}' AND Nha_may = '{current_user.macongty}' AND NgayCham = '{ngayxem}'"
-                else:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Chuyen_to = '{chuyen}' AND Bo_phan = '{phongban}' AND Nha_may = '{current_user.macongty}'"
-            else:
-                if ngayxem:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Chuyen_to = '{chuyen}' AND Nha_may = '{current_user.macongty}' AND NgayCham = '{ngayxem}'"
-                else:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Chuyen_to = '{chuyen}' AND Nha_may = '{current_user.macongty}'"
-        else:
-            if phongban:
-                if ngayxem:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Bo_phan = '{phongban}' AND Nha_may = '{current_user.macongty}' AND NgayCham = '{ngayxem}'"
-                else:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Bo_phan = '{phongban}' AND Nha_may = '{current_user.macongty}'"
-            else:
-                if ngayxem:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Nha_may = '{current_user.macongty}' AND NgayCham = '{ngayxem}'"
-                else:
-                    query = f"SELECT * FROM HR.dbo.Bao_com WHERE Nha_may = '{current_user.macongty}'"
-                    
-        
+        query = f"SELECT * FROM HR.dbo.Phep_ton_chi_tiet WHERE Nha_may = '{current_user.macongty}'"
+        if mst:
+            query += f" AND MST = '{mst}'"
+
+        query += " ORDER BY CAST(MST AS INT) asc"
         rows = cursor.execute(query).fetchall()
         conn.close()
         result = []
-        for row in rows:
-            result.append(row)
-        return result
+        return rows 
     except Exception as e:
         app.logger.info(f"{query}\n{e}")   
         return [] 
@@ -1540,7 +1507,43 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
         conn.close()
     except Exception as e:
         app.logger.info(f"{query}\n{e}")
-    
+
+def xoadulieuchamcong2ngay():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"Delete from Check_in_out where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23) and Nha_may = 'NT1';"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"{query}\n{e}")
+        return False
+
+def themdulieuchamcong2ngay():
+    try:
+        xoadulieuchamcong2ngay()
+        conn = pyodbc.connect(mccdb)
+        cursor = conn.cursor()
+        query = f"""
+	    select 'NT1',MaChamCong,NgayCham,GioCham,TenMay from checkinout 
+	    where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23)"""
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        conn1 = pyodbc.connect(used_db)
+        cursor1 = conn1.cursor()
+        query1 = "insert into Check_in_out(Nha_may,Machamcong,NgayCham,GioCham,TenMay) values(?,?,?,?,?)"
+        for row in rows:
+            print(row)
+            cursor1.execute(query1, row)
+        conn1.commit()
+        conn1.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"{query}\n{e}")
+        return False
+   
 def roles_required(*roles):
     def decorator(f):
         @wraps(f)
@@ -1592,10 +1595,10 @@ def admin_template():
         hoten = request.args.get('hoten', None, type=str)
         if hoten:
             search_pattern = f"%{hoten}%"
-            users_paginated = Users.query.filter(Users.hoten.LIKE(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
+            users_paginated = Users.query.filter(Users.hoten.like(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
-    cacrole= ['sa','user','tuyendung','cong','luong','nhansu','developer']
+    cacrole= ['sa','user','hr','gd','luong','tnc']
     return render_template('admin.html', users=users_paginated,cacrole=cacrole)
 
 @app.route('/register', methods=["POST"])
@@ -1719,7 +1722,7 @@ def home():
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
-@roles_required('tuyendung','developer','sa','nhansu')
+@roles_required('hr','tnc','sa','gd')
 def danhsachdangkytuyendung():
     if request.method == "GET":
         sdt = request.args.get("sdt")
@@ -1736,7 +1739,7 @@ def danhsachdangkytuyendung():
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
 
         return render_template("2_1.html", 
-                            page="2.1 Danh sách đăng ký tuyển dụng",
+                            page="2.1 Danh sách ứng viên",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count)
@@ -1790,7 +1793,7 @@ def danhsachdangkytuyendung():
 
 @app.route("/muc2_2_1", methods=["GET","POST"])
 @login_required
-@roles_required('tbp','developer','sa','nhansu')
+@roles_required('tbp','gd','sa')
 def dangkytuyendung():
     if request.method == "GET":
         maso = current_user.macongty[-1]
@@ -1812,12 +1815,13 @@ def dangkytuyendung():
     
 @app.route("/muc2_2_2", methods=["GET","POST"])
 @login_required
-@roles_required('tbp','developer','sa','nhansu')
+@roles_required('tbp','gd','sa','nhansu')
 def pheduyettuyendung():   
     if request.method == "GET":
         maso = current_user.macongty[-1]
         danhsach = laydanhsachyeucautuyendung(maso)
         return render_template("2_2_2.html", page="2.2.2 Phê duyệt yêu cầu tuyển dụng",danhsach=danhsach)
+    
     elif request.method == "POST":
         bophan = request.form.get("bophan")
         vitri = request.form.get("vitri")
@@ -1833,7 +1837,7 @@ def pheduyettuyendung():
     
 @app.route("/muc3_1", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','deveploper')
+@roles_required('hr','sa','gd')
 def nhapthongtinlaodongmoi():
     
     if request.method == "GET":
@@ -1980,7 +1984,7 @@ def nhapthongtinlaodongmoi():
         
 @app.route("/muc3_2", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','deveploper')
+@roles_required('hr','sa','gd')
 def thaydoithongtinlaodong():
     
     if request.method == "GET":
@@ -2291,7 +2295,7 @@ def thaydoithongtinlaodong():
     
 @app.route("/muc3_3", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def inhopdonglaodong():
     if request.method == "GET":
         return render_template("3_3.html", page="3.3 In hợp đồng lao động")
@@ -2341,7 +2345,6 @@ def inhopdonglaodong():
 
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
 def danhsachsaphethanhopdong():
     if request.method == "GET":
         danhsach = laydanhsachsaphethanhopdong()
@@ -2441,7 +2444,7 @@ def danhsachsaphethanhopdong():
         
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def dieuchuyen():
     
     if request.method == "POST":
@@ -2589,7 +2592,7 @@ def dieuchuyen():
     
 @app.route("/muc6_2", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def lichsucongtac():
     
     if request.method == "GET":
@@ -2614,7 +2617,7 @@ def lichsucongtac():
 
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
+@roles_required('hr','sa','gd')
 def khaibaochamcong():
     if request.method == "GET":
         danhsachphongban = laycacphongban()
@@ -2632,15 +2635,12 @@ def khaibaochamcong():
 
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
 def loichamcong():
     mst = request.args.get("mst")
     chuyen = request.args.get("chuyen")
     bophan = request.args.get("bophan")
-    phanloai = request.args.get("phanloai")
     ngay = request.args.get("ngay")
-    danhsachphanloai = laydanhsachphanloailoithe()
-    danhsach = laydanhsachloithe(mst,chuyen,bophan,phanloai,ngay)
+    danhsach = laydanhsachloithe(mst,chuyen,bophan,ngay)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -2653,12 +2653,10 @@ def loichamcong():
                             page="7.1.2 Danh sách lỗi chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
-                            count=count,
-                            danhsachphanloai=danhsachphanloai)
+                            count=count)
 
 @app.route("/muc7_1_3", methods=["GET"])
 @login_required
-@roles_required('cong','sa','developer')
 def diemdanhbu():
     
     mst = request.args.get("mst")
@@ -2691,7 +2689,6 @@ def diemdanhbu():
  
 @app.route("/muc7_1_4", methods=["GET"])
 @login_required
-@roles_required('cong','sa','developer')
 def xinnghiphep():
     
         mst = request.args.get("mst")
@@ -2719,7 +2716,6 @@ def xinnghiphep():
 
 @app.route("/muc7_1_5", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
 def danhsachxinnghikhac():
     if request.method == "GET":
         mst = request.args.get("mst")
@@ -2762,7 +2758,7 @@ def danhsachxinnghikhac():
 
 @app.route("/muc7_1_6", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
+@roles_required('hr','sa','gd','tk')
 def dangkytangca():
     
     if request.method == "GET":
@@ -2809,7 +2805,6 @@ def dangkytangca():
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
 def chamcongtudong():
     
     mst = request.args.get("mst")
@@ -2833,7 +2828,6 @@ def chamcongtudong():
                 
 @app.route("/muc7_1_8", methods=["GET","POST"])
 @login_required
-@roles_required('cong','sa','developer')
 def chamcongtudongchot():
     
     mst = request.args.get("mst")
@@ -2856,17 +2850,55 @@ def chamcongtudongchot():
                            pagination=pagination,
                            count=count,
                            danhsachphongban=danhsachphongban)
+
+@app.route("/muc7_1_9", methods=["GET","POST"])
+@login_required
+def capnhathulieuchamcong():
+    if request.method == "GET":
+        return render_template("7_1_9.html", page="7.1.9 Cập nhật dữ liệu chấm công")
+    elif request.method == "POST":
+        thread = Thread(target=themdulieuchamcong2ngay)
+        thread.start()    
+        return render_template("7_1_10.html", 
+                               page="7.1.9 Cập nhật dữ liệu chấm công", 
+                               message="Đang cập nhật dữ liệu chấm công 2 ngày gần nhất, vui lòng đợi khoảng 10 phút ...")
     
+@app.route("/muc7_1_10", methods=["GET","POST"])
+@login_required
+def danhsachphepton():
+    if request.method == "GET":
+        mst = request.args.get("mst")
+        danhsach = laydanhsachphepton(mst)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_10.html", page="7.1.10 Danh sách phép tồn",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+
+
+
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
-@roles_required('user','developer','nhansu','cong','sa','luong','tuyendung')
-def ykiemnhamay():
+def ykienkhieunai():
 
-    return render_template("8_1.html", page="8.1 Ý kiến đóng góp nhà máy")
+    return render_template("8_1.html", page="8.1 Danh sách ý kiến khiếu nại")
+
+@app.route("/muc8_2", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd')
+def capnhatykienkhieunai():
+
+    return render_template("8_2.html", page="8.2 Cập nhật ý kiến khiếu nại")
     
 @app.route("/muc9_1", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def xulykiluat():
     
     if request.method == "GET":
@@ -2892,7 +2924,7 @@ def xulykiluat():
     
 @app.route("/muc10_1", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def phongvannghiviec():
         
     return render_template("10_1.html", page="10.1 Tổng hợp phỏng vấn nghỉ việc")
@@ -2900,7 +2932,7 @@ def phongvannghiviec():
     
 @app.route("/muc10_3", methods=["GET","POST"])
 @login_required
-@roles_required('nhansu','sa','developer')
+@roles_required('hr','sa','gd')
 def inchamduthopdong():
      
     if request.method == "GET":
@@ -3178,9 +3210,8 @@ def export_dslt():
     mst = request.form.get("mst")
     chuyen = request.form.get("chuyen")
     bophan = request.form.get("bophan")
-    phanloai = request.form.get("phanloai")
     ngay = request.form.get("ngay")
-    rows = laydanhsachloithe(mst, chuyen, bophan, phanloai, ngay)
+    rows = laydanhsachloithe(mst, chuyen, bophan, ngay)
     df = pd.DataFrame(rows)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), index=False)

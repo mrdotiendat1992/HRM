@@ -65,17 +65,6 @@ th.sticky {
                     {% else %}
                     <input id="bophan" name="bophan"></input>
                     {% endif %}
-                    <label for="phanloai">Phân loại:</label>
-                    <select id="phanloai" name="phanloai">
-                        <option value=""></option>
-                        {% for phanloai in danhsachphanloai %}
-                            {% if request.args.get('phanloai') == phanloai %}
-                            <option value='{{ phanloai }}' selected>{{ phanloai }}</option>
-                            {% else %}
-                            <option value='{{ phanloai }}'>{{ phanloai }}</option>
-                            {% endif %}
-                        {% endfor %}
-                    </select>
                     <label for="ngay">Ngày</label>
                     <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                     <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
@@ -89,7 +78,6 @@ th.sticky {
                 <div class="form-group">
                     <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                     <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                    <input type="hidden" name="phanloai" value="{{ request.args.get('phanloai', '') }}">
                     <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
                     <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
                 </div>
@@ -111,7 +99,9 @@ th.sticky {
                     <th>Số phút thiếu</th>
                     <th>Phép tồn</th>
                     <th>Phút nghỉ không lương</th>
-                    <th>Phân loại</th>
+                    <th>Phút nghỉ khác</th>
+                    <th>Email thư kí</th>
+                    <th>Email trưởng bộ phận</th>
                 </tr>
             </thead>
             <tbody>
@@ -138,7 +128,9 @@ th.sticky {
                     <td>{{row["Số phút thiếu"]}}</td>
                     <td>{{row["Phép tồn"]}}</td>
                     <td>{{row["Phút nghỉ không lương"]}}</td>
-                    <td>{{row["Phân loại"]}}</td>
+                    <td>{{row["Phút nghỉ khác"]}}</td>
+                    <td>{{row["Email thư ký"]}}</td>
+                    <td>{{row["Email trưởng bộ phận"]}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
