@@ -2750,7 +2750,7 @@ def danhsachxinnghikhac():
                 themxinnghikhac(
                     row["Mã công ty"],
                     row["Mã số thẻ"],
-                    row["Ngày nghỉ"],
+                    int(row["Ngày nghỉ"]),
                     row["Tổng số phút"],
                     row["Loại nghỉ"]
                 )
