@@ -1536,7 +1536,6 @@ def themdulieuchamcong2ngay():
         cursor1 = conn1.cursor()
         query1 = "insert into Check_in_out(Nha_may,Machamcong,NgayCham,GioCham,TenMay) values(?,?,?,?,?)"
         for row in rows:
-            print(row)
             cursor1.execute(query1, row)
         conn1.commit()
         conn1.close()
