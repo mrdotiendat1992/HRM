@@ -1,15 +1,27 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    
+    #message {
+        color: red;
+        font-weight: bold;
+        font-size: 15px;
+        text-align: center;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
+<div style="width: 50%;">
     <form method="POST"> 
         <input class="btn btn-primary" type="submit" value="Cập nhật dữ liệu"></input>
     </form>
+    <br>
+    <br>
+    <br>
+    <div id="message">
+        {% for message in messages %}
+            <div>{{message}}</div>
+        {% endfor %}
+    </div>
 </div>
-<br>
-<div id="message">{{message}}</div>
+
 {% endblock content %}

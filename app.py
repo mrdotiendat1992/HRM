@@ -2853,18 +2853,6 @@ def chamcongtudongchot():
 
 @app.route("/muc7_1_9", methods=["GET","POST"])
 @login_required
-def capnhathulieuchamcong():
-    if request.method == "GET":
-        return render_template("7_1_9.html", page="7.1.9 Cập nhật dữ liệu chấm công")
-    elif request.method == "POST":
-        thread = Thread(target=themdulieuchamcong2ngay)
-        thread.start()    
-        return render_template("7_1_10.html", 
-                               page="7.1.9 Cập nhật dữ liệu chấm công", 
-                               message="Đang cập nhật dữ liệu chấm công 2 ngày gần nhất, vui lòng đợi khoảng 10 phút ...")
-    
-@app.route("/muc7_1_10", methods=["GET","POST"])
-@login_required
 def danhsachphepton():
     if request.method == "GET":
         mst = request.args.get("mst")
@@ -2876,12 +2864,46 @@ def danhsachphepton():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_10.html", page="7.1.10 Danh sách phép tồn",
+        return render_template("7_1_9.html", page="7.1.9 Danh sách phép tồn",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
-
-
+    if request.method == "POST":
+        mst = request.form.get("mst")
+        danhsach = laydanhsachphepton(mst)
+        result = []
+        for row in danhsach:
+            result.append({
+                "Mã công ty": row[0],
+                "Mã số thẻ": row[1],
+                "Họ tên": row[2],
+                "Chức danh": row[3],
+                "Tháng": row[4],
+                "Năm": row[5],
+                "Số phút phép được dùng": row[6],
+                "Số phút phép đã chốt": row[7],
+                "Số phút phép chưa dùng": row[8],
+                "Số phút phép cho dùng": row[9],
+                "Số phút phép còn lại": row[10]
+            })
+        df = pd.DataFrame(result)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"phepton_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"phepton_{thoigian}.xlsx"), as_attachment=True)
+    
+@app.route("/muc7_1_10", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd')
+def capnhathulieuchamcong():
+    if request.method == "GET":
+        return render_template("7_1_10.html", page="7.1.10 Cập nhật dữ liệu chấm công")
+    elif request.method == "POST":
+        thread = Thread(target=themdulieuchamcong2ngay)
+        thread.start()    
+        return render_template("7_1_10.html", 
+                               page="7.1.10 Cập nhật dữ liệu chấm công", 
+                               messages=["Đang cập nhật dữ liệu chấm công mới nhất, vui lòng đợi khoảng 10 phút ...","Trong lúc cập nhật các phần liên quan sẽ không hoạt động, vui lòng đợi đến khi cập nhật xong !!!"])
 
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required

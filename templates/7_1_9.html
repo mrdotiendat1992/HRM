@@ -1,15 +1,113 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    
+table, th, td {
+    font-size: 10px;
+}
+label {
+    text-align: right;
+    font-size: 12px;
+}
+input {
+    margin-left: 10px;
+    font-size: 12px;
+    width: auto;
+}
+.scroll-container {
+    width: 100%;
+    overflow-x: scroll;
+}
+
+.content {
+    width: auto;
+}
+.pagination {
+    font-size: 10px;
+    margin-left: 20px;
+}
+th.sticky, td.sticky {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+}
+td.sticky {
+    background-color: #4e73df;
+    color: white;
+    font-weight: bold;
+}
+th.sticky {
+    z-index: 2;
+}
+
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
-    <form method="POST"> 
-        <input class="btn btn-primary" type="submit" value="Cập nhật dữ liệu"></input>
-    </form>
+<div class="scroll-container">
+    <div class="content">
+        <form method="GET" action="/muc7_1_9">
+            <div class="form-group">
+                <label for="mst">Mã số thẻ:</label>
+                <input id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
+            </div>
+        </form>
+        
+        <br>
+        <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <div class="pagination">{{ pagination.links }}</div>
+            <form method="POST">
+                <div class="form-group">
+                    <input type="hidden" name="chuyen" value="{{ request.args.get('mst', '') }}">
+                    <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
+                </div>
+            </form>
+            <input class="btn btn-primary" onclick="window.location.href='/muc7_1_9'" value="Xem tất cả"></input>
+        </div>
+        <table class="table table-hover">
+            <thead>
+                <tr class="table-primary">
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chức danh</th>
+                    <th>Tháng</th>
+                    <th>Năm</th>
+                    <th>Số phút phép được dùng</th>
+                    <th>Số phút phép đã chốt</th>
+                    <th>Số phút phép chưa chốt</th>
+                    <th>Số phút phép cho dùng</th>
+                    <th>Số phút phép còn lại</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                <tr data-info='{{ row  | safe }}'>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td>{{row[7]}}</td>
+                    <td>{{row[8]}}</td>
+                    <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-<br>
-<div id="message">{{message}}</div>
+<script>
+    function changeFormatDate(date){
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
 {% endblock content %}
