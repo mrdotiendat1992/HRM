@@ -2750,8 +2750,8 @@ def danhsachxinnghikhac():
                 themxinnghikhac(
                     row["Mã công ty"],
                     row["Mã số thẻ"],
-                    int(row["Ngày nghỉ"]),
-                    row["Tổng số phút"],
+                    row["Ngày nghỉ"],
+                    int(row["Tổng số phút"]),
                     row["Loại nghỉ"]
                 )
         return redirect("/muc7_1_5")
