@@ -95,7 +95,15 @@ input, select {
         
 
     <script>
-       
+        function changeDateFormat(dateString) {
+            // Tách các thành phần ngày, tháng, năm từ định dạng d/m/y
+            let [day, month, year] = dateString.split('/');
+            
+            // Chuyển đổi thành định dạng Y-m-d
+            let newFormat = `${year}-${month}-${day}`;
+            
+            return newFormat;
+        }
         function kiemtrathongtinnld() {
             axios({
                 method: 'post',
@@ -106,15 +114,15 @@ input, select {
                     if (response.data != "") {
                         console.log(data)
                         document.getElementById("mst").value = data["MST"]; // 1
-                        document.getElementById("ngaysinh").value = data["Ngày sinh"]; //2
+                        document.getElementById("ngaysinh").value = changeDateFormat(data["Ngày sinh"]); //2
                         document.getElementById("hoten").value = data["Họ tên"]; //3
                         document.getElementById("gioitinh").value = data["Giới tính"]; //4
                         document.getElementById("quoctich").value = data["Quốc tịch"]; //5
                         document.getElementById("cccd").value = data["CCCD"]; //6
-                        document.getElementById("ngaycapcccd").value = data["Ngày cấp CCCD"]; //7
+                        document.getElementById("ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]); //7
                         document.getElementById("diachi").value = data["Thường trú"]; //10
-                        document.getElementById("ngaybatdau").value = data["Ngày ký HĐ"]; //11
-                        document.getElementById("ngayketthuc").value = data["Ngày hết hạn"]; //12
+                        document.getElementById("ngaybatdau").value = changeDateFormat(data["Ngày ký HĐ"]); //11
+                        document.getElementById("ngayketthuc").value = changeDateFormat(data["Ngày hết hạn"]); //12
                         document.getElementById("loaihopdong").value = data["Loại hợp đồng"]; //13
                         document.getElementById("chucvu").value = data["Chức vụ"]; //14
                         document.getElementById("luongcoban").value = data["Lương cơ bản"]; //15

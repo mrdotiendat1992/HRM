@@ -17,7 +17,7 @@ input, select {
     
     <div class="form-group">
         <label for="masothe">Mã số thẻ</label>
-        <input type="text" id="masothe" name="masothe">
+        <input type="text" id="masothe" name="masothe" value={{request.args.get('masothe', '')}}>
     </div>
 
     <hr />
