@@ -2904,12 +2904,17 @@ def capnhathulieuchamcong():
     if request.method == "GET":
         return render_template("7_1_10.html", page="7.1.10 Cập nhật dữ liệu chấm công")
     elif request.method == "POST":
-        thread = Thread(target=themdulieuchamcong2ngay)
-        thread.start()    
-        return render_template("7_1_10.html", 
-                               page="7.1.10 Cập nhật dữ liệu chấm công", 
-                               messages=["Đang cập nhật dữ liệu chấm công mới nhất, vui lòng đợi khoảng 10 phút ...","Trong lúc cập nhật các phần liên quan sẽ không hoạt động, vui lòng đợi đến khi cập nhật xong !!!"])
-
+        if (current_user.macongty == 'NT1' and current_user.masothe in [12579,2833] ) or (current_user.macongty == 'NT' and current_user.masothe in [12579,2833] ):
+            thread = Thread(target=themdulieuchamcong2ngay)
+            thread.start()    
+            return render_template("7_1_10.html", 
+                                page="7.1.10 Cập nhật dữ liệu chấm công", 
+                                messages=["Đang cập nhật dữ liệu chấm công mới nhất, vui lòng đợi khoảng 10 phút ...","Trong lúc cập nhật các phần liên quan sẽ không hoạt động, vui lòng đợi đến khi cập nhật xong !!!"])
+        else:
+            return render_template("7_1_10.html", 
+                                page="7.1.10 Cập nhật dữ liệu chấm công", 
+                                messages=["Bạn không có quyền cập nhật, vui lòng liên hệ HR !!!"])
+            
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
 def ykienkhieunai():
