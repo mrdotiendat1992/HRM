@@ -110,10 +110,10 @@ def dieuchuyennhansu(mst,
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}')"
-        print(query1)
+        app.logger.info(query1)
         cursor.execute(query1)
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Ghi_chu = N'{ghichu}'"
-        print(query2)
+        app.logger.info(query2)
         cursor.execute(query2)
         conn.commit()
         conn.close()
@@ -263,7 +263,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng thử việc_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    # print(filepath)
+                    # app.logger.info(filepath)
                     return filepath
                 except Exception as e:
                     app.logger.info(e)
@@ -292,7 +292,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng thử việc_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    # print(filepath)
+                    # app.logger.info(filepath)
                     return filepath
                 except Exception as e:
                     app.logger.info(e)
@@ -318,7 +318,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Hợp đồng 12 tháng_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    # print(filepath)
+                    # app.logger.info(filepath)
                     return filepath
                 except Exception as e:
                     app.logger.info(e)
@@ -369,7 +369,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng không thời hạn_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    # print(filepath)
+                    # app.logger.info(filepath)
                     return filepath
                 except Exception as e:
                     app.logger.info(e)
@@ -394,7 +394,7 @@ def thaydoithongtinhopdong(kieuhopdong,
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT2_Hợp đồng không thời hạn_{mst}_{thoigian}.xlsx')
                     workbook.save(filepath)
-                    # print(filepath)
+                    # app.logger.info(filepath)
                     return filepath
                 except Exception as e:
                     app.logger.info(e)
@@ -427,7 +427,7 @@ def inchamduthd(mst,
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Chấm dứt HĐ_{mst}_{thoigian}.xlsx')
             workbook.save(filepath)
-            # print(filepath)
+            # app.logger.info(filepath)
             return filepath
         except Exception as e:
             app.logger.info(e)
@@ -1266,7 +1266,7 @@ def kiemtrathuki(mst,chuyen):
         
         result = cursor.execute(query).fetchone()
         conn.close()
-        print(result[0])
+        app.logger.info(result[0])
         if result[0] > 0:
             return True
         else:
@@ -2747,7 +2747,7 @@ def danhsachxinnghikhac():
             file.save(filepath)
             data = pd.read_excel(filepath).to_dict(orient="records")
             for row in data:
-                print(row)
+                app.logger.info(row)
                 if row["Mã số thẻ"]!='nan':
                     try:
                         themxinnghikhac(
@@ -2758,7 +2758,7 @@ def danhsachxinnghikhac():
                             row["Loại nghỉ"]
                         )
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         break
         return redirect("/muc7_1_5")
 
@@ -2947,7 +2947,7 @@ def xulykiluat():
         try:
             themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap)
         except Exception as ex:
-            print(ex)
+            app.logger.info(ex)
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -3022,7 +3022,7 @@ def update_xinnghiphep():
         bophan = request.form["bophan"]
         ngayduyet = request.form["ngaynghi"]
         mstduyet = request.form["mstduyet"]
-        # print(mstduyet,bophan,ngayduyet,mst)
+        # app.logger.info(mstduyet,bophan,ngayduyet,mst)
         if laycacbophanduocduyet(mstduyet,bophan):
             capnhat_xinnghiphep(mst,ngayduyet)
         return redirect("/muc7_1_4")
@@ -3034,7 +3034,7 @@ def taimautangcanhom():
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
-    # print(request.args)
+    # app.logger.info(request.args)
     sdt = request.args.get("sdt")
     trangthai = request.args.get("trangthaimoi")
     if sdt and trangthai:
@@ -3171,7 +3171,7 @@ def dangkitangcanhom():
                 for row in data:
                     kiemtra = kiemtrathuki(current_user.masothe,row["Chuyền tổ"])
                     if kiemtra:
-                        print(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
+                        app.logger.info(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
                         try:
                             insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"])
                         except Exception as e:
@@ -3371,7 +3371,7 @@ def check_line_from_detailjob():
 def xoanhanviencu():
     mst = request.args.get("mst")
     try:
-        print(xoanhanvien(mst))
+        app.logger.info(xoanhanvien(mst))
         return redirect(url_for('timdanhsachnhanvien', mst=mst))
     except Exception as e:
         app.logger.info(f"{e}")
@@ -3384,7 +3384,7 @@ def doicacanhan():
     camoi = request.form.get("camoi")
     ngaybatdau = request.form.get("ngaybatdau")
     ngayketthuc = request.form.get("ngayketthuc")
-    print(ngaybatdau,ngayketthuc)
+    app.logger.info(ngaybatdau,ngayketthuc)
     themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
@@ -3403,7 +3403,7 @@ def doicanhom():
                 danhsach = laydanhsachusertheoline(chuyen)
             else:
                 file = request.files.get("file")
-                print(file)
+                app.logger.info(file)
                 if file:
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                     filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"doicanhom_{thoigian}.xlsx")
