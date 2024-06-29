@@ -3,10 +3,6 @@ from lib import *
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat\nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat\xuat')
 
-FILE_MAU_DOICA = os.path.join(os.path.dirname(__file__), r'static\uploads\mau\doica\doicanhom.xlsx')
-FILE_MAU_TANGCA = os.path.join(os.path.dirname(__file__), r'static\uploads\mau\doica\tangcanhom.xlsx')
-FILE_MAU_XINGNHIKHAC = os.path.join(os.path.dirname(__file__), r'static\uploads\mau\doica\xinnghikhac.xlsx')
-
 FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')
 FILE_MAU_HDTV_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdtv.xlsx')
 FILE_MAU_HDCTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdcth.xlsx')
@@ -22,3 +18,9 @@ FILE_MAU_HDNH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau
 
 FILE_MAU_CDHD_NT1 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/chamduthopdong/nt1/cdhd.xlsx')
 FILE_MAU_CDHD_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/chamduthopdong/nt2/cdhd.xlsx')
+
+FILE_MAU_DANGKY_TANGCA_NHOM = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/tangca/tangcanhom.xlsx') 
+
+FILE_MAU_DANGKY_DOICA_NHOM = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/doica/doicanhom.xlsx') 
+
+FILE_MAU_DANGKY_XINNGHIKHAC = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/xinnghikhac/xinnghikhac.xlsx') 

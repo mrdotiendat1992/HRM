@@ -98,24 +98,3 @@
 # cursor.close()
 # conn.close()
 
-from openpyxl import Workbook
-from openpyxl.styles import NamedStyle
-
-# Tạo một workbook và worksheet mới
-wb = Workbook()
-ws = wb.active
-
-# Định dạng ô như là văn bản
-text_format = NamedStyle(name="text_format", number_format="@")
-wb.add_named_style(text_format)
-
-# Dữ liệu với số 0 đầu tiên
-data = ["012345", "001234", "000123"]
-
-# Thêm dữ liệu vào worksheet
-for row_num, value in enumerate(data, 1):
-    cell = ws.cell(row=row_num, column=1, value=value)
-    cell.style = text_format
-
-# Lưu file
-wb.save("data.xlsx")

@@ -133,7 +133,7 @@ def laydanhsachca(mst):
         conn.close()
         return rows
     except Exception as e:
-            print(f"{e}")
+            flash(e)
             return
     
 def dichuyennghiviec(mst,
@@ -178,7 +178,7 @@ def dichuyennghiviec(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return
 
 def dichuyennghithaisan(mst,
@@ -222,7 +222,7 @@ def dichuyennghithaisan(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return
     
 def inhopdongtheomau(kieuhopdong,
@@ -607,7 +607,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         conn.close()
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
                      
 def laydanhsachlinetheovitri(vitri):
@@ -623,7 +623,7 @@ def laydanhsachlinetheovitri(vitri):
             result.append(row[0])
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def lay_user(user):
@@ -746,7 +746,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def laycacphongban():
@@ -762,7 +762,7 @@ def laycacphongban():
             result.append(x[0])
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laycacto():
@@ -775,7 +775,7 @@ def laycacto():
         conn.close()
         return [x[0] for x in cacto]
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laycachccategory():
@@ -788,7 +788,7 @@ def laycachccategory():
         conn.close()
         return [x[0] for x in cachccategory]
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 def laydanhsachtheomst(mst):
     try:
@@ -803,7 +803,7 @@ def laydanhsachtheomst(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachusercacongty(macongty):
@@ -819,7 +819,7 @@ def laydanhsachusercacongty(macongty):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def laydanhsachusertheophongban(phongban):
@@ -835,7 +835,7 @@ def laydanhsachusertheophongban(phongban):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def laydanhsachusertheogioitinh(gioitinh):
@@ -851,7 +851,7 @@ def laydanhsachusertheogioitinh(gioitinh):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachusertheoline(line):
@@ -867,7 +867,7 @@ def laydanhsachusertheoline(line):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachusertheostatus(status):
@@ -883,7 +883,7 @@ def laydanhsachusertheostatus(status):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laycactrangthai():
@@ -896,7 +896,7 @@ def laycactrangthai():
         conn.close()
         return [x[0] for x in cactrangtha]
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laycacvitri():
@@ -909,7 +909,7 @@ def laycacvitri():
         conn.close()
         return [x[0] for x in cacvitri]
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def laycacca():
@@ -922,7 +922,7 @@ def laycacca():
         conn.close()
         return [x[0] for x in cacca]
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def layhcname(jobtitle,line):
@@ -935,7 +935,7 @@ def layhcname(jobtitle,line):
         conn.close()
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachdangkytuyendung(sdt=None, cccd=None):
@@ -995,7 +995,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
             })
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def capnhattrangthai(sdt, trangthai):
@@ -1070,7 +1070,7 @@ def capnhatthongtinungvien(sdt,
         conn.close()
         return True
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
     
 def themnhanvienmoi(nhanvienmoi):
@@ -1084,7 +1084,7 @@ def themnhanvienmoi(nhanvienmoi):
         conn.close()
         return True
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
 
 def xoadautrongten(s):
@@ -1124,7 +1124,7 @@ def themlichsutrangthai(mst,tungay,denngay,trangthai):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return 
     
 def xoanhanvien(MST):
@@ -1138,7 +1138,7 @@ def xoanhanvien(MST):
         conn.close()
         return f"{MST} đã xoá thành công"
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return f"{MST} đã xoá thất bại"
     
 def laymasothemoi():
@@ -1153,7 +1153,7 @@ def laymasothemoi():
             return result[0]
         return 0
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return 0
 
 def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
@@ -1212,7 +1212,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
             })
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachchuyen():
@@ -1225,7 +1225,7 @@ def laydanhsachchuyen():
         conn.close()
         return rows
     except Exception as e:
-            print(f"{e}")
+            flash(e)
             return []
 
 def laydanhsachbophan():
@@ -1238,7 +1238,7 @@ def laydanhsachbophan():
         conn.close()
         return rows
     except Exception as e:
-            print(f"{e}")
+            flash(e)
             return []
 
 def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1262,7 +1262,7 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
         conn.close()
         return rows
     except Exception as e:
-            print(f"{e}")
+            flash(e)
             return False
 
 def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1289,7 +1289,7 @@ def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, 
             result.append(row)
         return result
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None):
@@ -1323,7 +1323,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         conn.close()
         return rows
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai):
@@ -1360,7 +1360,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         conn.close()
         return rows
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
 
 def laycacbophanduocduyet(mst,bophan):
@@ -1375,7 +1375,7 @@ def laycacbophanduocduyet(mst,bophan):
         else:
             return False
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
     
 def kiemtrathuki(mst,chuyen):
@@ -1392,7 +1392,7 @@ def kiemtrathuki(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
 
 def capnhat_diemdanhbu(mst,ngay,loaidiemdanh):
@@ -1405,7 +1405,7 @@ def capnhat_diemdanhbu(mst,ngay,loaidiemdanh):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def capnhat_xinnghiphep(mst,ngay):
     try:
@@ -1417,7 +1417,7 @@ def capnhat_xinnghiphep(mst,ngay):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     try:
@@ -1425,14 +1425,16 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
             chucvu = 'Không'
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giotangca}',NULL, NULL, NULL, NULL, NULL)"
+        query = f"INSERT INTO HR.dbo.Dang_ky_tang_ca VALUES (N'{nhamay}','{mst}',N'{hoten}',N'{chucvu}',N'{chuyen}',N'{phongban}','{ngay}','{giotangca}',NULL, NULL, NULL, NULL, NULL, NULL)"
         
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         conn.close()
+        return False
         
 def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=None,denngay=None):
     try:
@@ -1458,7 +1460,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-        print(f"{e}")   
+        flash(e)   
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1475,7 +1477,7 @@ def laydanhsachphepton(mst=None):
         result = []
         return rows 
     except Exception as e:
-        print(f"{e}")   
+        flash(e)   
         return [] 
     
 def laydanhsachkyluat():
@@ -1489,7 +1491,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-        print(f"{e}")   
+        flash(e)   
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1502,7 +1504,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
@@ -1553,7 +1555,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 conn.commit()
                 conn.close()
     except Exception as e:
-        print(f"{e}")     
+        flash(e)     
         
 def laycahientai(mst):
     try:
@@ -1567,7 +1569,7 @@ def laycahientai(mst):
             return row[-1]
         return None
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return None
 
 def laydanhsachyeucautuyendung(maso):
@@ -1582,7 +1584,7 @@ def laydanhsachyeucautuyendung(maso):
             result.append(row)
         return result 
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return []
     
 def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mucluong):
@@ -1594,7 +1596,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         cursor.execute(query)
         conn.commit()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
     try:
@@ -1615,7 +1617,7 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
         conn.close()
         return rows 
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
     try:
@@ -1627,7 +1629,7 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(f"{e}")
+        flash(e)
 
 def xoadulieuchamcong2ngay():
     try:
@@ -1639,7 +1641,7 @@ def xoadulieuchamcong2ngay():
         conn.close()
         return True
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
 
 def themdulieuchamcong2ngay():
@@ -1661,7 +1663,7 @@ def themdulieuchamcong2ngay():
         conn1.close()
         return True
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return False
    
 def roles_required(*roles):
@@ -2913,11 +2915,13 @@ def dangkytangca():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        messages = get_flashed_messages()
         return render_template("7_1_6.html", 
                                page="7.1.6 Đăng ký tăng ca",
                                danhsach=paginated_rows,
                                pagination=pagination,
-                               count=count
+                               count=count,
+                               messages=messages
                                )
     elif request.method == "POST":
         data = []
@@ -3175,7 +3179,7 @@ def update_xinnghiphep():
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
     if request.method == "POST":        
-        return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"Mau/tangcanhom.xlsx"), as_attachment=True)  
+        return send_file(FILE_MAU_DANGKY_TANGCA_NHOM, as_attachment=True)  
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
@@ -3257,21 +3261,38 @@ def kiemtrathongtinnld():
 
 @app.route("/dangkitangcacanhan", methods=["POST"])  
 def dangkitangcacanhan():
-    mst = request.form.get("mst")
-    giotangca = request.form.get("giotangca")
-    ngaytangca = request.form.get("ngaytangca")
-    user = laydanhsachtheomst(mst)[0]
-    if kiemtrathuki(current_user.masothe,user['Line']):
-        insert_tangca(current_user.macongty,
-                      mst,
-                      user['Họ tên'],
-                      user['Chức vụ'],
-                      user['Line'],
-                      user['Department'],
-                      ngaytangca,
-                      giotangca)
-    return redirect(f"/muc7_1_6?ngay={ngaytangca}")
-    
+    try:
+        mst = request.form.get("mst")
+        giotangca = request.form.get("giotangca")
+        ngaytangca = request.form.get("ngaytangca")
+        # print(mst,giotangca,ngaytangca)
+        user = laydanhsachtheomst(mst)
+        # print(user)
+        if user:
+            user = user[0]
+            # print(user)
+            if kiemtrathuki(current_user.masothe,user['Line']):
+                if insert_tangca(current_user.macongty,
+                            mst,
+                            user['Họ tên'],
+                            user['Chức vụ'],
+                            user['Line'],
+                            user['Department'],
+                            ngaytangca,
+                            giotangca):
+                    flash(f"{current_user.masothe} đã đăng ký tăng ca cho {mst} thành công", "success")
+                else:
+                    flash(f"{current_user.masothe} đã đăng ký tăng ca cho {mst} thất bại", "danger")
+                return redirect(f"/muc7_1_6?ngay={ngaytangca}")
+            else:
+                flash(f"{current_user.masothe} không được phép đăng ký tăng ca cho {mst}", "danger")
+                return redirect(f"/muc7_1_6")
+        else:
+            flash(f"Không tìm thấy nhân viên có {mst}", "danger")
+            return redirect(f"/muc7_1_6")  
+    except Exception as e:
+        flash(f"Đăng ký tăng ca lỗi: {e}")
+        return redirect(f"/muc7_1_6")
     
 @app.route("/dangkitangcanhom", methods=["POST"])   
 def dangkitangcanhom():
@@ -3289,12 +3310,17 @@ def dangkitangcanhom():
                     if kiemtra:
                         print(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
                         try:
-                            insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"])
+                            if insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"]):
+                                flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thành công", "success")
+                            else:
+                                flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            print(f"{e}")                
+                            flash(e)   
+                    else:
+                        flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
         except Exception as e:
-            print(f"{e}")
+            flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']} lỗi: {e}")
             return redirect("/muc7_1_6")
 
 @app.route("/export_dstc", methods=["POST"])
@@ -3490,7 +3516,7 @@ def xoanhanviencu():
         print(xoanhanvien(mst))
         return redirect(url_for('timdanhsachnhanvien', mst=mst))
     except Exception as e:
-        print(f"{e}")
+        flash(e)
         return redirect(url_for('timdanhsachnhanvien', mst=mst))
 
 @app.route("/doicacanhan", methods=["POST"])
@@ -3547,12 +3573,12 @@ def laycatheomst():
 
 @app.route("/taifilexinnghiphepkhacmau", methods=["POST"])
 def taifilexinnghiphepkhacmau():
-    file = os.path.join(app.config['UPLOAD_FOLDER'], "Mau/xinnghikhac.xlsx")
+    file = FILE_MAU_DANGKY_XINNGHIKHAC
     return send_file(file, as_attachment=True)
 
 @app.route("/taimaudoicanhom", methods=["POST"])
 def taimaudoicanhom():
-    file = os.path.join(app.config['UPLOAD_FOLDER'], "Mau/doicanhom.xlsx")
+    file = FILE_MAU_DANGKY_DOICA_NHOM
     return send_file(file, as_attachment=True)
 
 @app.route("/export_dscc", methods=["POST"])
@@ -3661,5 +3687,5 @@ def export_dsxnk():
     return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 
 if __name__ == "__main__":
-    print("KHoi dong phan mem ...")
+    print("Khoi dong phan mem ...")
     serve(app, host='0.0.0.0', port=81, threads=16)

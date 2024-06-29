@@ -8,17 +8,15 @@ conn = pyodbc.connect("Driver={SQL Server};"
     "PWD=Namthuan@123;")
 
 cursor = conn.cursor()
-rows = cursor.execute("SELECT MST,Factory,Grade_code FROM dbo.DANH_SACH_CBCNV").fetchall()
+rows = cursor.execute("SELECT distinct MST from Phan_quyen_thu_ky").fetchall()
 conn.close()
 for row in rows:
     mst = int(row[0])
-    macongty = row[1]
-    capbac = row[2]
 
     conn1 = sqlite3.connect('instance/db.sqlite')
     cursor1 = conn1.cursor()
 
-    rows = cursor1.execute(f"UPDATE users SET role = 'tbp' WHERE capbac = """)
+    rows = cursor1.execute(f"UPDATE users SET role = 'tk' WHERE masothe = {mst}")
     conn1.commit()
     conn1.close()
 
