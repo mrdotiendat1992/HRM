@@ -27,46 +27,36 @@ input, select {
     <hr />
     <form method="post" action="/muc3_3">
         <div class="form-group">
-            <label for="mst">Mã số thẻ</label>
-            <input type="text" id="mst" name="mst" readonly>
+            <input type="text" id="mst" name="mst" hidden>
             <label for="hoten">Họ tên</label>
-            <input type="text" id="hoten" name="hoten" readonly>
+            <input type="text" id="hoten" name="hoten" >
             <label for="gioitinh">Giới tính</label>
-            <input type="text" id="gioitinh" name="gioitinh" readonly>
+            <input type="text" id="gioitinh" name="gioitinh" >
+
         </div>
 
         <div class="form-group">
             <label for="ngaysinh">Ngày sinh</label>
-            <input type="date" id="ngaysinh" name="ngaysinh" readonly>
-            <label for="diachi">Địa chỉ</label>
-            <input type="text" id="diachi" name="diachi" readonly>
-            <label for="quoctich">Quốc tịch</label>
-            <input type="text" id="quoctich" name="quoctich" readonly>
-            
+            <input type="date" id="ngaysinh" name="ngaysinh" >
+            <label for="thuongtru">Địa chỉ</label>
+            <input type="text" id="thuongtru" name="thuongtru" >  
+            <label for="tamtru">Tạm trú</label>
+            <input type="text" id="tamtru" name="tamtru" >           
         </div>
 
         <div class="form-group">
             <label for="cccd">CCCD</label>
             <input type="text" id="cccd" name="cccd" readonly>
-            <label for="ngaybatdau">Ngày bắt đầu</label>
-            <input type="date" id="ngaybatdau" name="ngaybatdau" >
-            <label for="thuongtru">Thường trú</label>
-            <input type="text" id="thuongtru" name="thuongtru" >
-        </div>
-
-        <div class="form-group">
             <label for="ngaycapcccd">Ngày cấp CCCD</label>
-            <input type="date" id="ngaycapcccd" name="ngaycapcccd" readonly>
-            <label for="ngayketthuc">Ngày kết thúc</label>
-            <input type="date" id="ngayketthuc" name="ngayketthuc" >
-            <label for="tamtru">Thường trú</label>
-            <input type="text" id="tamtru" name="tamtru" >
+            <input type="date" id="ngaycapcccd" name="ngaycapcccd" >
+            <label for="ca">Cấp bậc</label>
+            <input type="text" id="capbac" name="capbac" >
         </div>
 
         <div class="form-group">
             <label for="loaihopdong">Loại hợp đồng</label>
             <input type="text" id="loaihopdong" name="loaihopdong" >
-            <label for="chucvu">Chức vụ</label>
+            <label for="chucvu">Chức danh</label>
             <input type="text" id="chucvu" name="chucvu" >
             <label for="bophan">Phòng ban</label>
             <input type="text" id="bophan" name="bophan" >
@@ -83,18 +73,121 @@ input, select {
 
         <hr />
         <div class="form-group">
-            <label for="kieuhopdong">Loại HĐ muốn in</label>
-            <select id="kieuhopdong" name="kieuhopdong">
+            <label for="kieuhopdong">Loại Hợp đồng</label>
+            <select id="kieuhopdong" name="kieuhopdong" onchange="showFields()">
+                <option value=""></option>
                 <option value="HĐ thử việc">HĐ thử việc</option>
-                <option value="HĐ xác định thời hạn lần 1">HĐ xác định thời hạn lần 1</option>
-                <option value="HĐ xác định thời hạn lần 2">HĐ xác định thời hạn lần 2</option>
+                <option value="HĐ có thời hạn lần 1">HĐ có thời hạn lần 1</option>
+                <option value="HĐ có thời hạn lần 2">HĐ có thời hạn lần 2</option>
                 <option value="HĐ vô thời hạn">HĐ vô thời hạn</option>
             </select>
-            <input class="btn btn-primary" value="In hợp đồng" type="submit"></select>
+            <label for="soNgay" id="nhanSoNgay" hidden>Số ngày</label>
+            <input type="number" id="soNgay" name="soNgay" min="1" onchange="calculateEndDate()"hidden>
+            <input type="submit" value="In hợp đồng" class="btn btn-primary">
+        </div>
+        <div class="form-group">
+            <label for="ngayBatDau" id="nhanNgayBatDau" hidden>Ngày bắt đầu</label>
+            <input type="date" id="ngayBatDau" name="ngayBatDau"hidden>
+            <label for="ngayKetThuc" id="nhanNgayKetThuc" hidden>Ngày kết thúc</label>
+            <input type="date" id="ngayKetThuc" name="ngayKetThuc"hidden>
         </div>
         
 
     <script>
+        function parseDate(dateString) {
+            // Parse the date string into a Date object
+            let dateParts = dateString.split("/");
+            let day = parseInt(dateParts[0], 10);
+            let month = parseInt(dateParts[1], 10) - 1; // Months are zero-based in JavaScript Date objects
+            let year = parseInt(dateParts[2], 10);
+
+            let dateObject = new Date(year, month, day);
+
+            // Format the Date object to YYYY-MM-DD
+            let formattedDate = dateObject.toISOString().split('T')[0];
+            return formattedDate;
+        }
+        function showFields() {
+            
+            const kieuhopdong = document.getElementById("kieuhopdong").value;
+            const soNgayLabel = document.getElementById("nhanSoNgay");
+            const songay = document.getElementById("soNgay");
+            const ngayBatDauLabel = document.getElementById("nhanNgayBatDau");
+            const ngaybatdau = document.getElementById("ngayBatDau");
+            const ngayKetThucLabel = document.getElementById("nhanNgayKetThuc");
+            const ngayketthuc = document.getElementById("ngayKetThuc");
+            console.log(kieuhopdong);
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById("ngayBatDau").value = today;
+            if (kieuhopdong === "HĐ thử việc") {
+                soNgay.hidden = false;
+                soNgayLabel.hidden = false;
+                ngayBatDau.hidden = false;
+                ngayBatDauLabel.hidden = false;
+                ngayKetThuc.hidden = false;
+                ngayKetThucLabel.hidden = false;
+            } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+                soNgay.hidden = true;
+                soNgayLabel.hidden = true;
+                soNgay.value = "";
+                ngayBatDau.hidden = false;
+                ngayBatDauLabel.hidden = false;
+                ngayKetThuc.hidden = false;
+                ngayKetThucLabel.hidden = false;
+            } else if (kieuhopdong === "HĐ vô thời hạn") {
+                soNgay.hidden = true;
+                soNgayLabel.hidden = true;
+                soNgay.value = "";
+                ngayBatDau.hidden = false;
+                ngayBatDauLabel.hidden = false;
+                ngayKetThuc.hidden = true;
+                ngayKetThucLabel.hidden = true;
+                ngayKetThuc.value = "";
+            } else {
+                soNgay.hidden = true;
+                soNgayLabel.hidden = true;
+                ngayBatDau.hidden = true;
+                ngayBatDauLabel.hidden = true;
+                ngayKetThuc.hidden = true;
+                ngayKetThucLabel.hidden = true;
+            }
+            calculateEndDate();
+        }
+            
+        
+
+        function calculateEndDate() {
+            const kieuhopdong = document.getElementById("kieuhopdong").value;
+            const soNgay = document.getElementById("soNgay").value;
+            const ngayBatDau = document.getElementById("ngayBatDau").value;
+            const ngayKetThuc = document.getElementById("ngayKetThuc");
+
+            if (ngayBatDau) {
+                const startDate = new Date(ngayBatDau);
+                let endDate;
+
+                if (kieuhopdong === "HĐ thử việc" && soNgay) {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate() + parseInt(soNgay)-1);
+                } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate()+364);
+                }
+
+                if (endDate) {
+                    ngayKetThuc.value = endDate.toISOString().split('T')[0];
+                } else {
+                    ngayKetThuc.value = '';
+                }
+            } else {
+                ngayKetThuc.value = '';
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            showFields();
+        });
+
         function changeDateFormat(dateString) {
             // Tách các thành phần ngày, tháng, năm từ định dạng d/m/y
             let [day, month, year] = dateString.split('/');
@@ -117,20 +210,17 @@ input, select {
                         document.getElementById("ngaysinh").value = changeDateFormat(data["Ngày sinh"]); //2
                         document.getElementById("hoten").value = data["Họ tên"]; //3
                         document.getElementById("gioitinh").value = data["Giới tính"]; //4
-                        document.getElementById("quoctich").value = data["Quốc tịch"]; //5
                         document.getElementById("cccd").value = data["CCCD"]; //6
                         document.getElementById("ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]); //7
-                        document.getElementById("diachi").value = data["Thường trú"]; //10
-                        document.getElementById("ngaybatdau").value = changeDateFormat(data["Ngày ký HĐ"]); //11
-                        document.getElementById("ngayketthuc").value = changeDateFormat(data["Ngày hết hạn"]); //12
+                        document.getElementById("thuongtru").value = data["Thường trú"]; //10
+                        document.getElementById("tamtru").value = data["Tạm trú"]; //10
                         document.getElementById("loaihopdong").value = data["Loại hợp đồng"]; //13
-                        document.getElementById("chucvu").value = data["Chức vụ"]; //14
-                        document.getElementById("luongcoban").value = data["Lương cơ bản"]; //15
+                        document.getElementById("chucvu").value = data["Job title VN"]; //14
+                        document.getElementById("luongcoban").value = formatNumberWithCommas(data["Lương cơ bản"]); //15
                         document.getElementById("phucap").value = data["Phụ cấp"]; //16
                         document.getElementById("tienphucap").value = data["Tiền phụ cấp"]; //17
                         document.getElementById("bophan").value = data["Department"]; //17
-                        document.getElementById("thuongtru").value = data["Thường trú"];
-                        document.getElementById("tamtru").value = data["Tạm trú"];
+                        document.getElementById("capbac").value = data["Gradecode"];
                     }
                 })
                 .catch(function (error) {
