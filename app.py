@@ -1729,7 +1729,7 @@ def admin_template():
             users_paginated = Users.query.filter(Users.hoten.like(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
-    cacrole= ['sa','user','hr','gd','luong','tnc']
+    cacrole= ['sa','user','hr','gd','luong','tnc','td']
     return render_template('admin.html', users=users_paginated,cacrole=cacrole)
 
 @app.route('/register', methods=["POST"])
@@ -1857,7 +1857,7 @@ def home():
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
-@roles_required('hr','tnc','sa','gd')
+@roles_required('hr','tnc','sa','gd','td')
 def danhsachdangkytuyendung():
     if request.method == "GET":
         sdt = request.args.get("sdt")
