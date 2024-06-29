@@ -79,11 +79,14 @@
                 <input id="sdt" name="sdt" type="text" onchange="this.form.submit()">
                 <label for="cccd">Căn cước công dân</label>
                 <input id="cccd" name="cccd" type="text" onchange="this.form.submit()">
+                <label for="ngaygui">Ngày ứng tuyển</label>
+                <input id="ngaygui" name="ngaygui" type="text" onchange="this.form.submit()">
                 <input class="btn btn-primary" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
             <form method="POST" action="/export_dsdktt" style="display: inline;">
-                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt')}}>
-                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd')}}>
+                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>
+                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd','')}}>
+                <input id="ngaygui" name="ngaygui" type="text" hidden value={{request.args.get('ngaygui','')}} >
                 <input class="btn btn-success" value="Xuất excel">
             </form>
         </div>
@@ -162,7 +165,7 @@
                         <td>{{ user["Ngày nhận việc"] }}</td>
                         <td>{{ user["Ngày gửi"] }}</td>
                         <td>{{ user["Ngày cập nhật"] }}</td>
-                        <td><input type="date" name="ngayhendilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
+                        <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
                         {% if user["Hiệu suất"] %}
                         <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
                         {% else %}
@@ -242,6 +245,18 @@
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+        document.getElementsByClassName('.ngayhen_dilam').forEach((element) => {
+            element.value = changeFormatDateReverse(element.value);
+        });
     });
+    funtion changeFormatDateReverse(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0];
+            console.log(date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0]);
+        } catch {
+            return "";    
+    }}
+
 </script>
 {% endblock content %}

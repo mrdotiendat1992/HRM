@@ -947,7 +947,7 @@ def layhcname(jobtitle,line):
         flash(e)
         return []
 
-def laydanhsachdangkytuyendung(sdt=None, cccd=None):
+def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -956,6 +956,9 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None):
             query += f"AND Sdt LIKE '{sdt}'"
         if cccd:
             query += f"AND CCCD LIKE '{cccd}'"
+        if ngaygui:
+            query += f"AND Ngay_gui_thong_tin =  '{ngaygui}'"
+            
         query+= " ORDER BY Ngay_gui_thong_tin DESC"
         
         rows =  cursor.execute(query).fetchall()
@@ -1073,7 +1076,7 @@ def capnhatthongtinungvien(sdt,
         SDT_nguoi_than = '{sdtnguoithan}'
         WHERE 
         Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
-        
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -1862,7 +1865,10 @@ def danhsachdangkytuyendung():
     if request.method == "GET":
         sdt = request.args.get("sdt")
         cccd = request.args.get("cccd")
-        rows = laydanhsachdangkytuyendung(sdt,cccd)
+        ngaygui = request.args.get("ngaygui")
+        rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui)
+        for row in rows:
+            row['Ngày hẹn đi làm'] = datetime.strptime(row['Ngày hẹn đi làm'], '%d/%m/%Y').strftime('%Y-%m-%d') if row['Ngày hẹn đi làm'] else None
         count=len(rows)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -3474,7 +3480,8 @@ def export_dsdktt():
     
     sdt = request.form.get("sdt")
     cccd = request.form.get("cccd")
-    rows = laydanhsachdangkytuyendung(sdt, cccd)   
+    ngaygui = request.form.get("ngaygui")
+    rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
     df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"tuyendung_{thoigian}.xlsx"), index=False)
