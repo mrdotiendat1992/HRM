@@ -1724,7 +1724,7 @@ def admin_template():
     per_page = 10
     mst = request.args.get('mst', None, type=str)
     if mst:
-        users_paginated = [Users.query.filter_by(masothe=mst).first()]
+        users_paginated = Users.query.filter(Users.masothe.like(f"%{mst}%")).paginate(page=page, per_page=per_page, error_out=False)
     else:
         hoten = request.args.get('hoten', None, type=str)
         if hoten:
