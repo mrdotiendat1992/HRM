@@ -408,14 +408,12 @@
     <!-- Page level custom scripts -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', (event) => {
-        var messages = {{ messages|tojson }};
+        var messages = {{ messages }};
         if (messages.length > 0) {
             messages.forEach(function(message) {
                 alert(message);
             });
         }
-    });
     </script>
 </body>
 

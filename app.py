@@ -46,9 +46,16 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
     try:
         current_user.matkhau = matkhau
         db.session.commit()
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Danh_sach_CBCNV SET Mat_khau='{matkhau}' WHERE Factory='{macongty}' AND MST='{mst}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
     except Exception as e:
         print(e)
-        return
+        return False
         
 def laydanhsachsaphethanhopdong():
     try:
@@ -557,8 +564,8 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        sohieucongty = current_user.macongty[-1]
         query= f"""SELECT 
+                Lich_su_cong_tac.Nha_may,
                 Lich_su_cong_tac.MST,
                 Danh_sach_CBCNV.Ho_ten,
                 Lich_su_cong_tac.Chuc_vu_cu,
@@ -566,7 +573,8 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
                 Lich_su_cong_tac.Chuc_vu_moi,
                 Lich_su_cong_tac.Line_moi,
                 Lich_su_cong_tac.Phan_loai,
-                Lich_su_cong_tac.Ngay_thuc_hien
+                Lich_su_cong_tac.Ngay_thuc_hien,
+                Lich_su_cong_tac.Ghi_chu
             FROM 
                 Lich_su_cong_tac
             INNER JOIN 
@@ -574,7 +582,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
             ON 
                 Lich_su_cong_tac.MST = Danh_sach_CBCNV.MST
             WHERE 
-                Lich_su_cong_tac.Line_cu LIKE '{sohieucongty}%' """
+                Lich_su_cong_tac.Nha_may = '{current_user.macongty}' """
         if mst:
             query += f"AND Lich_su_cong_tac.MST LIKE '%{mst}%' "
         if ngay:
@@ -594,14 +602,15 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         result = []
         for row in rows:
             result.append({
-                "MST": row[0],
-                "Họ tên": row[1],
+                "MST": row[1],
+                "Họ tên": row[2],
                 "Chuyền cũ": row[3],
                 "Chuyền mới": row[5],
-                "Vị trí cũ": row[2],
-                "Vị trí mới": row[4],
-                "Phân loại": row[6],
-                "Ngày thực hiện": row[7]
+                "Vị trí cũ": row[4],
+                "Vị trí mới": row[6],
+                "Phân loại": row[7],
+                "Ngày thực hiện": row[8],
+                "Ghi chú": row[9]
             })
         conn.commit()
         conn.close()
@@ -1772,7 +1781,11 @@ def doimatkhau():
     macongty = request.form.get("macongty")
     masothe = request.form.get("masothe")
     matkhaumoi = request.form.get("matkhaumoi")
-    doimatkhautaikhoan(macongty,masothe,matkhaumoi)
+    try:
+        if doimatkhautaikhoan(macongty,masothe,matkhaumoi):
+            flash("Đổi mật khẩu thành công")
+    except Exception as e:
+        flash(f"Đổi mật khẩu không thành công: {e}")
     return redirect(url_for("home"))
 
 

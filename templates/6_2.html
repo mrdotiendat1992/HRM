@@ -51,20 +51,22 @@ input, select, label {
                 <th>Line mới</th>
                 <th>Kiểu điều chuyển</th>
                 <th>Ngày thực hiện</th>
+                <th>Ghi chú</th>
             </tr>
         </thead>
       
         <tbody>
             {% for row in danhsach %}
             <tr data-info='{{ row  | safe }}'>
-                <th>{{row["MST"]}}</th> 
-                <th>{{row["Họ tên"]}}</th>
-                <th>{{row["Vị trí cũ"]}}</th>
-                <th>{{row["Chuyền cũ"]}}</th>
-                <th>{{row["Vị trí mới"]}}</th>
-                <th>{{row["Chuyền mới"]}}</th>
-                <th>{{row["Phân loại"]}}</th>
-                <th class='date_en'>{{row["Ngày thực hiện"]}}</th>
+                <td>{{row["MST"]}}</td> 
+                <td>{{row["Họ tên"]}}</td>
+                <td>{{row["Vị trí cũ"]}}</td>
+                <td>{{row["Chuyền cũ"]}}</td>
+                <td>{{row["Vị trí mới"]}}</td>
+                <td>{{row["Chuyền mới"]}}</td>
+                <td>{{row["Phân loại"]}}</td>
+                <td class='date_en'>{{row["Ngày thực hiện"]}}</td>
+                <td></td>
             </tr>
             {% endfor %}
         </tbody>
