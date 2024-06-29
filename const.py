@@ -20,3 +20,5 @@ FILE_MAU_HDCTH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/ma
 FILE_MAU_HDVTH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt2/hdvth.xlsx')
 FILE_MAU_HDNH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt2/hdnh.xlsx')
 
+FILE_MAU_CDHD_NT1 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/chamduthopdong/nt1/cdhd.xlsx')
+FILE_MAU_CDHD_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/chamduthopdong/nt2/cdhd.xlsx')

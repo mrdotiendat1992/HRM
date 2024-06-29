@@ -498,24 +498,54 @@ def inchamduthd(mst,
                 namlamhopdong,
                 tennhanvien,
                 chucvu,
-                ngaynghi):
+                ngaynghi,
+                ngaysinh,
+                diachi,
+                bophan,
+                lydo):
     if current_user.macongty == "NT1":
         try:
-            workbook = openpyxl.load_workbook(f'HĐLĐ_NT1/CHẤM DỨT HĐ.xlsx')
-            sheet = workbook.active
-
             
+            workbook = openpyxl.load_workbook(FILE_MAU_CDHD_NT1)
+            sheet = workbook.active
             sheet['C4'] = f'{mst}'
             sheet['H5'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
             sheet['I12'] = f'{mst}'
             sheet['G16'] = tennhanvien
             sheet['C21'] = tennhanvien
             sheet['B26'] = tennhanvien
+            sheet['D18'] = lydo
             sheet['D19'] = ngaynghi
             sheet['E22'] = ngaynghi
             sheet['D17'] = chucvu  
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f'NT1_Chấm dứt HĐ_{mst}_{thoigian}.xlsx')
+            filepath = os.path.join(FOLDER_XUAT, f'NT_CDHĐ_{mst}_{thoigian}.xlsx')
+            workbook.save(filepath)
+            
+            return filepath
+        except Exception as e:
+            print(e)
+            return None
+    elif current_user.macongty == "NT2":
+        try:
+            thangnghi=str(ngaynghi[3:])
+            workbook = openpyxl.load_workbook(FILE_MAU_CDHD_NT2)
+            sheet = workbook.active
+            sheet['A3'] = f'     Số: {mst}/QĐ-NTNA'
+            sheet['G3'] = f'          Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}     '
+            sheet['C17'] = tennhanvien
+            sheet['C18'] = ngaysinh
+            sheet['C19'] = diachi
+            sheet['C20'] = mst
+            sheet['C21'] = chucvu
+            sheet['C22'] = bophan
+            sheet['C23'] = ngaynghi 
+            sheet['C24'] = lydo
+            sheet['F25'] = thangnghi
+            sheet['B26'] = f"Ông/Bà: {tennhanvien} có trách nhiệm bàn giao toàn bộ công việc, tài liệu (nếu có) và các giấy tờ liên quan cho phòng HCNS."
+            sheet['B28'] = f"Quyết định có hiệu lực kể từ ngày {ngaynghi}, Phòng Hành chính nhân sự, Phòng Tài chính Kế toán, các Phòng/Bộ phận có liên quan và Ông/Bà {tennhanvien} chịu trách nhiệm thi hành quyết định này."
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+            filepath = os.path.join(FOLDER_XUAT, f'NT2_CDHĐ_{mst}_{thoigian}.xlsx')
             workbook.save(filepath)
             
             return filepath
@@ -3072,25 +3102,35 @@ def inchamduthopdong():
         return render_template("10_3.html", page="10.3 In chấm dứt hợp đồng")
     elif request.method == "POST":
         mst = request.form.get("mst")
-        ngaylamhopdong = request.form.get("ngaylamhd")[-2:]
-        thanglamhopdong = request.form.get("ngaylamhd")[5:7]
-        namlamhopdong = request.form.get("ngaylamhd")[:4]
+        ngaylamhopdong = datetime.strptime(request.form.get("ngaylamhd"),"%Y-%m-%d").strftime("%d")
+        thanglamhopdong = datetime.strptime(request.form.get("ngaylamhd"),"%Y-%m-%d").strftime("%m")
+        namlamhopdong = datetime.strptime(request.form.get("ngaylamhd"),"%Y-%m-%d").strftime("%Y")
         tennhanvien = request.form.get("hoten")
         chucvu = request.form.get("chucvu")
-        ngaynghi = request.form.get("ngaynghi")
+        ngaynghi = datetime.strptime(request.form.get("ngaynghi"),"%Y-%m-%d").strftime("%d/%m/%Y")
+        ngaysinh = request.form.get("ngaysinh")
+        diachi = request.form.get("diachi")
+        bophan = request.form.get("bophan")
+        lydo = request.form.get("lydo")
         try:
             file = inchamduthd(mst,
-                    ngaylamhopdong,
-                    thanglamhopdong,
-                    namlamhopdong,
-                    tennhanvien,
-                    chucvu,
-                    ngaynghi)
+                ngaylamhopdong,
+                thanglamhopdong,
+                namlamhopdong,
+                tennhanvien,
+                chucvu,
+                ngaynghi,
+                ngaysinh,
+                diachi,
+                bophan,
+                lydo)
             if file:
                 return send_file(file, as_attachment=True, download_name="chamduthopdong.xlsx")
             else:
+                print("NO FILE")
                 return redirect("/muc10_3")
-        except:
+        except Exception as e:
+            print(e)
             return redirect("/muc10_3")  
 
 #############################################
