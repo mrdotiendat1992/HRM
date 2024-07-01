@@ -1,9 +1,11 @@
 # Bỏ qua thư mục __pycache__
 __pycache__/
 
-instance/db.sqlite
+test.py
 
-app.log
+instance/
+
+*.log
 
 nhapxuat/nhap/*.xlsx
 nhapxuat/xuat/*.xlsx
