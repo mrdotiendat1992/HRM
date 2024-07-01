@@ -31,7 +31,7 @@
                 </form>
             </div>
             <div class="col">
-                <form action = "/muc7_1_5" method = "POST" enctype = "multipart/form-data">
+                <form action = "/muc7_1_6" method = "POST" enctype = "multipart/form-data">
                     <input type="file" name="file">
                     <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
                     <br>    
@@ -52,7 +52,7 @@
         <br>
         <table class="table table-hover">
             <thead>
-                <form action = "/muc7_1_9" method = "GET">
+                <form action = "/muc7_1_6" method = "GET">
                     <tr class="table-primary">
                         {% if request.args.get('mst') %}
                         <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>

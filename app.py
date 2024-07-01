@@ -1391,8 +1391,7 @@ def laydanhsachxinnghikhongluong():
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
-        query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC"
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_xin_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2076,7 +2075,7 @@ def nhapthongtinlaodongmoi():
         employeetype = f"N'{request.form.get("loailaodong")}'"
         sectioncode = f"N'{request.form.get("mabophan")}'"
         sectiondescription = f"N'{request.form.get("bophan")}'"
-        jobdetailvn = f"N'{request.form.get("vitrien")}'"
+        jobdetailen = f"N'{request.form.get("vitrien")}'"
         positioncode = f"N'{request.form.get("mavitri")}'"
         positioncodedescription = f"N'{request.form.get("tenvitri")}'"
         nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
@@ -2139,7 +2138,7 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdcthl2 = "NULL"
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
-        nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailvn},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
+        nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
         if themnhanvienmoi(nhanvienmoi):
             themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao.replace("'",""),datetime(2054,12,31))
             themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc')
@@ -2899,7 +2898,6 @@ def xinnghiphep():
 def xinnghikhongluong():
     
         danhsach = laydanhsachxinnghikhongluong()
-        print(danhsach)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2910,7 +2908,7 @@ def xinnghikhongluong():
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_5.html",
                             page="7.1.5 Danh sách xin nghỉ không lương",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
 

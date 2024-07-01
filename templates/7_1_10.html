@@ -44,7 +44,7 @@ th.sticky {
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <form method="GET" action="/muc7_1_9">
+        <form method="GET" action="/muc7_1_10">
             <div class="form-group">
                 <label for="mst">Mã số thẻ:</label>
                 <input id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
@@ -61,7 +61,7 @@ th.sticky {
                     <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
                 </div>
             </form>
-            <input class="btn btn-primary" onclick="window.location.href='/muc7_1_9'" value="Xem tất cả"></input>
+            <input class="btn btn-primary" onclick="window.location.href='/muc7_1_10'" value="Xem tất cả"></input>
         </div>
         <table class="table table-hover">
             <thead>
