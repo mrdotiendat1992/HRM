@@ -245,18 +245,6 @@
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
-        document.getElementsByClassName('.ngayhen_dilam').forEach((element) => {
-            element.value = changeFormatDateReverse(element.value);
-        });
     });
-    funtion changeFormatDateReverse(date){
-        if(date == 'None') return "";
-        try{
-            return date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0];
-            console.log(date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0]);
-        } catch {
-            return "";    
-    }}
-
 </script>
 {% endblock content %}

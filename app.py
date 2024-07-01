@@ -1384,6 +1384,19 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         flash(e)
         return []
 
+def laydanhsachxinnghikhongluong():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
+        query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC"
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        flash(e)
+        return []
+
 def laycacbophanduocduyet(mst,bophan):
     try:
         conn = pyodbc.connect(used_db)
@@ -2875,7 +2888,27 @@ def xinnghiphep():
                             pagination=pagination,
                             count=count)
 
-@app.route("/muc7_1_5", methods=["GET","POST"])
+@app.route("/muc7_1_5", methods=["GET"])
+@login_required
+def xinnghikhongluong():
+    
+        danhsach = laydanhsachxinnghikhongluong()
+        print(danhsach)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_5.html",
+                            page="7.1.5 Danh sách xin nghỉ không lương",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=count)
+
+@app.route("/muc7_1_6", methods=["GET","POST"])
 @login_required
 def danhsachxinnghikhac():
     if request.method == "GET":
@@ -2891,17 +2924,17 @@ def danhsachxinnghikhac():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_5.html", 
-                               page="7.1.5 Danh sách xin nghỉ khác", 
+        return render_template("7_1_6.html", 
+                               page="7.1.6 Danh sách xin nghỉ khác", 
                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=count,)
     elif request.method == "POST":
         if 'file' not in request.files:
-            return redirect("/muc7_1_5")
+            return redirect("/muc7_1_6")
         file = request.files['file']
         if file.filename == '':
-            return redirect("/muc7_1_5")
+            return redirect("/muc7_1_6")
         if file:
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
             filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
@@ -2920,9 +2953,9 @@ def danhsachxinnghikhac():
                     except Exception as e:
                         print(e)
                         break
-        return redirect("/muc7_1_5")
+        return redirect("/muc7_1_6")
 
-@app.route("/muc7_1_6", methods=["GET","POST"])
+@app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd','tk')
 def dangkytangca():
@@ -2944,8 +2977,8 @@ def dangkytangca():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         messages = get_flashed_messages()
-        return render_template("7_1_6.html", 
-                               page="7.1.6 Đăng ký tăng ca",
+        return render_template("7_1_7.html", 
+                               page="7.1.7 Đăng ký tăng ca",
                                danhsach=paginated_rows,
                                pagination=pagination,
                                count=count,
@@ -2971,7 +3004,7 @@ def dangkytangca():
 
         return send_file(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_7", methods=["GET","POST"])
+@app.route("/muc7_1_8", methods=["GET","POST"])
 @login_required
 def chamcongtudong():
     
@@ -2989,12 +3022,12 @@ def chamcongtudong():
     end = start + per_page
     paginated_rows = rows[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_7.html", page="7.1.7 Bảng công 5 ngày gần nhất",
+    return render_template("7_1_8.html", page="7.1.8 Bảng công 5 ngày gần nhất",
                            danhsach=paginated_rows, 
                            pagination=pagination,
                            count=count)
                 
-@app.route("/muc7_1_8", methods=["GET","POST"])
+@app.route("/muc7_1_9", methods=["GET","POST"])
 @login_required
 def chamcongtudongchot():
     
@@ -3013,13 +3046,13 @@ def chamcongtudongchot():
     paginated_rows = rows[start:end]
     danhsachphongban = laycacphongban()
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_8.html", page="7.1.8 Bảng chấm công chốt",
+    return render_template("7_1_9.html", page="7.1.9 Bảng chấm công chốt",
                            danhsach=paginated_rows, 
                            pagination=pagination,
                            count=count,
                            danhsachphongban=danhsachphongban)
 
-@app.route("/muc7_1_9", methods=["GET","POST"])
+@app.route("/muc7_1_10", methods=["GET","POST"])
 @login_required
 def danhsachphepton():
     if request.method == "GET":
@@ -3032,7 +3065,7 @@ def danhsachphepton():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_9.html", page="7.1.9 Danh sách phép tồn",
+        return render_template("7_1_10.html", page="7.1.10 Danh sách phép tồn",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)

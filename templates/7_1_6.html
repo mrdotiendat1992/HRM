@@ -1,182 +1,107 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-
-table, th, td , .pagination {
-    font-size: 10px;
-}
-h3 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-input, select, label {
-    margin-left: 10px;
-    width: 100px;
-    font-size: 10px;
-}
-button {
-    margin-right: 10px;
-}
-
-.col {
-    border-top: 1px solid #dee2e6;
-    border-right: 1px solid #dee2e6;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-}
-.center {
-    padding: 20px;
-}
-
-#filterngay {
-    margin: 10px;
-}
-.pagination {
-    margin-left: 20px;
-}
+    table, th, td , button{
+        font-size: 10px;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: 100%;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left:20px;
+    }
+    input {
+        margin-left: 10px;
+        font-size: 10px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="center">
-    <div class="row">
-        <div class="col">
-            <h3><b>Đăng kí theo nhóm</b></h3>
-            <hr />
-            <br>
-            <form action="/taimautangcanhom" method="POST">
-                <input class="btn btn-primary" value="Tải mẫu" type="submit"></input>
-            </form>
-            <br>
-            <form action="/dangkitangcanhom" method="POST"  enctype="multipart/form-data">
-                <input type="file" name="file" >
-                <input class="btn btn-primary" value="Đăng ký"  type="submit"></input>
-            </form>
-        </div>
-        <div class="col">
-            <h3><b>Đăng kí cá nhân</b></h3>
-            <hr />
-            <br>
-            <form action="/dangkitangcacanhan" method="POST">
-                <div class="form-group">
-                    <label for="mst">Nhập mã số thẻ</label>
-                    <input type="text" id="mst" name="mst">
-                </div>
-                <div class="form-group">
-                    <label for="giotangca">Giờ tăng ca(16:30)</label>
-                    <input type="text" id="giotangca" name="giotangca">
-                </div>
-                <div class="form-group">
-                    <label for="ngaytangca">Ngày tăng ca</label>
-                    <input type="date" id="ngaytangca" name="ngaytangca">
-                </div>
-                <input class="btn btn-primary" value="Đăng ký" type="submit"></input>
-            </form>
-        </div>
-    </div>
-    <hr />
-    <div class="row">
-        <div class="col">
-            <form action="/muc7_1_6" method="GET" id="filterngay">
-                <div class="form-group">
-                    <label for="mst">MST</label>
-                    <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}">
-                    <label for="phongban">Phòng ban</label>
-                    <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}">
-                </div>
-                <div class="form-group">
-                    <label for="chuyen">Chuyền tổ</label>
-                    <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                    <label for="ngay">Ngày</label>
-                    <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}">
-                </div>
-                <div class="form-group">
-                    <label for="tungay">Từ ngày</label>
-                    <input type="date" id="tungay" name="tungay" value="{{ request.args.get('tungay', '') }}">
-                    <label for="denngay">Đến ngày</label>
-                    <input type="date" id="denngay" name="denngay" value="{{ request.args.get('denngay', '') }}">
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <input type="submit" value="Xem" class="btn btn-primary">
-                    <div class="pagination">{{pagination.links}}</div>
-                </div>
-
-            </form>
-            
-        </div>
-        <div class="col" style="margin-left: 30px;">
-            <h3>
-                <b>Danh sách đăng kí tăng ca</b>
-            </h3>
-            <div style="display: flex; align-items: center;">
-                <h5 >Tổng : {{count}}</h5>
-                <form action="/export_dstc" method="POST">
-                    <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
-                    <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>
-                    <input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" hidden>
-                    <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" hidden>
-                    <input type="date" id="tungay" name="tungay" value="{{ request.args.get('tungay', '') }}" hidden>
-                    <input type="date" id="denngay" name="denngay" value="{{ request.args.get('denngay', '') }}" hidden>
-                    <input type="submit" value="Xuất Excel" class="btn btn-success">
+<div class="scroll-container">
+    <div class="content">
+        <div class="row">
+            <div class="col">
+                <form action = "/taifilexinnghiphepkhacmau" method = "POST">
+                    <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
                 </form>
             </div>
-            
+            <div class="col">
+                <form action = "/muc7_1_5" method = "POST" enctype = "multipart/form-data">
+                    <input type="file" name="file">
+                    <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
+                    <br>    
+                </form>
+            </div>  
+        </div>  
+        <hr />
+        <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <form method="POST" action="/export_dsxnk">
+                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
+            </form>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
         <table class="table table-hover">
             <thead>
-                <tr class="table-primary">
-                    <th>STT</th>
-                    <th>Mã số thẻ</th>
-                    <th>Họ tên</th>
-                    <th>Phòng ban</th>
-                    <th>Ngày</th>
-                    <th>Giờ tăng ca</th>
-                </tr>
+                <form action = "/muc7_1_9" method = "GET">
+                    <tr class="table-primary">
+                        {% if request.args.get('mst') %}
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
+                        {% else %}
+                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()"></th>
+                        {% endif %}
+
+                        {% if request.args.get('ngaynghi') %}
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()" value="{{request.args.get('ngaynghi')}}"></th>
+                        {% else %}
+                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()"></th>
+                        {% endif %}
+
+                        <th>Tổng số phút</th>
+
+                        {% if request.args.get('loainghi') %}
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()" value="{{request.args.get('loainghi')}}"></th>
+                        {% else %}
+                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()"></th>
+                        {% endif %}
+                    </tr>
+                </form>
             </thead>
+            
             <tbody>
                 {% for row in danhsach %}
-                <tr data-info='{{row  | safe }}'>
-                    <th>{{loop.index}}</th>
-                    <th>{{row[1]}}</th>
-                    <th>{{row[2]}}</th>
-                    <th>{{row[5]}}</th>
-                    <th class="date_en">{{row[6]}}</th>
-                    {% if row[7] %}
-                    <th>{{row[7][:5]}}</th>
-                    {% else %}
-                    <th></th>
-                    {% endif %}
-                </tr>
+                <tr data-info='{{ row  | safe }}'>
+                    <td>{{row[1]}}</td>
+                    <td class="date_en">{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                </tr>  
                 {% endfor %}
             </tbody>
         </table>
     </div>
-    
-    <script>
-        document.getElementById("ngay").addEventListener("change", function (event) {
-            if (document.getElementById("ngay").value != "") {
-                document.getElementById("tungay").disabled = true;
-                document.getElementById("denngay").disabled = true;
-            } else {
-                document.getElementById("tungay").disabled = false;
-                document.getElementById("denngay").disabled = false;
-            }
-        })
-
-        function changeFormatDate(date){
-            if(date == 'None') return "";
-            try{
-                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-            } catch {
-                return "";    
-        }}
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('.date_en').forEach((element) => {
-                element.textContent = changeFormatDate(element.textContent);
-            });
-        });
-    </script>
 </div>
+<script>
+    function changeFormatDate(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
 {% endblock content %}
