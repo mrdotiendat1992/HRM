@@ -56,7 +56,16 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
     except Exception as e:
         print(e)
         return False
-        
+
+def checkformatmst(mst):
+    "Thêm số 0 đằng trước mã số thẻ nếu là mã số thẻ ở Nghệ An"
+    if current_user.macongty == 'NT2':
+        maxwidth = 5
+        soluong = maxwidth-len(str(mst))
+        if soluong >0:
+            return '0'*soluong+str(mst)
+    return mst
+    
 def laydanhsachsaphethanhopdong():
     try:
         conn = pyodbc.connect(used_db)
@@ -1983,7 +1992,7 @@ def nhapthongtinlaodongmoi():
     
     if request.method == "GET":
         data= request.args.get("data")
-        masothe = int(laymasothemoi())+1
+        masothe = checkformatmst(int(laymasothemoi())+1)
         cacvitri= laycacvitri()
         cacto = laycacto()
         cacca = laycacca()
