@@ -1879,9 +1879,9 @@ def home():
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu,ghichu)      
         df = pd.DataFrame(users)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
+        df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
         
-        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachnhanvien_{thoigian}.xlsx"), as_attachment=True)
+        return send_file(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
@@ -2618,9 +2618,9 @@ def danhsachsaphethanhopdong():
             })
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"saphethan_{thoigian}.xlsx"), index=False)
+        df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
         
-        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"saphethan_{thoigian}.xlsx"), as_attachment=True)
+        return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
         
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
@@ -3006,9 +3006,9 @@ def dangkytangca():
             })
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), index=False)
+        df.to_excel(os.path.join(FOLDER_XUAT,f"tangca_{thoigian}.xlsx"), index=False)
 
-        return send_file(os.path.join(app.config["UPLOAD_FOLDER"],f"tangca_{thoigian}.xlsx"), as_attachment=True)
+        return send_file(os.path.join(FOLDER_XUAT,f"tangca_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_8", methods=["GET","POST"])
 @login_required
@@ -3095,9 +3095,9 @@ def danhsachphepton():
             })
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"phepton_{thoigian}.xlsx"), index=False)
+        df.to_excel(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), index=False)
         
-        return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"phepton_{thoigian}.xlsx"), as_attachment=True)
+        return send_file(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), as_attachment=True)
     
 @app.route("/muc7_1_10", methods=["GET","POST"])
 @login_required
@@ -3381,7 +3381,7 @@ def dangkitangcanhom():
             file = request.files['file']
             if file:
                 ngaylam = datetime.now().strftime("%d%m%Y%H%M%S")
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
+                filepath = os.path.join(FOLDER_NHAP, f"tangca_{current_user.phongban}_{ngaylam}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath).to_dict(orient="records")
                 for row in data:
@@ -3426,9 +3426,9 @@ def export_dstc():
         )
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsach_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"danhsach_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsach_{thoigian}.xlsx"), as_attachment=True)
+    return send_file(os.path.join(FOLDER_XUAT, f"danhsach_{thoigian}.xlsx"), as_attachment=True)
     
        
 @app.route("/export_dsnv", methods=["POST"])
@@ -3450,9 +3450,9 @@ def export_dsnv():
         
     users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu)      
     df = pd.DataFrame(users)
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], "danhsach.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, "danhsach.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], "danhsach.xlsx"),  as_attachment=True)  
+    return send_file(os.path.join(FOLDER_XUAT, "danhsach.xlsx"),  as_attachment=True)  
 
 @app.route("/export_dslt", methods=["POST"])
 def export_dslt():
@@ -3463,9 +3463,9 @@ def export_dslt():
     rows = laydanhsachloithe(mst, chuyen, bophan, ngay)
     df = pd.DataFrame(rows)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
+    return send_file(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
 
 @app.route("/export_dsddb", methods=["POST"])
 def export_dsddb():
@@ -3499,9 +3499,9 @@ def export_dsddb():
     
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
+    return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
 
 @app.route("/export_dsxnp", methods=["POST"])
 def export_dsxnp():
@@ -3531,9 +3531,9 @@ def export_dsxnp():
         })
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True) 
+    return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True) 
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
@@ -3544,9 +3544,9 @@ def export_dsdktt():
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config["UPLOAD_FOLDER"], f"tuyendung_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"tuyendung_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config["UPLOAD_FOLDER"], f"tuyendung_{thoigian}.xlsx"), as_attachment=True)  
+    return send_file(os.path.join(FOLDER_XUAT, f"tuyendung_{thoigian}.xlsx"), as_attachment=True)  
       
 @app.route("/check_hcname", methods=["POST"])
 def check_hcname():
@@ -3628,7 +3628,7 @@ def doicanhom():
                 print(file)
                 if file:
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-                    filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"doicanhom_{thoigian}.xlsx")
+                    filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
                     file.save(filepath)
                     data = pd.read_excel(filepath).to_dict(orient="records")
                     for row in data:
@@ -3698,9 +3698,9 @@ def export_dscc():
         )
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
+    return send_file(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/export_dscctt", methods=["POST"])
 def export_dscctt():
@@ -3739,9 +3739,9 @@ def export_dscctt():
         )
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"bangcong_{thoigian}.xlsx"), as_attachment=True)
+    return send_file(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/export_dsxnk", methods=["POST"])
 def export_dsxnk():
@@ -3762,9 +3762,9 @@ def export_dsxnk():
         )
     df = pd.DataFrame(result)
     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), index=False)
+    df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhac_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
+    return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 
 if __name__ == "__main__":
     print("Khoi dong phan mem ...")
