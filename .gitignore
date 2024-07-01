@@ -3,9 +3,9 @@ __pycache__/
 
 test.py
 
-instance/
+instance/*
 
-*.log
+*.log*
 
 nhapxuat/nhap/*.xlsx
 nhapxuat/xuat/*.xlsx
