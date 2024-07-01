@@ -1387,11 +1387,28 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         flash(e)
         return []
 
-def laydanhsachxinnghikhongluong():
+def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' ORDER BY Ngay_xin_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
+        if mst:
+            query += f"AND MST LIKE '%{mst}%'"
+        if hoten:
+            query += f"AND Ho_ten LIKE N'%{hoten}%'"
+        if chucvu:
+            query += f"AND Chuc_vu LIKE N'%{chucvu}%'"
+        if chuyen:
+            query += f"AND Chuyen LIKE N'%{chuyen}%'"
+        if bophan:
+            query += f"AND Bo_phan LIKE N'%{bophan}%'"
+        if ngay:
+            query += f"AND Ngay_xin_phep = '{ngay}'"    
+        if lydo:
+            query += f"AND Ly_do LIKE N'%{lydo}%'"
+        if trangthai:
+            query += f"AND Trang_thai LIKE N'%{trangthai}%'"
+        query += " ORDER BY Ngay_xin_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2620,7 +2637,13 @@ def danhsachsaphethanhopdong():
         df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
         
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
-        
+
+@app.route("/muc5_1", methods=["GET","POST"])
+@login_required
+@roles_required('sa','gd')
+def danhgiakpi():
+    return render_template("5_1.html",page="Đánh giá KPI")
+    
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -2896,8 +2919,16 @@ def xinnghiphep():
 @app.route("/muc7_1_5", methods=["GET"])
 @login_required
 def xinnghikhongluong():
-    
-        danhsach = laydanhsachxinnghikhongluong()
+    if request.method == 'GET':
+        mst = request.args.get("mst")
+        hoten = request.args.get("hoten")
+        chucvu = request.args.get("chucvu")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        ngay = request.args.get("ngaynghi")
+        lydo = request.args.get("lydo")
+        trangthai = request.args.get("trangthai")
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2911,7 +2942,36 @@ def xinnghikhongluong():
                             danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
-
+    elif request.method == 'POST':
+        mst = request.form.get("mst")
+        hoten = request.form.get("hoten")
+        chucvu = request.form.get("chucvu")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngaynghi")
+        lydo = request.form.get("lydo")
+        trangthai = request.form.get("trangthai")
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
+        data = []
+        for row in danhsach:
+            data.append({
+                "Nhà máy": row[0],
+                "Mã số thẻ": row[1],
+                "Họ tên": row[2],
+                "Chức danh": row[3],
+                "Chuyền tổ": row[4], 
+                "Phòng ban": row[5],
+                "Ngày xin phép": row[6],
+                "Tổng số phút": row[7],
+                "Lý do": row[8],
+                "Trạng thái": row[9]
+            })
+        df = pd.DataFrame(data)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
+    
+        return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
+        
 @app.route("/muc7_1_6", methods=["GET","POST"])
 @login_required
 def danhsachxinnghikhac():
