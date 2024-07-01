@@ -130,7 +130,7 @@
         </thead>
         <tbody>
             {% for user in users %}
-                <tr data-info='{{ user  | safe }}'>
+                <tr data-info='{{ user | tojson | safe }}'>
                     <td><a class="fas fa-fw fa-eye  view-details" href="#" >Xem</a></td>
                     <td>{{ user["MST"] }}</td>
                     <td>{{ user["Họ tên"] }}</td>
