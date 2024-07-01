@@ -9,7 +9,7 @@
         word-wrap: break-word;
     }
     select, input, label, button {
-        width: 120px;
+        width: auto;
         padding: 5px;
         font-size: 10px;
     }
@@ -83,11 +83,11 @@
                 <input id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
                 <input class="btn btn-primary" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
-            <form method="POST" action="/export_dsdktt" style="display: inline;">
+            <form method="POST" action="/export_dsdktt">
                 <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>
                 <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd','')}}>
-                <input id="ngaygui" name="ngaygui" type="text" hidden value={{request.args.get('ngaygui','')}} >
-                <input class="btn btn-success" value="Xuất excel">
+                <input id="ngaygui" name="ngaygui" type="date" hidden value={{request.args.get('ngaygui','')}} >
+                <input class="btn btn-success" value="Xuất excel" type="submit">
             </form>
         </div>
         <br>
@@ -127,6 +127,7 @@
                 <th>Ngày hẹn đi làm</th>
                 <th>Hiệu suất</th>
                 <th>Loại máy</th>
+                <th>Lưu hồ sơ</th>
                 <th></th>
             </tr>
             {% for user in danhsach %}
@@ -175,6 +176,21 @@
                         <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}"></td>
                         {% else %}
                         <td><input type="text" name="loaimay"></td>
+                        {% endif %}
+                        {% if user["Ghi chú"]=='Có' %}
+                        <td>
+                            <select name="luuhoso">
+                                <option value="Không">Không</option>
+                                <option value="Có" selected>Có</option>
+                            </select>
+                        </td>
+                        {% else %}
+                        <td>
+                            <select name="luuhoso">
+                                <option value="Không" selected>Không</option>
+                                <option value="Có">Có</option>
+                            </select>
+                        </td>
                         {% endif %}
                         <td><input type="submit" value="Lưu" class="btn btn-primary"></input></td>
                     </tr>

@@ -1012,7 +1012,8 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
                 "Ngày cập nhật": datetime.strptime(row[34], '%Y-%m-%d').strftime("%d/%m/%Y") if row[34] else None,
                 "Ngày hẹn đi làm": datetime.strptime(row[35], '%Y-%m-%d').strftime("%d/%m/%Y") if row[35] else None,
                 "Hiệu suất": row[36],
-                "Loại máy": row[37]
+                "Loại máy": row[37],
+                "Ghi chú": row[38], 
             })
         return result
     except Exception as e:
@@ -1034,27 +1035,28 @@ def capnhattrangthai(sdt, trangthai):
         return False
     
 def capnhatthongtinungvien(sdt,
-                               ngayhendilam,
-                               hieusuat,
-                               loaimay,
-                               vitrituyendung,
-                               hocvan,
-                               diachi,
-                               dantoc,
-                               connho,
-                               tencon1,
-                               ngaysinhcon1,
-                               tencon2,
-                               ngaysinhcon2,
-                               tencon3,
-                               ngaysinhcon3,
-                               tencon4,
-                               ngaysinhcon4,
-                               tencon5,
-                               ngaysinhcon5,
-                               nguoithan,
-                               sdtnguoithan
-                               ):
+                            ngayhendilam,
+                            hieusuat,
+                            loaimay,
+                            vitrituyendung,
+                            hocvan,
+                            diachi,
+                            dantoc,
+                            connho,
+                            tencon1,
+                            ngaysinhcon1,
+                            tencon2,
+                            ngaysinhcon2,
+                            tencon3,
+                            ngaysinhcon3,
+                            tencon4,
+                            ngaysinhcon4,
+                            tencon5,
+                            ngaysinhcon5,
+                            nguoithan,
+                            sdtnguoithan,
+                            luuhoso
+                            ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1082,7 +1084,8 @@ def capnhatthongtinungvien(sdt,
         Ho_ten_con_5 = N'{tencon5}',
         Ngay_sinh_con_5 = '{ngaysinhcon5}',
         Nguoi_than = N'{nguoithan}',
-        SDT_nguoi_than = '{sdtnguoithan}'
+        SDT_nguoi_than = '{sdtnguoithan}',
+        Ghi_chu = N'{luuhoso}'
         WHERE 
         Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
         # print(query)
@@ -1930,6 +1933,8 @@ def danhsachdangkytuyendung():
         ngaysinhcon5 = request.form.get("ngaysinhcon5")
         nguoithan = request.form.get("nguoithan")
         sdtnguoithan = request.form.get("sdtnguoithan")
+        ngayhendilam = request.form.get("ngayhendilam")
+        luuhoso = request.form.get("luuhoso")
         capnhatthongtinungvien(sdt,
                                ngayhendilam,
                                hieusuat,
@@ -1950,7 +1955,8 @@ def danhsachdangkytuyendung():
                                tencon5,
                                ngaysinhcon5,
                                nguoithan,
-                               sdtnguoithan
+                               sdtnguoithan,
+                               luuhoso
                                )
         return redirect(f"muc2_1?sdt={sdt}")
 
@@ -3271,6 +3277,7 @@ def laythongtincccd():
                 employee_dict = {
                     "Nhà máy": employee[0],
                     "Vị trí ứng tuyển": employee[1],
+                    "Họ tên": employee[2],
                     "Số điện thoại": employee[3],
                     "Số CCCD": employee[4],
                     "Dân tộc": employee[5],
@@ -3288,17 +3295,28 @@ def laythongtincccd():
                     "Số tài khoản": employee[14],
                     "Tên người thân": employee[15],
                     "SĐT người thân": employee[16],
+                    "Kênh tuyển dụng": employee[17], 
+                    "Kinh nghiệm": employee[18],
+                    "Mức lương": employee[19], 
+                    "Ngày có thể nhận việc": employee[20],
                     "Con nhỏ": employee[21],
                     "Tên con 1": employee[22],
                     "Ngày sinh con 1": employee[23],
                     "Tên con 2": employee[24],
-                    "Ngày sinh con 2": employee[24],
-                    "Tên con 3": employee[25],
-                    "Ngày sinh con 3": employee[25],
-                    "Tên con 4": employee[26],
-                    "Ngày sinh con 4": employee[26],
-                    "Tên con 5": employee[27],
-                    "Ngày sinh con 5": employee[27],
+                    "Ngày sinh con 2": employee[25],
+                    "Tên con 3": employee[26],
+                    "Ngày sinh con 3": employee[27],
+                    "Tên con 4": employee[28],
+                    "Ngày sinh con 4": employee[29],
+                    "Tên con 5": employee[30],
+                    "Ngày sinh con 5": employee[31],
+                    "Ngày gửi": employee[32],
+                    "Trạng thái": employee[33],
+                    "Ngày cập nhật": employee[34],
+                    "Ngày hẹn đi làm": employee[35],
+                    "Hiệu suất": employee[36],
+                    "Loại máy": employee[37],
+                    "Ghi chú": employee[38]
                 }
                 return jsonify(employee_dict)
             else:
