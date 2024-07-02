@@ -15,9 +15,10 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+test_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Trusted_Connection=yes;"
 used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
-
+# used_db = test_db
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     masothe = db.Column(db.String(250), nullable=False)
@@ -2028,7 +2029,7 @@ def nhapthongtinlaodongmoi():
 
         anh = f"N'{request.form.get("anh")}'"
         masothe = f"'{request.form.get("masothe")}'"
-        thechamcong = f"'{request.form.get("masothe")}'"
+        thechamcong = f"'{int(request.form.get("masothe"))}'"
         hoten = f"N'{request.form.get("hoten")}'"
         ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
         gioitinh = f"N'{request.form.get("gioitinh")}'"
