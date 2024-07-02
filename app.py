@@ -6,7 +6,9 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "hrm_system_NT"
 app.config['UPLOAD_FOLDER'] = r'./static/uploads'
-
+app.config['SQLALCHEMY_POOL_SIZE'] = 10
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 30
+app.config['SQLALCHEMY_MAX_OVERFLOW'] = 20
 db = SQLAlchemy()
  
 login_manager = LoginManager()
