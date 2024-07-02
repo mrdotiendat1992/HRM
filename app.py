@@ -1352,15 +1352,15 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
             query += f"AND Ngay_nghi_phep = '{ngaynghi}'"    
         if trangthai:
             query += f"AND Trang_thai LIKE N'%{trangthai}%'"
-        query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
+        query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
         if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not lydo and not trangthai:
             query = f"""
                         SELECT *
-                        FROM HR.dbo.Xin_nghi_phep
+                        FROM HR.dbo.DS_Xin_nghi_phep
                         WHERE Nha_may = '{current_user.macongty}'
-                        ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC;
+                        ORDER BY Ngay_nghi_phep DESC, MST ASC;
                     """
-        
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
