@@ -24,3 +24,12 @@ FILE_MAU_DANGKY_TANGCA_NHOM = os.path.join(os.path.dirname(__file__), r'static/u
 FILE_MAU_DANGKY_DOICA_NHOM = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/doica/doicanhom.xlsx') 
 
 FILE_MAU_DANGKY_XINNGHIKHAC = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/xinnghikhac/xinnghikhac.xlsx') 
+
+DANHSACH_MST_QUANLY = ['13186', # Huy
+                       '12579', # Đạt
+                       '04581', # Quế
+                       '364',   # Thắng PPC
+                       '345',   # Vân Anh PDN
+                       '9514',  # Hiền HRD
+                       '13217', # Lan QAD
+                       ]

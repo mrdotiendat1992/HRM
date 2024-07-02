@@ -35,17 +35,17 @@
     h5 {
         margin-right: 20px;
     }
-    #mst_col {
+    .nhaplieu, #kiemtra, #pheduyet{
         width: 60px;
     }
     .row_dakiemtra {
-        background-color: #b3ff66;
+        background-color: #ccffcc;
     }
-    .row_chuapheduyet {
-        background-color: #ffffb3;
+    .row_chopheduyet {
+        background-color: #ffffe6;
     }
     .row_bituchoi {
-        background-color: #ccd9ff;
+        background-color: #ffcccc;
     }
 </style>
 {% endblock style %}
@@ -64,7 +64,7 @@
                 <input type="hidden" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}">
                 <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
+                <input type="submit" class="btn btn-success" value="Xuất Excel" style="width:auto;"></input>
             </form>
             <div class="pagination">{{pagination.links}}</div>
         </div>
@@ -72,7 +72,7 @@
         <table class="table table-hover">
             <thead>
                 <tr class="table-primary">
-                    <th id="mst_col">Mã số thẻ</th>
+                    <th>Mã số thẻ</th>
                     <th class="sticky">Họ tên</th>
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
@@ -82,34 +82,36 @@
                     <th>Giờ</th>
                     <th>Lý do</th> 
                     <th>Trạng thái</th>
+                    <th></th>
                 </tr>
                 <tr>
                     <form action = "/muc7_1_3" method = "GET">
-                        <th id="mst_col"><input type="text" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
-                        <th class="sticky"><input type="text" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
+                        <th><input type="text" class="nhaplieu" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                        <th class="sticky"><input type="text" class="nhaplieu" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" class="nhaplieu" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" class="nhaplieu" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" class="nhaplieu" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" class="nhaplieu" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="date" class="nhaplieu" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
                         <th></th>  
-                        <th><input type="text" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
-                        <th><input type="text" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
+                        <th><input type="text" class="nhaplieu" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                        <th><input type="text" class="nhaplieu" id="trangthai" name="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
+                        <th></th>
                     </form>
                 </tr>
             </thead>
         
             <tbody>
                 {% for row in danhsach %}
-                    {% if row[10] == 'Đã kiểm tra' %}
-                    <tr data-info='{{ row  | safe }}'>
-                    {% elif row[10] == 'Đã phê duyệt' %}
+                {% if row[10]=='Chờ phê duyệt'%}
+                    <tr data-info='{{ row  | safe }}' class="row_chopheduyet">
+                {% elif row[10]=='Đã kiểm tra'%}
                     <tr data-info='{{ row  | safe }}' class="row_dakiemtra">
-                    {% elif row[10] == 'Chờ phê duyệt' %}
-                    <tr data-info='{{ row  | safe }}' class="row_chuapheduyet">
-                    {% elif (row[10] == 'Bị từ chối bởi người kiểm tra') or (row[10] == 'Bị từ chối bởi người phê duyệt') %}
-                    <tr data-info='{{ row  | safe }}' class="row_bituchoi">   
-                    {% endif %}
+                {% elif row[10]=='Đã phê duyệt'%}
+                    <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
+                {% else %}
+                    <tr data-info='{{ row  | safe }}' class="row_bituchoi">  
+                {% endif %} 
                         <td id="mst_col">{{row[1]}}</td>
                         <td class="sticky">{{row[2]}}</td>
                         <td>{{row[3]}}</td>
@@ -123,23 +125,29 @@
                         {% else %}
                         <td></td>
                         {% endif %}
-                        {% if row[10]=='Đã kiểm tra'%}
-                        <td>
-                            <div style="display: flex; align-items: center;">
-                                <b>{{row[10]}}</b>
-                                <form action="/update_diemdanhbu" method="POST" style="margin-left: 10px;">
-                                    <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
-                                    <input type="hidden" name="mst" value="{{row[1]}}">
-                                    <input type="hidden" name="bophan" value="{{row[5]}}">
+                        <td>{{row[10]}}</td>
+                        {% if row[10]=='Chờ phê duyệt'%}
+                            <td>
+                                <form action="/thuky_kiemtra_diemdanhbu" method="POST" style="margin-left: 10px;">
                                     <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
-                                    <input type="hidden" name="ngayduyet" value="{{row[7]}}">
-                                    <input type="hidden" name="loaidiemdanh" value="{{row[6]}}">
-                                    <input type="submit" class="btn btn-outline-success btn-sm" value="Phê duyệt"></input>
+                                    <input type="hidden" name="id" value="{{row[11]}}">
+                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                    <input type="text" class="btn btn-outline-warning btn-sm" id="kiemtra" name="kiemtra" value="KT" onclick="this.form.submit()"></input>
+                                    <input type="text" class="btn btn-outline-danger btn-sm" id="kiemtra" name="kiemtra" value="TC" onclick="this.form.submit()"></input>
                                 </form>
-                            </div>
-                        </td>
-                        {% else %}
-                        <td><b>{{row[10]}}</b></td>
+                            </td>
+                            {% elif row[10]=='Đã kiểm tra'%}
+                            <td>
+                                <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
+                                    <input type="hidden" name="mstduyet" value="{{current_user.mst}}">
+                                    <input type="hidden" name="id" value="{{row[11]}}">
+                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                    <input type="text" class="btn btn-outline-success btn-sm" id="pheduyet" name="pheduyet" value="PD" onclick="this.form.submit()"></input>
+                                    <input type="text" class="btn btn-outline-danger btn-sm" id="pheduyet" name="pheduyet" value="TC" onclick="this.form.submit()"></input>
+                                </form>
+                            </td>
+                            {% else %}
+                            <td></td>
                         {% endif %}
                     </tr>  
                 {% endfor %}

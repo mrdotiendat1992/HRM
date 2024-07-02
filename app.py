@@ -19,6 +19,7 @@ test_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Trusted_Connection=yes;"
 used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
 # used_db = test_db
+
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     masothe = db.Column(db.String(250), nullable=False)
@@ -1269,7 +1270,7 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
         return rows
     except Exception as e:
             print(e)
-            return False
+            return []
 
 def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
@@ -1336,7 +1337,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
+        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
@@ -1344,22 +1345,20 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         if chucvu:
             query += f"AND Chuc_vu LIKE N'%{chucvu}%'"
         if chuyen:
-            query += f"AND Line LIKE N'%{chuyen}%'"
+            query += f"AND Chuyen LIKE N'%{chuyen}%'"
         if bophan:
             query += f"AND Bo_phan LIKE N'%{bophan}%'"
         if ngaynghi:
             query += f"AND Ngay_nghi_phep = '{ngaynghi}'"    
-        if lydo:
-            query += f"AND Ly_do LIKE N'%{lydo}%'"
         if trangthai:
             query += f"AND Trang_thai LIKE N'%{trangthai}%'"
-        query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC"
+        query += " ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
         if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not lydo and not trangthai:
             query = f"""
                         SELECT *
                         FROM HR.dbo.Xin_nghi_phep
                         WHERE Nha_may = '{current_user.macongty}'
-                        ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Line ASC, MST ASC;
+                        ORDER BY Ngay_nghi_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC;
                     """
         
         rows = cursor.execute(query).fetchall()
@@ -1398,11 +1397,26 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         print(e)
         return []
 
-def laycacbophanduocduyet(mst,bophan):
+def thuky_duoc_phanquyen(mst,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT COUNT(*) FROM HR.dbo.Phan_quyen_phe_duyet WHERE Nha_may = '{current_user.macongty}' AND MST = '{mst}' AND Bo_phan = '{bophan}'"
+        query = f"SELECT COUNT(*) FROM HR.dbo.Phan_quyen_thu_ky WHERE Nha_may = '{current_user.macongty}' AND MST = '{mst}' AND Chuyen_to = '{chuyen}'"
+        result = cursor.execute(query).fetchone()
+        conn.close()
+        if result[0] > 0:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+def quanly_duoc_phanquyen(mst,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT COUNT(*) FROM HR.dbo.Phan_quyen_thu_ky WHERE Nha_may = '{current_user.macongty}' AND MST_QL = '{mst}' AND Chuyen_to = '{chuyen}'"
         result = cursor.execute(query).fetchone()
         conn.close()
         if result[0] > 0:
@@ -1429,18 +1443,6 @@ def kiemtrathuki(mst,chuyen):
     except Exception as e:
         print(e)
         return False
-
-def capnhat_diemdanhbu(mst,ngay,loaidiemdanh):
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"UPDATE HR.dbo.Diem_danh_bu SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND MST = '{mst}' AND Ngay_diem_danh = '{ngay}' AND Loai_diem_danh = N'{loaidiemdanh}'"
-        
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(e)
 
 def capnhat_xinnghiphep(mst,ngay):
     try:
@@ -1700,7 +1702,146 @@ def themdulieuchamcong2ngay():
     except Exception as e:
         print(e)
         return False
-   
+    
+def thuky_dakiemtra_diemdanhbu(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Diem_danh_bu SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def thuky_tuchoi_diemdanhbu(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Diem_danh_bu SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def quanly_pheduyet_diemdanhbu(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Diem_danh_bu SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def quanly_tuchoi_diemdanhbu(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Diem_danh_bu SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def thuky_dakiemtra_xinnghiphep(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_phep SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def thuky_tuchoi_xinnghiphep(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_phep SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def quanly_pheduyet_xinnghiphep(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_phep SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def quanly_tuchoi_xinnghiphep(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_phep SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        
+def thuky_dakiemtra_xinnghikhongluong(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def thuky_tuchoi_xinnghikhongluong(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def quanly_pheduyet_xinnghikhongluong(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def quanly_tuchoi_xinnghikhongluong(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        
+        
 def roles_required(*roles):
     def decorator(f):
         @wraps(f)
@@ -3238,18 +3379,6 @@ def thaydoiphanquyen():
             db.session.commit()
         return redirect("/admin")
     
-@app.route("/update_diemdanhbu", methods=["POST"])
-def update_diemdanhbu():
-    if request.method == "POST":
-        mst = request.form["mst"]
-        bophan = request.form["bophan"]
-        ngayduyet = request.form["ngayduyet"]
-        mstduyet = request.form["mstduyet"]
-        loaidiemdanh = request.form["loaidiemdanh"]
-        if laycacbophanduocduyet(mstduyet,bophan):
-            capnhat_diemdanhbu(mst,ngayduyet,loaidiemdanh)
-        return redirect("/muc7_1_3")
-    
 @app.route("/update_xinnghiphep", methods=["POST"])
 def update_xinnghiphep():
     if request.method == "POST":
@@ -3258,7 +3387,7 @@ def update_xinnghiphep():
         ngayduyet = request.form["ngaynghi"]
         mstduyet = request.form["mstduyet"]
         # print(mstduyet,bophan,ngayduyet,mst)
-        if laycacbophanduocduyet(mstduyet,bophan):
+        if thuky_duoc_phanquyen(mstduyet,bophan):
             capnhat_xinnghiphep(mst,ngayduyet)
         return redirect("/muc7_1_4")
     
@@ -3785,6 +3914,138 @@ def export_dsxnk():
     
     return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
 
+@app.route("/thuky_kiemtra_diemdanhbu", methods=["POST"])
+def thukykiemtradiemdanhbu():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            kiemtra = request.form["kiemtra"]
+            id = request.form["id"]
+            if thuky_duoc_phanquyen(mstduyet,chuyen):
+                if kiemtra == "KT":    
+                    thuky_dakiemtra_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
+                else:
+                    thuky_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_3")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_3")
+        
+@app.route("/quanly_pheduyet_diemdanhbu", methods=["POST"])
+def quanlypheduyetdiemdanhbu():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            pheduyet = request.form["pheduyet"]
+            id = request.form["id"]
+            if quanly_duoc_phanquyen(mstduyet,chuyen):
+                if pheduyet == "PD":    
+                    quanly_pheduyet_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
+                else:
+                    quanly_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_3")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_3")
+
+@app.route("/thuky_kiemtra_xinnghiphep", methods=["POST"])
+def thukykiemtraxinnghiphep():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            kiemtra = request.form["kiemtra"]
+            id = request.form["id"]
+            if thuky_duoc_phanquyen(mstduyet,chuyen):
+                if kiemtra == "KT":    
+                    thuky_dakiemtra_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                else:
+                    thuky_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_4")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_4")
+        
+@app.route("/quanly_pheduyet_xinnghiphep", methods=["POST"])
+def quanlypheduyetxinnghiphep():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            pheduyet = request.form["pheduyet"]
+            id = request.form["id"]
+            if quanly_duoc_phanquyen(mstduyet,chuyen):
+                if pheduyet == "PD":    
+                    quanly_pheduyet_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
+                else:
+                    quanly_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_4")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_4")
+        
+@app.route("/thuky_kiemtra_xinnghikhongluong", methods=["POST"])
+def thukykiemtraxinnghikhongluong():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            kiemtra = request.form["kiemtra"]
+            id = request.form["id"]
+            if thuky_duoc_phanquyen(mstduyet,chuyen):
+                if kiemtra == "KT":    
+                    thuky_dakiemtra_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                else:
+                    thuky_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_5")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_5")
+        
+@app.route("/quanly_pheduyet_xinnghikhongluong", methods=["POST"])
+def quanlypheduyetnghikhongluong():
+    if request.method == "POST":
+        try:
+            chuyen = request.form["chuyen"]
+            mstduyet = request.form["mstduyet"]
+            pheduyet = request.form["pheduyet"]
+            id = request.form["id"]
+            if quanly_duoc_phanquyen(mstduyet,chuyen):
+                if pheduyet == "PD":    
+                    quanly_pheduyet_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                else:
+                    quanly_tuchoi_diemdanhbu(id)
+                    print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
+            else:
+                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+            return redirect("/muc7_1_5")
+        except Exception as e:
+            print(e)
+            return redirect("/muc7_1_5")
+        
 if __name__ == "__main__":
     print("Khoi dong phan mem ...")
     serve(app, host='0.0.0.0', port=81, threads=16)
