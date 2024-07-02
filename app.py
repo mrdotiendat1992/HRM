@@ -3379,18 +3379,6 @@ def thaydoiphanquyen():
             db.session.commit()
         return redirect("/admin")
     
-@app.route("/update_xinnghiphep", methods=["POST"])
-def update_xinnghiphep():
-    if request.method == "POST":
-        mst = request.form["mst"]
-        bophan = request.form["bophan"]
-        ngayduyet = request.form["ngaynghi"]
-        mstduyet = request.form["mstduyet"]
-        # print(mstduyet,bophan,ngayduyet,mst)
-        if thuky_duoc_phanquyen(mstduyet,bophan):
-            capnhat_xinnghiphep(mst,ngayduyet)
-        return redirect("/muc7_1_4")
-    
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
     if request.method == "POST":        
@@ -3919,11 +3907,11 @@ def thukykiemtradiemdanhbu():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             if thuky_duoc_phanquyen(mstduyet,chuyen):
-                if kiemtra == "KT":    
+                if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
                     print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
                 else:
@@ -3941,11 +3929,11 @@ def quanlypheduyetdiemdanhbu():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             if quanly_duoc_phanquyen(mstduyet,chuyen):
-                if pheduyet == "PD":    
+                if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_diemdanhbu(id)
                     print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
                 else:
@@ -3963,15 +3951,15 @@ def thukykiemtraxinnghiphep():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             if thuky_duoc_phanquyen(mstduyet,chuyen):
-                if kiemtra == "KT":    
-                    thuky_dakiemtra_diemdanhbu(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                if kiemtra == "Kiểm tra":    
+                    thuky_dakiemtra_xinnghiphep(id)
+                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
                 else:
-                    thuky_tuchoi_diemdanhbu(id)
+                    thuky_tuchoi_xinnghiphep(id)
                     print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
             else:
                 print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
@@ -3985,15 +3973,15 @@ def quanlypheduyetxinnghiphep():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             if quanly_duoc_phanquyen(mstduyet,chuyen):
-                if pheduyet == "PD":    
-                    quanly_pheduyet_diemdanhbu(id)
+                if pheduyet == "Phê duyệt":    
+                    quanly_pheduyet_xinnghiphep(id)
                     print(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
                 else:
-                    quanly_tuchoi_diemdanhbu(id)
+                    quanly_tuchoi_xinnghiphep(id)
                     print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
             else:
                 print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
@@ -4007,15 +3995,15 @@ def thukykiemtraxinnghikhongluong():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             if thuky_duoc_phanquyen(mstduyet,chuyen):
-                if kiemtra == "KT":    
-                    thuky_dakiemtra_diemdanhbu(id)
+                if kiemtra == "Kiểm tra":    
+                    thuky_dakiemtra_xinnghikhongluong(id)
                     print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
                 else:
-                    thuky_tuchoi_diemdanhbu(id)
+                    thuky_tuchoi_xinnghikhongluong(id)
                     print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
             else:
                 print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
@@ -4029,15 +4017,15 @@ def quanlypheduyetnghikhongluong():
     if request.method == "POST":
         try:
             chuyen = request.form["chuyen"]
-            mstduyet = request.form["mstduyet"]
+            mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             if quanly_duoc_phanquyen(mstduyet,chuyen):
-                if pheduyet == "PD":    
-                    quanly_pheduyet_diemdanhbu(id)
+                if pheduyet == "Phê duyệt":    
+                    quanly_pheduyet_xinnghikhongluong(id)
                     print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
                 else:
-                    quanly_tuchoi_diemdanhbu(id)
+                    quanly_tuchoi_xinnghikhongluong(id)
                     print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
             else:
                 print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
