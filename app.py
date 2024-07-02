@@ -36,14 +36,14 @@ with app.app_context():
     try:
         db.create_all()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 @login_manager.user_loader
 def loader_user(user_id):
     try:
         return db.session.get(Users, int(user_id))
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return None
     
 def doimatkhautaikhoan(macongty,mst,matkhau):
@@ -58,7 +58,7 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
 
 def checkformatmst(mst):
@@ -79,7 +79,7 @@ def laydanhsachsaphethanhopdong():
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
@@ -98,7 +98,7 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return
     
 def dieuchuyennhansu(mst,
@@ -132,15 +132,15 @@ def dieuchuyennhansu(mst,
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}')"
-        print(query1)
+        app.logger.info(query1)
         cursor.execute(query1)
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
-        print(query2)
+        app.logger.info(query2)
         cursor.execute(query2)
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return
     
 def laydanhsachca(mst):
@@ -153,7 +153,7 @@ def laydanhsachca(mst):
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            app.logger.info(e)
             return
     
 def dichuyennghiviec(mst,
@@ -172,12 +172,12 @@ UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_n
 UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{ngaydieuchuyen}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
 INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaynghiviec}','2054-12-31',N'Nghỉ việc')
             """
-        print(query)
+        app.logger.info(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return
 
 def dichuyennghithaisan(mst,
@@ -221,7 +221,7 @@ def dichuyennghithaisan(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return
     
 def inhopdongtheomau(kieuhopdong,
@@ -275,7 +275,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None
                 else:
                     try:
@@ -302,7 +302,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None
             elif current_user.macongty == "NT2":
                 try:
@@ -332,7 +332,7 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    app.logger.info(e)
                     return None
         elif kieuhopdong == "HĐ có thời hạn lần 1" or kieuhopdong == "HĐ có thời hạn lần 2":
             if current_user.macongty == "NT1":
@@ -355,7 +355,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None
                 else:
                     try:
@@ -381,7 +381,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None
             elif current_user.macongty == "NT2":
                 try:
@@ -408,7 +408,7 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    app.logger.info(e)
                     return None
                 
         elif kieuhopdong == "HĐ vô thời hạn":
@@ -432,7 +432,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None   
                 else:
                     try:
@@ -459,7 +459,7 @@ def inhopdongtheomau(kieuhopdong,
                         
                         return filepath
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         return None  
             if current_user.macongty == "NT2":
                 try:
@@ -485,10 +485,10 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    app.logger.info(e)
                     return None  
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return None
     
 def inchamduthd(mst,
@@ -523,7 +523,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return None
     elif current_user.macongty == "NT2":
         try:
@@ -549,7 +549,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return None
    
 def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
@@ -608,7 +608,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         conn.close()
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
                      
 def laydanhsachlinetheovitri(vitri):
@@ -624,7 +624,7 @@ def laydanhsachlinetheovitri(vitri):
             result.append(row[0])
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def lay_user(user):
@@ -747,7 +747,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def laycacphongban():
@@ -763,7 +763,7 @@ def laycacphongban():
             result.append(x[0])
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laycacto():
@@ -776,7 +776,7 @@ def laycacto():
         conn.close()
         return [x[0] for x in cacto]
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laycachccategory():
@@ -789,7 +789,7 @@ def laycachccategory():
         conn.close()
         return [x[0] for x in cachccategory]
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 def laydanhsachtheomst(mst):
     try:
@@ -804,7 +804,7 @@ def laydanhsachtheomst(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachusercacongty(macongty):
@@ -820,7 +820,7 @@ def laydanhsachusercacongty(macongty):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def laydanhsachusertheophongban(phongban):
@@ -836,7 +836,7 @@ def laydanhsachusertheophongban(phongban):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def laydanhsachusertheogioitinh(gioitinh):
@@ -852,7 +852,7 @@ def laydanhsachusertheogioitinh(gioitinh):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachusertheoline(line):
@@ -868,7 +868,7 @@ def laydanhsachusertheoline(line):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachusertheostatus(status):
@@ -884,7 +884,7 @@ def laydanhsachusertheostatus(status):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laycactrangthai():
@@ -897,7 +897,7 @@ def laycactrangthai():
         conn.close()
         return [x[0] for x in cactrangtha]
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laycacvitri():
@@ -910,7 +910,7 @@ def laycacvitri():
         conn.close()
         return [x[0] for x in cacvitri]
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def laycacca():
@@ -923,7 +923,7 @@ def laycacca():
         conn.close()
         return [x[0] for x in cacca]
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def layhcname(jobtitle,line):
@@ -936,7 +936,7 @@ def layhcname(jobtitle,line):
         conn.close()
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
@@ -1000,7 +1000,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
             })
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def capnhattrangthai(sdt, trangthai):
@@ -1071,13 +1071,13 @@ def capnhatthongtinungvien(sdt,
         Ghi_chu = N'{luuhoso}'
         WHERE 
         Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
-        # print(query)
+        # app.logger.info(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
     
 def themnhanvienmoi(nhanvienmoi):
@@ -1091,7 +1091,7 @@ def themnhanvienmoi(nhanvienmoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
 
 def xoadautrongten(s):
@@ -1131,7 +1131,7 @@ def themlichsutrangthai(mst,tungay,denngay,trangthai):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return 
     
 def xoanhanvien(MST):
@@ -1145,7 +1145,7 @@ def xoanhanvien(MST):
         conn.close()
         return f"{MST} đã xoá thành công"
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return f"{MST} đã xoá thất bại"
     
 def laymasothemoi():
@@ -1160,7 +1160,7 @@ def laymasothemoi():
             return result[0]
         return 0
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return 0
 
 def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
@@ -1219,7 +1219,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
             })
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachchuyen():
@@ -1232,7 +1232,7 @@ def laydanhsachchuyen():
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            app.logger.info(e)
             return []
 
 def laydanhsachbophan():
@@ -1245,7 +1245,7 @@ def laydanhsachbophan():
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            app.logger.info(e)
             return []
 
 def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1269,7 +1269,7 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            app.logger.info(e)
             return []
 
 def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1296,7 +1296,7 @@ def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, 
             result.append(row)
         return result
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None):
@@ -1330,7 +1330,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai):
@@ -1360,12 +1360,12 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                         WHERE Nha_may = '{current_user.macongty}'
                         ORDER BY Ngay_nghi_phep DESC, MST ASC;
                     """
-        print(query)
+        app.logger.info(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai):
@@ -1394,7 +1394,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
 
 def thuky_duoc_phanquyen(mst,chuyen):
@@ -1409,7 +1409,7 @@ def thuky_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
 
 def quanly_duoc_phanquyen(mst,chuyen):
@@ -1424,7 +1424,7 @@ def quanly_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
     
 def kiemtrathuki(mst,chuyen):
@@ -1435,13 +1435,13 @@ def kiemtrathuki(mst,chuyen):
         
         result = cursor.execute(query).fetchone()
         conn.close()
-        print(result[0])
+        app.logger.info(result[0])
         if result[0] > 0:
             return True
         else:
             return False
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
 
 def capnhat_xinnghiphep(mst,ngay):
@@ -1454,7 +1454,7 @@ def capnhat_xinnghiphep(mst,ngay):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     try:
@@ -1469,7 +1469,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         conn.close()
         return False
         
@@ -1497,7 +1497,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-        print(e)   
+        app.logger.info(e)   
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1514,7 +1514,7 @@ def laydanhsachphepton(mst=None):
         result = []
         return rows 
     except Exception as e:
-        print(e)   
+        app.logger.info(e)   
         return [] 
     
 def laydanhsachkyluat():
@@ -1528,7 +1528,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-        print(e)   
+        app.logger.info(e)   
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1541,7 +1541,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
@@ -1592,7 +1592,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 conn.commit()
                 conn.close()
     except Exception as e:
-        print(e)     
+        app.logger.info(e)     
         
 def laycahientai(mst):
     try:
@@ -1606,7 +1606,7 @@ def laycahientai(mst):
             return row[-1]
         return None
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return None
 
 def laydanhsachyeucautuyendung(maso):
@@ -1621,7 +1621,7 @@ def laydanhsachyeucautuyendung(maso):
             result.append(row)
         return result 
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return []
     
 def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mucluong):
@@ -1633,7 +1633,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         cursor.execute(query)
         conn.commit()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
     try:
@@ -1654,7 +1654,7 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
         conn.close()
         return rows 
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
     try:
@@ -1666,7 +1666,7 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def xoadulieuchamcong2ngay():
     try:
@@ -1678,7 +1678,7 @@ def xoadulieuchamcong2ngay():
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
 
 def themdulieuchamcong2ngay():
@@ -1700,7 +1700,7 @@ def themdulieuchamcong2ngay():
         conn1.close()
         return True
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return False
     
 def thuky_dakiemtra_diemdanhbu(id):
@@ -1713,7 +1713,7 @@ def thuky_dakiemtra_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def thuky_tuchoi_diemdanhbu(id):
     try:
@@ -1724,7 +1724,7 @@ def thuky_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def quanly_pheduyet_diemdanhbu(id):
     try:
@@ -1736,7 +1736,7 @@ def quanly_pheduyet_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def quanly_tuchoi_diemdanhbu(id):
     try:
@@ -1747,7 +1747,7 @@ def quanly_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def thuky_dakiemtra_xinnghiphep(id):
     try:
@@ -1759,7 +1759,7 @@ def thuky_dakiemtra_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def thuky_tuchoi_xinnghiphep(id):
     try:
@@ -1770,7 +1770,7 @@ def thuky_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def quanly_pheduyet_xinnghiphep(id):
     try:
@@ -1782,7 +1782,7 @@ def quanly_pheduyet_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def quanly_tuchoi_xinnghiphep(id):
     try:
@@ -1793,7 +1793,7 @@ def quanly_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         
 def thuky_dakiemtra_xinnghikhongluong(id):
     try:
@@ -1805,7 +1805,7 @@ def thuky_dakiemtra_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def thuky_tuchoi_xinnghikhongluong(id):
     try:
@@ -1816,7 +1816,7 @@ def thuky_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
 
 def quanly_pheduyet_xinnghikhongluong(id):
     try:
@@ -1828,7 +1828,7 @@ def quanly_pheduyet_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
     
 def quanly_tuchoi_xinnghikhongluong(id):
     try:
@@ -1839,7 +1839,7 @@ def quanly_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         
         
 def roles_required(*roles):
@@ -1932,7 +1932,7 @@ def login():
             return redirect(url_for("login"))
         if user.matkhau == request.form.get("matkhau"):
             login_user(user)
-            print(f"User {user.masothe} {user.macongty} logged in")
+            app.logger.info(f"User {user.masothe} {user.macongty} logged in")
             return redirect(url_for("home"))
         else:
             return redirect(url_for("login"))
@@ -2656,10 +2656,10 @@ def inhopdonglaodong():
             if file:
                 return send_file(file, as_attachment=True, download_name="hopdonglaodong.xlsx")
             else:
-                print("NO FILE")
+                app.logger.info("NO FILE")
                 return redirect("/muc3_3")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc3_3")   
 
 @app.route("/muc3_4", methods=["GET","POST"])
@@ -2841,7 +2841,7 @@ def dieuchuyen():
                                 ghichu
                                 )
             except Exception as e:
-                print(e)
+                app.logger.info(e)
                 return redirect(f"/muc6_2?mst={mst}")
             
         elif loaidieuchuyen == "Nghỉ việc":
@@ -2853,7 +2853,7 @@ def dieuchuyen():
                     ghichu
                             )
             except Exception as e:
-                print(e)
+                app.logger.info(e)
                 return redirect(f"/muc6_2?mst={mst}")
         else:
             try:
@@ -2885,7 +2885,7 @@ def dieuchuyen():
                             ghichu
                             )
             except Exception as e:
-                print(e)
+                app.logger.info(e)
                 return redirect(f"/muc6_2?mst={mst}")
         return redirect(f"/muc6_2?mst={mst}")
     else:  
@@ -3117,7 +3117,7 @@ def danhsachxinnghikhac():
                             row["Loại nghỉ"]
                         )
                     except Exception as e:
-                        print(e)
+                        app.logger.info(e)
                         break
         return redirect("/muc7_1_6")
 
@@ -3313,7 +3313,7 @@ def xulykiluat():
         try:
             themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap)
         except Exception as ex:
-            print(ex)
+            app.logger.info(ex)
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -3358,10 +3358,10 @@ def inchamduthopdong():
             if file:
                 return send_file(file, as_attachment=True, download_name="chamduthopdong.xlsx")
             else:
-                print("NO FILE")
+                app.logger.info("NO FILE")
                 return redirect("/muc10_3")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc10_3")  
 
 #############################################
@@ -3386,7 +3386,7 @@ def taimautangcanhom():
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
-    # print(request.args)
+    # app.logger.info(request.args)
     sdt = request.args.get("sdt")
     trangthai = request.args.get("trangthaimoi")
     if sdt and trangthai:
@@ -3480,12 +3480,12 @@ def dangkitangcacanhan():
         mst = request.form.get("mst")
         giotangca = request.form.get("giotangca")
         ngaytangca = request.form.get("ngaytangca")
-        # print(mst,giotangca,ngaytangca)
+        # app.logger.info(mst,giotangca,ngaytangca)
         user = laydanhsachtheomst(mst)
-        # print(user)
+        # app.logger.info(user)
         if user:
             user = user[0]
-            # print(user)
+            # app.logger.info(user)
             if kiemtrathuki(current_user.masothe,user['Line']):
                 if insert_tangca(current_user.macongty,
                             mst,
@@ -3523,14 +3523,14 @@ def dangkitangcanhom():
                 for row in data:
                     kiemtra = kiemtrathuki(current_user.masothe,row["Chuyền tổ"])
                     if kiemtra:
-                        print(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
+                        app.logger.info(f"Thu ki {current_user.masothe} {row['Chuyền tổ']} dang ki tang ca cho {row['MST']} {row['Họ tên']} {row['Chức vụ']} {row['Phòng ban']} {row['Ngày đăng ký']} {row['Giờ tăng ca']}")
                         try:
                             if insert_tangca(current_user.macongty,row["MST"],row["Họ tên"],row["Chức vụ"],row["Chuyền tổ"],row["Phòng ban"],row["Ngày đăng ký"],row["Giờ tăng ca"]):
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thành công", "success")
                             else:
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            print(e)   
+                            app.logger.info(e)   
                     else:
                         flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
@@ -3729,10 +3729,10 @@ def check_line_from_detailjob():
 def xoanhanviencu():
     mst = request.args.get("mst")
     try:
-        print(xoanhanvien(mst))
+        app.logger.info(xoanhanvien(mst))
         return redirect(url_for('timdanhsachnhanvien', mst=mst))
     except Exception as e:
-        print(e)
+        app.logger.info(e)
         return redirect(url_for('timdanhsachnhanvien', mst=mst))
 
 @app.route("/doicacanhan", methods=["POST"])
@@ -3742,7 +3742,7 @@ def doicacanhan():
     camoi = request.form.get("camoi")
     ngaybatdau = request.form.get("ngaybatdau")
     ngayketthuc = request.form.get("ngayketthuc")
-    print(ngaybatdau,ngayketthuc)
+    app.logger.info(ngaybatdau,ngayketthuc)
     themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
     return redirect("/muc7_1_1")
 
@@ -3761,7 +3761,7 @@ def doicanhom():
                 danhsach = laydanhsachusertheoline(chuyen)
             else:
                 file = request.files.get("file")
-                print(file)
+                app.logger.info(file)
                 if file:
                     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                     filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
@@ -3913,15 +3913,15 @@ def thukykiemtradiemdanhbu():
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
                 else:
                     thuky_tuchoi_diemdanhbu(id)
-                    print(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_3")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_3")
         
 @app.route("/quanly_pheduyet_diemdanhbu", methods=["POST"])
@@ -3935,15 +3935,15 @@ def quanlypheduyetdiemdanhbu():
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_diemdanhbu(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra diem danh bu cho phieu so {id} !!!")
                 else:
                     quanly_tuchoi_diemdanhbu(id)
-                    print(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi diem danh bu cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_3")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_3")
 
 @app.route("/thuky_kiemtra_xinnghiphep", methods=["POST"])
@@ -3957,15 +3957,15 @@ def thukykiemtraxinnghiphep():
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghiphep(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
                 else:
                     thuky_tuchoi_xinnghiphep(id)
-                    print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_4")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_4")
         
 @app.route("/quanly_pheduyet_xinnghiphep", methods=["POST"])
@@ -3979,15 +3979,15 @@ def quanlypheduyetxinnghiphep():
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghiphep(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra xin nghi phep cho phieu so {id} !!!")
                 else:
                     quanly_tuchoi_xinnghiphep(id)
-                    print(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi xin nghi phep cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_4")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_4")
         
 @app.route("/thuky_kiemtra_xinnghikhongluong", methods=["POST"])
@@ -4001,15 +4001,15 @@ def thukykiemtraxinnghikhongluong():
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghikhongluong(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
                 else:
                     thuky_tuchoi_xinnghikhongluong(id)
-                    print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_5")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_5")
         
 @app.route("/quanly_pheduyet_xinnghikhongluong", methods=["POST"])
@@ -4023,17 +4023,17 @@ def quanlypheduyetnghikhongluong():
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghikhongluong(id)
-                    print(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} da kiem tra xin nghi khong luong cho phieu so {id} !!!")
                 else:
                     quanly_tuchoi_xinnghikhongluong(id)
-                    print(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
+                    app.logger.info(f"Thu ki {current_user.masothe} tu choi xin nghi khong luong cho phieu so {id}  !!!")
             else:
-                print(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
+                app.logger.info(f"Thu ki {current_user.masothe} khong co quyen kiem tra !!!")
             return redirect("/muc7_1_5")
         except Exception as e:
-            print(e)
+            app.logger.info(e)
             return redirect("/muc7_1_5")
         
 if __name__ == "__main__":
-    print("Khoi dong phan mem ...")
+    app.logger.info("Khoi dong phan mem ...")
     serve(app, host='0.0.0.0', port=81, threads=16)
