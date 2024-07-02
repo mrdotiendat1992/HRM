@@ -145,31 +145,33 @@
                     <td>{{row[9]}}</td>
                     {% if row[9]=='Chờ kiểm tra'%}
                             <td>
-                                <form action="/thuky_kiemtra_xinnghikhongluong" method="POST" style="margin-left: 10px;">
-                                    <input type="hidden" name="id" value="{{row[10]}}">
-                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                    <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
-                                </form>
-                                <br>
-                                <form action="/thuky_kiemtra_xinnghikhongluong" method="POST" style="margin-left: 10px;">
-                                    <input type="hidden" name="id" value="{{row[10]}}">
-                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                    <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
-                                </form>
+                                <div style="display: flex;">
+                                    <form action="/thuky_kiemtra_xinnghikhongluong" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="id" value="{{row[10]}}">
+                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
+                                    </form>
+                                    <form action="/thuky_kiemtra_xinnghikhongluong" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="id" value="{{row[10]}}">
+                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
+                                    </form>
+                                </div>
                             </td>
                             {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
                             <td>
-                                <form action="/quanly_pheduyet_xinnghikhongluong" method="POST" style="margin-left: 10px;">
-                                    <input type="hidden" name="id" value="{{row[10]}}">
-                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                    <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
-                                </form>
-                                <br>
-                                <form action="/quanly_pheduyet_xinnghikhongluong" method="POST" style="margin-left: 10px;">
-                                    <input type="hidden" name="id" value="{{row[10]}}">
-                                    <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                    <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
-                                </form>
+                                <div style="display: flex;">
+                                    <form action="/quanly_pheduyet_xinnghikhongluong" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="id" value="{{row[10]}}">
+                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
+                                    </form>
+                                    <form action="/quanly_pheduyet_xinnghikhongluong" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="id" value="{{row[10]}}">
+                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
+                                    </form>
+                                </div>
                             </td>
                             {% else %}
                             <td></td>
