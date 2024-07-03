@@ -56,20 +56,24 @@
         width:65px;
     }
     .row_chokiemtra {
-        background-color: #cc6600;
-        color: white;
+        background-color: #ffffcc;
+        color:black;
+        font-weight: bold;
     }
     .row_dakiemtra {
-        background-color: #3399ff;
-        color: white;
+        background-color: #ccffff;
+        color:black;
+        font-weight: bold;
     }
     .row_dapheduyet {
-        background-color: #009933;
-        color: white;
+        background-color: #99ff99;
+        color:black;
+        font-weight: bold;
     }
     .row_bituchoi {
-        background-color: black;
-        color: white;
+        background-color: #ffb3b3;
+        color:black;
+        font-weight: bold;
     }
 </style>
 {% endblock style %}
@@ -131,8 +135,10 @@
                     <tr data-info='{{ row  | safe }}' class="row_dakiemtra">
                 {% elif row[9]=='Đã phê duyệt'%}
                     <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
-                {% else %}
+                {% elif row[9]=='Bị từ chối bởi người kiểm tra' or row[9]=='Bị từ chối bởi người phê duyệt' %}
                     <tr data-info='{{ row  | safe }}' class="row_bituchoi">  
+                {% else %}
+                    <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
                 {% endif %} 
                     <td class="sticky_1">{{row[1]}}</td>
                     <td class="sticky_2">{{row[2]}}</td>
