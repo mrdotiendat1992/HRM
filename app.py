@@ -97,7 +97,19 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
     except Exception as e:
         app.logger.info(e)
         return
-    
+
+def laycatheochuyen(chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Ca_mac_dinh from Chuyen_theo_ca where Chuyen='{chuyen}'"
+        row = cursor.execute(query).fetchone()
+        conn.close()
+        return row[0]
+    except Exception as e:
+        app.logger.info(e)
+        return None
+  
 def dieuchuyennhansu(mst,
                     loaidieuchuyen,
                     vitricu,
@@ -131,6 +143,9 @@ def dieuchuyennhansu(mst,
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}')"
         app.logger.info(query1)
         cursor.execute(query1)
+        catheochuyen = laycatheochuyen(chuyenmoi)
+        if not catheochuyen:
+            catheochuyen = ""
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
         app.logger.info(query2)
         cursor.execute(query2)
@@ -2969,11 +2984,13 @@ def khaibaochamcong():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        cacca = laycacca()
         return render_template("7_1_1.html",
                                 page="7.1.1 Đổi ca làm việc",
                                 danhsach=paginated_rows,
                                 pagination=pagination,
-                                count=count)
+                                count=count,
+                                cacca=cacca)
 
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
