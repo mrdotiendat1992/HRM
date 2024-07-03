@@ -2813,7 +2813,7 @@ def danhsachsaphethanhopdong():
 @app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd')
-def danhgiakpi():
+def nhapkpi():
     return render_template("5_1_1.html",page="Input Performance")
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
