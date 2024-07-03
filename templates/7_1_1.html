@@ -5,7 +5,7 @@
         width: 500px;
     }
     table, th, td {
-        font-size: 8px;
+        font-size: 12px;
     }
     .col {
         border-right: 1px solid #dee2e6;
@@ -22,6 +22,7 @@
     }
     .pagination {
         margin-left: 50px;
+        font-size: 12px;
     }
 </style>
 {% endblock style %}
@@ -112,7 +113,7 @@
         <div class="col">
             <h5>Danh sách ca làm việc</h5>
             <hr />
-            <table class="table table-hover">
+            <!-- <table class="table table-hover">
                 <thead>
                     <tr class="table-primary">
                         <th scope="col">Ca</th>
@@ -185,13 +186,13 @@
                         <td>12:00 - 13:00</td>
                     </tr>
                 </tbody>
-            </table>
+            </table> -->
         </div>
     </div>
     <hr />  
     <div class="row">
-        <div class="col">
             <h5>Lịch sử đổi ca làm việc</h5>
+            <hr />
             <form action="/muc7_1_1" method="GET">
                 <div class="form-group">
                     <label for="mst">Mã số thẻ</label>
@@ -207,8 +208,6 @@
                 </div>
             </form>
             <div class='pagination'>{{ pagination.links }}</div>
-        </div>
-        <div class="col">
             <table class="table table-hover">
                 <thead>
                     <tr class="table-primary">
@@ -218,6 +217,7 @@
                         <th>Phòng ban</th>
                         <th>Ca hiện tại</th>
                         <th>Đổi từ ngày</th>
+                        <th>Đến ngày</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -228,7 +228,8 @@
                         <td>{{row[3]}}</td>
                         <td>{{row[4]}}</td>
                         <td>{{row[5]}}</td>
-                        <td>{{row[6]}}</td>
+                        <td class="date_en">{{row[6]}}</td>
+                        <td class="date_en">{{row[7]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
