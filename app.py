@@ -1557,7 +1557,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
 
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
-        if cacu != camoi:
+        if cacu != camoi and ngaybatdau < ngayketthuc:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             if ngayketthuc:
@@ -1883,6 +1883,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2328,7 +2329,7 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdvth = "NULL"
         nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
         if themnhanvienmoi(nhanvienmoi):
-            themdoicamoi(request.form.get("masothe"),None,calamviec,ngayvao.replace("'",""),datetime(2054,12,31))
+            themdoicamoi(request.form.get("masothe"),"A1-01",calamviec,ngayvao.replace("'",""),datetime(2054,12,31))
             themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc')
             return redirect("/muc3_1")
         else:
@@ -2809,11 +2810,17 @@ def danhsachsaphethanhopdong():
         
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
-@app.route("/muc5_1", methods=["GET","POST"])
+@app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd')
 def danhgiakpi():
-    return render_template("5_1.html",page="Đánh giá KPI")
+    return render_template("5_1_1.html",page="Input Performance")
+
+@app.route("/muc5_1_2", methods=["GET","POST"])
+@login_required
+@roles_required('sa','gd')
+def danhgiakpi():
+    return render_template("5_1_2.html",page="Dashboard Performance")
     
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
@@ -3792,16 +3799,20 @@ def xoanhanviencu():
 
 @app.route("/doicacanhan", methods=["POST"])
 def doicacanhan():
-    mst = request.form.get("mst")
-    cacu = request.form.get("cacu")
-    camoi = request.form.get("camoi")
-    ngaybatdau = request.form.get("ngaybatdau")
-    ngayketthuc = request.form.get("ngayketthuc")
-    app.logger.info(ngaybatdau,ngayketthuc)
-    themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
-    flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
-    return redirect("/muc7_1_1")
-
+    try:
+        mst = request.form.get("mst")
+        cacu = request.form.get("cacu")
+        camoi = request.form.get("camoi")
+        ngaybatdau = request.form.get("ngaybatdau")
+        ngayketthuc = request.form.get("ngayketthuc")
+        themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
+        flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
+        return redirect("/muc7_1_1")
+    except Exception as e:
+        app.logger.info(e)
+        flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
+        return redirect("/muc7_1_1")
+    
 @app.route("/doicanhom", methods=["POST"])
 def doicanhom():
     try:
@@ -3825,7 +3836,7 @@ def doicanhom():
                         file.save(filepath)
                         data = pd.read_excel(filepath).to_dict(orient="records")
                         for row in data:
-                            themdoicamoi(row['Mã số thẻ'],'A1',row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
+                            themdoicamoi(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
             camoi = request.form.get("camoinhom")
@@ -3833,11 +3844,13 @@ def doicanhom():
             ngayketthuc = request.form.get("ngayketthuc")
             
             for user in danhsach:
-                themdoicamoi(user['MST'],'A1',camoi,ngaybatdau,ngayketthuc)
-            flash(f"Đổi ca thành công thành {camoi}", "success")
+                themdoicamoi(user['MST'],laycahientai(user['MST']),camoi,ngaybatdau,ngayketthuc)
+            cacmst = [user['MST'] for user in danhsach]
+            flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
         app.logger.info(e)
+        flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
         
 @app.route("/laycatheomst", methods=["POST"])
