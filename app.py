@@ -1874,7 +1874,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         ON 
             Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.MST AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
         WHERE 
-            Dang_ky_ca_lam_viec.Factory = 'NT1' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
+            Dang_ky_ca_lam_viec.Factory = '{current_user.macongty}' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
         """
         if mst:
             query += f" AND Dang_ky_ca_lam_viec.MST LIKE '%{mst}%'"
@@ -1882,7 +1882,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             query += f" AND Danh_sach_CBCNV.Line LIKE '%{chuyen}%'"
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
-        print(query)
+        query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
