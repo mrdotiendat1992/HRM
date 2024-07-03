@@ -1874,7 +1874,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         ON 
             Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.MST AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
         WHERE 
-            Dang_ky_ca_lam_viec.Factory = 'NT1' AND Dang_ky_ca_lam_viec.Den_ngay='2054-12-31' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
+            Dang_ky_ca_lam_viec.Factory = 'NT1' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
         """
         if mst:
             query += f" AND Dang_ky_ca_lam_viec.MST LIKE '%{mst}%'"
