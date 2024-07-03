@@ -121,7 +121,17 @@
                         <th><input type="date" name="ngaynghi" class="nhaplieu" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
                         <th></th>
                         <th></th> 
-                        <th><input type="text" name="trangthai" class="nhaplieu" id="trangthai" value="{{ request.args.get('trangthai', '') }}" onchange='this.form.submit()'></th>
+                        <th>
+                            <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
+                                <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
+                                <option value=""></option>
+                                <option value="Chờ kiểm tra">Chờ kiểm tra</option>
+                                <option value="Đã kiểm tra">Đã kiểm tra</option>
+                                <option value="Đã phê duyệt">Đã phê duyệt</option>
+                                <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
+                                <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
+                            </select>
+                        </th>
                         <th></th>
                     </form>
                 </tr>

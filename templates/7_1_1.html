@@ -5,22 +5,24 @@
         width: 500px;
     }
     table, th, td {
+        font-size: 8px;
+    }
+    .col {
+        border-right: 1px solid #dee2e6;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        width: 30%;
         font-size: 12px;
     }
-.col {
-    border-right: 1px solid #dee2e6;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    width: 30%;
-    font-size: 12px;
-}
 
-label, input, select {
-    width: 100px;
-    margin-left: 10px;
-}
-
+    label, input, select {
+        width: 100px;
+        margin-left: 10px;
+    }
+    .pagination {
+        margin-left: 50px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -113,53 +115,74 @@ label, input, select {
             <table class="table table-hover">
                 <thead>
                     <tr class="table-primary">
-                        <th scope="col">STT</th>
                         <th scope="col">Ca</th>
-                        <th scope="col">Giờ làm việc</th>
-                        <th scope="col">Bộ phận</th>
+                        <th scope="col">Giờ nghỉ trưa</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
-                        <th scope="row">1</th>
-                        <td>A1</td>
-                        <td>07:30 - 16:30</td>
-                        <td>Tất cả</td>
+                        <td>A1-01</td>
+                        <td>11:15 - 12:15</td>
                     </tr>
                     <tr>
-                        <th scope="row">2</th>
-                        <td>A2</td>
-                        <td>06:30 - 15:30</td>
-                        <td rowspan="2">Lò hơi</td>
+                        <td>A1-02</td>
+                        <td>11:30 - 12:30</td>
                     </tr>
                     <tr>
-                        <th scope="row">3</th>
-                        <td>A4</td>
-                        <td>08:00 - 17:00</td>
+                        <td>A1-03</td>
+                        <td>11:50 - 12:50</td>
                     </tr>
                     <tr>
-                        <th scope="row">4</th>
-                        <td>A3</td>
-                        <td>07:00 - 16:00</td>
-                        <td>Tạp vụ</td>
+                        <td>A1-04</td>
+                        <td>12:00 - 13:00</td>
                     </tr>
                     <tr>
-                        <th scope="row">5</th>
-                        <td>A5</td>
-                        <td>06:00 - 15:00</td>
-                        <td>Tất cả</td>
+                        <td>A3-01</td>
+                        <td>11:15 - 12:15</td>
                     </tr>
                     <tr>
-                        <th scope="row">6</th>
-                        <td>E1</td>
-                        <td>07:30 - 15:30</td>
-                        <td>LĐ mang thai/ cao tuổi</td>
+                        <td>A3-02</td>
+                        <td>11:30 - 12:30</td>
                     </tr>
                     <tr>
-                        <th scope="row">7</th>
-                        <td>F1</td>
-                        <td>07:30 - 14:30</td>
-                        <td>LĐ nữ con nhỏ(<1 tuổi)</td>
+                        <td>A3-03</td>
+                        <td>11:50 - 12:50</td>
+                    </tr>
+                    <tr>
+                        <td>A3-04</td>
+                        <td>12:00 - 13:00</td>
+                    </tr>
+                    <tr>
+                        <td>E1-01</td>
+                        <td>11:15 - 12:15</td>
+                    </tr>
+                    <tr>
+                        <td>E1-02</td>
+                        <td>11:30 - 12:30</td>
+                    </tr>
+                    <tr>
+                        <td>E1-03</td>
+                        <td>11:50 - 12:50</td>
+                    </tr>
+                    <tr>
+                        <td>E1-04</td>
+                        <td>12:00 - 13:00</td>
+                    </tr>
+                    <tr>
+                        <td>F1-01</td>
+                        <td>11:15 - 12:15</td>
+                    </tr>
+                    <tr>
+                        <td>F1-02</td>
+                        <td>11:30 - 12:30</td>
+                    </tr>
+                    <tr>
+                        <td>F1-03</td>
+                        <td>11:50 - 12:50</td>
+                    </tr>
+                    <tr>
+                        <td>F1-04</td>
+                        <td>12:00 - 13:00</td>
                     </tr>
                 </tbody>
             </table>
@@ -169,32 +192,43 @@ label, input, select {
     <div class="row">
         <div class="col">
             <h5>Lịch sử đổi ca làm việc</h5>
-            <form action="/muc7_1_1" method="POST">
+            <form action="/muc7_1_1" method="GET">
                 <div class="form-group">
                     <label for="mst">Mã số thẻ</label>
-                    {% if request.args.get('mst') %}
-                    <input id="mst" name="mst" type="text" onchange="this.form.submit()" value="{{request.args.get('mst')}}">
-                    {% else %}
-                    <input id="mst" name="mst" type="text" onchange="this.form.submit()"></input>
-                    {% endif %}
+                    <input id="mst" name="mst" type="text" onchange="this.form.submit()" value="{{request.args.get('mst','')}}">
+                </div>
+                <div class="form-group">
+                    <label for="chuyen">Chuyền</label>
+                    <input id="chuyen" name="chuyen" type="text" onchange="this.form.submit()" value="{{request.args.get('chuyen','')}}">
+                </div>
+                <div class="form-group">
+                    <label for="phongban">Phòng ban</label>
+                    <input id="phongban" name="phongban" type="text" onchange="this.form.submit()" value="{{request.args.get('phongban','')}}">
                 </div>
             </form>
+            <div class='pagination'>{{ pagination.links }}</div>
         </div>
         <div class="col">
             <table class="table table-hover">
                 <thead>
                     <tr class="table-primary">
-                        <th>Ca</th=>
-                        <th>Từ ngày</th=>
-                        <th>Đến ngày</th>
+                        <th>Mã số thẻ</th>
+                        <th>Họ tên</th>
+                        <th>Chuyền</th>
+                        <th>Phòng ban</th>
+                        <th>Ca hiện tại</th>
+                        <th>Đổi từ ngày</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for row in danhsach %}
-                    <tr>
-                        <td>{{row[0]}}</td>
-                        <td class="date_en">{{row[1]}}</td>
-                        <td class="date_en">{{row[2]}}</td>
+                    <tr data-info='{{ row  | safe }}'>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[5]}}</td>
+                        <td>{{row[6]}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

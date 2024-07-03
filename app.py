@@ -1,7 +1,5 @@
 from const import *
 
-# text_format = NamedStyle(name="text_format", number_format="@")
-
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "hrm_system_NT"
@@ -10,7 +8,7 @@ app.config['SQLALCHEMY_POOL_SIZE'] = 10
 app.config['SQLALCHEMY_POOL_TIMEOUT'] = 30
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 20
 db = SQLAlchemy()
- 
+
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
@@ -18,7 +16,6 @@ login_manager.login_view = 'login'
 test_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Trusted_Connection=yes;"
 used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
-# used_db = test_db
 
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -45,7 +42,7 @@ def loader_user(user_id):
     except Exception as e:
         app.logger.info(e)
         return None
-    
+  
 def doimatkhautaikhoan(macongty,mst,matkhau):
     try:
         current_user.matkhau = matkhau
@@ -172,7 +169,7 @@ UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_n
 UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{ngaydieuchuyen}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
 INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaynghiviec}','2054-12-31',N'Nghỉ việc')
             """
-        app.logger.info(query)
+        
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -1003,7 +1000,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
         app.logger.info(e)
         return []
     
-def capnhattrangthai(sdt, trangthai):
+def capnhattrangthai(sdt, trangthai, luuhoso):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1071,7 +1068,7 @@ def capnhatthongtinungvien(sdt,
         Ghi_chu = N'{luuhoso}'
         WHERE 
         Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
-        # app.logger.info(query)
+        # 
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -1360,7 +1357,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                         WHERE Nha_may = '{current_user.macongty}'
                         ORDER BY Ngay_nghi_phep DESC, MST ASC;
                     """
-        app.logger.info(query)
+        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -1841,7 +1838,43 @@ def quanly_tuchoi_xinnghikhongluong(id):
     except Exception as e:
         app.logger.info(e)
         
-        
+def laydanhsachcahientai(mst,chuyen, phongban):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"""
+        SELECT 
+            Dang_ky_ca_lam_viec.Factory,
+            Dang_ky_ca_lam_viec.MST, 
+            Danh_sach_CBCNV.Ho_ten,
+            Danh_sach_CBCNV.Line,
+            Danh_sach_CBCNV.Department,
+            Dang_ky_ca_lam_viec.Ca,
+            Dang_ky_ca_lam_viec.Tu_ngay,
+            Dang_ky_ca_lam_viec.Den_ngay
+        FROM 
+            Dang_ky_ca_lam_viec
+        INNER JOIN 
+            Danh_sach_CBCNV 
+        ON 
+            Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.MST AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
+        WHERE 
+            Dang_ky_ca_lam_viec.Factory = 'NT1' AND Dang_ky_ca_lam_viec.Den_ngay='2054-12-31' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
+        """
+        if mst:
+            query += f" AND Dang_ky_ca_lam_viec.MST LIKE '%{mst}%'"
+        if chuyen:
+            query += f" AND Danh_sach_CBCNV.Line LIKE '%{chuyen}%'"
+        if phongban:
+            query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
+        print(query)
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        app.logger.info(e)
+        return []
+    
 def roles_required(*roles):
     def decorator(f):
         @wraps(f)
@@ -1862,7 +1895,7 @@ if __name__ != '__main__':
     app.logger.setLevel(gunicorn_logger.level)
 
 if __name__ == '__main__':
-    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1)
+    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1, encoding='utf-8')
     handler.setLevel(logging.INFO)
     formatter = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
@@ -1993,7 +2026,7 @@ def home():
         paginated_users = users[start:end]
         
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        
+        flash(f"Chào mừng {current_user.hoten} quay trở lại!")
         return render_template("home.html", users=paginated_users, 
                             cacphongban=cacphongban, cacto=cacto,
                             page="Trang chủ", pagination=pagination,
@@ -2924,18 +2957,23 @@ def lichsucongtac():
 @roles_required('hr','sa','gd')
 def khaibaochamcong():
     if request.method == "GET":
-        danhsachphongban = laycacphongban()
-        danhsachca = laycacca()
         mst = request.args.get("mst")
-        danhsach = laydanhsachca(mst)
+        chuyen = request.args.get("chuyen") 
+        phongban = request.args.get("phongban") 
+        rows = laydanhsachcahientai(mst,chuyen,phongban)
+        count = len(rows)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(rows)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = rows[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_1.html",
                                 page="7.1.1 Đổi ca làm việc",
-                                danhsachphongban=danhsachphongban,
-                                danhsachca = danhsachca,
-                                danhsach=danhsach)
-    elif request.method == "POST":
-        mst = request.form.get('mst')
-        return redirect(f"/muc7_1_1?mst={mst}")
+                                danhsach=paginated_rows,
+                                pagination=pagination,
+                                count=count)
 
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
@@ -3744,41 +3782,47 @@ def doicacanhan():
     ngayketthuc = request.form.get("ngayketthuc")
     app.logger.info(ngaybatdau,ngayketthuc)
     themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
+    flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
     return redirect("/muc7_1_1")
 
 @app.route("/doicanhom", methods=["POST"])
 def doicanhom():
-    cacongty = request.form.get("cacongty")
-    if cacongty:
-        danhsach = laydanhsachusercacongty(current_user.macongty)
-    else:
-        phongban = request.form.get("phongban")
-        if phongban:
-            danhsach = laydanhsachusertheophongban(phongban)
+    try:
+        cacongty = request.form.get("cacongty")
+        if cacongty:
+            danhsach = laydanhsachusercacongty(current_user.macongty)
         else:
-            chuyen = request.form.get("chuyento")   
-            if chuyen: 
-                danhsach = laydanhsachusertheoline(chuyen)
+            phongban = request.form.get("phongban")
+            if phongban:
+                danhsach = laydanhsachusertheophongban(phongban)
             else:
-                file = request.files.get("file")
-                app.logger.info(file)
-                if file:
-                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-                    filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
-                    file.save(filepath)
-                    data = pd.read_excel(filepath).to_dict(orient="records")
-                    for row in data:
-                        themdoicamoi(row['Mã số thẻ'],'A1',row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
-                danhsach = None
-    if danhsach:
-        camoi = request.form.get("camoinhom")
-        ngaybatdau = request.form.get("ngaybatdau")
-        ngayketthuc = request.form.get("ngayketthuc")
+                chuyen = request.form.get("chuyento")   
+                if chuyen: 
+                    danhsach = laydanhsachusertheoline(chuyen)
+                else:
+                    file = request.files.get("file")
+                    app.logger.info(file)
+                    if file:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
+                        file.save(filepath)
+                        data = pd.read_excel(filepath).to_dict(orient="records")
+                        for row in data:
+                            themdoicamoi(row['Mã số thẻ'],'A1',row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
+                    danhsach = None
+        if danhsach:
+            camoi = request.form.get("camoinhom")
+            ngaybatdau = request.form.get("ngaybatdau")
+            ngayketthuc = request.form.get("ngayketthuc")
+            
+            for user in danhsach:
+                themdoicamoi(user['MST'],'A1',camoi,ngaybatdau,ngayketthuc)
+            flash(f"Đổi ca thành công thành {camoi}", "success")
+        return redirect("/muc7_1_1")
+    except Exception as e:
+        app.logger.info(e)
+        return redirect("/muc7_1_1")
         
-        for user in danhsach:
-            themdoicamoi(user['MST'],'A1',camoi,ngaybatdau,ngayketthuc)
-    return redirect("/muc7_1_1")
-
 @app.route("/laycatheomst", methods=["POST"])
 def laycatheomst():
     mst = request.args.get("mst")
@@ -4033,7 +4077,11 @@ def quanlypheduyetnghikhongluong():
         except Exception as e:
             app.logger.info(e)
             return redirect("/muc7_1_5")
-        
+  
+@app.route("/test", methods=["POST"])
+def test():
+    return "TEST TEMPLATE"
+      
 if __name__ == "__main__":
     app.logger.info("Khoi dong phan mem ...")
     serve(app, host='0.0.0.0', port=81, threads=16)
