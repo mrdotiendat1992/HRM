@@ -2378,6 +2378,7 @@ def thaydoithongtinlaodong():
     if request.method == "GET":
         return render_template("3_2.html", page="3.2 Thay đổi thông tin người lao động")
     else:
+        trangthailamviec = request.form.get("trangthai")
         thechamcong = request.form.get("thechamcong")
         cccd = request.form.get("cccd")
         ngaycapcccd = request.form.get("ngaycapcccd")
@@ -2672,7 +2673,10 @@ def thaydoithongtinlaodong():
             query += f"Tong_phu_cap = '{tienphucap}',"
         else:
             query += f"Tong_phu_cap = NULL,"
-               
+        if trangthailamviec:
+            query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
+        else:
+            query += f"trangthailamviec = NULL,"
         query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
