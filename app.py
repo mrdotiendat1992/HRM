@@ -1886,7 +1886,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        print(query)
+
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -1916,6 +1916,33 @@ def laydanhsachkpi(mst,macongty):
     except Exception as e:
         app.logger.info(e)
         return None  
+
+def inputkpi(macongty,
+                masothe,
+                hoten,
+                department,
+                objectives,
+                possibleMeasures,
+                unitOfMeasurement,
+                measurementSource,
+                aTarget,
+                bTarget,
+                cTarget,
+                month,
+                year,
+                actualResult):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into KPI_Data values ('{macongty}','{masothe}',N'{hoten}','{department}','{objectives}','{possibleMeasures}','{unitOfMeasurement}','{measurementSource}','{cTarget}','{bTarget}','{aTarget}','{actualResult}','{month}','{year}')"
+
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(e)
+        return False  
 
    
 def roles_required(*roles):
@@ -4035,7 +4062,6 @@ def thukykiemtradiemdanhbu():
             mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
-            print(request.args.get("trangthai"))
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
@@ -4200,10 +4226,46 @@ def quanlypheduyetnghikhongluong():
             flash(f"Lỗi quản lý phê duyệt xin nghỉ không lương: {e}")
             return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
   
-@app.route("/test", methods=["POST"])
-def test():
-    return "TEST TEMPLATE"
+@app.route("/themdulieukpi", methods=["POST"])
+def themdulieukpi():
+    try:
+        json_data = request.get_json()
+        macongty = json_data[0]
+        masothe = json_data[1]
+        hoten = json_data[2]
+        for row in json_data[3:]:
+            department = row['department']
+            objectives = row['objectives']
+            possibleMeasures = row['possibleMeasures']
+            unitOfMeasurement = row['unitOfMeasurement']
+            measurementSource = row['measurementSource']
+            aTarget = row['aTarget']
+            bTarget = row['bTarget']
+            cTarget = row['cTarget']
+            month = row['month']
+            year = row['year']
+            actualResult = row['actualResult']
+            inputkpi(macongty,
+                     masothe,
+                     hoten,
+                     department,
+                     objectives,
+                     possibleMeasures,
+                     unitOfMeasurement,
+                     measurementSource,
+                     aTarget,
+                     bTarget,
+                     cTarget,
+                     month,
+                     year,
+                     actualResult)
+        
+        return {"status": "success"}, 200
+    except Exception as e:
+        app.logger.info(e)
+        return {"status":"failed"}, 400 
       
 if __name__ == "__main__":
     app.logger.info("Khoi dong phan mem ...")
     serve(app, host='0.0.0.0', port=81, threads=16)
+    # app.run(host='0.0.0.0',port=81)
