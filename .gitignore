@@ -9,3 +9,4 @@ instance/*
 
 nhapxuat/nhap/*.xlsx
 nhapxuat/xuat/*.xlsx
+instance/db.sqlite

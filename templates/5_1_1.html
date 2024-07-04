@@ -1,9 +1,76 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
+    table, th, td {
+        font-size: 12px;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    .a_target {
+        font-weight: bold;
+        color: purple;
+    }
+    .b_target {
+        font-weight: bold;
+        color: green;
+    }
+    .c_target {
+        font-weight: bold;
+        color: red;
+    }
+    #actual_result {
+        width:100%;
+        height: 100%;
+    }
 </style>
 {% endblock style %}
 {% block content %}
+<div class="container-fluid">
+    <table class="table table-bordered">
+        <thead>
+            <tr class="bg-primary">
+                <th rowspan="2" style="vertical-align: middle;">No.</th>
+                <th rowspan="2" style="vertical-align: middle;">Department</th>
+                <th rowspan="2" style="vertical-align: middle;">Objectives</th>
+                <th rowspan="2" style="vertical-align: middle;">Possible measures</th>
+                <th rowspan="2" style="vertical-align: middle;">Unit of measurement</th>
+                <th rowspan="2" style="vertical-align: middle;">Measurment Source</th>
+                <th colspan="3">Target</th>
+                <th rowspan="2" style="vertical-align: middle;">Month</th>
+                <th rowspan="2" style="vertical-align: middle;">Year</th>
+                <th rowspan="2" style="vertical-align: middle;">Actual result</th>
+            </tr>
+            <tr class="bg-info">
+                <th class="a_target">A</th>
+                <th class="b_target">B</th>
+                <th class="c_target">C</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in danhsachdong %}
+            <tr>
+                <td>{{loop.index}}</td>
+                <td>{{row["Department"]}}</td>
+                <td>{{row["Objective"]}}</td>
+                <td>{{row["Possible measures"]}}</td>
+                <td>{{row["Unit of measurement"]}}</td>
+                <td>{{row["Measurement source"]}}</td>                
+                <td class="a_target">{{row["A target"]}}</td>
+                <td class="b_target">{{row["B target"]}}</td>
+                <td class="c_target">{{row["C target"]}}</td>
+                <td>{{month}}</td>
+                <td>{{year}}</td>
+                <td>
+                    <input type="text" name="actual_result" id="actual_result">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
 
+
+    </table>
+</div>
 
 {% endblock content %}

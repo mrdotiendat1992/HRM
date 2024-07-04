@@ -128,13 +128,14 @@
                 <th>Hiệu suất</th>
                 <th>Loại máy</th>
                 <th>Lưu hồ sơ</th>
+                <th>Ghi chú</th>
                 <th></th>
             </tr>
             {% for user in danhsach %}
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
-                        <td >{{ loop.index }}</td>
-                        <td class="sticky"><b>{{ user["Họ tên"] }}</b></td>
+                        <td class="sticky_1"><input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">{{ user['ID'] }}</td>
+                        <td class="sticky_2"><b>{{ user["Họ tên"] }}</b></td>
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
                         {% if user["Trạng thái"] == "Đạt" %}
@@ -165,7 +166,11 @@
                         <td><input type="text" name="sdtnguoithan" value="{{ user["SĐT người thân"] }}"></td>
                         <td>{{ user["Ngày nhận việc"] }}</td>
                         <td>{{ user["Ngày gửi"] }}</td>
+                        {% if user["Ngày cập nhật"] %}
                         <td>{{ user["Ngày cập nhật"] }}</td>
+                        {% else %}
+                        <td><input type="date" name="ngaycapnhat"></td>
+                        {% endif %}
                         <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
                         {% if user["Hiệu suất"] %}
                         <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
@@ -177,7 +182,7 @@
                         {% else %}
                         <td><input type="text" name="loaimay"></td>
                         {% endif %}
-                        {% if user["Ghi chú"]=='Có' %}
+                        {% if user["Lưu hồ sơ"]=='Có' %}
                         <td>
                             <select name="luuhoso">
                                 <option value="Không">Không</option>
@@ -191,6 +196,11 @@
                                 <option value="Có">Có</option>
                             </select>
                         </td>
+                        {% endif %}
+                        {% if user["Ghi chú"] %}
+                        <td><input type="text" name="ghichu" value="{{ user['Ghi chú'] }}"></td>
+                        {% else %}
+                        <td><input type="text" name="ghichu"></td>
                         {% endif %}
                         <td><input type="submit" value="Lưu" class="btn btn-primary"></input></td>
                     </tr>
@@ -207,6 +217,11 @@
                 <select id="newStatus" name="newStatus">
                     <option value="Đạt">Đạt</option>
                     <option value="Không đạt">Không đạt</option>
+                </select>
+                <label for="luuhoso">Lưu hồ sơ:</label>
+                <select id="luuhoso" name="luuhoso">
+                    <option value="Có">Có</option>
+                    <option value="Khôngt">Không</option>
                 </select>
                 <br><br>
                 <button class ="btn btn-primary" type="submit">Cập nhật</button>

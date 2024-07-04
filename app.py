@@ -970,6 +970,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
         result = []
         for row in rows:
             result.append({
+                "ID": row[39],
                 "Nhà máy": row[0],
                 "Vị trí tuyển dụng": row[1],
                 "Họ tên": row[2],
@@ -1009,18 +1010,19 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
                 "Hiệu suất": row[36],
                 "Loại máy": row[37],
                 "Ghi chú": row[38], 
+                "Lưu hồ sơ": row[40]
             })
         return result
     except Exception as e:
         app.logger.info(e)
         return []
     
-def capnhattrangthai(sdt, trangthai, luuhoso):
+def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         ngaythuchien = datetime.now().date()
-        query = f"UPDATE HR.Dbo.Dang_ky_thong_tin SET Trang_thai = N'{trangthai}',Ngay_cap_nhat = '{ngaythuchien}' WHERE Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"
+        query = f"UPDATE HR.Dbo.Dang_ky_thong_tin SET Trang_thai = N'{trangthai}', Luu_ho_so='{luuhoso}', Ngay_cap_nhat = '{ngaythuchien}' WHERE Sdt = '{sdt}' AND Nha_may = N'{current_user.macongty}'"
         
         cursor.execute(query)
         conn.commit()
@@ -1029,29 +1031,31 @@ def capnhattrangthai(sdt, trangthai, luuhoso):
     except Exception as e:
         return False
     
-def capnhatthongtinungvien(sdt,
-                            ngayhendilam,
-                            hieusuat,
-                            loaimay,
-                            vitrituyendung,
-                            hocvan,
-                            diachi,
-                            dantoc,
-                            connho,
-                            tencon1,
-                            ngaysinhcon1,
-                            tencon2,
-                            ngaysinhcon2,
-                            tencon3,
-                            ngaysinhcon3,
-                            tencon4,
-                            ngaysinhcon4,
-                            tencon5,
-                            ngaysinhcon5,
-                            nguoithan,
-                            sdtnguoithan,
-                            luuhoso
-                            ):
+def capnhatthongtinungvien(id,
+                        sdt,
+                        ngayhendilam,
+                        hieusuat,
+                        loaimay,
+                        vitrituyendung,
+                        hocvan,
+                        diachi,
+                        dantoc,
+                        connho,
+                        tencon1,
+                        ngaysinhcon1,
+                        tencon2,
+                        ngaysinhcon2,
+                        tencon3,
+                        ngaysinhcon3,
+                        tencon4,
+                        ngaysinhcon4,
+                        tencon5,
+                        ngaysinhcon5,
+                        nguoithan,
+                        sdtnguoithan,
+                        luuhoso,
+                        ghichu
+                        ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1060,6 +1064,7 @@ def capnhatthongtinungvien(sdt,
         query = f"""
         UPDATE HR.Dbo.Dang_ky_thong_tin 
         SET 
+        Sdt = '{sdt}',
         Ngay_hen_di_lam = '{ngayhendilam}',
         Hieu_suat = '{hieusuat}',
         Loai_may = N'{loaimay}',
@@ -1080,10 +1085,11 @@ def capnhatthongtinungvien(sdt,
         Ngay_sinh_con_5 = '{ngaysinhcon5}',
         Nguoi_than = N'{nguoithan}',
         SDT_nguoi_than = '{sdtnguoithan}',
-        Ghi_chu = N'{luuhoso}'
+        Luu_ho_so = N'{luuhoso}',
+        Ghi_chu = N'{ghichu}'
         WHERE 
-        Sdt = N'{sdt}' AND Nha_may = N'{current_user.macongty}'"""
-        # 
+        ID = '{id}' AND Nha_may = N'{current_user.macongty}'"""
+        
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -1890,7 +1896,31 @@ def laydanhsachcahientai(mst,chuyen, phongban):
     except Exception as e:
         app.logger.info(e)
         return []
-    
+
+def laydanhsachkpi(mst,macongty):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from KPI_Name where MST='{mst}' and  Nha_may='{macongty}'"
+        rows = cursor.execute(query).fetchall()
+        result = []
+        for row in rows:
+            result.append({
+                "Department": row[3],
+                "Objective": row[4],
+                "Possible measures": row[5],
+                "Unit of measurement": row[6],
+                "Measurement source": row[7],
+                "C target": row[8],
+                "B target": row[9],
+                "A target": row[10],
+            })
+        return result
+    except Exception as e:
+        app.logger.info(e)
+        return None  
+
+   
 def roles_required(*roles):
     def decorator(f):
         @wraps(f)
@@ -2099,6 +2129,7 @@ def danhsachdangkytuyendung():
                             count=count)
         
     if request.method == "POST":
+        id = request.form.get("id")
         sdt = request.form.get("sdt")
         vitrituyendung = request.form.get("vitrituyendung")
         hocvan = request.form.get("hocvan")
@@ -2123,7 +2154,9 @@ def danhsachdangkytuyendung():
         sdtnguoithan = request.form.get("sdtnguoithan")
         ngayhendilam = request.form.get("ngayhendilam")
         luuhoso = request.form.get("luuhoso")
-        capnhatthongtinungvien(sdt,
+        ghichu = request.form.get("ghichu")
+        capnhatthongtinungvien(id,
+                               sdt,
                                ngayhendilam,
                                hieusuat,
                                loaimay,
@@ -2144,7 +2177,8 @@ def danhsachdangkytuyendung():
                                ngaysinhcon5,
                                nguoithan,
                                sdtnguoithan,
-                               luuhoso
+                               luuhoso,
+                               ghichu
                                )
         return redirect(f"muc2_1?sdt={sdt}")
 
@@ -2812,13 +2846,16 @@ def danhsachsaphethanhopdong():
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
-@roles_required('sa','gd')
+@roles_required('sa','gd','tbp')
 def nhapkpi():
-    return render_template("5_1_1.html",page="Input Performance")
+    danhsachdong = laydanhsachkpi(current_user.masothe,current_user.macongty)
+    month = datetime.now().month-1
+    year = datetime.now().year
+    return render_template("5_1_1.html",page="Input Performance",danhsachdong=danhsachdong,month = month, year= year)
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
 @login_required
-@roles_required('sa','gd')
+@roles_required('sa','gd','tbp')
 def danhgiakpi():
     return render_template("5_1_2.html",page="Dashboard Performance")
     
@@ -3448,13 +3485,17 @@ def taimautangcanhom():
     
 @app.route("/capnhattrangthaiungvien", methods=["POST"])
 def capnhattrangthaiungvien():
-    # app.logger.info(request.args)
-    sdt = request.args.get("sdt")
-    trangthai = request.args.get("trangthaimoi")
-    if sdt and trangthai:
-        capnhattrangthai(sdt, trangthai)
-        return {"status": "success"}, 200
-    return {"status": "fail"}, 400
+    try:
+        sdt = request.args.get("sdt")
+        trangthai = request.args.get("trangthaimoi")
+        luuhoso = request.args.get("luuhoso")
+        if capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
+            return {"status": "success"}, 200
+        else:
+            return {"status": "fail"}, 400
+    except Exception as e:
+        app.logger.info(e)
+        return {"status": "fail"}, 400
 
 @app.route("/laythongtincccd", methods=["POST"])
 def laythongtincccd():
