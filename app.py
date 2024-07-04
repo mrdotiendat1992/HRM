@@ -4184,7 +4184,7 @@ def quanlypheduyetnghikhongluong():
             trangthai_filter = request.form["trangthai_filter"]
             chuyen = request.form["chuyen"]
             mstduyet = current_user.masothe
-            kiemtra = request.form["kiemtra"]
+            pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
