@@ -320,7 +320,7 @@
                                                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                                                 transition: opacity 0.5s ease, transform 0.5s ease;
                                                 transform: translateY(-20px);">
-                                    {{ messages[-1] }}
+                                    {{ messages[0] }}
                                     <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
@@ -424,11 +424,6 @@
     <!-- Page level custom scripts -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-       document.addEventListener('DOMContentLoaded', (event) => {
-           .alert {
-
-           }
-       }) 
     </script>
 </body>
 
