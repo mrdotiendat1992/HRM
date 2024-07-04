@@ -49,7 +49,7 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         db.session.commit()
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"UPDATE Danh_sach_CBCNV SET Mat_khau='{matkhau}' WHERE Factory='{macongty}' AND MST='{mst}'"
+        query = f"UPDATE Danh_sach_CBCNV SET Mat_khau='{matkhau}' WHERE Factory='{macongty}' AND The_cham_cong='{mst}'"
         cursor.execute(query)
         conn.commit()
         conn.close()
