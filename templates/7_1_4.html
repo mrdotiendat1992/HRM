@@ -169,11 +169,25 @@
                                     <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                         <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                     </form>
                                     <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                         <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
                                     </form>
                                 </div>
@@ -184,11 +198,25 @@
                                     <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                         <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                                     </form>
                                     <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                         <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                                     </form>
                                 </div>
