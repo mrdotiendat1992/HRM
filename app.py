@@ -4174,9 +4174,17 @@ def thukykiemtraxinnghikhongluong():
 def quanlypheduyetnghikhongluong():
     if request.method == "POST":
         try:
+            mst_filter = request.form["mst_filter"]
+            hoten_filter = request.form["hoten_filter"]
+            chucvu_filter = request.form["chucvu_filter"]
+            chuyen_filter = request.form["chuyen_filter"]
+            bophan_filter = request.form["bophan_filter"]
+            ngay_filter = request.form["ngay_filter"]
+            lydo_filter = request.form["lydo_filter"]
+            trangthai_filter = request.form["trangthai_filter"]
             chuyen = request.form["chuyen"]
             mstduyet = current_user.masothe
-            pheduyet = request.form["pheduyet"]
+            kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
