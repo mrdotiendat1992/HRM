@@ -106,6 +106,7 @@
                 <th>Dân tộc</th>
                 <th>Trình độ</th>
                 <th>Địa chỉ</th>
+                <th>Ngày hẹn đi làm</th>
                 <th>Kinh nghiệm</th>
                 <th>Mức lương</th>
                 <th>Có con nhỏ</th>
@@ -124,7 +125,6 @@
                 <th>Ngày nhận việc</th>
                 <th>Ngày gửi</th>
                 <th>Ngày cập nhật</th>
-                <th>Ngày hẹn đi làm</th>
                 <th>Hiệu suất</th>
                 <th>Loại máy</th>
                 <th>Lưu hồ sơ</th>
@@ -149,6 +149,7 @@
                         <td><input type="text" name="dantoc" id="dantoc" value="{{ user['Dân tộc'] }}"></input></td>
                         <td><input type="text" name="hocvan" id="hocvan" value="{{ user['Học vấn'] }}"></input></td>
                         <td><input type="text" name="diachi" id="diachi" value="{{ user['Tạm trú'] }}"></input></td>
+                        <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
                         <td>{{ user["Kinh nghiệm"] }}</td>
                         <td>{{ user["Mức lương"] }}</td>
                         <td><input type="text" name="connho" value="{{ user['Có con nhỏ'] }}"></td>
@@ -171,7 +172,6 @@
                         {% else %}
                         <td><input type="date" name="ngaycapnhat"></td>
                         {% endif %}
-                        <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
                         {% if user["Hiệu suất"] %}
                         <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
                         {% else %}
