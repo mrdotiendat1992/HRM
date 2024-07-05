@@ -4,9 +4,10 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite"
 app.config["SECRET_KEY"] = "hrm_system_NT"
 app.config['UPLOAD_FOLDER'] = r'./static/uploads'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_POOL_SIZE'] = 10
-app.config['SQLALCHEMY_POOL_TIMEOUT'] = 30
 app.config['SQLALCHEMY_MAX_OVERFLOW'] = 20
+app.config['SQLALCHEMY_POOL_TIMEOUT'] = 60
 db = SQLAlchemy()
 
 login_manager = LoginManager()
@@ -4062,13 +4063,19 @@ def thukykiemtradiemdanhbu():
             mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
+            mstdiemdanh = request.form["mst_diemdanh"]
+            if mstdiemdanh==mstduyet:
+                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
                     flash(f"Thư ký {current_user.hoten} đã kiểm tra phiếu điểm danh bù số {id} !!!")
+                    return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
                 else:
                     thuky_tuchoi_diemdanhbu(id)
                     flash(f"Thư ký {current_user.hoten} đã từ chối điểm danh bù phiếu số {id}  !!!")
+                    return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             else:
                 flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
             return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -4093,6 +4100,10 @@ def quanlypheduyetdiemdanhbu():
             mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
+            mstdiemdanh = request.form["mst_diemdanh"]
+            if mstdiemdanh==mstduyet:
+                flash(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_diemdanhbu(id)
@@ -4122,13 +4133,19 @@ def thukykiemtraxinnghiphep():
             mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
+            mstxinnghiphep = request.form["mst_xinnghiphep"]
+            if mstxinnghiphep==mstduyet:
+                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghiphep(id)
                     flash(f"Thư ký {current_user.hoten} đã kiểm tra phiếu xin nghỉ phép số {id} !!!")
+                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
                 else:
                     thuky_tuchoi_xinnghiphep(id)
-                    flash(f"Thư ký {current_user.hoten} từ chối phiếu nghỉ phép số {id}  !!!")
+                    flash(f"Thư ký {current_user.hoten} từ chối phiếu nghỉ phép số {id} !!!")
+                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             else:
                 flash(f"{current_user.hoten} không có quyền kiểm tra !!!")
             return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
@@ -4152,13 +4169,19 @@ def quanlypheduyetxinnghiphep():
             mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
+            mstxinnghiphep = request.form["mst_xinnghiphep"]
+            if mstxinnghiphep==mstduyet:
+                flash(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghiphep(id)
-                    flash(f"Quản lý {current_user.hoten} đã kiểm tra cho phiếu xin nghỉ phép số {id} !!!")
+                    flash(f"Quản lý {current_user.hoten} đã hê duyệt cho phiếu xin nghỉ phép số {id} !!!")
+                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
                 else:
                     quanly_tuchoi_xinnghiphep(id)
-                    flash(f"Quản lý {current_user.hoten} từ chối kiểm tra phiếu xin nghỉ phép số {id}  !!!")
+                    flash(f"Quản lý {current_user.hoten} từ chối hê duyệt phiếu xin nghỉ phép số {id}  !!!")
+                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             else:
                 flash(f"{current_user.hoten} không có quyền phê duyệt !!!")
             return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
@@ -4182,13 +4205,19 @@ def thukykiemtraxinnghikhongluong():
             mstduyet = current_user.masothe
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
+            mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
+            if mstxinnghikhongluong==mstduyet:
+                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghikhongluong(id)
                     flash(f"Thư ký {current_user.hoten} đã kiểm tra cho phiếu xin nghỉ không lương số {id} !!!")
+                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
                 else:
                     thuky_tuchoi_xinnghikhongluong(id)
                     flash(f"Thư ký {current_user.hoten} từ chối kiểm tra phiếu xin nghỉ không lương số {id}  !!!")
+                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             else:
                 flash(f"{current_user.hoten} không có quyền kiểm tra !!!")
             return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -4212,13 +4241,19 @@ def quanlypheduyetnghikhongluong():
             mstduyet = current_user.masothe
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
+            mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
+            if mstxinnghikhongluong==mstduyet:
+                flash(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghikhongluong(id)
                     flash(f"Quản lý {current_user.hoten} đã phê duyệt cho phiếu xin nghỉ không lương số {id} !!!")
+                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
                 else:
                     quanly_tuchoi_xinnghikhongluong(id)
                     flash(f"Quản lý {current_user.hoten} ttừ chối phê duyệt phiếu xin nghỉ không lương số {id}  !!!")
+                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             else:
                 flash(f"{current_user.hoten} không có quyền phê duyệt !!!")
             return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")

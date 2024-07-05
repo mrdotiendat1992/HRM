@@ -171,6 +171,7 @@
                                 <div style="display: flex;">
                                     <form action="/thuky_kiemtra_diemdanhbu" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[11]}}">
+                                        <input type="hidden" name="mst_diemdanh" value="{{row[1]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                         <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
                                         <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
@@ -186,6 +187,7 @@
                                     <form action="/thuky_kiemtra_diemdanhbu" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[11]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_diemdanh" value="{{row[1]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                         <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
                                         <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
@@ -204,6 +206,7 @@
                                 <div style="display: flex;">
                                     <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[11]}}">
+                                        <input type="hidden" name="mst_diemdanh" value="{{row[1]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                         <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
@@ -219,6 +222,7 @@
                                     <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
                                         <input type="hidden" name="id" value="{{row[11]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                        <input type="hidden" name="mst_diemdanh" value="{{row[1]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                         <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
                                         <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">

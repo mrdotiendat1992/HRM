@@ -47,16 +47,30 @@
     .content {
         width: 2000px;
     }
-    th.sticky, td.sticky {
-        position: -webkit-sticky; /* for Safari */
+    th.sticky_1, td.sticky_1 {
         position: sticky;
         left: 0;
-        background: #003cb3;
-        color: white;
         z-index: 1;
     }
-
-    th.sticky {
+    td.sticky_1 {
+        background-color: #4e73df;
+        color:black;
+        font-weight: bold;
+    }
+    th.sticky_1 {
+        z-index: 2;
+    }
+    th.sticky_2, td.sticky_2 {
+        position: sticky;
+        left: 60px;
+        z-index: 1;
+    }
+    td.sticky_2 {
+        background-color: #4e73df;
+        color:black;
+        font-weight: bold;
+    }
+    th.sticky_2 {
         z-index: 2;
     }
     .pagination {
@@ -92,8 +106,8 @@
         </div>
         <table class="table table-bordered">
             <tr class="table-primary">
-                <th >STT</th>
-                <th  class="sticky">Họ và tên</th>
+                <th class="sticky_1">STT</th>
+                <th class="sticky_2">Họ và tên</th>
                 <th>Vị trí tuyển dụng</th>
                 <th>Số điện thoại</th>
                 <th>Trạng thái</th>

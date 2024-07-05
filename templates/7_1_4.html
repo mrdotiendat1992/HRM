@@ -167,6 +167,7 @@
                             <td>
                                 <div style="display: flex;">
                                     <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
@@ -179,6 +180,7 @@
                                         <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                     </form>
                                     <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
@@ -196,6 +198,7 @@
                             <td>
                                 <div style="display: flex;">
                                     <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
@@ -208,6 +211,7 @@
                                         <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                                     </form>
                                     <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
                                         <input type="hidden" name="id" value="{{row[10]}}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
