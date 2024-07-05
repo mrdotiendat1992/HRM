@@ -95,9 +95,10 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
         app.logger.info(e)
-        return
+        return False
 
 def laycatheochuyen(chuyen):
     try:
@@ -1633,6 +1634,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
+                
             else:
                 if type(ngaybatdau) == str:
                     ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
@@ -1651,8 +1653,10 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
+        return True
     except Exception as e:
-        app.logger.info(e)     
+        app.logger.info(e)    
+        return False 
         
 def laycahientai(mst):
     try:
@@ -1692,9 +1696,11 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         
         cursor.execute(query)
         conn.commit()
+        return True
     except Exception as e:
         app.logger.info(e)
-
+        return False
+    
 def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
     try:
         conn = pyodbc.connect(used_db)
@@ -2079,8 +2085,12 @@ def login():
         if not user:
             return redirect(url_for("login"))
         if user.matkhau == request.form.get("matkhau"):
-            login_user(user)
-            app.logger.info(f"User {user.masothe} {user.macongty} logged in")
+            try:
+                login_user(user)
+                app.logger.info(f"User {user.masothe} {user.macongty} logged in")
+            except Exception as e:
+                app.logger.error(f"Error during login: {e}")
+                flash('An error occurred. Please try again.')
             return redirect(url_for("home"))
         else:
             return redirect(url_for("login"))
@@ -2088,8 +2098,13 @@ def login():
 
 @app.route("/logout", methods=["POST"])
 def logout():
-    logout_user()
-    return redirect(url_for("login"))
+    try:
+        logout_user()
+        flash("Đăng xuất thành công")
+    except Exception as e:
+        app.logger.error(f"Error during login: {e}")
+        flash('An error occurred. Please try again.')
+    return redirect("/")
 
 @app.route("/doimatkhau", methods=['POST'])
 def doimatkhau():
@@ -2141,7 +2156,7 @@ def home():
         paginated_users = users[start:end]
         
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        flash(f"Chào mừng {current_user.hoten} quay trở lại!")
+        flash(f"Xin chào {current_user.hoten} !!!")
         return render_template("home.html", users=paginated_users, 
                             cacphongban=cacphongban, cacto=cacto,
                             page="Trang chủ", pagination=pagination,
@@ -2167,7 +2182,7 @@ def home():
         df = pd.DataFrame(users)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
-        
+        flash("Tải file thành công")        
         return send_file(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc2_1", methods=["GET","POST"])
@@ -2224,7 +2239,7 @@ def danhsachdangkytuyendung():
         ngayhendilam = request.form.get("ngayhendilam")
         luuhoso = request.form.get("luuhoso")
         ghichu = request.form.get("ghichu")
-        capnhatthongtinungvien(id,
+        if capnhatthongtinungvien(id,
                                sdt,
                                ngayhendilam,
                                hieusuat,
@@ -2248,7 +2263,10 @@ def danhsachdangkytuyendung():
                                sdtnguoithan,
                                luuhoso,
                                ghichu
-                               )
+                               ):
+            flash("Cập nhật thông tin ứng viên thành công !!!")
+        else:
+            flash("Cập nhật thông tin ứng viên thất bại !!!")
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2_1", methods=["GET","POST"])
@@ -2258,8 +2276,8 @@ def dangkytuyendung():
     if request.method == "GET":
         maso = current_user.macongty[-1]
         danhsach = laydanhsachyeucautuyendung(maso)
-        
         return render_template("2_2_1.html", page="2.2.1 Thêm yêu cầu tuyển dụng",danhsach=danhsach)
+    
     elif request.method == "POST":
         bophan = request.form.get("bophan")
         vitri = request.form.get("vitri")
@@ -2270,7 +2288,10 @@ def dangkytuyendung():
         mucluongtu = request.form.get("mucluongtu")
         mucluongden = request.form.get("mucluongden")
         mucluong = f"{mucluongtu} - {mucluongden} triệu VNĐ"
-        themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong)
+        if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong)
+            flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
+        else:
+            flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         return redirect("muc2_2_1")
     
 @app.route("/muc2_2_2", methods=["GET","POST"])
@@ -2292,7 +2313,10 @@ def pheduyettuyendung():
         trangthaiyeucau = request.form.get("trangthaiyeucau") if request.form.get("trangthaiyeucau") else None
         trangthaithuchien = request.form.get("trangthaithuchien") if request.form.get("trangthaithuchien") else None
         ghichu = request.form.get("ghichu") if request.form.get("ghichu") else None
-        capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu)
+        if capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
+            flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
+        else:
+            flash("Cập nhật trạng thái yêu cầu tuyển dụng thất bại !!!")
         return redirect("/muc2_2_2")
     
 @app.route("/muc3_1", methods=["GET","POST"])
@@ -2432,15 +2456,22 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdvth = "NULL"
         nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
         if themnhanvienmoi(nhanvienmoi):
-            themdoicamoi(request.form.get("masothe"),"A1-01",calamviec,ngayvao.replace("'",""),datetime(2054,12,31))
-            themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc')
-            return redirect("/muc3_1")
+            flash("Thêm lao động mới thành công !!!")
+            if themdoicamoi(request.form.get("masothe"),"A1-01",calamviec,ngayvao.replace("'",""),datetime(2054,12,31)):
+                flash("Tạo ca mặc định là A1-01 cho người mới thành công !!!")                
+                if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
+                    flash("Thêm lịch sử trạng thái cho người mới thành công !!!")
+                else:
+                    flash("Thêm lịch sử trạng thái cho người mới thất bại !!!")
+            else:
+                flash("Tạo ca mặc định là A1-01 cho người mới thất bại !!!") 
         else:
             masothe = int(laymasothemoi())+1
             cacvitri= laycacvitri()
             cacto = laycacto()
             cacca = laycacca()
-            return redirect("/muc3_1")
+            flash("Thêm lao động mới thất bại !!!")
+        return redirect("/muc3_1")
         
 @app.route("/muc3_2", methods=["GET","POST"])
 @login_required
@@ -2450,311 +2481,317 @@ def thaydoithongtinlaodong():
     if request.method == "GET":
         return render_template("3_2.html", page="3.2 Thay đổi thông tin người lao động")
     else:
-        trangthailamviec = request.form.get("trangthai")
-        thechamcong = request.form.get("thechamcong")
-        cccd = request.form.get("cccd")
-        ngaycapcccd = request.form.get("ngaycapcccd")
-        hoten = request.form.get("hoten")
-        ngaysinh = request.form.get("ngaysinh")
-        gioitinh = request.form.get("gioitinh")
-        cmt = request.form.get("cmt")
-        quoctich = request.form.get("quoctich")
-        dienthoai = request.form.get("dienthoai")
-        thonxom = request.form.get("thonxom")
-        phuongxa = request.form.get("phuongxa")
-        quanhuyen = request.form.get("quanhuyen")
-        tinhthanhpho = request.form.get("tinhthanhpho")
-        dantoc = request.form.get("dantoc")
-        tongiao = request.form.get("tongiao")
-        hocvan = request.form.get("hocvan")
-        masothue = request.form.get("masothue")
-        nganhang = request.form.get("nganhang")
-        sotaikhoan = request.form.get("sotaikhoan")
-        connho = request.form.get("connho")
-        mst = request.form.get("mst")
-        tenconnho1 = request.form.get("tenconnho1")
-        tenconnho2 = request.form.get("tenconnho2")
-        tenconnho3 = request.form.get("tenconnho3")
-        tenconnho4 = request.form.get("tenconnho4")
-        tenconnho5 = request.form.get("tenconnho5")
-        ngaysinhcon1 = request.form.get("ngaysinhcon1")
-        ngaysinhcon2 = request.form.get("ngaysinhcon2")
-        ngaysinhcon3 = request.form.get("ngaysinhcon3")
-        ngaysinhcon4 = request.form.get("ngaysinhcon4")
-        ngaysinhcon5 = request.form.get("ngaysinhcon5")
-        jobtitlevn = request.form.get("jobtitlevn") 
-        jobtitleen = request.form.get("jobtitleen") 
-        positioncode = request.form.get("positioncode")
-        positioncodedescription = request.form.get("positioncodedescription")
-        chucvu =  request.form.get("chucvu")
-        line = request.form.get("line")
-        department = request.form.get("department")
-        sectioncode = request.form.get("sectioncode")
-        sectiondescription = request.form.get("sectiondescription")
-        hccategory = request.form.get("hccategory")
-        employeetype = request.form.get("employeetype")
-        gradecode = request.form.get("gradecode")
-        factory = request.form.get("factory")
-        kieuhopdong = request.form.get("kieuhopdong")
-        ngaybatdau = request.form.get("ngaybatdau")
-        ngayketthuc = request.form.get("ngayketthuc")
-        mucluong = request.form.get("mucluong").replace(',','')
-        phucap = request.form.get("phucap").replace(',','')
-        tienphucap = request.form.get("tienphucap")
-        
-        query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
-        if thechamcong:
-            query += f"The_cham_cong = '{thechamcong}',"
-        else:
-            query += f"The_cham_cong = NULL,"
+        try:
+            trangthailamviec = request.form.get("trangthai")
+            thechamcong = request.form.get("thechamcong")
+            cccd = request.form.get("cccd")
+            ngaycapcccd = request.form.get("ngaycapcccd")
+            hoten = request.form.get("hoten")
+            ngaysinh = request.form.get("ngaysinh")
+            gioitinh = request.form.get("gioitinh")
+            cmt = request.form.get("cmt")
+            quoctich = request.form.get("quoctich")
+            dienthoai = request.form.get("dienthoai")
+            thonxom = request.form.get("thonxom")
+            phuongxa = request.form.get("phuongxa")
+            quanhuyen = request.form.get("quanhuyen")
+            tinhthanhpho = request.form.get("tinhthanhpho")
+            dantoc = request.form.get("dantoc")
+            tongiao = request.form.get("tongiao")
+            hocvan = request.form.get("hocvan")
+            masothue = request.form.get("masothue")
+            nganhang = request.form.get("nganhang")
+            sotaikhoan = request.form.get("sotaikhoan")
+            connho = request.form.get("connho")
+            mst = request.form.get("mst")
+            tenconnho1 = request.form.get("tenconnho1")
+            tenconnho2 = request.form.get("tenconnho2")
+            tenconnho3 = request.form.get("tenconnho3")
+            tenconnho4 = request.form.get("tenconnho4")
+            tenconnho5 = request.form.get("tenconnho5")
+            ngaysinhcon1 = request.form.get("ngaysinhcon1")
+            ngaysinhcon2 = request.form.get("ngaysinhcon2")
+            ngaysinhcon3 = request.form.get("ngaysinhcon3")
+            ngaysinhcon4 = request.form.get("ngaysinhcon4")
+            ngaysinhcon5 = request.form.get("ngaysinhcon5")
+            jobtitlevn = request.form.get("jobtitlevn") 
+            jobtitleen = request.form.get("jobtitleen") 
+            positioncode = request.form.get("positioncode")
+            positioncodedescription = request.form.get("positioncodedescription")
+            chucvu =  request.form.get("chucvu")
+            line = request.form.get("line")
+            department = request.form.get("department")
+            sectioncode = request.form.get("sectioncode")
+            sectiondescription = request.form.get("sectiondescription")
+            hccategory = request.form.get("hccategory")
+            employeetype = request.form.get("employeetype")
+            gradecode = request.form.get("gradecode")
+            factory = request.form.get("factory")
+            kieuhopdong = request.form.get("kieuhopdong")
+            ngaybatdau = request.form.get("ngaybatdau")
+            ngayketthuc = request.form.get("ngayketthuc")
+            mucluong = request.form.get("mucluong").replace(',','')
+            phucap = request.form.get("phucap").replace(',','')
+            tienphucap = request.form.get("tienphucap")
             
-        if cccd: 
-            query += f"CCCD = '{cccd}',"
-        else:
-            query += f"CCCD = NULL,"
-            
-        if ngaycapcccd: 
-            query += f"Ngay_cap = '{ngaycapcccd}',"
-        else:
-            query += f"Ngay_cap = NULL,"
-            
-        if hoten: 
-            query += f"Ho_ten = N'{hoten}',"
-        else:
-            query += f"Ho_ten = NULL,"
-            
-        if ngaysinh: 
-            query += f"Ngay_sinh = '{ngaysinh}',"
-        else:
-            query += f"Ngay_sinh = NULL,"
-            
-        if gioitinh: 
-            query += f"Gioi_tinh = N'{gioitinh}',"
-        else:
-            query += f"Gioi_tinh = NULL,"
+            query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
+            if thechamcong:
+                query += f"The_cham_cong = '{thechamcong}',"
+            else:
+                query += f"The_cham_cong = NULL,"
                 
-        if cmt: 
-            query += f"CMT = N'{cmt}',"
-        else:
-            query += f"CMT = NULL,"   
-            
-        if quoctich: 
-            query += f"Quoc_tich = N'{quoctich}',"
-        else:
-            query += f"Quoc_tich = NULL," 
-            
-        if dienthoai: 
-            query += f"Sdt = N'{dienthoai}',"
-        else:
-            query += f"Sdt = NULL,"
-            
-        if thonxom: 
-            query += f"Thon_xom = N'{thonxom}',"
-        else:
-            query += f"Thon_xom = NULL,"
-            
-        if phuongxa: 
-            query += f"Phuong_xa = N'{phuongxa}',"
-            
-        if quanhuyen: 
-            query += f"Quan_huyen = N'{quanhuyen}',"
-        else:
-            query += f"Quan_huyen = NULL,"
-            
-        if tinhthanhpho: 
-            query += f"Tinh_TP = N'{tinhthanhpho}',"
-        else:
-            query += f"Tinh_TP = NULL,"
-            
-        if dantoc: 
-            query += f"Dan_toc = N'{dantoc}',"
-        else:
-            query += f"Dan_toc = NULL,"
+            if cccd: 
+                query += f"CCCD = '{cccd}',"
+            else:
+                query += f"CCCD = NULL,"
                 
-        if tongiao: 
-            query += f"Ton_giao = N'{tongiao}',"
-        else:
-            query += f"Ton_giao = NULL,"
+            if ngaycapcccd: 
+                query += f"Ngay_cap = '{ngaycapcccd}',"
+            else:
+                query += f"Ngay_cap = NULL,"
                 
-        if hocvan: 
-            query += f"Trinh_do = N'{hocvan}',"
-        else:
-            query += f"Trinh_do = NULL,"
-            
-        if masothue: 
-            query += f"Ma_so_thue = N'{masothue}',"
-        else:
-            query += f"Ma_so_thue = NULL,"   
-            
-        if nganhang: 
-            query += f"Ngan_hang = N'{nganhang}',"
-        else:
-            query += f"Ngan_hang = NULL,"   
-            
-        if sotaikhoan: 
-            query += f"So_tai_khoan = N'{sotaikhoan}',"
-        else:
-            query += f"So_tai_khoan = NULL,"
-            
-        if connho: 
-            query += f"Con_nho = N'{connho}',"
-        else:
-            query += f"Con_nho = NULL,"
+            if hoten: 
+                query += f"Ho_ten = N'{hoten}',"
+            else:
+                query += f"Ho_ten = NULL,"
+                
+            if ngaysinh: 
+                query += f"Ngay_sinh = '{ngaysinh}',"
+            else:
+                query += f"Ngay_sinh = NULL,"
+                
+            if gioitinh: 
+                query += f"Gioi_tinh = N'{gioitinh}',"
+            else:
+                query += f"Gioi_tinh = NULL,"
+                    
+            if cmt: 
+                query += f"CMT = N'{cmt}',"
+            else:
+                query += f"CMT = NULL,"   
+                
+            if quoctich: 
+                query += f"Quoc_tich = N'{quoctich}',"
+            else:
+                query += f"Quoc_tich = NULL," 
+                
+            if dienthoai: 
+                query += f"Sdt = N'{dienthoai}',"
+            else:
+                query += f"Sdt = NULL,"
+                
+            if thonxom: 
+                query += f"Thon_xom = N'{thonxom}',"
+            else:
+                query += f"Thon_xom = NULL,"
+                
+            if phuongxa: 
+                query += f"Phuong_xa = N'{phuongxa}',"
+                
+            if quanhuyen: 
+                query += f"Quan_huyen = N'{quanhuyen}',"
+            else:
+                query += f"Quan_huyen = NULL,"
+                
+            if tinhthanhpho: 
+                query += f"Tinh_TP = N'{tinhthanhpho}',"
+            else:
+                query += f"Tinh_TP = NULL,"
+                
+            if dantoc: 
+                query += f"Dan_toc = N'{dantoc}',"
+            else:
+                query += f"Dan_toc = NULL,"
+                    
+            if tongiao: 
+                query += f"Ton_giao = N'{tongiao}',"
+            else:
+                query += f"Ton_giao = NULL,"
+                    
+            if hocvan: 
+                query += f"Trinh_do = N'{hocvan}',"
+            else:
+                query += f"Trinh_do = NULL,"
+                
+            if masothue: 
+                query += f"Ma_so_thue = N'{masothue}',"
+            else:
+                query += f"Ma_so_thue = NULL,"   
+                
+            if nganhang: 
+                query += f"Ngan_hang = N'{nganhang}',"
+            else:
+                query += f"Ngan_hang = NULL,"   
+                
+            if sotaikhoan: 
+                query += f"So_tai_khoan = N'{sotaikhoan}',"
+            else:
+                query += f"So_tai_khoan = NULL,"
+                
+            if connho: 
+                query += f"Con_nho = N'{connho}',"
+            else:
+                query += f"Con_nho = NULL,"
 
-        if tenconnho1: 
-            query += f"Ten_con_nho_1 = N'{tenconnho1}',"
-        else:
-            query += f"Ten_con_nho_1 = NULL,"
-        
-        if tenconnho2: 
-            query += f"Ten_con_nho_2 = N'{tenconnho2}',"
-        else:
-            query += f"Ten_con_nho_2 = NULL,"
+            if tenconnho1: 
+                query += f"Ten_con_nho_1 = N'{tenconnho1}',"
+            else:
+                query += f"Ten_con_nho_1 = NULL,"
             
-        if tenconnho3: 
-            query += f"Ten_con_nho_3 = N'{tenconnho3}',"
-        else:
-            query += f"Ten_con_nho_3 = NULL,"
+            if tenconnho2: 
+                query += f"Ten_con_nho_2 = N'{tenconnho2}',"
+            else:
+                query += f"Ten_con_nho_2 = NULL,"
+                
+            if tenconnho3: 
+                query += f"Ten_con_nho_3 = N'{tenconnho3}',"
+            else:
+                query += f"Ten_con_nho_3 = NULL,"
+                
+            if tenconnho4: 
+                query += f"Ten_con_nho_4 = N'{tenconnho4}',"
+            else:
+                query += f"Ten_con_nho_4 = NULL,"
             
-        if tenconnho4: 
-            query += f"Ten_con_nho_4 = N'{tenconnho4}',"
-        else:
-            query += f"Ten_con_nho_4 = NULL,"
-        
-        if tenconnho5: 
-            query += f"Ten_con_nho_5 = N'{tenconnho5}',"
-        else:
-            query += f"Ten_con_nho_5 = NULL,"
-        
-        if ngaysinhcon1: 
-            query += f"Ngay_sinh_con_nho_1 = '{ngaysinhcon1}',"
-        else:
-            query += f"Ngay_sinh_con_nho_1 = NULL,"
-        
-        if ngaysinhcon2: 
-            query += f"Ngay_sinh_con_nho_2 = '{ngaysinhcon2}',"
-        else:
-            query += f"Ngay_sinh_con_nho_2 = NULL,"
+            if tenconnho5: 
+                query += f"Ten_con_nho_5 = N'{tenconnho5}',"
+            else:
+                query += f"Ten_con_nho_5 = NULL,"
             
-        if ngaysinhcon3: 
-            query += f"Ngay_sinh_con_nho_3 = '{ngaysinhcon3}',"
-        else:
-            query += f"Ngay_sinh_con_nho_3 = NULL,"
+            if ngaysinhcon1: 
+                query += f"Ngay_sinh_con_nho_1 = '{ngaysinhcon1}',"
+            else:
+                query += f"Ngay_sinh_con_nho_1 = NULL,"
             
-        if ngaysinhcon4: 
-            query += f"Ngay_sinh_con_nho_4 = '{ngaysinhcon4}',"
-        else:
-            query += f"Ngay_sinh_con_nho_4 = NULL,"
+            if ngaysinhcon2: 
+                query += f"Ngay_sinh_con_nho_2 = '{ngaysinhcon2}',"
+            else:
+                query += f"Ngay_sinh_con_nho_2 = NULL,"
+                
+            if ngaysinhcon3: 
+                query += f"Ngay_sinh_con_nho_3 = '{ngaysinhcon3}',"
+            else:
+                query += f"Ngay_sinh_con_nho_3 = NULL,"
+                
+            if ngaysinhcon4: 
+                query += f"Ngay_sinh_con_nho_4 = '{ngaysinhcon4}',"
+            else:
+                query += f"Ngay_sinh_con_nho_4 = NULL,"
+                
+            if ngaysinhcon5: 
+                query += f"Ngay_sinh_con_nho_5 = '{ngaysinhcon5}',"
+            else:
+                query += f"Ngay_sinh_con_nho_5 = NULL,"
             
-        if ngaysinhcon5: 
-            query += f"Ngay_sinh_con_nho_5 = '{ngaysinhcon5}',"
-        else:
-            query += f"Ngay_sinh_con_nho_5 = NULL,"
-        
-        if jobtitlevn: 
-            query += f"Job_title_VN = N'{jobtitlevn}',"
-        else:
-            query += f"Job_title_VN = NULL,"
+            if jobtitlevn: 
+                query += f"Job_title_VN = N'{jobtitlevn}',"
+            else:
+                query += f"Job_title_VN = NULL,"
+                
+            if jobtitleen: 
+                query += f"Job_title_EN = '{jobtitleen}',"
+            else:
+                query += f"Job_title_EN = NULL,"
+                
+            if positioncode: 
+                query += f"Position_code = '{positioncode}',"
+            else:
+                query += f"Position_code = NULL,"
             
-        if jobtitleen: 
-            query += f"Job_title_EN = '{jobtitleen}',"
-        else:
-            query += f"Job_title_EN = NULL,"
+            if positioncodedescription: 
+                query += f"Position_code_description = '{positioncodedescription}',"
+            else:
+                query += f"Position_code_description = NULL,"  
             
-        if positioncode: 
-            query += f"Position_code = '{positioncode}',"
-        else:
-            query += f"Position_code = NULL,"
-        
-        if positioncodedescription: 
-            query += f"Position_code_description = '{positioncodedescription}',"
-        else:
-            query += f"Position_code_description = NULL,"  
-        
-        if chucvu: 
-            query += f"Chuc_vu = '{chucvu}',"
-        else:
-            query += f"Chuc_vu = NULL," 
+            if chucvu: 
+                query += f"Chuc_vu = '{chucvu}',"
+            else:
+                query += f"Chuc_vu = NULL," 
+                
+            if line: 
+                query += f"Line = '{line}',"
+            else:
+                query += f"Line = NULL,"     
             
-        if line: 
-            query += f"Line = '{line}',"
-        else:
-            query += f"Line = NULL,"     
-        
-        if department: 
-            query += f"Department = '{department}',"
-        else:
-            query += f"Department = NULL,"  
+            if department: 
+                query += f"Department = '{department}',"
+            else:
+                query += f"Department = NULL,"  
+                
+            if sectioncode: 
+                query += f"Section_code = '{sectioncode}',"
+            else:
+                query += f"Section_code = NULL,"     
             
-        if sectioncode: 
-            query += f"Section_code = '{sectioncode}',"
-        else:
-            query += f"Section_code = NULL,"     
-        
-        if sectiondescription: 
-            query += f"Section_description = '{sectiondescription}',"
-        else:
-            query += f"Section_description = NULL," 
+            if sectiondescription: 
+                query += f"Section_description = '{sectiondescription}',"
+            else:
+                query += f"Section_description = NULL," 
+                
+            if hccategory: 
+                query += f"Headcount_category = '{hccategory}',"
+            else:
+                query += f"Headcount_category = NULL," 
+                
+            if employeetype: 
+                query += f"Emp_type = '{employeetype}',"
+            else:
+                query += f"Emp_type = NULL," 
+                
+            if gradecode: 
+                query += f"Grade_code = '{gradecode}',"
+            else:
+                query += f"Grade_code = NULL," 
+                
+            if factory: 
+                query += f"Factory = '{factory}',"
+            else:
+                query += f"Factory = NULL,"
+                
+            if kieuhopdong:
+                query += f"Loai_hop_dong = N'{kieuhopdong}',"
+            else:
+                query += f"Loai_hop_dong = NULL,"
+                
+            if ngaybatdau:
+                query += f"Ngay_ky_HD = '{ngaybatdau}',"
+            else:
+                query += f"Ngay_ky_HD = NULL,"
             
-        if hccategory: 
-            query += f"Headcount_category = '{hccategory}',"
-        else:
-            query += f"Headcount_category = NULL," 
+            if ngayketthuc:
+                query += f"Ngay_het_han_HD = '{ngayketthuc}',"
+            else:
+                query += f"Ngay_het_han_HD = NULL,"
+                
+            if mucluong:
+                query += f"Luong_co_ban = '{mucluong}',"
+            else:
+                query += f"Luong_co_ban = NULL,"
+                
+            if phucap:
+                query += f"Phu_cap = N'{phucap}',"
+            else:
+                query += f"Phu_cap = NULL,"
+                
+            if tienphucap:
+                query += f"Tong_phu_cap = '{tienphucap}',"
+            else:
+                query += f"Tong_phu_cap = NULL,"
+            if trangthailamviec:
+                query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
+            else:
+                query += f"trangthailamviec = NULL,"
+            query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
+            conn = pyodbc.connect(used_db)
+            cursor = conn.cursor()
             
-        if employeetype: 
-            query += f"Emp_type = '{employeetype}',"
-        else:
-            query += f"Emp_type = NULL," 
-            
-        if gradecode: 
-            query += f"Grade_code = '{gradecode}',"
-        else:
-            query += f"Grade_code = NULL," 
-            
-        if factory: 
-            query += f"Factory = '{factory}',"
-        else:
-            query += f"Factory = NULL,"
-            
-        if kieuhopdong:
-            query += f"Loai_hop_dong = N'{kieuhopdong}',"
-        else:
-            query += f"Loai_hop_dong = NULL,"
-            
-        if ngaybatdau:
-            query += f"Ngay_ky_HD = '{ngaybatdau}',"
-        else:
-            query += f"Ngay_ky_HD = NULL,"
-          
-        if ngayketthuc:
-            query += f"Ngay_het_han_HD = '{ngayketthuc}',"
-        else:
-            query += f"Ngay_het_han_HD = NULL,"
-            
-        if mucluong:
-            query += f"Luong_co_ban = '{mucluong}',"
-        else:
-            query += f"Luong_co_ban = NULL,"
-            
-        if phucap:
-            query += f"Phu_cap = N'{phucap}',"
-        else:
-            query += f"Phu_cap = NULL,"
-            
-        if tienphucap:
-            query += f"Tong_phu_cap = '{tienphucap}',"
-        else:
-            query += f"Tong_phu_cap = NULL,"
-        if trangthailamviec:
-            query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
-        else:
-            query += f"trangthailamviec = NULL,"
-        query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        
-        cursor.execute(query)
-        conn.commit()
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            flash("Cập nhật thông tin người lao động thành công !!!")
+        except Exception as e:
+            app.logger.info(e)
+            flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
 @app.route("/muc3_3", methods=["GET","POST"])
@@ -2810,12 +2847,15 @@ def inhopdonglaodong():
                                             capbac,
                                             songaythuviec)
             if file:
+                flash("Tải file hợp đồng thành công !!!")
                 return send_file(file, as_attachment=True, download_name="hopdonglaodong.xlsx")
             else:
+                flash("Tải file hợp đồng thất bại !!!")
                 app.logger.info("NO FILE")
                 return redirect("/muc3_3")
         except Exception as e:
             app.logger.info(e)
+            flash("Tải file hợp đồng thất bại !!!")
             return redirect("/muc3_3")   
 
 @app.route("/muc3_4", methods=["GET","POST"])
@@ -2914,7 +2954,7 @@ def danhsachsaphethanhopdong():
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
-        
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
@@ -3017,8 +3057,10 @@ def dieuchuyen():
                                 ngaydieuchuyen,
                                 ghichu
                                 )
+                flash("Điều chuyển thành công !!!")
             except Exception as e:
                 app.logger.info(e)
+                flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
             
         elif loaidieuchuyen == "Nghỉ việc":
@@ -3029,8 +3071,10 @@ def dieuchuyen():
                     ngaydieuchuyen,
                     ghichu
                             )
+                flash("Điều chuyển thành công !!!")
             except Exception as e:
                 app.logger.info(e)
+                flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Nghỉ thai sản":
             try:
@@ -3061,8 +3105,10 @@ def dieuchuyen():
                             ngaydieuchuyen,
                             ghichu
                             )
+                flash("Điều chuyển thành công !!!")
             except Exception as e:
                 app.logger.info(e)
+                flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Thai sản đi làm lại":
             try:
@@ -3093,8 +3139,10 @@ def dieuchuyen():
                             ngaydieuchuyen,
                             ghichu
                             )
+                flash("Điều chuyển thành công !!!")
             except Exception as e:
                 app.logger.info(e)
+                flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         return redirect(f"/muc6_1")
     else:  
@@ -3287,7 +3335,7 @@ def xinnghikhongluong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
-    
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_6", methods=["GET","POST"])
@@ -3312,29 +3360,34 @@ def danhsachxinnghikhac():
                                 pagination=pagination,
                                 count=count,)
     elif request.method == "POST":
-        if 'file' not in request.files:
-            return redirect("/muc7_1_6")
-        file = request.files['file']
-        if file.filename == '':
-            return redirect("/muc7_1_6")
-        if file:
-            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-            filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
-            file.save(filepath)
-            data = pd.read_excel(filepath).to_dict(orient="records")
-            for row in data:
-                if row["Mã số thẻ"]!=np.nan:
-                    try:
-                        themxinnghikhac(
-                            row["Mã công ty"],
-                            int(row["Mã số thẻ"]),
-                            row["Ngày nghỉ"],
-                            int(row["Tổng số phút"]),
-                            row["Loại nghỉ"]
-                        )
-                    except Exception as e:
-                        app.logger.info(e)
-                        break
+        try:
+            if 'file' not in request.files:
+                return redirect("/muc7_1_6")
+            file = request.files['file']
+            if file.filename == '':
+                return redirect("/muc7_1_6")
+            if file:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath).to_dict(orient="records")
+                for row in data:
+                    if row["Mã số thẻ"]!=np.nan:
+                        try:
+                            themxinnghikhac(
+                                row["Mã công ty"],
+                                int(row["Mã số thẻ"]),
+                                row["Ngày nghỉ"],
+                                int(row["Tổng số phút"]),
+                                row["Loại nghỉ"]
+                            )
+                        except Exception as e:
+                            app.logger.info(e)
+                            break
+                flash("Cập nhật xin nghỉ khác thành công !!!")
+        except Exception as e:
+            flash("Cập nhật xin nghỉ khác thất bại !!!")
+            app.logger.info(e)
         return redirect("/muc7_1_6")
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
@@ -3383,7 +3436,7 @@ def dangkytangca():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT,f"tangca_{thoigian}.xlsx"), index=False)
-
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT,f"tangca_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_8", methods=["GET","POST"])
@@ -3472,26 +3525,8 @@ def danhsachphepton():
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), index=False)
-        
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), as_attachment=True)
-    
-@app.route("/muc7_1_10", methods=["GET","POST"])
-@login_required
-@roles_required('hr','sa','gd')
-def capnhathulieuchamcong():
-    if request.method == "GET":
-        return render_template("7_1_10.html", page="7.1.10 Cập nhật dữ liệu chấm công")
-    elif request.method == "POST":
-        if (current_user.macongty == 'NT1' and current_user.masothe in [12579,2833] ) or (current_user.macongty == 'NT' and current_user.masothe in [12579,2833] ):
-            thread = Thread(target=themdulieuchamcong2ngay)
-            thread.start()    
-            return render_template("7_1_10.html", 
-                                page="7.1.10 Cập nhật dữ liệu chấm công", 
-                                messages=["Đang cập nhật dữ liệu chấm công mới nhất, vui lòng đợi khoảng 10 phút ...","Trong lúc cập nhật các phần liên quan sẽ không hoạt động, vui lòng đợi đến khi cập nhật xong !!!"])
-        else:
-            return render_template("7_1_10.html", 
-                                page="7.1.10 Cập nhật dữ liệu chấm công", 
-                                messages=["Bạn không có quyền cập nhật, vui lòng liên hệ HR !!!"])
             
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
@@ -3527,8 +3562,10 @@ def xulykiluat():
         noidung = request.form.get("noidung")
         bienphap = request.form.get("bienphap")
         try:
-            themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap)
+            if themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
+                flash("Thêm biên bản kỷ luật thành công !!!")
         except Exception as ex:
+            flash("Thêm biên bản kỷ luật thất bại !!!")
             app.logger.info(ex)
         return redirect("/muc9_1") 
     
