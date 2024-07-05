@@ -2288,7 +2288,7 @@ def dangkytuyendung():
         mucluongtu = request.form.get("mucluongtu")
         mucluongden = request.form.get("mucluongden")
         mucluong = f"{mucluongtu} - {mucluongden} triệu VNĐ"
-        if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong)
+        if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong):
             flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
         else:
             flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
