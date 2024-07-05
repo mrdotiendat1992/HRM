@@ -106,7 +106,7 @@
         </div>
         <table class="table table-bordered">
             <tr class="table-primary">
-                <th class="sticky_1">STT</th>
+                <th>STT</th>
                 <th class="sticky_2">Họ và tên</th>
                 <th>Vị trí tuyển dụng</th>
                 <th>Số điện thoại</th>
@@ -143,7 +143,7 @@
             {% for user in danhsach %}
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
-                        <td class="sticky_1"><input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">{{ user['ID'] }}</td>
+                        <td><input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">{{ user['ID'] }}</td>
                         <td class="sticky_2">{{ user["Họ tên"] }}</td>
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
