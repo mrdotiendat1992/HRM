@@ -228,7 +228,7 @@ input, select {
         </div>
 
         <hr />
-        <input type="submit" value="Lưu" class="btn btn-primary"/>
+        <input value="Lưu" class="btn btn-primary" onclick="submitForm(this)">
     </form>
     <script>
         function parseDate(dateString) {
@@ -603,7 +603,14 @@ input, select {
             // Set the formatted value back to the input field
             e.target.value = formattedValue;
         });
-
+        function submitForm() {
+            if (window.confirm("Bạn đã chắc chắn các thông tin nhập vào là đúng?")) {
+                this.submit();
+            } else {
+                return false;
+            }
+        }
+        
     </script>
 </div>
 {% endblock content %}

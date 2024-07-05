@@ -1,0 +1,71 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    table, th, td {
+        font-size: 12px;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    #a_target {
+        color: purple;
+    }
+    #b_target {
+        color: green;
+    }
+    #c_target {
+        color: red;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .content {
+        width: auto;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div class="scroll-container">
+    <div class="content">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th rowspan="2" style="vertical-align: middle;">No.</th>
+                    <th rowspan="2" style="vertical-align: middle;">Department</th>
+                    <th rowspan="2" style="vertical-align: middle;">Objectives</th>
+                    <th rowspan="2" style="vertical-align: middle;">Possible measures</th>
+                    <th rowspan="2" style="vertical-align: middle;">Unit of measurement</th>
+                    <th rowspan="2" style="vertical-align: middle;">Measurment Source</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Jan</th>
+                    <th rowspan="2" style="vertical-align: middle;">Feb</th>
+                    <th rowspan="2" style="vertical-align: middle;">Mar</th>
+                    <th rowspan="2" style="vertical-align: middle;">Apr</th>
+                    <th rowspan="2" style="vertical-align: middle;">May</th>
+                    <th rowspan="2" style="vertical-align: middle;">Jun</th>
+                    <th rowspan="2" style="vertical-align: middle;">Jul</th>
+                    <th rowspan="2" style="vertical-align: middle;">Aug</th>
+                    <th rowspan="2" style="vertical-align: middle;">Sep</th>
+                    <th rowspan="2" style="vertical-align: middle;">Oct</th>
+                    <th rowspan="2" style="vertical-align: middle;">Nov</th>
+                    <th rowspan="2" style="vertical-align: middle;">Dec</th>
+                    <th rowspan="2" style="vertical-align: middle;">YTD</th>
+                </tr>
+                <tr class="bg-info">
+                    <th id="a_target">A</th>
+                    <th id="b_target">B</th>
+                    <th id="c_target">C</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+
+
+        </table>
+    </div>
+</div>
+
+{% endblock content %}

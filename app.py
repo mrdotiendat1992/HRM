@@ -1899,7 +1899,7 @@ def laydanhsachkpi(mst,macongty):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from KPI_Name where MST='{mst}' and  Nha_may='{macongty}'"
+        query = f"select * from KPI_Name where MST='{mst}' and  Nha_may='{macongty}' and Trang_thai = '1'"
         rows = cursor.execute(query).fetchall()
         result = []
         for row in rows:
@@ -1916,7 +1916,7 @@ def laydanhsachkpi(mst,macongty):
         return result
     except Exception as e:
         app.logger.info(e)
-        return None  
+        return []  
 
 def inputkpi(macongty,
                 masothe,
@@ -2880,13 +2880,13 @@ def nhapkpi():
     danhsachdong = laydanhsachkpi(current_user.masothe,current_user.macongty)
     month = datetime.now().month-1
     year = datetime.now().year
-    return render_template("5_1_1.html",page="Input Performance",danhsachdong=danhsachdong,month = month, year= year)
+    return render_template("5_1_1.html",page="Performance Indicators",danhsachdong=danhsachdong,month = month, year= year)
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
 def danhgiakpi():
-    return render_template("5_1_2.html",page="Dashboard Performance")
+    return render_template("5_1_2.html",page="Performance Report")
     
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
@@ -4064,9 +4064,9 @@ def thukykiemtradiemdanhbu():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
-            if mstdiemdanh==mstduyet:
-                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
-                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            # if mstdiemdanh==mstduyet:
+            #     flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+            #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
@@ -4134,9 +4134,9 @@ def thukykiemtraxinnghiphep():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
-            if mstxinnghiphep==mstduyet:
-                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
-                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
+            # if mstxinnghiphep==mstduyet:
+            #     flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+            #     return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghiphep(id)
@@ -4206,9 +4206,9 @@ def thukykiemtraxinnghikhongluong():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
-            if mstxinnghikhongluong==mstduyet:
-                flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
-                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            # if mstxinnghikhongluong==mstduyet:
+            #     flash(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+            #     return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghikhongluong(id)
