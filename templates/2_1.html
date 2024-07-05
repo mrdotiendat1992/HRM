@@ -6,7 +6,7 @@
     }
     select, input, label {
         font-size: 10px;
-        width: 60px
+        width: auto;
     }
     .modal {
         display: none;
@@ -144,7 +144,7 @@
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
                         <td class="sticky_1"><input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">{{ user['ID'] }}</td>
-                        <td class="sticky_2"><b>{{ user["Họ tên"] }}</b></td>
+                        <td class="sticky_2">{{ user["Họ tên"] }}</td>
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
                         {% if user["Trạng thái"] == "Đạt" %}
