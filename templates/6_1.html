@@ -177,7 +177,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="save-button" style="text-align: center;">
-                            <td colspan="4"><input type="submit" class="btn btn-primary" value="Điều chuyển"></input></td>
+                            <td colspan="4"><input class="btn btn-primary" value="Điều chuyển" onclick="kiemtradieuchuyen(this)"></input></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -365,7 +365,77 @@
                 console.log(error);
             });
         })
-
+        function kiemtradieuchuyen() {      
+            var masothe = document.getElementById("masothe").value     
+            var vitricu = document.getElementById("vitricu").value
+            var vitrimoi = document.getElementById("vitrimoi").value
+            var chuyencu = document.getElementById("chuyencu").value
+            var chuyenmoi = document.getElementById("chuyenmoi").value
+            var gradecodecu = document.getElementById("gradecodecu").value
+            var gradecodemoi = document.getElementById("gradecodemoi").value
+            var sectioncodecu = document.getElementById("sectioncodecu").value
+            var sectioncodemoi = document.getElementById("sectioncodemoi").value
+            var hccategorycu = document.getElementById("hccategorycu").value
+            var hccategorymoi = document.getElementById("hccategorymoi").value
+            var departmentcu = document.getElementById("departmentcu").value
+            var departmentmoi = document.getElementById("departmentmoi").value
+            var sectiondescriptioncu = document.getElementById("sectiondescriptioncu").value
+            var sectiondescriptionmoi = document.getElementById("sectiondescriptionmoi").value
+            var employeetypecu = document.getElementById("employeetypecu").value
+            var employeetypemoi = document.getElementById("employeetypemoi").value
+            var positioncodecu = document.getElementById("positioncodecu").value
+            var positioncodemoi = document.getElementById("positioncodemoi").value
+            var positioncodedescriptioncu = document.getElementById("positioncodedescriptioncu").value
+            var positioncodedescriptionmoi = document.getElementById("positioncodedescriptionmoi").value
+            var loaidieuchuyen = document.getElementById("loaidieuchuyen").value
+            var ngaydieuchuyen = document.getElementById("ngaydieuchuyen").value
+            var ghichu = document.getElementById("ghichu").value
+            if (chuyencu == chuyenmoi) {
+                alert("Chuyền không được trùng nhau !!!")
+                return false
+            }
+            if (masothe == "") {
+                alert("Vui lòng nhập mã số thẻ !!!")
+                return false
+            }
+            if (ngaydieuchuyen == "") {
+                alert("Vui lòng nhập ngày điều chuyển !!!")
+                return false
+            }
+            if (loaidieuchuyen == "Chuyển vị trí") {
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " từ vị trí "+vitricu+" sang vị trí "+vitrimoi + " từ ngày " + ngaydieuchuyen + " ?"))
+                {
+                    this.submit()
+                }
+                else
+                {
+                    return false
+                }
+            }
+            else if (loaidieuchuyen=="Nghỉ thai sản") { 
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " sang trạng thái Nghỉ thai sản từ ngày " + ngaydieuchuyen + " ?"))
+                {
+                    this.submit()
+                }
+                else
+                {
+                    return false
+                }
+            } else if (loaidieuchuyen=="Nghỉ việc") { 
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " sang trạng thái Nghỉ việc vì lý do " + ghichu + "từ ngày " + ngaydieuchuyen + " ?"))
+                {
+                    this.submit()
+                }
+                else
+                {
+                    this.submit()
+                }
+            }
+            else {
+                alert("Vui lòng chọn loại điều chuyển")
+                return false
+            }
+        }
     </script>
 </div>
 {% endblock content %}

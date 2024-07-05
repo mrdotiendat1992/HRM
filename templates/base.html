@@ -424,6 +424,16 @@
     <!-- Page level custom scripts -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
+        setTimeout(function() {
+            var alert = document.querySelector('.alert');
+            if (alert) {
+                alert.classList.remove('show');
+                alert.classList.add('fade');
+                setTimeout(function() {
+                    alert.remove();
+                }, 500); // Wait for the fade-out transition to complete
+            }
+        }, 5000); // 5 seconds
     </script>
 </body>
 

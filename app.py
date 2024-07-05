@@ -2963,7 +2963,7 @@ def dieuchuyen():
                                 )
             except Exception as e:
                 app.logger.info(e)
-                return redirect(f"/muc6_2?mst={mst}")
+                return redirect(f"/muc6_1")
             
         elif loaidieuchuyen == "Nghỉ việc":
             try:
@@ -2975,7 +2975,7 @@ def dieuchuyen():
                             )
             except Exception as e:
                 app.logger.info(e)
-                return redirect(f"/muc6_2?mst={mst}")
+                return redirect(f"/muc6_1")
         else:
             try:
                 dichuyennghithaisan(mst,
@@ -3007,8 +3007,8 @@ def dieuchuyen():
                             )
             except Exception as e:
                 app.logger.info(e)
-                return redirect(f"/muc6_2?mst={mst}")
-        return redirect(f"/muc6_2?mst={mst}")
+                return redirect(f"/muc6_1")
+        return redirect(f"/muc6_1")
     else:  
         cacvitri= laycacvitri()
         return render_template("6_1.html",
