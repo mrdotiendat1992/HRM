@@ -19,7 +19,7 @@ input, select {
 }
 
 .content {
-    width: 1500px;
+    width: 100%;
 }
 .pagination {
     font-size: 10px;
@@ -100,8 +100,6 @@ th.sticky {
                     <th>Phép tồn</th>
                     <th>Phút nghỉ không lương</th>
                     <th>Phút nghỉ khác</th>
-                    <th>Email thư kí</th>
-                    <th>Email trưởng bộ phận</th>
                 </tr>
             </thead>
             <tbody>
@@ -129,8 +127,6 @@ th.sticky {
                     <td>{{row["Phép tồn"]}}</td>
                     <td>{{row["Phút nghỉ không lương"]}}</td>
                     <td>{{row["Phút nghỉ khác"]}}</td>
-                    <td>{{row["Email thư ký"]}}</td>
-                    <td>{{row["Email trưởng bộ phận"]}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
