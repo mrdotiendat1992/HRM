@@ -48,9 +48,11 @@
                 </div>
                 <div class="form-group">
                     <select id="loaidieuchuyen" name="loaidieuchuyen">
+                        <option value="">Chọn</option>
                         <option value="Chuyển vị trí">Chuyển vị trí</option>
                         <option value="Nghỉ thai sản">Nghỉ thai sản</option>
                         <option value="Nghỉ việc">Nghỉ việc</option>
+                        <option value="Thai sản đi làm lại">Thai sản đi làm lại</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -177,7 +179,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="save-button" style="text-align: center;">
-                            <td colspan="4"><input class="btn btn-primary" value="Điều chuyển" onclick="kiemtradieuchuyen(this)"></input></td>
+                            <td colspan="4"><input class="btn btn-primary" type="submit" value="Điều chuyển" onclick="return kiemtradieuchuyen()"></input></td>
                         </tr>
                     </tfoot>
                 </table>
@@ -405,7 +407,8 @@
             if (loaidieuchuyen == "Chuyển vị trí") {
                 if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " từ vị trí "+vitricu+" sang vị trí "+vitrimoi + " từ ngày " + ngaydieuchuyen + " ?"))
                 {
-                    this.submit()
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
                 }
                 else
                 {
@@ -415,7 +418,8 @@
             else if (loaidieuchuyen=="Nghỉ thai sản") { 
                 if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " sang trạng thái Nghỉ thai sản từ ngày " + ngaydieuchuyen + " ?"))
                 {
-                    this.submit()
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
                 }
                 else
                 {
@@ -424,10 +428,21 @@
             } else if (loaidieuchuyen=="Nghỉ việc") { 
                 if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " sang trạng thái Nghỉ việc vì lý do " + ghichu + "từ ngày " + ngaydieuchuyen + " ?"))
                 {
-                    this.submit()
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
                 }
                 else
                 {
+                    return false
+                }
+            }
+            else if (loaidieuchuyen=="Thai sản đi làm lại") {
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " từ trạng thái nghỉ thai sản sang trạng thái Đang làm việc từ ngày " + ngaydieuchuyen + " ?")){
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
+                } 
+                else 
+                {   
                     return false
                 }
             }

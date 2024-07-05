@@ -233,6 +233,50 @@ def dichuyennghithaisan(mst,
     except Exception as e:
         app.logger.info(e)
         return
+
+def dichuyenthaisandilamlai(mst,
+                            loaidieuchuyen,
+                            vitricu,
+                            vitrimoi,
+                            chuyencu,
+                            chuyenmoi,
+                            gradecodecu,
+                            gradecodemoi,
+                            sectioncodecu,
+                            sectioncodemoi,
+                            hccategorycu,
+                            hccategorymoi,
+                            departmentcu,
+                            departmentmoi,
+                            sectiondescriptioncu,
+                            sectiondescriptionmoi,
+                            employeetypecu,
+                            employeetypemoi,
+                            positioncodedescriptioncu,
+                            positioncodedescriptionmoi,
+                            positioncodecu,
+                            positioncodemoi,
+                            vitriencu,
+                            vitrienmoi,
+                            ngaydieuchuyen,
+                            ghichu
+                            ):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        truocngaydilamlai = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
+        query = f"""
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL)
+            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc' WHERE MST = '{mst}' AND Factory = '{current_user.macongty} AND Ghi_chu=NULL
+            UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaydilamlai}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
+            INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Đang làm việc')
+            """    
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        app.logger.info(e)
+        return
     
 def inhopdongtheomau(kieuhopdong,
                            mst,
@@ -2976,9 +3020,41 @@ def dieuchuyen():
             except Exception as e:
                 app.logger.info(e)
                 return redirect(f"/muc6_1")
-        else:
+        elif loaidieuchuyen=="Nghỉ thai sản":
             try:
                 dichuyennghithaisan(mst,
+                            loaidieuchuyen,
+                            vitricu,
+                            vitrimoi,
+                            chuyencu,
+                            chuyenmoi,
+                            gradecodecu,
+                            gradecodemoi,
+                            sectioncodecu,
+                            sectioncodemoi,
+                            hccategorycu,
+                            hccategorymoi,
+                            departmentcu,
+                            departmentmoi,
+                            sectiondescriptioncu,
+                            sectiondescriptionmoi,
+                            employeetypecu,
+                            employeetypemoi,
+                            positioncodedescriptioncu,
+                            positioncodedescriptionmoi,
+                            positioncodecu,
+                            positioncodemoi,
+                            vitriencu,
+                            vitrienmoi,
+                            ngaydieuchuyen,
+                            ghichu
+                            )
+            except Exception as e:
+                app.logger.info(e)
+                return redirect(f"/muc6_1")
+        elif loaidieuchuyen=="Thai sản đi làm lại":
+            try:
+                dichuyenthaisandilamlai(mst,
                             loaidieuchuyen,
                             vitricu,
                             vitrimoi,

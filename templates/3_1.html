@@ -605,7 +605,8 @@ input, select {
         });
         function submitForm() {
             if (window.confirm("Bạn đã chắc chắn các thông tin nhập vào là đúng?")) {
-                this.submit();
+                alert("Thêm người lao động thành công");
+                return true;
             } else {
                 return false;
             }
