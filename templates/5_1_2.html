@@ -24,12 +24,28 @@
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
-    <form action = "/upload_file_kpi" method = "POST" enctype = "multipart/form-data">
-        <input type = "file" name = "file" /> 
-        <input type = "submit" class="btn btn-success" value = "Upload file" />
+    <form method="get">
+        <div class="form-group">
+            <select id="employee" name="employee" onchange="this.form.submit()">
+                <option value="NT1">NT1</option>
+                <option value="NT2">NT2</option>
+            </select>
+            <label for="employee">Employee</label>
+            <select id="employee" name="employee" onchange="this.form.submit()">
+                <option value="NT1-345-Phạm Thị Vân Anh">Phạm Thị Vân Anh</option>
+                <option value="NT1-345-Phạm Thị Vân Anh">Nguyễn Thị Thắng</option>
+                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hiền</option>
+                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hương Lan</option>
+                <option value="NT1-345-Phạm Thị Vân Anh">Nguyễn Thị Thắng</option>
+                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hương Lan</option>
+            </select>
+            <label for="month">Month</label>
+            <input type="text" id="month" name="month" value="{{ request.args.get('month', '') }}" onchange="this.form.submit()"></input>
+            <label for="year">Year</label>
+            <input type="text" id="year" name="year" value="{{ request.args.get('year', '') }}" onchange="this.form.submit()"></input>
+        </div>
     </form>
     <hr />
-    <h5><b>Last data approved</b></h5>
     <table class="table table-bordered">
         <thead>
             <tr class="bg-primary">
@@ -42,6 +58,7 @@
                 <th colspan="3">Target</th>
                 <th rowspan="2" style="vertical-align: middle;">Month</th>
                 <th rowspan="2" style="vertical-align: middle;">Year</th>
+                <th rowspan="2" style="vertical-align: middle;">Action</th>
             </tr>
             <tr class="bg-info">
                 <th class="a_target">A</th>

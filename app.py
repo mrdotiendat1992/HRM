@@ -2044,7 +2044,7 @@ def admin_template():
             users_paginated = Users.query.filter(Users.hoten.like(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
-    cacrole= ['sa','user','hr','gd','luong','tnc','td']
+    cacrole= ['sa','user','hr','gd','luong','tnc','td','tbp']
     return render_template('admin.html', users=users_paginated,cacrole=cacrole)
 
 @app.route('/register', methods=["POST"])
@@ -2924,13 +2924,25 @@ def nhapkpi():
     danhsachdong = laydanhsachkpi(current_user.masothe,current_user.macongty)
     month = datetime.now().month-1
     year = datetime.now().year
-    return render_template("5_1_1.html",page="Performance Indicators",danhsachdong=danhsachdong,month = month, year= year)
+    return render_template("5_1_1.html",page="Upload KPI",danhsachdong=danhsachdong,month = month, year= year)
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
-def danhgiakpi():
-    return render_template("5_1_2.html",page="Performance Report")
+def duyetkpi():
+    return render_template("5_1_2.html",page="Approve KPI")
+
+@app.route("/muc5_1_3", methods=["GET","POST"])
+@login_required
+@roles_required('sa','gd','tbp')
+def nhapthucte():
+    return render_template("5_1_3.html",page="Input Actual Result")
+
+@app.route("/muc5_1_4", methods=["GET","POST"])
+@login_required
+@roles_required('sa','gd','tbp')
+def baocaokpi():
+    return render_template("5_1_4.html",page="Performance Report")
     
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
