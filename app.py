@@ -2964,13 +2964,13 @@ def duyetkpi():
 @app.route("/muc5_1_3", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
-def nhapthucte():
+def baocaocanam():
     return render_template("5_1_3_1.html",page="Performance Report All Year")
 
 @app.route("/muc5_1_3_2", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
-def nhapthucte():
+def baocaoytd():
     return render_template("5_1_3_2.html",page="Performance Report Year to date")
 
 
