@@ -1382,11 +1382,8 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         if lido:
             query += f"AND Ly_do LIKE N'%{lido}%' "   
         if trangthai:
-            query += f"AND Trang_thai LIKE N'%{trangthai}%' "   
-            
+            query += f"AND Trang_thai LIKE N'%{trangthai}%' "    
         query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
-        
-        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -1414,14 +1411,6 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         if trangthai:
             query += f"AND Trang_thai LIKE N'%{trangthai}%'"
         query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
-        if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not lydo and not trangthai:
-            query = f"""
-                        SELECT *
-                        FROM HR.dbo.DS_Xin_nghi_phep
-                        WHERE Nha_may = '{current_user.macongty}'
-                        ORDER BY Ngay_nghi_phep DESC, MST ASC;
-                    """
-        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
