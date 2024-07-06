@@ -20,70 +20,142 @@
         font-weight: bold;
         color: red;
     }
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: auto;
+    }
+    th.sticky1 {
+        position: sticky;
+        left: 0;
+        z-index: 10;
+        background-color: #000099;
+    }
+    th.sticky2 {
+        position: sticky;
+        left: 80px;
+        z-index: 10;
+        background-color: #000099;
+    }
+    th.sticky3 {
+        position: sticky;
+        left: 135px;
+        z-index: 10;
+        background-color: #000099;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container-fluid">
-    <form method="get">
-        <div class="form-group">
-            <select id="employee" name="employee" onchange="this.form.submit()">
-                <option value="NT1">NT1</option>
-                <option value="NT2">NT2</option>
-            </select>
-            <label for="employee">Employee</label>
-            <select id="employee" name="employee" onchange="this.form.submit()">
-                <option value="NT1-345-Phạm Thị Vân Anh">Phạm Thị Vân Anh</option>
-                <option value="NT1-345-Phạm Thị Vân Anh">Nguyễn Thị Thắng</option>
-                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hiền</option>
-                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hương Lan</option>
-                <option value="NT1-345-Phạm Thị Vân Anh">Nguyễn Thị Thắng</option>
-                <option value="NT1-345-Phạm Thị Vân Anh">Vũ Thị Hương Lan</option>
-            </select>
-            <label for="month">Month</label>
-            <input type="text" id="month" name="month" value="{{ request.args.get('month', '') }}" onchange="this.form.submit()"></input>
-            <label for="year">Year</label>
-            <input type="text" id="year" name="year" value="{{ request.args.get('year', '') }}" onchange="this.form.submit()"></input>
-        </div>
-    </form>
-    <hr />
-    <table class="table table-bordered">
-        <thead>
-            <tr class="bg-primary">
-                <th rowspan="2" style="vertical-align: middle;">No.</th>
-                <th rowspan="2" style="vertical-align: middle;">Department</th>
-                <th rowspan="2" style="vertical-align: middle;">Objectives</th>
-                <th rowspan="2" style="vertical-align: middle;">Possible measures</th>
-                <th rowspan="2" style="vertical-align: middle;">Unit of measurement</th>
-                <th rowspan="2" style="vertical-align: middle;">Measurement Source</th>
-                <th colspan="3">Target</th>
-                <th rowspan="2" style="vertical-align: middle;">Month</th>
-                <th rowspan="2" style="vertical-align: middle;">Year</th>
-                <th rowspan="2" style="vertical-align: middle;">Action</th>
-            </tr>
-            <tr class="bg-info">
-                <th class="a_target">A</th>
-                <th class="b_target">B</th>
-                <th class="c_target">C</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for row in danhsachdong %}
-            <tr data-info='{{ row  | safe }}'>
-                <td>{{loop.index}}</td>
-                <td>{{row["Department"]}}</td>
-                <td>{{row["Objective"]}}</td>
-                <td>{{row["Possible measures"]}}</td>
-                <td>{{row["Unit of measurement"]}}</td>
-                <td>{{row["Measurement source"]}}</td>                
-                <td class="a_target">{{row["A target"]}}</td>
-                <td class="b_target">{{row["B target"]}}</td>
-                <td class="c_target">{{row["C target"]}}</td>
-                <td>{{month}}</td>
-                <td>{{year}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="scroll-container">
+    <div class="content">
+        <form method="get">
+            <div class="form-group">
+                <select id="employee" name="employee" onchange="this.form.submit()">
+                    <option value="NT1">NT1</option>
+                    <option value="NT2">NT2</option>
+                </select>
+                <label for="employee">Employee</label>
+                <select id="pics" name="pics" onchange="this.form.submit()"></select>
+            </div>
+        </form>
+        <hr />
+        <table class="table table-bordered">
+            <thead>
+                <tr class="bg-primary">
+                    <th rowspan="3" style="vertical-align: middle;">No.</th>
+                    <th rowspan="3" style="vertical-align: middle;" class="sticky1">Company code</th>
+                    <th rowspan="3" style="vertical-align: middle;" class="sticky2">PIC Code</th>
+                    <th rowspan="3" style="vertical-align: middle;" class="sticky3">PIC Name</th>
+                    <th rowspan="3" style="vertical-align: middle;">Department</th>
+                    <th rowspan="3" style="vertical-align: middle;">Objectives</th>
+                    <th rowspan="3" style="vertical-align: middle;">Possible measures</th>
+                    <th rowspan="3" style="vertical-align: middle;">Unit of measurement</th>
+                    <th rowspan="3" style="vertical-align: middle;">Measurement Source</th>
+                    <th colspan="4">January</th>
+                    <th colspan="4">February</th>
+                    <th colspan="4">March</th>
+                    <th colspan="4">April</th>
+                    <th colspan="4">May</th>
+                    <th colspan="4">June</th>
+                    <th colspan="4">July</th>
+                    <th colspan="4">August</th>
+                    <th colspan="4">September</th>
+                    <th colspan="4">October</th>
+                    <th colspan="4">November</th>
+                    <th colspan="4">December</th>
+                </tr>
+                <tr class="bg-primary">
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                    <th colspan="3">Target</th>
+                    <th rowspan="2" style="vertical-align: middle;">Actual</th>
+                </tr>
+                <tr class="bg-info">
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                    <th class="a_target">A</th>
+                    <th class="b_target">B</th>
+                    <th class="c_target">C</th>
+                </tr>
+            </thead>
+            <tbody>
+
+            </tbody>
+        </table>
+    </div>
 </div>
 <script>
     // Function to format numbers with thousand separators

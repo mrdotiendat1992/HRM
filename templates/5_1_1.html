@@ -3,10 +3,14 @@
 <style>
     table, th, td {
         font-size: 12px;
-    }
-    th, td {
         text-align: center;
+        justify-content: center;
+    }
+    th {
         color: white;
+    }
+    a {
+        margin-left: 30px;
     }
     .a_target {
         font-weight: bold;
@@ -32,12 +36,15 @@
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <form action = "/upload_file_kpi" method = "POST" enctype = "multipart/form-data">
-            <input type = "file" name = "file" /> 
-            <input type = "submit" class="btn btn-success" value = "Upload file" />
-        </form>
+        <div style="display: flex; align-items: center;">
+            <form method = "POST" enctype = "multipart/form-data">
+                <input type = "file" name = "file" /> 
+                <input type = "submit" class="btn btn-success" value = "Upload file" />
+            </form>
+            <a class="btn btn-primary" href="/taifilemaukp">KPI Report sample</a>
+        </div>
         <hr />
-        <h5><b>Last data approved</b></h5>
+        <h5><b>Waiting for approval</b></h5>
         <table class="table table-bordered">
             <thead>
                 <tr class="bg-primary">

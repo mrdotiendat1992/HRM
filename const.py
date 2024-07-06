@@ -25,6 +25,8 @@ FILE_MAU_DANGKY_DOICA_NHOM = os.path.join(os.path.dirname(__file__), r'static/up
 
 FILE_MAU_DANGKY_XINNGHIKHAC = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/xinnghikhac/xinnghikhac.xlsx') 
 
+FILE_MAU_DANGKY_KPI = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/kpi/Kpi report sample.xlsx') 
+
 DANHSACH_MST_QUANLY = ['13186', # Huy
                        '12579', # Đạt
                        '04581', # Quế

@@ -1364,7 +1364,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
         if mst:
             query += f"AND MST LIKE '%{mst}%' "
         if hoten:
@@ -1395,7 +1395,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
@@ -1422,7 +1422,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
@@ -2957,7 +2957,7 @@ def nhapkpi():
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
 @login_required
-@roles_required('sa','gd','tbp')
+@roles_required('sa','gd')
 def duyetkpi():
     return render_template("5_1_2.html",page="Approve KPI")
 
@@ -2965,13 +2965,15 @@ def duyetkpi():
 @login_required
 @roles_required('sa','gd','tbp')
 def nhapthucte():
-    return render_template("5_1_3.html",page="Input Actual Result")
+    return render_template("5_1_3_1.html",page="Performance Report All Year")
 
-@app.route("/muc5_1_4", methods=["GET","POST"])
+@app.route("/muc5_1_3_2", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
-def baocaokpi():
-    return render_template("5_1_4.html",page="Performance Report")
+def nhapthucte():
+    return render_template("5_1_3_2.html",page="Performance Report Year to date")
+
+
     
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
@@ -4375,44 +4377,17 @@ def quanlypheduyetnghikhongluong():
             flash(f"Lỗi quản lý phê duyệt xin nghỉ không lương: {e}")
             return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
   
-@app.route("/themdulieukpi", methods=["POST"])
-def themdulieukpi():
-    try:
-        json_data = request.get_json()
-        macongty = json_data[0]
-        masothe = json_data[1]
-        hoten = json_data[2]
-        for row in json_data[3:]:
-            department = row['department']
-            objectives = row['objectives']
-            possibleMeasures = row['possibleMeasures']
-            unitOfMeasurement = row['unitOfMeasurement']
-            measurementSource = row['measurementSource']
-            aTarget = row['aTarget']
-            bTarget = row['bTarget']
-            cTarget = row['cTarget']
-            month = row['month']
-            year = row['year']
-            actualResult = row['actualResult']
-            inputkpi(macongty,
-                     masothe,
-                     hoten,
-                     department,
-                     objectives,
-                     possibleMeasures,
-                     unitOfMeasurement,
-                     measurementSource,
-                     aTarget,
-                     bTarget,
-                     cTarget,
-                     month,
-                     year,
-                     actualResult)
-        
-        return {"status": "success"}, 200
-    except Exception as e:
-        app.logger.info(e)
-        return {"status":"failed"}, 400 
+@app.route("/taifilemaukp", methods=["GET"])
+def taifilemaukp():
+    if request.method == "GET":
+        try:
+            file = FILE_MAU_DANGKY_KPI
+            return send_file(file, as_attachment=True)
+            
+        except Exception as e:
+            app.logger.info(e)
+            flash("Download file error !!!")
+            return redirect("/muc5_1_1")
       
 if __name__ == "__main__":
     app.logger.info("Khoi dong phan mem ...")
