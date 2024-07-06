@@ -1364,27 +1364,27 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
+        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
         if mst:
-            query += f"AND MST LIKE '%{mst}%'"
+            query += f"AND MST LIKE '%{mst}%' "
         if hoten:
-            query += f"AND Ho_ten LIKE N'%{hoten}%'"
+            query += f"AND Ho_ten LIKE N'%{hoten}%' "
         if chucvu:
-            query += f"AND Chuc_vu LIKE N'%{chucvu}%'"
+            query += f"AND Chuc_vu LIKE N'%{chucvu}%' "
         if chuyen:
-            query += f"AND Line LIKE N'%{chuyen}%'"
+            query += f"AND Line LIKE N'%{chuyen}%' "
         if bophan:
-            query += f"AND Bo_phan LIKE N'%{bophan}%'"
+            query += f"AND Bo_phan LIKE N'%{bophan}%' "
         if loaidiemdanh:
-            query += f"AND Loai_diem_danh LIKE N'%{loaidiemdanh}%'"
+            query += f"AND Loai_diem_danh LIKE N'%{loaidiemdanh}%' "
         if ngaydiemdanh:
-            query += f"AND Ngay_diem_danh = '{ngaydiemdanh}'"    
+            query += f"AND Ngay_diem_danh = '{ngaydiemdanh}' "    
         if lido:
-            query += f"AND Ly_do LIKE N'%{lido}%'"   
+            query += f"AND Ly_do LIKE N'%{lido}%' "   
         if trangthai:
-            query += f"AND Trang_thai LIKE N'%{trangthai}%'"   
+            query += f"AND Trang_thai LIKE N'%{trangthai}%' "   
             
-        query += " ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
+        query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
         
         
         rows = cursor.execute(query).fetchall()
@@ -1398,7 +1398,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
+        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
@@ -1433,7 +1433,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
