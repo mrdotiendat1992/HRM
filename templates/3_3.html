@@ -77,8 +77,8 @@ input, select {
             <select id="kieuhopdong" name="kieuhopdong" onchange="showFields()">
                 <option value=""></option>
                 <option value="HĐ thử việc">HĐ thử việc</option>
-                <option value="HĐ có thời hạn lần 1">HĐ có thời hạn lần 1</option>
-                <option value="HĐ có thời hạn lần 2">HĐ có thời hạn lần 2</option>
+                <option value="HĐ có thời hạn 28 ngày">HĐ có thời hạn 28 ngày</option>
+                <option value="HĐ có thời hạn 1 năm">HĐ có thời hạn 1 năm</option>
                 <option value="HĐ vô thời hạn">HĐ vô thời hạn</option>
             </select>
             <label for="soNgay" id="nhanSoNgay" hidden>Số ngày</label>
@@ -126,7 +126,7 @@ input, select {
                 ngayBatDauLabel.hidden = false;
                 ngayKetThuc.hidden = false;
                 ngayKetThucLabel.hidden = false;
-            } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+            } else if (kieuhopdong === "HĐ có thời hạn 28 ngày" || kieuhopdong === "HĐ có thời hạn 1 năm") {
                 soNgay.hidden = true;
                 soNgayLabel.hidden = true;
                 soNgay.value = "";
@@ -169,11 +169,13 @@ input, select {
                 if (kieuhopdong === "HĐ thử việc" && soNgay) {
                     endDate = new Date(startDate);
                     endDate.setDate(startDate.getDate() + parseInt(soNgay)-1);
-                } else if (kieuhopdong === "HĐ có thời hạn lần 1" || kieuhopdong === "HĐ có thời hạn lần 2") {
+                } else if (kieuhopdong === "HĐ có thời hạn 28 ngày") {
+                    endDate = new Date(startDate);
+                    endDate.setDate(startDate.getDate()+27);
+                } else if (kieuhopdong === "HĐ có thời hạn 1 năm") {
                     endDate = new Date(startDate);
                     endDate.setDate(startDate.getDate()+364);
                 }
-
                 if (endDate) {
                     ngayKetThuc.value = endDate.toISOString().split('T')[0];
                 } else {

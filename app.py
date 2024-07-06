@@ -280,27 +280,27 @@ def dichuyenthaisandilamlai(mst,
         return
     
 def inhopdongtheomau(kieuhopdong,
-                           mst,
-                           ngaylamhopdong,
-                           thanglamhopdong,
-                           namlamhopdong,
-                           ngayketthuchopdong,
-                           thangketthuchopdong,
-                           namketthuchopdong,
-                           tennhanvien,
-                           ngaysinh,
-                           gioitinh,
-                           thuongtru,
-                           tamtru,
-                           cccd,
-                           ngaycapcccd,
-                           mucluong,
-                           phucap,
-                           tongphucap,
-                           chucvu,
-                           bophan,
-                           capbac,
-                           songaythuviec):   
+                    mst,
+                    ngaylamhopdong,
+                    thanglamhopdong,
+                    namlamhopdong,
+                    ngayketthuchopdong,
+                    thangketthuchopdong,
+                    namketthuchopdong,
+                    tennhanvien,
+                    ngaysinh,
+                    gioitinh,
+                    thuongtru,
+                    tamtru,
+                    cccd,
+                    ngaycapcccd,
+                    mucluong,
+                    phucap,
+                    tongphucap,
+                    chucvu,
+                    bophan,
+                    capbac,
+                    songaythuviec):   
     
     try:
         if kieuhopdong == "HĐ thử việc":
@@ -326,7 +326,7 @@ def inhopdongtheomau(kieuhopdong,
                         else:
                             sheet['G43'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_TO3_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_TO2_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
@@ -342,7 +342,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
-                        sheet['E21'] = f"{cccd}"
+                        sheet['D21'] = cccd
                         sheet['L21'] = ngaycapcccd
                         sheet['H24'] = f"Thử việc {songaythuviec} ngày"
                         sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
@@ -353,7 +353,7 @@ def inhopdongtheomau(kieuhopdong,
                         else:
                             sheet['G43'] = "Không" 
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_DO3_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_DO2_{mst}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
@@ -389,7 +389,88 @@ def inhopdongtheomau(kieuhopdong,
                 except Exception as e:
                     app.logger.info(e)
                     return None
-        elif kieuhopdong == "HĐ có thời hạn lần 1" or kieuhopdong == "HĐ có thời hạn lần 2":
+        elif kieuhopdong == "HĐ có thời hạn 28 ngày":
+            if current_user.macongty == "NT1":
+                if capbac in ["O2","O1","M3","M2","M1"]:
+                    try:
+                        workbook = openpyxl.load_workbook(FILE_MAU_HDNH_NT1_O2_TROLEN)
+                        sheet = workbook.active
+                        sheet['E4'] = f'Số: LC28D/{mst}'
+                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                        sheet['D18'] = tennhanvien
+                        sheet['E19'] = ngaysinh
+                        sheet['Q19'] = gioitinh
+                        sheet['F20'] = thuongtru
+                        sheet['B21'] = f"Số CCCD:{cccd}"
+                        sheet['L21'] = ngaycapcccd
+                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G28'] = chucvu
+                        sheet['G38'] = f"{mucluong} VNĐ/tháng"
+                        if phucap == "Có":
+                            sheet['G39'] = f"{tongphucap} VNĐ/tháng"
+                        else:
+                            sheet['G39'] = "Không"
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDNH_TO2_{mst}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        workbook.save(filepath)
+                        return filepath
+                    except Exception as e:
+                        app.logger.info(e)
+                        return None
+                else:
+                    try:
+                        workbook = openpyxl.load_workbook(FILE_MAU_HDNH_NT1_DUOI_O2)
+                        sheet = workbook.active
+                        sheet['E4'] = f'Số: LC28D/{mst}'
+                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                        sheet['D18'] = tennhanvien
+                        sheet['E19'] = ngaysinh
+                        sheet['Q19'] = gioitinh
+                        sheet['F20'] = thuongtru
+                        sheet['B21'] = f"Số CCCD: {cccd}"
+                        sheet['L21'] = ngaycapcccd
+                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G28'] = f"{chucvu}"
+                        sheet['G38'] = f"{int(mucluong):,} VNĐ/tháng"
+                        if phucap == "Có":
+                            sheet['G39'] = f"{tongphucap} VNĐ/tháng"
+                        else:
+                            sheet['G39'] = "Không"
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDNH_DO2_{mst}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        workbook.save(filepath)
+                        return filepath
+                    except Exception as e:
+                        app.logger.info(e)
+                        return None
+            elif current_user.macongty == "NT2":
+                try:
+                    workbook = openpyxl.load_workbook(FILE_MAU_HDCTH_NT2)
+                    sheet = workbook.active
+                    sheet['E4'] = f'Số: LC28D/{mst}'
+                    sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
+                    sheet['D19'] = tennhanvien
+                    sheet['E21'] = ngaysinh
+                    sheet['E20'] = gioitinh
+                    sheet['F22'] = thuongtru
+                    sheet['F23'] = tamtru
+                    sheet['D24'] = cccd
+                    sheet['L24'] = ngaycapcccd
+                    sheet['F32'] = bophan
+                    sheet['F33'] = mst
+                    sheet['G43'] = f"{int(mucluong):,} VNĐ/tháng"
+                    if phucap == "Có":
+                        sheet['G44'] = f"{tongphucap} VNĐ/tháng"
+                    else:
+                        sheet['G44'] = "Không" 
+                    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                    filepath = os.path.join(FOLDER_XUAT, f'NT2_HDNH_{mst}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                    workbook.save(filepath)
+                    return filepath
+                except Exception as e:
+                    app.logger.info(e)
+                    return None
+        elif kieuhopdong == "HĐ có thời hạn 1 năm":
             if current_user.macongty == "NT1":
                 if capbac in ["O2","O1","M3","M2","M1"]:
                     try:
@@ -405,6 +486,10 @@ def inhopdongtheomau(kieuhopdong,
                         sheet['L21'] = ngaycapcccd
                         sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                         sheet['G38'] = f"{mucluong} VNĐ/tháng"
+                        if phucap == "Có":
+                            sheet['G39'] = f"{tongphucap} VNĐ/tháng"
+                        else:
+                            sheet['G39'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_TO3_{mst}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -465,7 +550,6 @@ def inhopdongtheomau(kieuhopdong,
                 except Exception as e:
                     app.logger.info(e)
                     return None
-                
         elif kieuhopdong == "HĐ vô thời hạn":
             if current_user.macongty == "NT1":
                 if capbac in ["O2","O1","M3","M2","M1"]:
