@@ -311,7 +311,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: PC/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -338,7 +338,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: PC/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -365,7 +365,7 @@ def inhopdongtheomau(kieuhopdong,
                     sheet = workbook.active
                     sheet['E4'] = f'Số: PC/{mst}'
                     sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                    sheet['D19'] = tennhanvien
+                    sheet['D19'] = tennhanvien.upper()
                     sheet['E21'] = ngaysinh
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
@@ -397,7 +397,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC28D/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -423,7 +423,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC28D/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -449,7 +449,7 @@ def inhopdongtheomau(kieuhopdong,
                     sheet = workbook.active
                     sheet['E4'] = f'Số: LC28D/{mst}'
                     sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                    sheet['D19'] = tennhanvien
+                    sheet['D19'] = tennhanvien.upper()
                     sheet['E21'] = ngaysinh
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
@@ -478,7 +478,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC12/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -503,7 +503,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC12/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -529,7 +529,7 @@ def inhopdongtheomau(kieuhopdong,
                     sheet = workbook.active
                     sheet['E4'] = f'Số: LC12/{mst}'
                     sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                    sheet['D19'] = tennhanvien
+                    sheet['D19'] = tennhanvien.upper()
                     sheet['E21'] = ngaysinh
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
@@ -558,7 +558,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -579,7 +579,7 @@ def inhopdongtheomau(kieuhopdong,
                         sheet = workbook.active
                         sheet['E4'] = f'Số: LC/{mst}'
                         sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = tennhanvien
+                        sheet['D18'] = tennhanvien.upper()
                         sheet['E19'] = ngaysinh
                         sheet['Q19'] = gioitinh
                         sheet['F20'] = thuongtru
@@ -606,7 +606,7 @@ def inhopdongtheomau(kieuhopdong,
                     sheet = workbook.active
                     sheet['E4'] = f'Số: LC/{mst}'
                     sheet['M4'] = f'Nghệ An, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                    sheet['D19'] = tennhanvien
+                    sheet['D19'] = tennhanvien.upper()
                     sheet['E21'] = ngaysinh
                     sheet['E20'] = gioitinh
                     sheet['F22'] = thuongtru
