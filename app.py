@@ -1364,7 +1364,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%' "
         if hoten:
@@ -1398,7 +1398,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
@@ -1433,7 +1433,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != 'Đã phê duyệt' "
+        query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%'"
         if hoten:
