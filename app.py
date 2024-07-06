@@ -1364,7 +1364,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
+        query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' AND Trang_thai != N'Đã phê duyệt' "
         if mst:
             query += f"AND MST LIKE '%{mst}%' "
         if hoten:
@@ -1934,25 +1934,14 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         app.logger.info(e)
         return []
 
-def laydanhsachkpi(mst,macongty):
+def laydanhsachkpichuduyet(mst,macongty):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from KPI_Name where MST='{mst}' and  Nha_may='{macongty}' and Trang_thai = '1'"
+        query = f"select * from KPI_Data where MST='{mst}' and  Nha_may='{macongty}' and Status = 'Waiting for approval'"
         rows = cursor.execute(query).fetchall()
-        result = []
-        for row in rows:
-            result.append({
-                "Department": row[3],
-                "Objective": row[4],
-                "Possible measures": row[5],
-                "Unit of measurement": row[6],
-                "Measurement source": row[7],
-                "C target": row[8],
-                "B target": row[9],
-                "A target": row[10],
-            })
-        return result
+        conn.close()
+        return rows
     except Exception as e:
         app.logger.info(e)
         return []  
@@ -2950,10 +2939,8 @@ def danhsachsaphethanhopdong():
 @login_required
 @roles_required('sa','gd','tbp')
 def nhapkpi():
-    danhsachdong = laydanhsachkpi(current_user.masothe,current_user.macongty)
-    month = datetime.now().month-1
-    year = datetime.now().year
-    return render_template("5_1_1.html",page="Upload KPI",danhsachdong=danhsachdong,month = month, year= year)
+    danhsach = laydanhsachkpichuduyet(current_user.masothe,current_user.macongty)
+    return render_template("5_1_1.html",page="Upload KPI",danhsach=danhsach)
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
 @login_required
