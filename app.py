@@ -1679,34 +1679,35 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
 
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
-        if cacu != camoi and ngaybatdau < ngayketthuc:
+        if cacu != camoi:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             if ngayketthuc:
-                if type(ngaybatdau) == str:
-                    ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
-                else:
-                    ngayketthuccacu = ngaybatdau - timedelta(days=1)
-                if type(ngayketthuc) == str:
-                    ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
-                else:
-                    ngayvecamacdinh = ngayketthuc + timedelta(days=1)
-                ngaymoc = datetime(2054,12,31)
-                query = f"""
-                            UPDATE HR.dbo.Dang_ky_ca_lam_viec
-                            SET Den_ngay = '{ngayketthuccacu}'
-                            WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
+                if ngaybatdau < ngayketthuc:
+                    if type(ngaybatdau) == str:
+                        ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+                    else:
+                        ngayketthuccacu = ngaybatdau - timedelta(days=1)
+                    if type(ngayketthuc) == str:
+                        ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
+                    else:
+                        ngayvecamacdinh = ngayketthuc + timedelta(days=1)
+                    ngaymoc = datetime(2054,12,31)
+                    query = f"""
+                                UPDATE HR.dbo.Dang_ky_ca_lam_viec
+                                SET Den_ngay = '{ngayketthuccacu}'
+                                WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
-                            INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                            VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
+                                INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                                VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
 
-                            INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                            VALUES ('{mst}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
-                        """
-                
-                cursor.execute(query)
-                conn.commit()
-                conn.close()
+                                INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                                VALUES ('{mst}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
+                            """
+                    
+                    cursor.execute(query)
+                    conn.commit()
+                    conn.close()
                 
             else:
                 if type(ngaybatdau) == str:
