@@ -952,7 +952,7 @@ def danhsachsaphethanhopdong():
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
-@roles_required('sa','tbp')
+@roles_required('sa','tbp','gd')
 def nhapkpi():
     if request.method == "GET":
         danhsach = laydanhsachkpichuaduyet(current_user.masothe,current_user.macongty)
