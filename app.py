@@ -2036,6 +2036,24 @@ def laydanhsachkpichuaduyet(mst:None,macongty:None):
         print(e)
         return []  
    
+def laydanhsachkpidaduyet(mst:None,macongty:None):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from KPI_Data where Status = 'Approved' "
+        if mst:
+            query += f"and MST='{mst}'"
+        if macongty:
+            query += f"and Nha_may='{macongty}' " 
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        if not mst:
+            return []
+        return rows
+    except Exception as e:
+        print(e)
+        return []
+      
 def roles_required(*roles):
     def decorator(f):
         @wraps(f)
@@ -2086,7 +2104,34 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"insert into KPI_Cho_phe_duyet values ('{nhamay}','{mst}',N'{hoten}',GETDATE())"  
+        query = f"insert into KPI_Cho_phe_duyet values ('{nhamay}','{mst}',N'{hoten}',GETDATE())"
+        print(query)  
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        return False
+    
+def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into KPI_Da_phe_duyet values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+        return False
+    
+def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into KPI_Bi_tu_choi values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2111,3 +2156,41 @@ def laydanhsachquanly(macongty:None):
     except Exception as e:
         print(e)
         return []
+    
+def pheduyetkpi(masothe,macongty):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update KPI_Data set Status='Approved',Time_stamp=GETDATE() where Nha_may='{macongty}' and MST='{masothe}'"  
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+    
+def tuchoikpi(masothe,macongty):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update KPI_Data set Status='Denied',Time_stamp=GETDATE() where Nha_may='{macongty}' and MST='{masothe}'"  
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+    
+def layemailquanly(macongty,masothe):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Email from KPI_DS_Email where Nha_may='{macongty}' and MST='{masothe}'"  
+        row = cursor.execute(query).fetchone()
+        conn.close()
+        return row[0]
+    except Exception as e:
+        print(e)
+        return False

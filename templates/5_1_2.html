@@ -70,13 +70,13 @@
         <div style="display: flex; align-items: center; overflow-x: auto;">
             <p><b>PIC</b></p>
             {% for quanly in danhsachquanly %}
-            <a class="btn btn-outline-info btn-sm" href="/muc5_1_2?company={{request.args.get('company','NT1')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            <a class="btn btn-outline-info btn-sm" href="/muc5_1_2?company={{request.args.get('company','NT1')}}&pic={{quanly['mst']}}_{{quanly['hoten']}}">{{quanly['hoten']}}</a>
             {% endfor %}
         </div>
         <hr/>
         <h5 class="waiting"><b>Waiting for approval <span class="dots"></span></b></h5>
         
-        <table class="table table-bordered">
+        <table class="table table-bordered table-sm">
             <thead>
                 <tr class="bg-primary">
                     <th rowspan="3" style="vertical-align: middle;">Company code</th>
@@ -193,7 +193,7 @@
                         <td>{{dong[17]}}</td>
                         <td>{{dong[18]}}</td>
                         <td>{{dong[19]}}</td>
-                        <td style='color:{{dong[16]}};'>{{dong[21]}}</td>
+                        <td style='color:{{dong[21]}};'>{{dong[20]}}</td>
                         <td>{{dong[22]}}</td>
                         <td>{{dong[23]}}</td>
                         <td>{{dong[24]}}</td>

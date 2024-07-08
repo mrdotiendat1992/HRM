@@ -986,31 +986,46 @@ def nhapkpi():
 def duyetkpi():
     if request.method == "GET":
         congty = request.args.get("company")
-        mst = request.args.get("mst")
+        pic = request.args.get("pic")
+        mst = pic.split("_")[0] if pic else None
         danhsachquanly = laydanhsachquanly(congty)
         danhsach = laydanhsachkpichuaduyet(mst,congty)
         return render_template("5_1_2.html",page="Approve KPI",danhsach=danhsach,danhsachquanly=danhsachquanly)
     if request.method == "POST":
         congty = request.form.get("company")
-        mst = request.form.get("mst")
+        pic = request.args.get("pic")
+        mst = pic.split("_")[0] if pic else None
+        hoten = pic.split("_")[1] if pic else None
+        email = layemailquanly(congty,mst)
         pheduyet = request.form.get("pheduyet")
-        if pheduyet == "khong":
+        if pheduyet == "co":
             pheduyetkpi(mst,congty)
+            guimailthongbaodapheduyetkpi(congty,mst,hoten,email)
         else:
             tuchoikpi(mst,congty)
+            guimailthongbaodatuchoikpi(congty,mst,hoten,email)
         return redirect(f"/muc5_1_2?company={congty}&mst={mst}")
 
-@app.route("/muc5_1_3", methods=["GET","POST"])
+@app.route("/muc5_1_3_1", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
 def baocaocanam():
-    return render_template("5_1_3_1.html",page="Performance Report All Year")
+    if request.method == "GET":
+        congty = request.args.get("company")
+        mst = request.args.get("mst")
+        danhsachquanly = laydanhsachquanly(congty)
+        danhsach = laydanhsachkpidaduyet(mst,congty)
+        return render_template("5_1_3_1.html",page="Performance Report All Year",danhsach=danhsach,danhsachquanly=danhsachquanly)
 
 @app.route("/muc5_1_3_2", methods=["GET","POST"])
 @login_required
 @roles_required('sa','gd','tbp')
 def baocaoytd():
-    return render_template("5_1_3_2.html",page="Performance Report Year to date")
+    congty = request.args.get("company")
+    mst = request.args.get("mst")
+    danhsachquanly = laydanhsachquanly(congty)
+    danhsach = laydanhsachkpidaduyet(mst,congty)
+    return render_template("5_1_3_2.html",page="Performance Report Year to date",danhsach=danhsach,danhsachquanly=danhsachquanly)
 
 
     
