@@ -35,16 +35,15 @@ def admin_template():
     per_page = 10
     mst = request.args.get('mst', None, type=str)
     if mst:
-        users_paginated = Users.query.filter(Users.masothe.like(f"%{mst}%")).paginate(page=page, per_page=per_page, error_out=False)
+        users_paginated = Users.query.filter_by(masothe=mst).paginate(page=page, per_page=per_page, error_out=False)
     else:
         hoten = request.args.get('hoten', None, type=str)
         if hoten:
-            search_pattern = f"%{hoten}%"
-            users_paginated = Users.query.filter(Users.hoten.like(search_pattern)).paginate(page=page, per_page=per_page, error_out=False)
+            users_paginated = Users.query.filter_by(hoten=hoten).paginate(page=page, per_page=per_page, error_out=False)
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
     cacrole= ['sa','user','hr','gd','luong','tnc','td','tbp']
-    return render_template('admin.html', users=users_paginated,cacrole=cacrole)
+    return render_template('admin.html', users=users,cacrole=cacrole)
 
 @app.route('/register', methods=["POST"])
 def register():
