@@ -1245,7 +1245,29 @@ def khaibaochamcong():
                                 pagination=pagination,
                                 count=count,
                                 cacca=cacca)
-
+    elif request.method == "POST":
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen") 
+        phongban = request.form.get("phongban") 
+        rows = laydanhsachcahientai(mst,chuyen,phongban)
+        data =[]
+        for row in rows:
+            data.append({
+                "Nhà máy": row[0],
+                "Mã số thẻ": row[1],
+                "Họ tên": row[2],
+                "Chuyền tổ": row[3], 
+                "Phòng ban": row[4],
+                "Ca": row[5],
+                "Đổi từ ngày": row[6],
+                "Đổi đến ngày": row[7]
+            })
+        df = pd.DataFrame(data)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), index=False)
+        flash("Tải file thành công !!!")
+        return send_file(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), as_attachment=True)
+            
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
 def loichamcong():
