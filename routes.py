@@ -966,7 +966,7 @@ def nhapkpi():
                 file.save(filepath)
                 data = pd.read_excel(filepath).to_dict(orient="records")
                 delete_kpidata(current_user.masothe,current_user.macongty)
-                for row in data[2:]:
+                for row in data[1:]:
                     values=[]
                     for row in row.items():
                         values.append(row[1])
