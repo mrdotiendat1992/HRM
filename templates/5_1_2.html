@@ -260,35 +260,7 @@
     </div>
 </div>
 <script>
-    // Function to format numbers with thousand separators
-    function formatNumberWithCommas(number) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    // Function to check if a string is a number
-    function isNumber(value) {
-        return !isNaN(value) && !isNaN(parseFloat(value));
-    }
-
-    // Function to format table cells
-    function formatTableCells() {
-        // Select all target cells
-        const cells = document.querySelectorAll('.a_target, .b_target, .c_target');
-        
-        // Iterate over each cell
-        cells.forEach(cell => {
-            const cellContent = cell.textContent.trim();
-            
-            // Check if the cell content is a number
-            if (isNumber(cellContent)) {
-                const formattedNumber = formatNumberWithCommas(cellContent);
-                cell.textContent = formattedNumber;
-            }
-        });
-    }
-
-    // Call the function to format table cells
-    formatTableCells();
+   
 </script>
 
 {% endblock content %}
