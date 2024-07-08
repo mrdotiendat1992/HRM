@@ -2093,6 +2093,7 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
                 value = f"'{value}',"
             query += value
         query += "'Waiting for approval',GETDATE())"  
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
