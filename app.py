@@ -1696,13 +1696,13 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                     query = f"""
                                 UPDATE HR.dbo.Dang_ky_ca_lam_viec
                                 SET Den_ngay = '{ngayketthuccacu}'
-                                WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
+                                WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
                                 INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                                VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
+                                VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
 
                                 INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                                VALUES ('{mst}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
+                                VALUES ('{int(mst)}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
                             """
                     
                     cursor.execute(query)
@@ -2000,7 +2000,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         INNER JOIN 
             Danh_sach_CBCNV 
         ON 
-            Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.MST AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
+            Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.The_cham_cong AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
         WHERE 
             Dang_ky_ca_lam_viec.Factory = '{current_user.macongty}' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
         """
