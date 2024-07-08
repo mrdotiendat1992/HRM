@@ -27,24 +27,12 @@
     .content {
         width: auto;
     }
-    th.sticky1 {
+    .sticky {
         position: sticky;
         left: 0;
         z-index: 10;
-        background-color: #000099;
     }
-    th.sticky2 {
-        position: sticky;
-        left: 80px;
-        z-index: 10;
-        background-color: #000099;
-    }
-    th.sticky3 {
-        position: sticky;
-        left: 135px;
-        z-index: 10;
-        background-color: #000099;
-    }
+    
     .dots::after {
         content: '';
         display: inline-block;
@@ -65,24 +53,29 @@
             content: '...';
         }
     }
+
+    a, form {
+        margin-left: 20px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div class="content">
         <div style="display: flex; align-items: center;">
-            <h5><b>Company</b></h5>
-            <a class="btn btn-primary" href="/muc5_1_2?company=NT1">NT1</a>
-            <a class="btn btn-primary" href="/muc5_1_2?company=NT2">NT2</a>
+            <p><b>Company</b></p>
+            <a class="btn btn-outline-primary btn-sm" href="/muc5_1_2?company=NT1">NT1</a>
+            <a class="btn btn-outline-success btn-sm" href="/muc5_1_2?company=NT2">NT2</a>
         </div>
-        <div>
-            <h5><b>PIC</b></h5>
+        <div style="display: flex; align-items: center; overflow-x: auto;">
+            <p><b>PIC</b></p>
             {% for quanly in danhsachquanly %}
-            <a class="btn btn-primary" href="/muc5_1_2?company={{request.args.get('company','NT1')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            <a class="btn btn-outline-info btn-sm" href="/muc5_1_2?company={{request.args.get('company','NT1')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
             {% endfor %}
         </div>
         <hr/>
         <h5 class="waiting"><b>Waiting for approval <span class="dots"></span></b></h5>
+        
         <table class="table table-bordered">
             <thead>
                 <tr class="bg-primary">
@@ -245,6 +238,23 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="sticky">
+            <div style="display: flex; align-items: center;">
+                <form method="POST">
+                    <input type="hidden" name="company" value="{{request.args.get('company','')}}">
+                    <input type="hidden" name="mst" value="{{request.args.get('mst','')}}">
+                    <input type="hidden" name="pheduyet" value="co">
+                    <input class="btn btn-success" value="Approve" type="submit">
+                </form>
+                <form method="POST">
+                    <input type="hidden" name="company" value="{{request.args.get('company','')}}">
+                    <input type="hidden" name="mst" value="{{request.args.get('mst','')}}">
+                    <input type="hidden" name="pheduyet" value="khong">
+                    <input class="btn btn-danger" value="Deny" type="submit">
+                </form>
+                <br>
+            </div>
+        </div>
     </div>
 </div>
 <script>

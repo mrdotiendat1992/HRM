@@ -2029,7 +2029,7 @@ def laydanhsachkpichuaduyet(mst:None,macongty:None):
             query += f"and Nha_may='{macongty}' " 
         rows = cursor.execute(query).fetchall()
         conn.close()
-        if not mst and not macongty:
+        if not mst:
             return []
         return rows
     except Exception as e:

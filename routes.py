@@ -984,12 +984,21 @@ def nhapkpi():
 @login_required
 @roles_required('sa','gd')
 def duyetkpi():
-    congty = request.args.get("company")
-    mst = request.args.get("mst")
-    danhsachquanly = laydanhsachquanly(congty)
-    danhsach = laydanhsachkpichuaduyet(mst,congty)
-    print(danhsachquanly)
-    return render_template("5_1_2.html",page="Approve KPI",danhsach=danhsach,danhsachquanly=danhsachquanly)
+    if request.method == "GET":
+        congty = request.args.get("company")
+        mst = request.args.get("mst")
+        danhsachquanly = laydanhsachquanly(congty)
+        danhsach = laydanhsachkpichuaduyet(mst,congty)
+        return render_template("5_1_2.html",page="Approve KPI",danhsach=danhsach,danhsachquanly=danhsachquanly)
+    if request.method == "POST":
+        congty = request.form.get("company")
+        mst = request.form.get("mst")
+        pheduyet = request.form.get("pheduyet")
+        if pheduyet == "khong":
+            pheduyetkpi(mst,congty)
+        else:
+            tuchoikpi(mst,congty)
+        return redirect(f"/muc5_1_2?company={congty}&mst={mst}")
 
 @app.route("/muc5_1_3", methods=["GET","POST"])
 @login_required
