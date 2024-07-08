@@ -43,7 +43,7 @@ def admin_template():
         else:
             users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
     cacrole= ['sa','user','hr','gd','luong','tnc','td','tbp']
-    return render_template('admin.html', users=users,cacrole=cacrole)
+    return render_template('admin.html', users=users_paginated,cacrole=cacrole)
 
 @app.route('/register', methods=["POST"])
 def register():
