@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
 @app.route('/unauthorized')
 def unauthorized():
-    return "Bạn không có quyền truy cập vui lòng chọn mục khác", 401
+    return render_template_string("<h1>Bạn không thể vào mục này, vui lòng chọn mục khác!!!</h1><h3>Ấn vào <a href='/'>đây</a> để quay lại trang chủ</h3>")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -952,7 +952,7 @@ def danhsachsaphethanhopdong():
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
-@roles_required('sa','gd','tbp')
+@roles_required('sa','tbp')
 def nhapkpi():
     if request.method == "GET":
         danhsach = laydanhsachkpichuaduyet(current_user.masothe,current_user.macongty)
