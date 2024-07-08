@@ -402,8 +402,8 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdcthl2 = "NULL"
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
-        elif kieuhopdong == "HĐ có thời hạn lần 1":
-            kieuhopdong = "N'HĐ có thời hạn lần 1'"
+        elif kieuhopdong == "HĐ có thời hạn 28 ngày":
+            kieuhopdong = "N'HĐ có thời hạn 28 ngày'"
             ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
             ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
             ngaybatdauhdcthl1 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
@@ -413,8 +413,8 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdcthl2 = "NULL"
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
-        elif kieuhopdong == "HĐ có thời hạn lần 2":
-            kieuhopdong = "N'HĐ có thời hạn lần 2'"
+        elif kieuhopdong == "HĐ có thời hạn 1 năm":
+            kieuhopdong = "N'HĐ có thời hạn 1 năm'"
             ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
             ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
             ngaybatdauhdcthl2 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
