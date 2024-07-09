@@ -11,6 +11,9 @@
         color: #4e73df;
         font-weight: bold;
     }
+    label, .input_ngay {
+        width : 160px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -31,7 +34,7 @@
     </form>
     <div style="display: flex; align-items: center;">
         <p>Tổng: <b>{{count}}</b></p> 
-        <button class="btn btn-primary" onclick="themdonnghiviec()" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"><i class="fas fa-plus"></i></button>
+        <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
     </div>
     <table class="table table-bordered table-hover table-sm">
         <thead>
@@ -62,5 +65,114 @@
             {% endfor %}
         </tbody>
     </table>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel">Đơn xin nghỉ việc</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="masothe">Mã số thẻ</label>
+                                    <input type="text" id="masothe" name="masothe" onchange="kiemtrathongtinnld()">
+                                </div>
+                                <hr />
+                                <div>
+                                    <form method="POST">
+                                        <input type="text" id="form_manhanvien" name="form_manhanvien" hidden>
+                                        <input type="text" id="form_macongty" name="form_macongty" value="{{current_user.macongty}}" readonly>
+                                        <input type="text" id="form_hovaten" name="form_hovaten" readonly placeholder="Họ tên">
+                                        <input type="text" id="form_chucvu" name="form_chucvu" readonly placeholder="Chức danh">
+                                        <input type="text" id="form_chuyento" name="form_chuyento" readonly placeholder="Chuyền">
+                                        <input type="text" id="form_bophan" name="form_bophan" readonly placeholder="Phòng ban">
+                                        <input type="text" id="form_ngayvao" name="form_ngayvao" readonly placeholder="Ngày vào">
+                                </div>
+                                <hr />
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label for="form_ngaynopdon">Ngày nộp đơn</label>
+                                        <input type="date" id="form_ngaynopdon" name="form_ngaynopdon" class="input_ngay">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_ngaybaotruoc">Số ngày báo trước</label>
+                                        <input type="number" id="form_ngaybaotruoc" name="form_ngaybaotruoc"  class="input_ngay" value=30>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_ngaydukiennghi">Ngày dự kiến nghỉ</label>
+                                        <input type="date" id="form_ngaydukiennghi" name="form_ngaydukiennghi"  class="input_ngay">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="form_ghichu">Ghi chú</label>
+                                        <textarea class="form-control" id="form_ghichu" name="form_ghichu" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                    <input type="submit" class="btn btn-primary" value="Lưu"></input>
+                </div>
+            </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        function kiemtrathongtinnld() {
+            axios({
+                method: 'post',
+                url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
+            })
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        console.log(data)
+                        document.getElementById("form_manhanvien").value = data["MST"];
+                        document.getElementById("form_hovaten").value = data["Họ tên"]; 
+                        document.getElementById("form_chucvu").value = data["Job title VN"];
+                        document.getElementById("form_chuyento").value = data["Line"];
+                        document.getElementById("form_bophan").value = data["Department"];
+                        document.getElementById("form_ngayvao").value = data["Ngày vào"];
+                        const today = new Date().toISOString().split('T')[0];
+                        document.getElementById("form_ngaynopdon").value = today;
+
+                        // Lấy số ngày báo trước từ input
+                        const daysNotice = parseInt(document.getElementById("form_ngaybaotruoc").value);
+
+                        // Tính toán ngày dự kiến nghỉ
+                        const expectedLeaveDate = new Date();
+                        expectedLeaveDate.setDate(expectedLeaveDate.getDate() + daysNotice);
+                        const expectedLeaveDateString = expectedLeaveDate.toISOString().split('T')[0];
+
+                        // Đặt giá trị cho input ngày dự kiến nghỉ
+                        document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            
+        }
+        document.getElementById("form_ngaybaotruoc").addEventListener("change", function () {
+            // Lấy số ngày báo trước từ input
+            const daysNotice = parseInt(document.getElementById("form_ngaybaotruoc").value);
+
+            // Tính toán ngày dự kiến nghỉ
+            const expectedLeaveDate = new Date();
+            expectedLeaveDate.setDate(expectedLeaveDate.getDate() + daysNotice);
+            const expectedLeaveDateString = expectedLeaveDate.toISOString().split('T')[0];
+
+            // Đặt giá trị cho input ngày dự kiến nghỉ
+            document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
+        });
+    </script>
 </div>
+
 {% endblock content %}

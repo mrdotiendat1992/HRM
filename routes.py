@@ -374,7 +374,7 @@ def nhapthongtinlaodongmoi():
         ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
         jobdetailvn = f"N'{request.form.get("vitri")}'"
         line = f"'{request.form.get("line")}'"
-        calamviec = request.form.get("calamviec")
+        calamviec = f"'{request.form.get("calamviec")}'"
         factory = f"'{current_user.macongty}'"
         hccategory = f"N'{request.form.get("hccategory")}'"
         gradecode = f"N'{request.form.get("gradecode")}'"
@@ -449,14 +449,14 @@ def nhapthongtinlaodongmoi():
         nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '')"             
         if themnhanvienmoi(nhanvienmoi):
             flash("Thêm lao động mới thành công !!!")
-            if themdoicamoi(request.form.get("masothe"),"A1-01",calamviec,ngayvao.replace("'",""),datetime(2054,12,31)):
-                flash("Tạo ca mặc định là A1-01 cho người mới thành công !!!")                
+            if themdoicamoi(request.form.get("masothe"),request.form.get("calamviec"),request.form.get("calamviec"),ngayvao.replace("'",""),datetime(2054,12,31)):
+                flash("Tạo ca mặc định cho người mới thành công !!!")                
                 if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
                     flash("Thêm lịch sử trạng thái cho người mới thành công !!!")
                 else:
                     flash("Thêm lịch sử trạng thái cho người mới thất bại !!!")
             else:
-                flash("Tạo ca mặc định là A1-01 cho người mới thất bại !!!") 
+                flash("Tạo ca mặc định cho người mới thất bại !!!") 
         else:
             masothe = int(laymasothemoi())+1
             cacvitri= laycacvitri()
@@ -1646,26 +1646,41 @@ def phongvannghiviec():
 @login_required
 @roles_required('hr','sa','gd')
 def nhandonnghiviec():
-    mst = request.args.get("mst")
-    hoten = request.args.get("hoten")
-    chuyen = request.args.get("chuyen")
-    phongban = request.args.get("phongban")
-    ngaynopdon = request.args.get("ngaynopdon")
-    ngaynghi = request.args.get("ngaynghi")
-    danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi)
-    current_page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
-    total = len(danhsach)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("10_2.html", 
-                           page="10.2 Tổng hợp đơn nghỉ việc",
-                           danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=total)
-  
+    if request.method == "GET":
+        mst = request.args.get("mst")
+        hoten = request.args.get("hoten")
+        chuyen = request.args.get("chuyen")
+        phongban = request.args.get("phongban")
+        ngaynopdon = request.args.get("ngaynopdon")
+        ngaynghi = request.args.get("ngaynghi")
+        danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("10_2.html", 
+                            page="10.2 Tổng hợp đơn nghỉ việc",
+                            danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+    elif request.method == "POST":
+        mst = request.form.get("form_manhanvien")
+        hoten = request.form.get("form_hovaten")
+        chucdanh = request.form.get("form_chucvu")
+        chuyen = request.form.get("form_chuyento")
+        phongban = request.form.get("form_bophan")
+        ngaynopdon = request.form.get("form_ngaynopdon")
+        ngaynghi = request.form.get("form_ngaydukiennghi")
+        ghichu = request.form.get("form_ghichu")
+        if themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
+            flash("Thêm đơn xin nghỉ thành công !!!")
+        else:
+            flash("Thêm đơn xin nghỉ thất bại !!!")
+        return redirect(f"/muc10_2?mst={mst}")
+    
 @app.route("/muc10_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -2131,6 +2146,14 @@ def doicanhom():
 def laycatheomst():
     mst = request.args.get("mst")
     ca = laycahientai(mst)
+    return jsonify({
+        "Ca": ca
+    })
+    
+@app.route("/laycatheoline", methods=["POST"])
+def laycatheoline():
+    line = request.args.get("line")
+    ca = laycatheochuyen(line)
     return jsonify({
         "Ca": ca
     })

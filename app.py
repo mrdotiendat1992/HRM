@@ -102,12 +102,7 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
 
 def laycatheochuyen(chuyen):
     try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"select Ca_mac_dinh from Ca_theo_chuyen where Chuyen='{chuyen}'"
-        row = cursor.execute(query).fetchone()
-        conn.close()
-        return row[0]
+        return CA_THEO_CHUYEN[chuyen]
     except Exception as e:
         print(e)
         return None
@@ -143,11 +138,15 @@ def dieuchuyennhansu(mst,
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}')"
-
         cursor.execute(query1)
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
-
         cursor.execute(query2)
+        camoi = laycatheochuyen(chuyenmoi)
+        query3 = f"""
+        UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
+        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
+        """
+        cursor.execute(query3)
         conn.commit()
         conn.close()
     except Exception as e:
@@ -2205,11 +2204,11 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
         if mst:
             query += f" AND MST = '{mst}'"
         if hoten:
-            query += f" AND Ho_ten = N'{hoten}'"
+            query += f" AND Ho_ten LIKE N'%{hoten}%'"
         if chuyen:
-            query += f" AND Chuyen_to = N'{chuyen}'"
+            query += f" AND Chuyen_to LIKE N'%{chuyen}%'"
         if phongban:
-            query += f" AND Bo_phan = '{phongban}'"
+            query += f" AND Bo_phan LIKE '%{phongban}%'"
         if ngaynopdon:
             query += f" AND Ngay_nop_don = '{ngaynopdon}'"
         if ngaynghi:
@@ -2219,6 +2218,22 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
+    except Exception as e:
+        print(e)
+        return []
+
+def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        if ghichu:
+            query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',N'{ghichu}')"
+        else:
+            query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',NULL)"
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
     except Exception as e:
         print(e)
         return []

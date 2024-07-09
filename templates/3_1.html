@@ -155,12 +155,7 @@ input, select {
             <select id="line" name="line">
             </select>
             <label for="calamviec">Ca làm việc</label>
-            <select type="text" id="calamviec" name="calamviec">
-                {% for ca in cacca %}
-                    <option value="{{ ca }}">{{ ca }}</option>
-                {% endfor %}
-            </select>
-
+            <input id="calamviec" name="calamviec">
         </div>
 
         <div class="form-group">
@@ -522,7 +517,14 @@ input, select {
                                 document.getElementById("mavitri").value = data["Position_code"]; // 9
                                 document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
                                 document.getElementById("chucvu").value = data["Detail_job_title_VN"]; // 11
-                                    }
+                                axios({
+                                    method: 'post',
+                                    url: '/laycatheoline?line=' + data["Line"]
+                                })
+                                .then(function (response) {
+                                    document.getElementById("calamviec").value = response.data['Ca']
+                                })
+                            }
                         })
                         .catch(function (error) {
                             console.log(error);
