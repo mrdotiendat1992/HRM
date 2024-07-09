@@ -7,11 +7,12 @@
     th {
         color: white;
     }
-    td, label, p {
+    td, label, p, input {
         color: #4e73df;
         font-weight: bold;
     }
     label, .input_ngay {
+        text-align: right;
         width : 160px;
     }
 </style>
@@ -61,6 +62,7 @@
                 <td>{{row[6]}}</td>
                 <td>{{row[7]}}</td>
                 <td>{{row[8]}}</td>
+                <td>{{row[9]}}</td>
             </tr>
             {% endfor %}
         </tbody>

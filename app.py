@@ -2252,6 +2252,7 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
         print(e)
-        return []
+        return False
