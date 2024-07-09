@@ -26,7 +26,7 @@ import sqlite3
 conn = sqlite3.connect('instance/db.sqlite')
 cursor = conn.cursor()
 
-cursor.execute("INSERT INTO users VALUES ('6569','3',N'Nguyễn Thị Kim Anh','NT1',N'Công ty cổ phần sản xuất Nam Thuận','1IED','1','user')")
-
+cursor.execute("INSERT INTO users VALUES ('6570','5',N'Nguyễn Xuân Hoàng Phúc','NT1',N'Công ty cổ phần sản xuất Nam Thuận','MGT','1','gd')")
+cursor.execute("INSERT INTO users VALUES ('6571','6',N'Trần Lê Đại Dương','NT1',N'Công ty cổ phần sản xuất Nam Thuận','MGT','1','gd')")
 conn.commit()
 conn.close()
