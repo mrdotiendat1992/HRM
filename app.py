@@ -2196,3 +2196,29 @@ def layemailquanly(macongty,masothe):
     except Exception as e:
         print(e)
         return False
+    
+def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM Cho_nghi_viec WHERE Nha_may = '{current_user.macongty}' "
+        if mst:
+            query += f" AND MST = '{mst}'"
+        if hoten:
+            query += f" AND Ho_ten = N'{hoten}'"
+        if chuyen:
+            query += f" AND Chuyen_to = N'{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan = '{phongban}'"
+        if ngaynopdon:
+            query += f" AND Ngay_nop_don = '{ngaynopdon}'"
+        if ngaynghi:
+            query += f" AND Ngay_nghi_du_kien = '{ngaynghi}'"    
+        query += "ORDER BY Ngay_nop_don DESC, Ngay_nghi_du_kien DESC"  
+        print(query)
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        print(e)
+        return []

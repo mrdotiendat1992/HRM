@@ -3,10 +3,24 @@
 <style>
     table, th, td {
         font-size: 12px;
+        font-weight:bold;
+    }
+    table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        border-collapse: collapse;  
+        text-align: center;
+        color: black;
     }
     select, input, label {
         font-size: 10px;
         width: auto;
+        border: none;
+        outline: none; 
+        color: black;
+        font-weight:bold;
     }
     .modal {
         display: none;
@@ -85,7 +99,7 @@
                 <input id="cccd" name="cccd" type="text" onchange="this.form.submit()">
                 <label for="ngaygui">Ngày ứng tuyển</label>
                 <input id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
-                <input class="btn btn-primary" onclick="window.location.href='/muc2_1'" value="Tất cả">
+                <input class="btn btn-primary" style="width: 80px;" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
             <form method="POST" action="/export_dsdktt">
                 <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>

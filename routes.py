@@ -191,7 +191,7 @@ def danhsachdangkytuyendung():
         count=len(rows)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 5
         total = len(rows)
         start = (current_page - 1) * per_page
         end = start + per_page
@@ -387,7 +387,7 @@ def nhapthongtinlaodongmoi():
         positioncode = f"N'{request.form.get("mavitri")}'"
         positioncodedescription = f"N'{request.form.get("tenvitri")}'"
         nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
-        sdtnguoithan = f"N'{request.form.get("sodienthoainguoithan")}'" if request.form.get("sodienthoainguoithan") else 'NULL'
+        sdtnguoithan = f"N'{request.form.get("sdtnguoithan")}'" if request.form.get("sdtnguoithan") else 'NULL'
         luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
         tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
         kieuhopdong = request.form.get("kieuhopdong")
@@ -1642,7 +1642,30 @@ def phongvannghiviec():
         
     return render_template("10_1.html", page="10.1 Tổng hợp phỏng vấn nghỉ việc")
 
-    
+@app.route("/muc10_2", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd')
+def nhandonnghiviec():
+    mst = request.args.get("mst")
+    hoten = request.args.get("hoten")
+    chuyen = request.args.get("chuyen")
+    phongban = request.args.get("phongban")
+    ngaynopdon = request.args.get("ngaynopdon")
+    ngaynghi = request.args.get("ngaynghi")
+    danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(danhsach)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("10_2.html", 
+                           page="10.2 Tổng hợp đơn nghỉ việc",
+                           danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=total)
+  
 @app.route("/muc10_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
