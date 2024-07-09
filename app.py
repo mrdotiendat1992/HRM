@@ -34,14 +34,14 @@ with app.app_context():
     try:
         db.create_all()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 @login_manager.user_loader
 def loader_user(user_id):
     try:
         return db.session.get(Users, int(user_id))
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return None
   
 def doimatkhautaikhoan(macongty,mst,matkhau):
@@ -56,7 +56,7 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def checkformatmst(mst):
@@ -77,7 +77,7 @@ def laydanhsachsaphethanhopdong():
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
@@ -97,14 +97,14 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def laycatheochuyen(chuyen):
     try:
         return CA_THEO_CHUYEN[chuyen]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return None
   
 def dieuchuyennhansu(mst,
@@ -150,7 +150,7 @@ def dieuchuyennhansu(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return
     
 def laydanhsachca(mst):
@@ -163,7 +163,7 @@ def laydanhsachca(mst):
         conn.close()
         return rows
     except Exception as e:
-            app.logger.info(e)
+            print(e)
             return
     
 def dichuyennghiviec(mst,
@@ -187,7 +187,7 @@ INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.ma
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return
 
 def dichuyennghithaisan(mst,
@@ -231,7 +231,7 @@ def dichuyennghithaisan(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return
 
 def dichuyenthaisandilamlai(mst,
@@ -275,7 +275,7 @@ def dichuyenthaisandilamlai(mst,
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return
     
 def inhopdongtheomau(kieuhopdong,
@@ -329,7 +329,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
                 else:
                     try:
@@ -356,7 +356,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
             elif current_user.macongty == "NT2":
                 try:
@@ -386,7 +386,7 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    app.logger.info(e)
+                    print(e)
                     return None
         elif kieuhopdong == "HĐ có thời hạn 28 ngày":
             if current_user.macongty == "NT1":
@@ -414,7 +414,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
                 else:
                     try:
@@ -440,7 +440,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
             elif current_user.macongty == "NT2":
                 try:
@@ -467,7 +467,7 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    app.logger.info(e)
+                    print(e)
                     return None
         elif kieuhopdong == "HĐ có thời hạn 1 năm":
             if current_user.macongty == "NT1":
@@ -494,7 +494,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
                 else:
                     try:
@@ -520,7 +520,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None
             elif current_user.macongty == "NT2":
                 try:
@@ -547,7 +547,7 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    app.logger.info(e)
+                    print(e)
                     return None
         elif kieuhopdong == "HĐ vô thời hạn":
             if current_user.macongty == "NT1":
@@ -570,7 +570,7 @@ def inhopdongtheomau(kieuhopdong,
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None   
                 else:
                     try:
@@ -597,7 +597,7 @@ def inhopdongtheomau(kieuhopdong,
                         
                         return filepath
                     except Exception as e:
-                        app.logger.info(e)
+                        print(e)
                         return None  
             if current_user.macongty == "NT2":
                 try:
@@ -623,10 +623,10 @@ def inhopdongtheomau(kieuhopdong,
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    app.logger.info(e)
+                    print(e)
                     return None  
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return None
     
 def inchamduthd(mst,
@@ -661,7 +661,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             return None
     elif current_user.macongty == "NT2":
         try:
@@ -687,7 +687,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             return None
    
 def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
@@ -746,7 +746,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         conn.close()
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
                      
 def laydanhsachlinetheovitri(vitri):
@@ -762,7 +762,7 @@ def laydanhsachlinetheovitri(vitri):
             result.append(row[0])
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def lay_user(user):
@@ -885,7 +885,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def laycacphongban():
@@ -901,7 +901,7 @@ def laycacphongban():
             result.append(x[0])
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laycacto():
@@ -914,7 +914,7 @@ def laycacto():
         conn.close()
         return [x[0] for x in cacto]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laycachccategory():
@@ -927,7 +927,7 @@ def laycachccategory():
         conn.close()
         return [x[0] for x in cachccategory]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 def laydanhsachtheomst(mst):
     try:
@@ -942,7 +942,7 @@ def laydanhsachtheomst(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachusercacongty(macongty):
@@ -958,7 +958,7 @@ def laydanhsachusercacongty(macongty):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def laydanhsachusertheophongban(phongban):
@@ -974,7 +974,7 @@ def laydanhsachusertheophongban(phongban):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def laydanhsachusertheogioitinh(gioitinh):
@@ -990,7 +990,7 @@ def laydanhsachusertheogioitinh(gioitinh):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachusertheoline(line):
@@ -1006,7 +1006,7 @@ def laydanhsachusertheoline(line):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachusertheostatus(status):
@@ -1022,7 +1022,7 @@ def laydanhsachusertheostatus(status):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laycactrangthai():
@@ -1035,7 +1035,7 @@ def laycactrangthai():
         conn.close()
         return [x[0] for x in cactrangtha]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laycacvitri():
@@ -1048,7 +1048,7 @@ def laycacvitri():
         conn.close()
         return [x[0] for x in cacvitri]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def laycacca():
@@ -1061,7 +1061,7 @@ def laycacca():
         conn.close()
         return [x[0] for x in cacca]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def layhcname(jobtitle,line):
@@ -1074,7 +1074,7 @@ def layhcname(jobtitle,line):
         conn.close()
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
@@ -1140,7 +1140,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
             })
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
@@ -1221,7 +1221,7 @@ def capnhatthongtinungvien(id,
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def themnhanvienmoi(nhanvienmoi):
@@ -1235,7 +1235,7 @@ def themnhanvienmoi(nhanvienmoi):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def xoadautrongten(s):
@@ -1275,7 +1275,7 @@ def themlichsutrangthai(mst,tungay,denngay,trangthai):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return 
     
 def xoanhanvien(MST):
@@ -1289,7 +1289,7 @@ def xoanhanvien(MST):
         conn.close()
         return f"{MST} đã xoá thành công"
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return f"{MST} đã xoá thất bại"
     
 def laymasothemoi():
@@ -1304,7 +1304,7 @@ def laymasothemoi():
             return result[0]
         return 0
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return 0
 
 def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
@@ -1363,7 +1363,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
             })
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachchuyen():
@@ -1376,7 +1376,7 @@ def laydanhsachchuyen():
         conn.close()
         return rows
     except Exception as e:
-            app.logger.info(e)
+            print(e)
             return []
 
 def laydanhsachbophan():
@@ -1389,7 +1389,7 @@ def laydanhsachbophan():
         conn.close()
         return rows
     except Exception as e:
-            app.logger.info(e)
+            print(e)
             return []
 
 def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1413,7 +1413,7 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
         conn.close()
         return rows
     except Exception as e:
-            app.logger.info(e)
+            print(e)
             return []
 
 def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1440,7 +1440,7 @@ def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, 
             result.append(row)
         return result
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None):
@@ -1471,7 +1471,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai):
@@ -1498,7 +1498,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai):
@@ -1527,7 +1527,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def thuky_duoc_phanquyen(mst,chuyen):
@@ -1542,7 +1542,7 @@ def thuky_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def quanly_duoc_phanquyen(mst,chuyen):
@@ -1557,7 +1557,7 @@ def quanly_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def kiemtrathuki(mst,chuyen):
@@ -1574,7 +1574,7 @@ def kiemtrathuki(mst,chuyen):
         else:
             return False
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def capnhat_xinnghiphep(mst,ngay):
@@ -1587,7 +1587,7 @@ def capnhat_xinnghiphep(mst,ngay):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     try:
@@ -1602,7 +1602,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         conn.close()
         return False
         
@@ -1630,7 +1630,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)   
+        print(e)   
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1647,7 +1647,7 @@ def laydanhsachphepton(mst=None):
         result = []
         return rows 
     except Exception as e:
-        app.logger.info(e)   
+        print(e)   
         return [] 
     
 def laydanhsachkyluat():
@@ -1661,7 +1661,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-        app.logger.info(e)   
+        print(e)   
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1674,25 +1674,38 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
+def chuadangkytangca(mst):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select count(*) from Dang_ky_ca_lam_viec where Factory='{current_user.macongty}' and MST='{mst}'"
+        
+        row = cursor.execute(query).fetchone()
+        conn.close()
+        app.logger(row[0])
+        if row[0]==0:
+            return True
+    except Exception as e:
+        print(e)
+        return False
+        
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
         if cacu != camoi:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            if ngayketthuc:
+            if pd.notna(ngayketthuc):
+                print("Co ngay ket thuc")
+                ngayketthuccacu = ngaybatdau - timedelta(days=1)
+                ngayvecamacdinh = ngayketthuc + timedelta(days=1)
                 if ngaybatdau < ngayketthuc:
-                    if type(ngaybatdau) == str:
-                        ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
-                    else:
-                        ngayketthuccacu = ngaybatdau - timedelta(days=1)
-                    if type(ngayketthuc) == str:
-                        ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
-                    else:
-                        ngayvecamacdinh = ngayketthuc + timedelta(days=1)
                     ngaymoc = datetime(2054,12,31)
-                    query = f"""
+                    if chuadangkytangca(mst):
+                        query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
+                    else:
+                        query = f"""
                                 UPDATE HR.dbo.Dang_ky_ca_lam_viec
                                 SET Den_ngay = '{ngayketthuccacu}'
                                 WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
@@ -1703,16 +1716,17 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                                 INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
                                 VALUES ('{int(mst)}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
                             """
-                    
+                    print(query)
                     cursor.execute(query)
                     conn.commit()
                     conn.close()
-                
-            else:
-                if type(ngaybatdau) == str:
-                    ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+                    flash("Đổi ca thành công", "success")
+                    return True
                 else:
-                    ngayketthuccacu = ngaybatdau - timedelta(days=1)
+                    flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
+            else:
+                print("KHong co ngay ket thuc")
+                ngayketthuccacu = ngaybatdau - timedelta(days=1)
                 ngaymoc = datetime(2054,12,31)
                 query = f"""
                             UPDATE HR.dbo.Dang_ky_ca_lam_viec
@@ -1722,13 +1736,15 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                             INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
                             VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
                         """
-                
+                print(query)
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
+                flash("Đổi ca thành công", "success")
+                return True
         return True
     except Exception as e:
-        app.logger.info(e)    
+        print(e)    
         return False 
         
 def laycahientai(mst):
@@ -1743,7 +1759,7 @@ def laycahientai(mst):
             return row[-1]
         return None
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return None
 
 def laydanhsachyeucautuyendung(maso):
@@ -1758,7 +1774,7 @@ def laydanhsachyeucautuyendung(maso):
             result.append(row)
         return result 
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mucluong):
@@ -1771,7 +1787,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         conn.commit()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
@@ -1793,7 +1809,7 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
         conn.close()
         return rows 
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
     try:
@@ -1805,7 +1821,7 @@ def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def xoadulieuchamcong2ngay():
     try:
@@ -1817,7 +1833,7 @@ def xoadulieuchamcong2ngay():
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
 
 def themdulieuchamcong2ngay():
@@ -1839,7 +1855,7 @@ def themdulieuchamcong2ngay():
         conn1.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def thuky_dakiemtra_diemdanhbu(id):
@@ -1852,7 +1868,7 @@ def thuky_dakiemtra_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def thuky_tuchoi_diemdanhbu(id):
     try:
@@ -1863,7 +1879,7 @@ def thuky_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def quanly_pheduyet_diemdanhbu(id):
     try:
@@ -1875,7 +1891,7 @@ def quanly_pheduyet_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def quanly_tuchoi_diemdanhbu(id):
     try:
@@ -1886,7 +1902,7 @@ def quanly_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def thuky_dakiemtra_xinnghiphep(id):
     try:
@@ -1898,7 +1914,7 @@ def thuky_dakiemtra_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def thuky_tuchoi_xinnghiphep(id):
     try:
@@ -1909,7 +1925,7 @@ def thuky_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def quanly_pheduyet_xinnghiphep(id):
     try:
@@ -1921,7 +1937,7 @@ def quanly_pheduyet_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def quanly_tuchoi_xinnghiphep(id):
     try:
@@ -1932,7 +1948,7 @@ def quanly_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         
 def thuky_dakiemtra_xinnghikhongluong(id):
     try:
@@ -1944,7 +1960,7 @@ def thuky_dakiemtra_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def thuky_tuchoi_xinnghikhongluong(id):
     try:
@@ -1955,7 +1971,7 @@ def thuky_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
 
 def quanly_pheduyet_xinnghikhongluong(id):
     try:
@@ -1967,7 +1983,7 @@ def quanly_pheduyet_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
     
 def quanly_tuchoi_xinnghikhongluong(id):
     try:
@@ -1978,7 +1994,7 @@ def quanly_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         
 def laydanhsachcahientai(mst,chuyen, phongban):
     try:
@@ -2015,7 +2031,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def laydanhsachkpichuaduyet(mst:None,macongty:None):
@@ -2033,7 +2049,7 @@ def laydanhsachkpichuaduyet(mst:None,macongty:None):
             return []
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []  
    
 def laydanhsachkpidaduyet(mst:None,macongty:None):
@@ -2051,7 +2067,7 @@ def laydanhsachkpidaduyet(mst:None,macongty:None):
             return []
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
       
 def roles_required(*roles):
@@ -2075,7 +2091,7 @@ def delete_kpidata(masothe,macongty):
         conn.close()
         return True    
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def insert_kpidata(masothe:str,macongty:str,values:list):
@@ -2092,13 +2108,13 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
                 value = f"'{value}',"
             query += value
         query += "'Waiting for approval',GETDATE())"  
-        app.logger.info(query)
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
         return True    
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def guimailthongbaodaguikpi(nhamay,mst,hoten):
@@ -2106,12 +2122,12 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Cho_phe_duyet values ('{nhamay}','{mst}',N'{hoten}',GETDATE())"
-        app.logger.info(query)  
+        print(query)  
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
@@ -2119,12 +2135,12 @@ def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Da_phe_duyet values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
-        app.logger.info(query)
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
@@ -2132,12 +2148,12 @@ def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Bi_tu_choi values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
-        app.logger.info(query)
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def laydanhsachquanly(macongty:None):
@@ -2155,7 +2171,7 @@ def laydanhsachquanly(macongty:None):
         else:
             return []        
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
     
 def pheduyetkpi(masothe,macongty):
@@ -2168,7 +2184,7 @@ def pheduyetkpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def tuchoikpi(masothe,macongty):
@@ -2181,7 +2197,7 @@ def tuchoikpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def layemailquanly(macongty,masothe):
@@ -2193,7 +2209,7 @@ def layemailquanly(macongty,masothe):
         conn.close()
         return row[0]
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return False
     
 def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
@@ -2214,12 +2230,12 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
         if ngaynghi:
             query += f" AND Ngay_nghi_du_kien = '{ngaynghi}'"    
         query += "ORDER BY Ngay_nop_don DESC, Ngay_nghi_du_kien DESC"  
-        app.logger.info(query)
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []
 
 def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
@@ -2230,10 +2246,10 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
             query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',N'{ghichu}')"
         else:
             query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',NULL)"
-        app.logger.info(query)
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return []

@@ -4,11 +4,6 @@ from app import *
 #          MAIN ROUTES           #
 ##################################
 
-if __name__ != '__main__':
-    gunicorn_logger = logging.getLogger('gunicorn.error')
-    app.logger.handlers = gunicorn_logger.handlers
-    app.logger.setLevel(gunicorn_logger.level)
-
 if __name__ == '__main__':
     handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1, encoding='utf-8')
     handler.setLevel(logging.INFO)
@@ -79,7 +74,7 @@ def login():
         if user.matkhau == request.form.get("matkhau"):
             try:
                 login_user(user)
-                app.logger.info(f"User {user.masothe} {user.macongty} logged in")
+                print(f"User {user.masothe} {user.macongty} logged in")
             except Exception as e:
                 app.logger.error(f"Error during login: {e}")
                 flash('An error occurred. Please try again.')
@@ -782,7 +777,7 @@ def thaydoithongtinlaodong():
             conn.close()
             flash("Cập nhật thông tin người lao động thành công !!!")
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
@@ -846,7 +841,7 @@ def inhopdonglaodong():
 
                 return redirect("/muc3_3")
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             flash("Tải file hợp đồng thất bại !!!")
             return redirect("/muc3_3")   
 
@@ -975,7 +970,7 @@ def nhapkpi():
             else:
                 flash("Upload new KPI failed: Cannot found data !!!")
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             flash("Upload new KPI failed !!!")
         return redirect("/muc5_1_1")
 
@@ -1103,7 +1098,7 @@ def dieuchuyen():
                                 )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                print(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
             
@@ -1117,7 +1112,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                print(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Nghỉ thai sản":
@@ -1151,7 +1146,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                print(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Thai sản đi làm lại":
@@ -1185,7 +1180,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                print(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         return redirect(f"/muc6_1")
@@ -1448,12 +1443,12 @@ def danhsachxinnghikhac():
                                 row["Loại nghỉ"]
                             )
                         except Exception as e:
-                            app.logger.info(e)
+                            print(e)
                             break
                 flash("Cập nhật xin nghỉ khác thành công !!!")
         except Exception as e:
             flash("Cập nhật xin nghỉ khác thất bại !!!")
-            app.logger.info(e)
+            print(e)
         return redirect("/muc7_1_6")
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
@@ -1632,7 +1627,7 @@ def xulykiluat():
                 flash("Thêm biên bản kỷ luật thành công !!!")
         except Exception as ex:
             flash("Thêm biên bản kỷ luật thất bại !!!")
-            app.logger.info(ex)
+            print(ex)
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -1718,7 +1713,7 @@ def inchamduthopdong():
 
                 return redirect("/muc10_3")
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             return redirect("/muc10_3")  
 
 #############################################
@@ -1752,7 +1747,7 @@ def capnhattrangthaiungvien():
         else:
             return {"status": "fail"}, 400
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         return {"status": "fail"}, 400
 
 @app.route("/laythongtincccd", methods=["POST"])
@@ -1891,7 +1886,7 @@ def dangkitangcanhom():
                             else:
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            app.logger.info(e)   
+                            print(e)   
                     else:
                         flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
@@ -2098,7 +2093,7 @@ def doicacanhan():
         flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
     
@@ -2118,13 +2113,14 @@ def doicanhom():
                     danhsach = laydanhsachusertheoline(chuyen)
                 else:
                     file = request.files.get("file")
-                    app.logger.info(file)
+                    print(file)
                     if file:
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                         filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
                         file.save(filepath)
                         data = pd.read_excel(filepath).to_dict(orient="records")
                         for row in data:
+                            print(row)
                             themdoicamoi(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
@@ -2138,7 +2134,7 @@ def doicanhom():
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        app.logger.info(e)
+        print(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
         
@@ -2496,6 +2492,6 @@ def taifilemaukp():
             return send_file(file, as_attachment=True)
             
         except Exception as e:
-            app.logger.info(e)
+            print(e)
             flash("Download file error !!!")
             return redirect("/muc5_1_1")
