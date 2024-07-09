@@ -1742,7 +1742,9 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 conn.close()
                 flash("Đổi ca thành công", "success")
                 return True
-        return True
+        else:
+            flash("Ca cũ và ca mới giống nhau")
+            return False
     except Exception as e:
         print(e)    
         return False 
