@@ -156,15 +156,15 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{row  | safe }}'>
-                    <th>{{loop.index}}</th>
-                    <th>{{row[1]}}</th>
-                    <th>{{row[2]}}</th>
-                    <th>{{row[5]}}</th>
-                    <th class="date_en">{{row[6]}}</th>
+                    <td>{{loop.index}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td class="date_en">{{row[6]}}</td>
                     {% if row[7] %}
-                    <th>{{row[7][:5]}}</th>
+                    <td>{{row[7][:5]}}</td>
                     {% else %}
-                    <th></th>
+                    <td></td>
                     {% endif %}
                 </tr>
                 {% endfor %}
