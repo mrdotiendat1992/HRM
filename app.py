@@ -1741,7 +1741,7 @@ def laycahientai(mst):
         
         row = cursor.execute(query).fetchone()
         if row:
-            return row[-1]
+            return row[-2]
         return None
     except Exception as e:
         print(e)

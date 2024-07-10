@@ -155,7 +155,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                    <input type="submit" class="btn btn-primary" value="Lưu"></input>
+                    <input type="submit" class="btn btn-primary" value="Lưu" onclick="return luudonxinnghiviec()"></input>
                 </div>
             </form>
             </div>
@@ -229,6 +229,13 @@
                 }
             });
         });
+        function luudonxinnghiviec() {
+            if confirm("Bạn muốn lưu đơn xon nghỉ này?") {
+                return true;
+            } else {
+                return false;
+            }
+        }
     </script>
 </div>
 
