@@ -64,7 +64,7 @@
                     <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
                 </div>
             </form>
-            <input class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_10'" value="tất cả"></input>
+            <input class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_10'" style="margin-left: 30px; margin-right: 30px;" value="Tất cả"></input>
             <form method="POST">
                 <input type="hidden" name="chuyen" value="{{ request.args.get('mst', '') }}">
                 <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
