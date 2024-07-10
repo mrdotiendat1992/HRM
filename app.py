@@ -1714,10 +1714,10 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 query = f"""
                             UPDATE HR.dbo.Dang_ky_ca_lam_viec
                             SET Den_ngay = '{ngayketthuccacu}'
-                            WHERE MST='{mst}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
+                            WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
                             INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                            VALUES ('{mst}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
+                            VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
                         """
                 print(query)
                 cursor.execute(query)
