@@ -1681,8 +1681,8 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
         cursor = conn.cursor()
         if pd.notna(ngayketthuc):
             print("Co ngay ket thuc")
-            ngayketthuccacu = ngaybatdau - timedelta(days=1)
-            ngayvecamacdinh = ngayketthuc + timedelta(days=1)
+            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
+            ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
             if ngaybatdau < ngayketthuc:
                 ngaymoc = datetime(2054,12,31)
                 if chuadangkytangca(mst):
