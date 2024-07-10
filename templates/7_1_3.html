@@ -92,14 +92,14 @@
                 <input type="hidden" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}">
                 <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                <input type="submit" class="btn btn-success" value="Xuất Excel" style="width:auto;"></input>
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel" style="width:auto;"></input>
             </form>
             <div class="pagination">{{pagination.links}}</div>
         </div>
         <br>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th class="sticky_1">Mã số thẻ</th>
                     <th class="sticky_2">Họ tên</th>
                     <th>Chức danh</th>
