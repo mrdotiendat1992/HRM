@@ -105,7 +105,7 @@ def laycatheochuyen(chuyen):
         if chuyen in CA_THEO_CHUYEN:
             return CA_THEO_CHUYEN[chuyen]
         else:
-            return "A1-01"
+            return "A1-04"
     except Exception as e:
         print(e)
         return None
@@ -2218,7 +2218,7 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
             ngayhientai = datetime.now().date()
             ngaynghisapden = datetime.now().date() + timedelta(days=7)
             query += f" AND Ngay_nghi_du_kien >= '{ngayhientai}' AND Ngay_nghi_du_kien <= '{ngaynghisapden}'"   
-        query += "ORDER BY Ngay_nop_don DESC, Ngay_nghi_du_kien DESC"  
+        query += "ORDER BY Ngay_nghi_du_kien DESC,Ngay_nop_don DESC"  
         print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()

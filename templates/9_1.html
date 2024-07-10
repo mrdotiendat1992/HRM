@@ -2,21 +2,25 @@
 {% block style%}
 <style>
     table, th, td {
-        font-size: 11px;
+        font-size: 12px;
+        font-weight:bold;
+        border-collapse: collapse;
+    }
+    th {
         text-align: center;
-        justify-content: center;
-        align-items: center;
+        color: white;
     }
-    input, select {
-        margin-left: 10px;
-        width: 150px;
+    td {
+        text-align: left;
+        color: #4e73df;
     }
+    
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container">
     <div class="row">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#myModal">
             Thêm biên bản
         </button>
     </div>
@@ -81,17 +85,17 @@
     <br>
     <br>
     <div class="row">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-sm">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th colspan="7">Thông tin nhân viên</th>
-                    <th rowspan="2">Ngày vi phạm</th>
-                    <th rowspan="2">Ngày lập biên bản</th>
-                    <th rowspan="2">Địa điểm</th>
-                    <th rowspan="2">Nội dung vi phạm</th>
-                    <th rowspan="2">Biện pháp kỉ luật</th>
+                    <th rowspan="2" style="vertical-align:middle;">Ngày vi phạm</th>
+                    <th rowspan="2" style="vertical-align:middle;">Ngày lập biên bản</th>
+                    <th rowspan="2" style="vertical-align:middle;">Địa điểm</th>
+                    <th rowspan="2" style="vertical-align:middle;">Nội dung vi phạm</th>
+                    <th rowspan="2" style="vertical-align:middle;">Biện pháp kỉ luật</th>
                 </tr>
-                <tr class="table-info">
+                <tr class="bg-info">
                     <th>STT</th>
                     <th>MST</th>
                     <th>Họ tên</th>
