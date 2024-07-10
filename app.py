@@ -1060,7 +1060,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin_OK WHERE Nha_may = '{current_user.macongty}'"
         if sdt:
             query += f"AND Sdt LIKE '{sdt}'"
         if cccd:

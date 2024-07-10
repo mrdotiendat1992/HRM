@@ -4,23 +4,34 @@
     table, th, td {
         font-size: 12px;
         font-weight:bold;
+        border-collapse: collapse;
     }
-    table td {
+    th {
+        text-align: center;
+        color: white;
+    }
+    td, th {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 200px;
-        border-collapse: collapse;  
-        text-align: center;
-        color: black;
+        max-width: 200px; /* Adjust based on your requirement */
     }
-    select, input, label {
-        font-size: 10px;
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
+    }
+    input, select, label {
         width: auto;
+        font-weight: bold;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    td input {
         border: none;
-        outline: none; 
-        color: black;
-        font-weight:bold;
+        background-color: transparent;
     }
     .modal {
         display: none;
@@ -59,33 +70,19 @@
     }
 
     .content {
-        width: 2500px;
-    }
-    th.sticky_1, td.sticky_1 {
-        position: sticky;
-        left: 0;
-        z-index: 1;
-    }
-    td.sticky_1 {
-        background-color: #4e73df;
-        color:white;
-        font-weight: bold;
-    }
-    th.sticky_2, td.sticky_2 {
-        position: sticky;
-        left: 60px;
-        z-index: 1;
+        width: auto;
     }
     td.sticky_2 {
         background-color: #4e73df;
         color:white;
         font-weight: bold;
     }
-
-    .pagination {
-        margin-left: 50px;
-        font-size: 10px;
+    td.sticky_2 {
+        position: sticky;
+        left: 0;
+        z-index: 1;
     }
+
 </style>
 {% endblock style %}
 {% block content %} 
@@ -93,29 +90,26 @@
     <div class="content">
         <div style="display: fixed; align-items: center;">
             <form method="GET" action="/muc2_1" style="display: inline;">
-                <label for="sdt">Số điện thoại</label>
-                <input id="sdt" name="sdt" type="text" onchange="this.form.submit()">
-                <label for="cccd">Căn cước công dân</label>
-                <input id="cccd" name="cccd" type="text" onchange="this.form.submit()">
+                <input id="sdt" name="sdt" type="text" onchange="this.form.submit()" placeholder="Số điện thoại" value={{request.args.get('sdt','')}}>
+                <input id="cccd" name="cccd" type="text" onchange="this.form.submit()" placeholder="CCCD" value={{request.args.get('cccd','')}}>
                 <label for="ngaygui">Ngày ứng tuyển</label>
                 <input id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
-                <input class="btn btn-primary" style="width: 80px;" onclick="window.location.href='/muc2_1'" value="Tất cả">
-            </form>
-            <form method="POST" action="/export_dsdktt">
-                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>
-                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd','')}}>
-                <input id="ngaygui" name="ngaygui" type="date" hidden value={{request.args.get('ngaygui','')}} >
-                <input class="btn btn-success" value="Xuất excel" type="submit">
+                <input class="btn btn-primary btn-sm" style="width: 80px;" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
         </div>
         <br>
         <div style="display: flex; align-items: center;">
             <h5>Tổng: {{count}}</h5>
             <div class="pagination">{{ pagination.links }}</div>
+            <form method="POST" action="/export_dsdktt">
+                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>
+                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd','')}}>
+                <input id="ngaygui" name="ngaygui" type="date" hidden value={{request.args.get('ngaygui','')}} >
+                <input class="btn btn-success btn-sm" value="Xuất excel" type="submit">
+            </form>
         </div>
-        <table class="table table-bordered">
-            <tr class="table-primary">
-                <th>STT</th>
+        <table class="table table-bordered table-hover table-sm">
+            <tr class="bg-primary">
                 <th class="sticky_2">Họ và tên</th>
                 <th>Vị trí tuyển dụng</th>
                 <th>Số điện thoại</th>
@@ -152,7 +146,7 @@
             {% for user in danhsach %}
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
-                        <td><input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">{{ user['ID'] }}</td>
+                        <input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">
                         <td class="sticky_2">{{ user["Họ tên"] }}</td>
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
@@ -220,7 +214,7 @@
                         {% else %}
                         <td><input type="text" name="ghichu"></td>
                         {% endif %}
-                        <td><input type="submit" value="Lưu" class="btn btn-primary"></input></td>
+                        <td><input type="submit" value="Lưu" class="btn btn-primary btn-sm"></input></td>
                     </tr>
                 </form>
             {% endfor %}
