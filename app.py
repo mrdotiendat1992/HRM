@@ -1676,48 +1676,28 @@ def chuadangkytangca(mst):
         
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
-        if cacu != camoi:
-            conn = pyodbc.connect(used_db)
-            cursor = conn.cursor()
-            if pd.notna(ngayketthuc):
-                print("Co ngay ket thuc")
-                ngayketthuccacu = ngaybatdau - timedelta(days=1)
-                ngayvecamacdinh = ngayketthuc + timedelta(days=1)
-                if ngaybatdau < ngayketthuc:
-                    ngaymoc = datetime(2054,12,31)
-                    if chuadangkytangca(mst):
-                        query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
-                    else:
-                        query = f"""
-                                UPDATE HR.dbo.Dang_ky_ca_lam_viec
-                                SET Den_ngay = '{ngayketthuccacu}'
-                                WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
-                                INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                                VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
-
-                                INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                                VALUES ('{int(mst)}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
-                            """
-                    print(query)
-                    cursor.execute(query)
-                    conn.commit()
-                    conn.close()
-                    flash("Đổi ca thành công", "success")
-                    return True
-                else:
-                    flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
-            else:
-                print("KHong co ngay ket thuc")
-                ngayketthuccacu = ngaybatdau - timedelta(days=1)
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        if pd.notna(ngayketthuc):
+            print("Co ngay ket thuc")
+            ngayketthuccacu = ngaybatdau - timedelta(days=1)
+            ngayvecamacdinh = ngayketthuc + timedelta(days=1)
+            if ngaybatdau < ngayketthuc:
                 ngaymoc = datetime(2054,12,31)
-                query = f"""
+                if chuadangkytangca(mst):
+                    query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
+                else:
+                    query = f"""
                             UPDATE HR.dbo.Dang_ky_ca_lam_viec
                             SET Den_ngay = '{ngayketthuccacu}'
                             WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
 
                             INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
-                            VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
+                            VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngayketthuc}','{camoi}')
+
+                            INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                            VALUES ('{int(mst)}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
                         """
                 print(query)
                 cursor.execute(query)
@@ -1725,9 +1705,26 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 conn.close()
                 flash("Đổi ca thành công", "success")
                 return True
+            else:
+                flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
         else:
-            flash("Ca cũ và ca mới giống nhau")
-            return False
+            print("KHong co ngay ket thuc")
+            ngayketthuccacu = ngaybatdau - timedelta(days=1)
+            ngaymoc = datetime(2054,12,31)
+            query = f"""
+                        UPDATE HR.dbo.Dang_ky_ca_lam_viec
+                        SET Den_ngay = '{ngayketthuccacu}'
+                        WHERE MST='{int(mst)}' AND Den_ngay = '{ngaymoc}' AND Factory = '{current_user.macongty}'
+
+                        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
+                        VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
+                    """
+            print(query)
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            flash("Đổi ca thành công", "success")
+            return True
     except Exception as e:
         print(e)    
         return False 
