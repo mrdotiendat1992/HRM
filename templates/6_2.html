@@ -3,6 +3,14 @@
 <style>
 table, th, td {
     font-size: 10px;
+    font-weight:bold;
+}
+th {
+    color: white;
+}
+td, label, p, input, h5 {
+    color: #4e73df;
+    font-weight: bold;
 }
 input, select, label {
     width: 150px;
@@ -12,39 +20,39 @@ input, select, label {
 .pagination {
     font-size: 10px;
     margin-left: 50px;
+    margin-right: 50px;
 }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
-    <form action="/muc6_2" method="get">
+    <form method="get">
         <div class="form-group">
-            <label for="mst">Nhập mã số thẻ:</label>
-            <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
-
-            <label for="hoten">Họ tên:</label>
-            <input type="text" id="hoten" name="hoten" value='{{request.args.get('hoten', '')}}'>
-
-            <label for="ngay">Ngày:</label>
-            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
-
-            <label for="kieudieuchuyen">Kiểu điều chuyển:</label>
-            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value='{{request.args.get('kieudieuchuyen', '')}}'></input>
+            <input type="text" id="mst" name="mst" value='{{request.args.get('mst', '')}}' onchange="this.form.submit()" placeholder="Mã số thẻ">
+            <input type="text" id="hoten" name="hoten" value='{{request.args.get('hoten', '')}}' onchange="this.form.submit()" placeholder="Họ tên">
+            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" value='{{request.args.get('kieudieuchuyen', '')}}' onchange="this.form.submit()" placeholder="Kiểu điều chuyển">
+            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}} onchange="this.form.submit()">
+            <a class="btn btn-primary btn-sm" onclick="window.location.href='/muc6_2'">Tất cả</a>
         </div>
-        <br>
-        
+    </form>
+    
     <div style="display: flex; align-items: center;">
-            <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
-        </form>
         <h5 style="margin-left: 20px">Tổng: {{count}}</h5>
         <div class="pagination">{{pagination.links}}</div>
+        <form method="post">
+            <input type="text" id="mst" name="mst" hidden value='{{request.args.get('mst', '')}}'>
+            <input type="text" id="hoten" name="hoten" hidden value='{{request.args.get('hoten', '')}}'>
+            <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" hidden value='{{request.args.get('kieudieuchuyen', '')}}'>
+            <input type="date" id="ngay" name="ngay" hidden value={{request.args.get('ngay', '')}}>
+            <input class="btn btn-success btn-sm" value="Xuất Excel" type="submit">
+        </form>
     </div>
-    <br>
-    <table class="table table-hover">
+    <table class="table table-bordered table-hover table-sm">
         <thead>
-            <tr class="table-primary">
+            <tr class="bg-primary">
                 <th>Mã số thẻ</th> 
                 <th>Họ tên</th>
+                <th>Ngày chính thức</th>
                 <th>Vị trí cũ</th>
                 <th>Line cũ</th>
                 <th>Vị trí mới</th>
@@ -60,10 +68,11 @@ input, select, label {
             <tr data-info='{{ row  | safe }}'>
                 <td>{{row["MST"]}}</td> 
                 <td>{{row["Họ tên"]}}</td>
-                <td>{{row["Vị trí cũ"]}}</td>
+                <td class='date_en'>{{row["Ngày chính thức"]}}</td>
                 <td>{{row["Chuyền cũ"]}}</td>
-                <td>{{row["Vị trí mới"]}}</td>
                 <td>{{row["Chuyền mới"]}}</td>
+                <td>{{row["Vị trí cũ"]}}</td>
+                <td>{{row["Vị trí mới"]}}</td>
                 <td>{{row["Phân loại"]}}</td>
                 <td class='date_en'>{{row["Ngày thực hiện"]}}</td>
                 <td>{{row["Ghi chú"]}}</td>

@@ -694,53 +694,32 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query= f"""SELECT 
-                Lich_su_cong_tac.Nha_may,
-                Lich_su_cong_tac.MST,
-                Danh_sach_CBCNV.Ho_ten,
-                Lich_su_cong_tac.Chuc_vu_cu,
-                Lich_su_cong_tac.Line_cu,
-                Lich_su_cong_tac.Chuc_vu_moi,
-                Lich_su_cong_tac.Line_moi,
-                Lich_su_cong_tac.Phan_loai,
-                Lich_su_cong_tac.Ngay_thuc_hien,
-                Lich_su_cong_tac.Ghi_chu
-            FROM 
-                Lich_su_cong_tac
-            INNER JOIN 
-                Danh_sach_CBCNV 
-            ON 
-                Lich_su_cong_tac.MST = Danh_sach_CBCNV.MST
-            WHERE 
-                Lich_su_cong_tac.Nha_may = '{current_user.macongty}' """
+        query= f"""SELECT * FROM Lich_su_cong_tac_OK WHERE Nha_may = '{current_user.macongty}' """
         if mst:
-            query += f"AND Lich_su_cong_tac.MST LIKE '%{mst}%' "
+            query += f"AND MST LIKE '%{mst}%' "
         if ngay:
-            query += f"AND Lich_su_cong_tac.Ngay_thuc_hien = '{ngay}' "
+            query += f"AND Ngay_thuc_hien = '{ngay}' "
         if kieudieuchuyen:
-            query += f"AND Lich_su_cong_tac.Phan_loai LIKE N'%{kieudieuchuyen}%' "
+            query += f"AND Phan_loai LIKE N'%{kieudieuchuyen}%' "
         if hoten:
-            query += f"AND Danh_sach_CBCNV.Ho_ten LIKE N'%{hoten}%' "
-        query += "ORDER BY Lich_su_cong_tac.Ngay_thuc_hien DESC, CAST(Lich_su_cong_tac.MST AS INT) ASC, Lich_su_cong_tac.Line_moi ASC"
-        # if not mst and not ngay and not kieudieuchuyen:
-        #     query = f"""
-        #         SELECT * FROM HR.dbo.Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' 
-        #         ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC, Line_moi ASC
-        #         """
-        
+            query += f"AND Ho_ten LIKE N'%{hoten}%' "
+        query += "ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC"
+        print(query)
         rows = cursor.execute(query)
         result = []
         for row in rows:
             result.append({
+                "Mã công ty": row[10],
                 "MST": row[1],
-                "Họ tên": row[2],
+                "Họ tên": row[0],
+                "Ngày chính thức": row[2],
                 "Chuyền cũ": row[3],
-                "Chuyền mới": row[5],
-                "Vị trí cũ": row[4],
-                "Vị trí mới": row[6],
-                "Phân loại": row[7],
-                "Ngày thực hiện": row[8],
-                "Ghi chú": row[9]
+                "Chuyền mới": row[4] if row[4] else '',
+                "Vị trí cũ": row[6],
+                "Vị trí mới": row[7] if row[7] else '',
+                "Phân loại": row[8],
+                "Ngày thực hiện": row[5],
+                "Ghi chú": row[9] if row[9] else '',
             })
         conn.commit()
         conn.close()

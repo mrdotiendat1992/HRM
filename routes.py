@@ -1214,7 +1214,18 @@ def lichsucongtac():
                                pagination=pagination,
                                mst=mst, 
                                count=count)
-
+    if request.method == "POST":
+        mst = request.args.get("mst")
+        hoten = request.args.get("hoten")
+        ngay = request.args.get("ngay")
+        kieudieuchuyen = request.args.get("kieudieuchuyen")
+        data = laylichsucongtac(mst,hoten,ngay,kieudieuchuyen)
+        df = pd.DataFrame(data)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), index=False)
+        flash("Tải file thành công !!!")
+        return send_file(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), as_attachment=True)
+    
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
