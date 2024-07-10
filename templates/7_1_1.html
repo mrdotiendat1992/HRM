@@ -22,7 +22,7 @@
         text-overflow: ellipsis;
         max-width: 200px; /* Adjust based on your requirement */
     }
-    td, label, p, input, h5 {
+    td, label, p, input, h5,select {
         color: #4e73df;
         font-weight: bold;
     }
@@ -214,21 +214,22 @@
     <hr />  
     <div class="row">
         <h5>Lịch sử đổi ca làm việc</h5>
-        <hr />
-        <form method="GET">
-            <div class="form-group">
-                <input id="mst" name="mst" type="text" onchange="this.form.submit()" placeholder='Mã số thẻ' value="{{request.args.get('mst','')}}">
-                <input id="chuyen" name="chuyen" type="text" onchange="this.form.submit()" placeholder='Chuyền' value="{{request.args.get('chuyen','')}}">
-                <input id="phongban" name="phongban" type="text" onchange="this.form.submit()" placeholder='Phòng ban' value="{{request.args.get('phongban','')}}">
-            </div>
-        </form>
-        <div class='pagination'>{{ pagination.links }}</div>
-        <form method="POST">
-            <input id="mst" name="mst" type="text" hidden value="{{request.args.get('mst','')}}">
-            <input id="chuyen" name="chuyen" type="text" hidden value="{{request.args.get('chuyen','')}}">
-            <input id="phongban" name="phongban" type="text" hidden value="{{request.args.get('phongban','')}}">
-            <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel" id="excel"></input>
-        </form>
+        <div style="display: flex; align-items: center;">
+            <form method="GET">
+                <div class="form-group">
+                    <input id="mst" name="mst" type="text" onchange="this.form.submit()" placeholder='Mã số thẻ' value="{{request.args.get('mst','')}}">
+                    <input id="chuyen" name="chuyen" type="text" onchange="this.form.submit()" placeholder='Chuyền' value="{{request.args.get('chuyen','')}}">
+                    <input id="phongban" name="phongban" type="text" onchange="this.form.submit()" placeholder='Phòng ban' value="{{request.args.get('phongban','')}}">
+                </div>
+            </form>
+            <form method="POST">
+                <input id="mst" name="mst" type="text" hidden value="{{request.args.get('mst','')}}">
+                <input id="chuyen" name="chuyen" type="text" hidden value="{{request.args.get('chuyen','')}}">
+                <input id="phongban" name="phongban" type="text" hidden value="{{request.args.get('phongban','')}}">
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel" id="excel"></input>
+            </form>
+            <div class='pagination'>{{ pagination.links }}</div>
+        </div>
         <table class="table table-hover table-sm">
             <thead>
                 <tr class="bg-primary">
