@@ -2,7 +2,14 @@
 {% block style%}
 <style>
     table, th, td , button{
-        font-size: 10px;
+        font-size: 12px;
+    }
+    th {
+        color: white;
+    }
+    td {
+        color: white;color: #4e73df;
+        font-weight: bold;
     }
     .scroll-container {
         width: 100%;
@@ -27,13 +34,13 @@
         <div class="row">
             <div class="col">
                 <form action = "/taifilexinnghiphepkhacmau" method = "POST">
-                    <input type="submit" value="Tải file mẫu" class="btn btn-primary"></input>
+                    <input type="submit" value="Tải file mẫu" class="btn btn-primary btn-sm"></input>
                 </form>
             </div>
             <div class="col">
                 <form action = "/muc7_1_6" method = "POST" enctype = "multipart/form-data">
                     <input type="file" name="file">
-                    <input type="submit" value="Đăng ký" class="btn btn-primary"></input>
+                    <input type="submit" value="Đăng ký" class="btn btn-primary btn-sm"></input>
                     <br>    
                 </form>
             </div>  
@@ -45,15 +52,15 @@
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
                 <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm">
             <thead>
                 <form action = "/muc7_1_6" method = "GET">
-                    <tr class="table-primary">
+                    <tr class="bg-primary">
                         {% if request.args.get('mst') %}
                         <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
                         {% else %}
