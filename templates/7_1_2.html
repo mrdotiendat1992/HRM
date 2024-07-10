@@ -89,17 +89,17 @@ th.sticky {
         </form>
         <br>
         <div style="display: flex; align-items: center;">
-        <h5><b>Tổng: {{count}}</b></h5>
-        <div class="pagination">{{ pagination.links }}</div>
-        <form method="POST" action="/export_dslt">
-            <div class="form-group">
-                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
-                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
-            </div>
-        </form>
-
+            <h5><b>Tổng: {{count}}</b></h5>
+            <div class="pagination">{{ pagination.links }}</div>
+            <form method="POST" action="/export_dslt">
+                <div class="form-group">
+                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                    <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                    <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
+                </div>
+            </form>
+        </div>
         <table class="table table-hover table-sm">
             <thead>
                 <tr class="bg-primary">
