@@ -2,7 +2,25 @@
 {% block style%}
 <style>
 table, th, td {
-    font-size: 10px;
+    font-size: 12px;
+    font-weight:bold;
+    color: black;
+    border-collapse: collapse;  
+    text-align: center;
+}
+th {
+    text-align: center;
+    color: white;
+}
+table td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Adjust based on your requirement */
+}
+td, label, p, input, h5,select {
+    color: #4e73df;
+    font-weight: bold;
 }
 label {
     text-align: right;
@@ -44,48 +62,47 @@ th.sticky {
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        
-            <form method="GET" action="/muc7_1_2">
-                <div class="form-group">
-                    <label for="mst">Mã số thẻ:</label>
-                    {% if request.args.get('mst') %}
-                    <input id="mst" name="mst" value="{{ request.args.get('mst')  }}"></input>
-                    {% else %}
-                    <input id="mst" name="mst"></input>
-                    {% endif %}
-                    <label for="chuyen">Chuyền:</label>
-                    {% if request.args.get('chuyen') %}
-                    <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
-                    {% else %}
-                    <input id="chuyen" name="chuyen"></input>
-                    {% endif %}
-                    <label for="bophan">Bộ phận:</label>
-                    {% if request.args.get('bophan') %}
-                    <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
-                    {% else %}
-                    <input id="bophan" name="bophan"></input>
-                    {% endif %}
-                    <label for="ngay">Ngày</label>
-                    <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
-                    <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
-                </div>
-            </form>
-            <br>
-            <div style="display: flex; align-items: center;">
-            <h5><b>Tổng: {{count}}</b></h5>
-            <div class="pagination">{{ pagination.links }}</div>
-            <form method="POST" action="/export_dslt">
-                <div class="form-group">
-                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                    <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
-                    <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
-                </div>
-            </form>
-        </div>
-        <table class="table table-hover">
+        <form method="GET" action="/muc7_1_2">
+            <div class="form-group">
+                <label for="mst">Mã số thẻ:</label>
+                {% if request.args.get('mst') %}
+                <input id="mst" name="mst" value="{{ request.args.get('mst')  }}"></input>
+                {% else %}
+                <input id="mst" name="mst"></input>
+                {% endif %}
+                <label for="chuyen">Chuyền:</label>
+                {% if request.args.get('chuyen') %}
+                <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
+                {% else %}
+                <input id="chuyen" name="chuyen"></input>
+                {% endif %}
+                <label for="bophan">Bộ phận:</label>
+                {% if request.args.get('bophan') %}
+                <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
+                {% else %}
+                <input id="bophan" name="bophan"></input>
+                {% endif %}
+                <label for="ngay">Ngày</label>
+                <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
+                <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
+            </div>
+        </form>
+        <br>
+        <div style="display: flex; align-items: center;">
+        <h5><b>Tổng: {{count}}</b></h5>
+        <div class="pagination">{{ pagination.links }}</div>
+        <form method="POST" action="/export_dslt">
+            <div class="form-group">
+                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
+            </div>
+        </form>
+
+        <table class="table table-hover table-sm">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
                     <th>Chuyền tổ</th>
