@@ -1,12 +1,24 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td , button{
-        font-size: 10px;
-        width: auto;
+    table, th, td {
+        font-size: 12px;
+        font-weight:bold;
+        color: black;
+        border-collapse: collapse;  
+        text-align: center;
     }
     th {
+        text-align: center;
         color: white;
+    }
+    table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+        color: white;color: #4e73df;
+        font-weight: bold;
     }
     td, label, p, input, h5, select {
         color: white;color: #4e73df;
@@ -46,20 +58,21 @@
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <form method="GET" action="/muc7_1_10">
-            <div class="form-group">
-                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
-            </div>
-        </form>
-        <input class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_10'" value="Xem tất cả"></input>
         <div style="display: flex; align-items: center;">
-            <h5><b>Tổng: {{count}}</b></h5>
-            <div class="pagination">{{ pagination.links }}</div>
+            <form method="GET" action="/muc7_1_10">
+                <div class="form-group">
+                    <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
+                </div>
+            </form>
+            <input class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_10'" value="tất cả"></input>
             <form method="POST">
                 <input type="hidden" name="chuyen" value="{{ request.args.get('mst', '') }}">
                 <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
             </form>
-            
+        </div>
+        <div style="display: flex; align-items: center;">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <div class="pagination">{{ pagination.links }}</div>            
         </div>
         <table class="table table-hover table-sm table-bordered">
             <thead>
