@@ -6,17 +6,26 @@
         overflow-x: scroll;
     }
     .content {
-        width: 1500px;
+        width: 100%;
     }
     table, th, td {
-        font-size: 11px;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
+        font-size: 12px;
+        font-weight:bold;
+        border-collapse: collapse;
     }
-    input, select {
-        margin-left: 10px;
-        width: 150px;
+    th {
+        text-align: center;
+        color: white;
+    }
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+    }
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
     }
 </style>
 {% endblock style %}
@@ -24,66 +33,64 @@
 <div class="scroll-container">
     <div class="content">
         <br>
-        <div class="row">
-            <table class="table table-bordered">
-                <thead>
-                    <tr class="table-primary">
-                        <th>STT</th>
-                        <th>Bộ phận</th>
-                        <th>Vị trí</th>
-                        <th>Số lượng</th>
-                        <th>JD</th>
-                        <th>Thời gian dự kiến</th>
-                        <th>Phân loại</th>
-                        <th>Khoảng lương</th>
-                        <th>Trạng thái yêu cầu</th>
-                        <th>Trạng thái thực hiện</th>
-                        <th>Ghi chú</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for row in danhsach %}
-                    <form action="/muc2_2_2" method="post">
-                        <tr>
-                            <form action="/muc2_2_2" method="post">
-                                <th>{{loop.index}}</th>
-                                <th><input type="text" id="bophan" name="bophan" value="{{row[0]}}" hidden>{{row[0]}}</th>
-                                <th><input type="text" id="vitri" name="vitri" value="{{row[1]}}" hidden>{{row[1]}}</th>
-                                <th><input type="text" id="soluong" name="soluong" value="{{row[2]}}" hidden>{{row[2]}}</th>
-                                <th><input type="text" id="mota" name="mota" value="{{row[3]}}" hidden>{{row[3]}}</th>
-                                <th><input type="date" id="thoigian" name="thoigian" value="{{row[4]}}" hidden>{{row[4]}}</th>
-                                <th><input type="text" id="phanloai" name="phanloai" value="{{row[5]}}" hidden>{{row[5]}}</th>
-                                <th>{{row[6]}}</th>
-                                <th>{{row[7]}}</th>
-                                <th>
-                                    <select id="trangthaithuchien" name="trangthaithuchien">
-                                        {% if row[8] %}
-                                        <option value="{{row[8]}}">{{row[8]}}</option>
-                                        <option value="Đang tuyển">Đang tuyển</option>
-                                        <option value="Đã tuyển">Đã tuyển</option>
-                                        {% else %}
-                                        <option value="">Chọn</option>
-                                        <option value="Đang tuyển">Đang tuyển</option>
-                                        <option value="Đã tuyển">Đã tuyển</option>
-                                        {% endif %}
-                                    </select>
-                                </th>
-                                <th>
-                                    {% if row[9] %}
-                                    <input type="text" id="ghichu" name="ghichu" value="{{row[9]}}">
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr class="bg-primary">
+                    <th>STT</th>
+                    <th>Bộ phận</th>
+                    <th>Vị trí</th>
+                    <th>Số lượng</th>
+                    <th>JD</th>
+                    <th>Thời gian dự kiến</th>
+                    <th>Phân loại</th>
+                    <th>Khoảng lương</th>
+                    <th>Trạng thái yêu cầu</th>
+                    <th>Trạng thái thực hiện</th>
+                    <th>Ghi chú</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                <form action="/muc2_2_2" method="post">
+                    <tr class="bg-info">
+                        <form action="/muc2_2_2" method="post">
+                            <th>{{loop.index}}</th>
+                            <th><input type="text" id="bophan" name="bophan" value="{{row[0]}}" hidden>{{row[0]}}</th>
+                            <th><input type="text" id="vitri" name="vitri" value="{{row[1]}}" hidden>{{row[1]}}</th>
+                            <th><input type="text" id="soluong" name="soluong" value="{{row[2]}}" hidden>{{row[2]}}</th>
+                            <th><input type="text" id="mota" name="mota" value="{{row[3]}}" hidden>{{row[3]}}</th>
+                            <th><input type="date" id="thoigian" name="thoigian" value="{{row[4]}}" hidden>{{row[4]}}</th>
+                            <th><input type="text" id="phanloai" name="phanloai" value="{{row[5]}}" hidden>{{row[5]}}</th>
+                            <th>{{row[6]}}</th>
+                            <th>{{row[7]}}</th>
+                            <th>
+                                <select id="trangthaithuchien" name="trangthaithuchien">
+                                    {% if row[8] %}
+                                    <option value="{{row[8]}}">{{row[8]}}</option>
+                                    <option value="Đang tuyển">Đang tuyển</option>
+                                    <option value="Đã tuyển">Đã tuyển</option>
                                     {% else %}
-                                    <input type="text" id="ghichu" name="ghichu">
+                                    <option value="">Chọn</option>
+                                    <option value="Đang tuyển">Đang tuyển</option>
+                                    <option value="Đã tuyển">Đã tuyển</option>
                                     {% endif %}
-                                </th>
-                                    
-                                <th><input type="submit" class="btn btn-primary" value="Lưu"></input></th>
-                        </tr>
-                    </form>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+                                </select>
+                            </th>
+                            <th>
+                                {% if row[9] %}
+                                <input type="text" id="ghichu" name="ghichu" value="{{row[9]}}">
+                                {% else %}
+                                <input type="text" id="ghichu" name="ghichu">
+                                {% endif %}
+                            </th>
+                                
+                            <th><input type="submit" class="btn btn-primary btn-sm" value="Lưu"></input></th>
+                    </tr>
+                </form>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 {% endblock content %}

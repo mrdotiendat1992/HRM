@@ -2,21 +2,30 @@
 {% block style%}
 <style>
     table, th, td {
-        font-size: 11px;
-        text-align: center;
-        justify-content: center;
-        align-items: center;
+        font-size: 12px;
+        font-weight:bold;
+        border-collapse: collapse;
     }
-    input, select {
-        margin-left: 10px;
-        width: 150px;
+    th {
+        text-align: center;
+        color: white;
+    }
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+    }
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
     }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container">
     <div class="row">
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#requestModal">
+        <button type="button" class="btn btn-primary btn-sm" title="Thêm yêu cầu tuyến dụng" data-toggle="modal" data-target="#requestModal">
             Thêm yêu cầu tuyển dụng
         </button>
     </div>
@@ -36,7 +45,7 @@
                             <div class="col-sm-6">
                                 <div class="form-group">
                                     <label for="bophan">Bộ phận</label>
-                                    <input type="text" id="bophan" name="bophan" >
+                                    <input type="text" id="bophan" name="bophan" value={{current_user.bophan}}>
                                     <label for="vitri">Vị trí</label>
                                     <input type="text" id="vitri" name="vitri" >
                                     <label for="soluong">Số lượng</label>
@@ -53,8 +62,8 @@
                                         <option value="Ngắn hạn">Ngắn hạn</option>
                                     </select>
                                     <label for="mucluong">Mức lương (Triệu đồng)</label>
-                                    <input type="text" id="mucluongtu" name="mucluongtu" >
-                                    <input type="text" id="mucluongden" name="mucluongden" >
+                                    <input type="text" id="mucluongtu" name="mucluongtu" placeholder="Từ">
+                                    <input type="text" id="mucluongden" name="mucluongden" placeholder="Đến">
                                 </div>
                             </div>
                         </div>
@@ -71,9 +80,9 @@
     <br>
     <br>
     <div class="row">
-        <table class="table table-bordered">
+        <table class="table table-bordered table-hover table-sm">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th>STT</th>
                     <th>Bộ phận</th>
                     <th>Vị trí</th>
@@ -89,7 +98,7 @@
             </thead>
             <tbody>
                 {% for row in danhsach %}
-                <tr>
+                <tr class="bg-info">
                     <th>{{loop.index}}</th>
                     <th>{{row[0]}}</th>
                     <th>{{row[1]}}</th>

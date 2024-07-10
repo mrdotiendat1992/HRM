@@ -2,7 +2,9 @@
 {% block style%}
 <style>
 
-    table {
+    table, th, td {
+        font-size: 12px;
+        font-weight:bold;
         border-collapse: collapse;
     }
     th, td {
@@ -14,6 +16,7 @@
     }
     td {
         text-align: left;
+        color: #4e73df;
     }
     select, input {
         width: 120px;
@@ -24,6 +27,10 @@
     h4 {
         color: red;
         font-weight: bold;
+    }
+    label, input, select {
+        font-weight: bold;
+        color: #4e73df;
     }
 </style>
 {% endblock style %}
@@ -75,6 +82,8 @@
                         <option value="Sa thải">Sa thải</option>
                     </select>
                 </div>
+                <hr/>
+                <input class="btn btn-primary btn-sm" type="submit" value="Điều chuyển" onclick="return kiemtradieuchuyen()"></input>
             </div>
 
             <div class="col">
@@ -179,7 +188,7 @@
                     </tbody>
                     <tfoot>
                         <tr class="save-button" style="text-align: center;">
-                            <td colspan="4"><input class="btn btn-primary" type="submit" value="Điều chuyển" onclick="return kiemtradieuchuyen()"></input></td>
+                            
                         </tr>
                     </tfoot>
                 </table>

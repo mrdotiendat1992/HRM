@@ -102,7 +102,10 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
 
 def laycatheochuyen(chuyen):
     try:
-        return CA_THEO_CHUYEN[chuyen]
+        if chuyen in CA_THEO_CHUYEN:
+            return CA_THEO_CHUYEN[chuyen]
+        else:
+            return "A1-01"
     except Exception as e:
         print(e)
         return None
@@ -267,10 +270,11 @@ def dichuyenthaisandilamlai(mst,
         truocngaydilamlai = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL)
-            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc' WHERE MST = '{mst}' AND Factory = '{current_user.macongty} AND Ghi_chu=NULL
+            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaydilamlai}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
             INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Đang làm việc')
             """    
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()

@@ -283,12 +283,12 @@ def dangkytuyendung():
     
 @app.route("/muc2_2_2", methods=["GET","POST"])
 @login_required
-@roles_required('tbp','gd','sa','nhansu')
+@roles_required('tbp','gd','sa','hr')
 def pheduyettuyendung():   
     if request.method == "GET":
         maso = current_user.macongty[-1]
         danhsach = laydanhsachyeucautuyendung(maso)
-        return render_template("2_2_2.html", page="2.2.2 Phê duyệt yêu cầu tuyển dụng",danhsach=danhsach)
+        return render_template("2_2_2.html", page="2.2.2 Trạng thái yêu cầu tuyển dụng",danhsach=danhsach)
     
     elif request.method == "POST":
         bophan = request.form.get("bophan")

@@ -1,8 +1,27 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td, .pagination {
-        font-size: 10px;
+    table, th, td {
+        font-size: 12px;
+        font-weight:bold;
+        border-collapse: collapse;
+    }
+    th {
+        text-align: center;
+    }
+    td, th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+    }
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
+    }
+    input, select, label {
+        width: auto;
+        font-weight: bold;
     }
     .pagination {
         margin-left: 50px;
@@ -83,7 +102,7 @@
         <button class="btn btn-primary" onclick="xoaboloc()" title="Xóa các điều kiện lọc"><i class="fas fa-times"></i></button>
     </div>
     <br>
-    <div id="dieukienloc">
+    <div style="display: flex; align-items: center;">
         <form action="/" method="GET" id="formdieukienloc">
             {% for key, value in request.args.items() %}
                 {% if key == 'page' %}
@@ -112,12 +131,12 @@
             <input type="text" id="Nghỉ từ ngày" name="Nghỉ từ ngày" hidden value={{request.args.get('Nghỉ từ ngày', '')}}>
             <input type="text" id="Nghỉ đến ngày" name="Nghỉ đến ngày" hidden value={{request.args.get('Nghỉ đến ngày', '')}}>
             <input type="text" id="ghichu" name="ghichu" hidden value={{request.args.get('ghichu', '')}}>
-            <input type="submit" class="btn btn-success" value="Xuất excel">
+            <input type="submit" class="btn btn-success btn-sm" value="Xuất excel">
         </form>
     </div>
-    <table class="table table-hove table-bordered">
+    <table class="table table-hover table-bordered table-sm">
         <thead>
-            <tr class="table-primary">
+            <tr class="bg-primary" style="color:white;">
                 <th></th>
                 <th>Mã số thẻ</th>
                 <th>Họ tên</th>
@@ -131,7 +150,7 @@
         <tbody>
             {% for user in users %}
                 <tr data-info='{{ user | tojson | safe }}'>
-                    <td><a class="fas fa-fw fa-eye  view-details" href="#" >Xem</a></td>
+                    <td><a class="fas fa-fw fa-eye  view-details" href="#" ></a></td>
                     <td>{{ user["MST"] }}</td>
                     <td>{{ user["Họ tên"] }}</td>
                     <td>{{ user["Job title VN"] }}</td>
@@ -206,7 +225,6 @@
                     event.preventDefault(); // Ngăn chặn hành động mặc định của thẻ <a>
                     const row = event.target.closest('tr');
                     const info = JSON.parse(row.dataset.info);
-                    console.log(info);
                     var ngaysinh = info["Ngày sinh"];
                     var ngaycapcccd = info["Ngày cấp CCCD"];
                     var ngayvao = info["Ngày vào"];
