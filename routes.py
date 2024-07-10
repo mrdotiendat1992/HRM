@@ -186,7 +186,7 @@ def danhsachdangkytuyendung():
         count=len(rows)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 5
+        per_page = 10
         total = len(rows)
         start = (current_page - 1) * per_page
         end = start + per_page

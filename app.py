@@ -1078,7 +1078,7 @@ def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
                 "ID": row[39],
                 "Nhà máy": row[0],
                 "Vị trí tuyển dụng": row[1],
-                "Họ tên": row[2],
+                "Họ tên": row[2].upper(),
                 "Số điện thoại": row[3],
                 "CCCD": row[4],
                 "Dân tộc": row[5],

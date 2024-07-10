@@ -36,7 +36,7 @@
     .modal {
         display: none;
         position: fixed;
-        z-index: 1;
+        z-index: 10;
         left: 0;
         top: 0;
         width: 100%;
@@ -151,9 +151,9 @@
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
                         <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
                         {% if user["Trạng thái"] == "Đạt" %}
-                        <td style= "background-color: green; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        <td style= "background-color: green; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% elif user["Trạng thái"] == "Không đạt" %}
-                        <td style= "background-color: black; color: white;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        <td style= "background-color: black; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% else %}
                         <td><b class="status" onclick="openModal(this)">Không</b></td>
                         {% endif %}
@@ -225,17 +225,21 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <form id="statusForm" onsubmit="submitForm(event)">
                 <input type="hidden" id="phone" name="phone">
-                <label for="newStatus">Trạng thái mới:</label>
-                <select id="newStatus" name="newStatus">
-                    <option value="Đạt">Đạt</option>
-                    <option value="Không đạt">Không đạt</option>
-                </select>
-                <label for="luuhoso">Lưu hồ sơ:</label>
-                <select id="luuhoso" name="luuhoso">
-                    <option value="Có">Có</option>
-                    <option value="Khôngt">Không</option>
-                </select>
-                <br><br>
+                <div class="form-group">
+                    <label for="newStatus">Trạng thái mới:</label>
+                    <select id="newStatus" name="newStatus">
+                        <option value="Đạt">Đạt</option>
+                        <option value="Không đạt">Không đạt</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="luuhoso">Lưu hồ sơ:</label>
+                    <select id="luuhoso" name="luuhoso">
+                        <option value="Có">Có</option>
+                        <option value="Khôngt">Không</option>
+                    </select>
+                </div>
+                <hr />
                 <input class ="btn btn-primary" type="submit" value="Cập nhật"></input>
             </form>
         </div>
