@@ -1,43 +1,45 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-table, th, td {
-    font-size: 10px;
-}
-label {
-    text-align: right;
-    font-size: 12px;
-}
-input {
-    margin-left: 10px;
-    font-size: 12px;
-    width: auto;
-}
-.scroll-container {
-    width: 100%;
-    overflow-x: scroll;
-}
+    table, th, td , button{
+        font-size: 10px;
+        width: auto;
+    }
+    th {
+        color: white;
+    }
+    td, label, p, input, h5, select {
+        color: white;color: #4e73df;
+        font-weight: bold;
+    }
+    label {
+        width: auto;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
 
-.content {
-    width: auto;
-}
-.pagination {
-    font-size: 10px;
-    margin-left: 20px;
-}
-th.sticky, td.sticky {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-}
-td.sticky {
-    background-color: #4e73df;
-    color: white;
-    font-weight: bold;
-}
-th.sticky {
-    z-index: 2;
-}
+    .content {
+        width: auto;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left: 20px;
+    }
+    th.sticky, td.sticky {
+        position: sticky;
+        left: 0;
+        z-index: 1;
+    }
+    td.sticky {
+        background-color: #4e73df;
+        color: white;
+        font-weight: bold;
+    }
+    th.sticky {
+        z-index: 2;
+    }
 
 </style>
 {% endblock style %}
@@ -46,26 +48,22 @@ th.sticky {
     <div class="content">
         <form method="GET" action="/muc7_1_10">
             <div class="form-group">
-                <label for="mst">Mã số thẻ:</label>
-                <input id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
+                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
             </div>
         </form>
-        
-        <br>
+        <input class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_10'" value="Xem tất cả"></input>
         <div style="display: flex; align-items: center;">
             <h5><b>Tổng: {{count}}</b></h5>
             <div class="pagination">{{ pagination.links }}</div>
             <form method="POST">
-                <div class="form-group">
-                    <input type="hidden" name="chuyen" value="{{ request.args.get('mst', '') }}">
-                    <input type="submit" class="btn btn-success" value="Xuất Excel"></input>
-                </div>
+                <input type="hidden" name="chuyen" value="{{ request.args.get('mst', '') }}">
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
             </form>
-            <input class="btn btn-primary" onclick="window.location.href='/muc7_1_10'" value="Xem tất cả"></input>
+            
         </div>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm table-bordered">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
                     <th>Chức danh</th>

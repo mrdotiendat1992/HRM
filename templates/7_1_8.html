@@ -1,13 +1,19 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td, .pagination {
+    table, th, td , button{
         font-size: 10px;
         width: auto;
     }
-    input, label {
-        width: 100px;
-        font-size: 10px;
+    th {
+        color: white;
+    }
+    td, label, p, input, h5, select {
+        color: white;color: #4e73df;
+        font-weight: bold;
+    }
+    label {
+        width: auto;
     }
     .pagination, h5, input {
         margin-left: 20px;
@@ -59,7 +65,7 @@
                 <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
             </div>
         <div style="display: flex; align-items: center;">
-            <input type="submit" class="btn btn-primary" value="Tìm kiếm"></input>
+            <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
             </form>
             <form action="/export_dscc" method="POST">
                 <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
@@ -67,16 +73,16 @@
                 <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
                 <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
                 <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
-                <input type="submit" value="Xuất Excel" class="btn btn-success">
+                <input type="submit" value="Xuất Excel" class="btn btn-success btn-sm">
             </form>
             <br>
             <h5>Tổng: {{count}}</h5>
             <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm table-bordered">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th>#</th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>

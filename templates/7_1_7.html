@@ -2,40 +2,48 @@
 {% block style%}
 <style>
 
-table, th, td , .pagination {
-    font-size: 10px;
-}
-h3 {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-input, select, label {
-    margin-left: 10px;
-    width: 100px;
-    font-size: 10px;
-}
-button {
-    margin-right: 10px;
-}
+    table, th, td , button{
+        font-size: 10px;
+        width: auto;
+    }
+    th {
+        color: white;
+    }
+    td, label, p, input, h5, select {
+        color: white;color: #4e73df;
+        font-weight: bold;
+    }
+    h3 {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+    input, select, label {
+        margin-left: 10px;
+        width: 100px;
+        font-size: 10px;
+    }
+    button {
+        margin-right: 10px;
+    }
 
-.col {
-    border-top: 1px solid #dee2e6;
-    border-right: 1px solid #dee2e6;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    width: 50%;
-}
-.center {
-    padding: 20px;
-}
+    .col {
+        border-top: 1px solid #dee2e6;
+        border-right: 1px solid #dee2e6;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+        width: 50%;
+    }
+    .center {
+        padding: 20px;
+    }
 
-#filterngay {
-    margin: 10px;
-}
-.pagination {
-    margin-left: 20px;
-}
+    #filterngay {
+        margin: 10px;
+    }
+    .pagination {
+        margin-left: 20px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -46,12 +54,12 @@ button {
             <hr />
             <br>
             <form action="/taimautangcanhom" method="POST">
-                <input class="btn btn-primary" value="Tải mẫu" type="submit"></input>
+                <input class="btn btn-primary btn-sm" value="Tải mẫu" type="submit"></input>
             </form>
             <br>
             <form action="/dangkitangcanhom" method="POST"  enctype="multipart/form-data">
                 <input type="file" name="file" >
-                <input class="btn btn-primary" value="Đăng ký"  type="submit"></input>
+                <input class="btn btn-primary btn-sm" value="Đăng ký"  type="submit"></input>
             </form>
         </div>
         <div class="col">
@@ -71,7 +79,7 @@ button {
                     <label for="ngaytangca">Ngày tăng ca</label>
                     <input type="date" id="ngaytangca" name="ngaytangca">
                 </div>
-                <input class="btn btn-primary" value="Đăng ký" type="submit"></input>
+                <input class="btn btn-primary btn-sm" value="Đăng ký" type="submit"></input>
             </form>
         </div>
     </div>
@@ -98,8 +106,7 @@ button {
                     <input type="date" id="denngay" name="denngay" value="{{ request.args.get('denngay', '') }}">
                 </div>
                 <div style="display: flex; align-items: center;">
-                    <input type="submit" value="Xem" class="btn btn-primary">
-                    <div class="pagination">{{pagination.links}}</div>
+                    <input type="submit" value="Xem" class="btn btn-primary btn-sm">
                 </div>
 
             </form>
@@ -118,15 +125,16 @@ button {
                     <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" hidden>
                     <input type="date" id="tungay" name="tungay" value="{{ request.args.get('tungay', '') }}" hidden>
                     <input type="date" id="denngay" name="denngay" value="{{ request.args.get('denngay', '') }}" hidden>
-                    <input type="submit" value="Xuất Excel" class="btn btn-success">
+                    <input type="submit" value="Xuất Excel" class="btn btn-success btn-sm">
                 </form>
+                <div class="pagination">{{pagination.links}}</div>
             </div>
             
         </div>
         <br>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm table-bordered">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th>STT</th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
