@@ -1648,7 +1648,8 @@ def nhandonnghiviec():
         phongban = request.args.get("phongban")
         ngaynopdon = request.args.get("ngaynopdon")
         ngaynghi = request.args.get("ngaynghi")
-        danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi)
+        sapdenhan = request.args.get("sapdenhan")
+        danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,sapdenhan)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
         total = len(danhsach)
@@ -2495,3 +2496,18 @@ def taifilemaukp():
             print(e)
             flash("Download file error !!!")
             return redirect("/muc5_1_1")
+
+@app.route("/rutdonxinnghiviec", methods=["POST"])
+def rutdonxinnghiviec():
+    if request.method == "POST":
+        try:
+            id = request.form.get("id")
+            if rutdonnghiviec(id):
+                flash("Rút đơn nghỉ việc thành công !!!")
+            else:
+                flash("Rút đơn nghỉ việc thất bại !!!")
+            return redirect("/muc10_2")
+        except Exception as e:
+            print(e)
+            flash(f"Rút đơn bị lỗi ({e}) !!!")
+            return redirect("/muc10_2")    

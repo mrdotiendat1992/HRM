@@ -13,7 +13,27 @@
     }
     label, .input_ngay {
         text-align: right;
-        width : 160px;
+        width : 150px;
+    }
+    .highlight {
+        background-color: yellow;
+    }
+    .expired {
+        background-color: #666699;
+    }
+    #donsapdenhan {
+        background-color: yellow;
+        width: 150px;
+        text-align: center;
+        font-weight: bold;
+        margin-left: 30px;
+    }
+    #donquahan {
+        width: 150px;
+        color: white;
+        font-weight: bold;
+        margin-left: 30px;
+        text-align: center;
     }
 </style>
 {% endblock style %}
@@ -31,12 +51,18 @@
             <input type="date" name="ngaynopdon" id="ngaynopdon" value={{request.args.get('ngaynopdon', '')}} onchange="this.form.submit()">
             <label for="ngaynghi">Ngày nghỉ dự kiến</label>
             <input type="date" name="ngaynghi" id="ngaynghi" value={{request.args.get('ngaynghi', '')}} onchange="this.form.submit()">
+            <a class="btn btn-warning btn-sm" onclick="window.location.href='/muc10_2?sapdenhan=Co'">Sắp đến hạn</a>
+            <a class="btn btn-primary btn-sm" onclick="window.location.href='/muc10_2'">Tất cả</a>
         </div>
     </form>
+    
     <div style="display: flex; align-items: center;">
         <p>Tổng: <b>{{count}}</b></p> 
         <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
+        <span id="donsapdenhan">Đơn sắp đến hạn</span>
+        <span class="bg-info" id="donquahan">Đơn hết hạn</span>
     </div>
+    
     <table class="table table-bordered table-hover table-sm">
         <thead>
             <tr class="bg-primary">
@@ -53,16 +79,19 @@
         </thead>
         <tbody>
             {% for row in danhsach %}
-            <tr>
+            <tr class="highlightable">
                 <td>{{row[2]}}</td>
                 <td>{{row[3]}}</td>
                 <td>{{row[4]}}</td>
                 <td>{{row[5]}}</td>
                 <td>{{row[6]}}</td>
                 <td>{{row[7]}}</td>
-                <td>{{row[8]}}</td>
-                <td>{{row[9]}}</td>
-                <td><a class="fas fa-times"></a></td>
+                <td class="ngay-nghi">{{row[8]}}</td>
+                {% if row[9] %}<td>{{row[9]}}</td>{% else %}<td></td>{% endif %}
+                <form method="post" action="/rutdonxinnghiviec">
+                    <input type="text" name="id" value="{{row[0]}}" hidden>
+                    <td><input class="btn-danger btn-sm" type="submit" value="Rút đơn"></input></td>
+                </form>
             </tr>
             {% endfor %}
         </tbody>
@@ -165,14 +194,34 @@
         document.getElementById("form_ngaybaotruoc").addEventListener("change", function () {
             // Lấy số ngày báo trước từ input
             const daysNotice = parseInt(document.getElementById("form_ngaybaotruoc").value);
-
+    
+            // Lấy ngày nộp đơn từ input
+            const submitDateValue = document.getElementById("form_ngaynopdon").value;
+            const submitDate = new Date(submitDateValue);
+    
             // Tính toán ngày dự kiến nghỉ
-            const expectedLeaveDate = new Date();
-            expectedLeaveDate.setDate(expectedLeaveDate.getDate() + daysNotice);
-            const expectedLeaveDateString = expectedLeaveDate.toISOString().split('T')[0];
-
+            submitDate.setDate(submitDate.getDate() + daysNotice);
+            const expectedLeaveDateString = submitDate.toISOString().split('T')[0];
+    
             // Đặt giá trị cho input ngày dự kiến nghỉ
             document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
+        });
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const rows = document.querySelectorAll('.highlightable');
+            const currentDate = new Date();
+            const futureDate = new Date();
+            futureDate.setDate(currentDate.getDate() + 7);
+    
+            rows.forEach(row => {
+                const dateCell = row.querySelector('.ngay-nghi');
+                const dateValue = new Date(dateCell.textContent);
+    
+                if (dateValue >= currentDate && dateValue <= futureDate) {
+                    row.classList.add('highlight');
+                } else if (dateValue < currentDate) {
+                    row.classList.add('bg-info');
+                }
+            });
         });
     </script>
 </div>

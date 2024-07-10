@@ -2214,7 +2214,7 @@ def layemailquanly(macongty,masothe):
         print(e)
         return False
     
-def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
+def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphethan):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -2230,7 +2230,11 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi):
         if ngaynopdon:
             query += f" AND Ngay_nop_don = '{ngaynopdon}'"
         if ngaynghi:
-            query += f" AND Ngay_nghi_du_kien = '{ngaynghi}'"    
+            query += f" AND Ngay_nghi_du_kien = '{ngaynghi}'" 
+        if saphethan:
+            ngayhientai = datetime.now().date()
+            ngaynghisapden = datetime.now().date() + timedelta(days=7)
+            query += f" AND Ngay_nghi_du_kien >= '{ngayhientai}' AND Ngay_nghi_du_kien <= '{ngaynghisapden}'"   
         query += "ORDER BY Ngay_nop_don DESC, Ngay_nghi_du_kien DESC"  
         print(query)
         rows = cursor.execute(query).fetchall()
@@ -2256,3 +2260,17 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
     except Exception as e:
         print(e)
         return False
+    
+def rutdonnghiviec(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"DELETE Cho_nghi_viec WHERE ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+    
