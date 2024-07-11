@@ -1351,7 +1351,7 @@ def loichamcong():
 @app.route("/muc7_1_3", methods=["GET"])
 @login_required
 def diemdanhbu():
-    
+    mstquanly = request.args.get("mstquanly")
     mst = request.args.get("mst")
     hoten = request.args.get("hoten")
     chucvu = request.args.get("chucvu")
@@ -1363,7 +1363,7 @@ def diemdanhbu():
     trangthai = request.args.get("trangthai")
     danh_sach_chuyen = laydanhsachchuyen()
     danh_sach_bophan = laydanhsachbophan()
-    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai)
+    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -1383,34 +1383,35 @@ def diemdanhbu():
 @app.route("/muc7_1_4", methods=["GET"])
 @login_required
 def xinnghiphep():
-    
-        mst = request.args.get("mst")
-        hoten = request.args.get("hoten")
-        chucvu = request.args.get("chucvu")
-        chuyen = request.args.get("chuyen")
-        bophan = request.args.get("bophan")
-        ngay = request.args.get("ngaynghi")
-        lydo = request.args.get("lydo")
-        trangthai = request.args.get("trangthai")
-        danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
-        count = len(danhsach)
-        current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
-        total = len(danhsach)
-        start = (current_page - 1) * per_page
-        end = start + per_page
-        paginated_rows = danhsach[start:end]
-        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_4.html",
-                            page="7.1.4 Danh sách xin nghỉ phép",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+    mstquanly = request.args.get("mstquanly")
+    mst = request.args.get("mst")
+    hoten = request.args.get("hoten")
+    chucvu = request.args.get("chucvu")
+    chuyen = request.args.get("chuyen")
+    bophan = request.args.get("bophan")
+    ngay = request.args.get("ngaynghi")
+    lydo = request.args.get("lydo")
+    trangthai = request.args.get("trangthai")
+    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+    count = len(danhsach)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(danhsach)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("7_1_4.html",
+                        page="7.1.4 Danh sách xin nghỉ phép",
+                        danhsach=paginated_rows, 
+                        pagination=pagination,
+                        count=count)
 
 @app.route("/muc7_1_5", methods=["GET","POST"])
 @login_required
 def xinnghikhongluong():
     if request.method == 'GET':
+        mstquanly = request.args.get("mstquanly")
         mst = request.args.get("mst")
         hoten = request.args.get("hoten")
         chucvu = request.args.get("chucvu")
@@ -1419,7 +1420,7 @@ def xinnghikhongluong():
         ngay = request.args.get("ngaynghi")
         lydo = request.args.get("lydo")
         trangthai = request.args.get("trangthai")
-        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10

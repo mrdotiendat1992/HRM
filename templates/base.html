@@ -300,38 +300,38 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     {% if notice["Điểm danh bù"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-primary">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Có {{notice["Điểm danh bù"]}} đơn điểm danh bù chưa được duyệt</span>
+                                            <span class="font-weight-bold">Bạn có {{notice["Điểm danh bù"]}} đơn điểm danh bù chưa được duyệt</span>
                                         </div>
                                     </a>
                                     {% endif %}  
                                     {% if notice["Xin nghỉ phép"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_4?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-success">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Có {{notice["Xin nghỉ phép"]}} đơn xin nghỉ phép chưa được duyệt</span>
+                                            <span class="font-weight-bold">Bạn có {{notice["Xin nghỉ phép"]}} đơn xin nghỉ phép chưa được duyệt</span>
                                         </div>
                                     </a>
                                     {% endif %}  
                                     {% if notice["Xin nghỉ không lương"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_5?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-warning">
                                                 <i class="fas fa-file-alt text-white"></i>
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Có {{notice["Xin nghỉ không lương"]}} đơn xin nghỉ không lương chưa được duyệt</span>
+                                            <span class="font-weight-bold">Bạn có {{notice["Xin nghỉ không lương"]}} đơn xin nghỉ không lương chưa được duyệt</span>
                                         </div>
                                     </a>
                                     {% endif %}                                           

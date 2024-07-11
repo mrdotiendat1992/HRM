@@ -110,6 +110,16 @@
                 <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
+            {% if notice %}
+            {% if not request.args.get('mstquanly') %}
+            <form method = "GET" style="margin-left: 50px;">
+                <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
+                <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
+            </form>
+            {% else %}
+            <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 50px;">Quay lại</button>
+            {% endif %}
+            {% endif %}
         </div>
         <br>
         <table class="table table-hover table-sm">
