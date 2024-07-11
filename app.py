@@ -189,7 +189,7 @@ UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_n
 UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaynghiviec}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
 INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Nghỉ việc')
             """
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -278,7 +278,7 @@ def dichuyenthaisandilamlai(mst,
             UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaydilamlai}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
             INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Đang làm việc')
             """    
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -713,7 +713,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         if hoten:
             query += f"AND Ho_ten LIKE N'%{hoten}%' "
         query += "ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC"
-        print(query)
+        # print(query)
         rows = cursor.execute(query)
         result = []
         for row in rows:
@@ -1683,14 +1683,17 @@ def chuadangkycalamviec(mst):
         
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
-
+        if type(ngayketthuc) == str:
+            ngayketthuc = datetime.strptime(ngayketthuc, '%Y-%m-%d')
+        if type(ngaybatdau) == str:
+            ngaybatdau = datetime.strptime(ngaybatdau, '%Y-%m-%d')
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if pd.notna(ngayketthuc):
-            print("Co ngay ket thuc")
-            ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
-            ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
-            if datetime.strptime(ngaybatdau, '%Y-%m-%d') <= datetime.strptime(ngayketthuc, '%Y-%m-%d'):
+            # print("Co ngay ket thuc")
+            ngayketthuccacu = ngaybatdau - timedelta(days=1)
+            ngayvecamacdinh = ngayketthuc + timedelta(days=1)
+            if ngaybatdau <= ngayketthuc:
                 ngaymoc = datetime(2054,12,31)
                 if chuadangkycalamviec(mst):
                     query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
@@ -2095,7 +2098,7 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
                 value = f"'{value}',"
             query += value
         query += "'Waiting for approval',GETDATE())"  
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2109,7 +2112,7 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Cho_phe_duyet values ('{nhamay}','{mst}',N'{hoten}',GETDATE())"
-        print(query)  
+        # print(query)  
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2122,7 +2125,7 @@ def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Da_phe_duyet values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2135,7 +2138,7 @@ def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into KPI_Bi_tu_choi values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"  
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2221,7 +2224,7 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
             ngaynghisapden = datetime.now().date() + timedelta(days=7)
             query += f" AND Ngay_nghi_du_kien >= '{ngayhientai}' AND Ngay_nghi_du_kien <= '{ngaynghisapden}'"   
         query += "ORDER BY Ngay_nghi_du_kien DESC,Ngay_nop_don DESC"  
-        print(query)
+        # print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2237,7 +2240,7 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
             query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',N'{ghichu}')"
         else:
             query = f"INSERT INTO Cho_nghi_viec VALUES ('{current_user.macongty}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngaynopdon}','{ngaynghi}',NULL)"
-        print(query)
+        # print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()

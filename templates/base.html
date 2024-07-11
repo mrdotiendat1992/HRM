@@ -276,12 +276,42 @@
                         <h3 style="margin-top:10px;margin-bottom:2px;text-align:center;color:#4e73df;"><b>NAM THUẬN</b></h3>
                         <p style="margin-bottom:10px;text-align:center;color:#4e73df;"><b>PHẦN MỀM QUẢN LÝ NHÂN SỰ</b></p>
                     </div>
-
+                    
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
                         
                         <div class="topbar-divider d-none d-sm-block"></div>
-
+                        {% if current_user.masothe=='12579' %}
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">1</span>
+                            </a>
+                            
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Thông báo
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                        </div>
+                                    </div>
+                                    <div class="mr-3">
+                                        <div class="small text-gray-500">11 Tháng 7 năm 2024</div>
+                                        <span class="font-weight-bold">Có 3 đơn điểm danh bù chưa được duyệt</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
+                            </div>
+                        </li>
+                        {% endif %}
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -289,8 +319,8 @@
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.hoten}}</b></span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.masothe}}</b></span>
                                 <span class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.phongban}}</b></span>
-                                <img class="img-profile rounded-circle"
-                                    src="static/img/undraw_profile.svg" alt="profile.svg">
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><img class="img-profile rounded-circle"
+                                    src="static/img/undraw_profile.svg" alt="profile.svg"></span>   
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
