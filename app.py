@@ -719,12 +719,14 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
                 "Họ tên": row[0],
                 "Ngày chính thức": row[2],
                 "Chuyền cũ": row[3],
-                "Chuyền mới": row[4] if row[4] else '',
-                "Vị trí cũ": row[6],
-                "Vị trí mới": row[7] if row[7] else '',
-                "Phân loại": row[8],
-                "Ngày thực hiện": row[5],
-                "Ghi chú": row[9] if row[9] else '',
+                "Chuyền mới": row[5] if row[5] else '',
+                "Vị trí cũ": row[8],
+                "Vị trí mới": row[9] if row[9] else '',
+                "Phòng ban cũ": row[4],
+                "Phòng ban mới": row[6] if row[6] else '',
+                "Phân loại": row[10],
+                "Ngày thực hiện": row[7],
+                "Ghi chú": row[11] if row[1] else '',
             })
         conn.commit()
         conn.close()
