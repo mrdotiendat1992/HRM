@@ -140,15 +140,18 @@ def dieuchuyennhansu(mst,
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}')"
+        query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}')"
+        print(query1)
         cursor.execute(query1)
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+        print(query2)
         cursor.execute(query2)
         camoi = laycatheochuyen(chuyenmoi)
         query3 = f"""
         UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
         INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
         """
+        print(query3)
         cursor.execute(query3)
         conn.commit()
         conn.close()
@@ -172,6 +175,7 @@ def laydanhsachca(mst):
 def dichuyennghiviec(mst,
                     vitricu,
                     chuyencu,
+                    gradecodecu,
                     ngaydieuchuyen,
                     ghichu
                    ):
@@ -180,12 +184,12 @@ def dichuyennghiviec(mst,
         cursor = conn.cursor()
         truocngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
-INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}')
+INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL)
 UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
 UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaynghiviec}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
 INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Nghỉ việc')
             """
-        
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -225,7 +229,7 @@ def dichuyennghithaisan(mst,
         cursor = conn.cursor()
         truocngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
-            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL)
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL)
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ thai sản' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaynghiviec}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
             INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Nghỉ thai sản')
@@ -269,7 +273,7 @@ def dichuyenthaisandilamlai(mst,
         cursor = conn.cursor()
         truocngaydilamlai = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
-            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL)
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodecu}')
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaydilamlai}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
             INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Đang làm việc')
@@ -1702,7 +1706,6 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                             INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
                             VALUES ('{int(mst)}','{current_user.macongty}','{ngayvecamacdinh}','{ngaymoc}','{cacu}')
                         """
-                print(query)
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
@@ -1722,7 +1725,6 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                         INSERT INTO HR.dbo.Dang_ky_ca_lam_viec
                         VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')
                     """
-            print(query)
             cursor.execute(query)
             conn.commit()
             conn.close()

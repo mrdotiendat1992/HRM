@@ -1107,6 +1107,7 @@ def dieuchuyen():
                 dichuyennghiviec(mst,
                     vitricu,
                     chuyencu,
+                    gradecodecu,
                     ngaydieuchuyen,
                     ghichu
                             )
