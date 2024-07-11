@@ -652,6 +652,7 @@ def inchamduthd(mst,
             sheet['C4'] = f'{mst}'
             sheet['H5'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
             sheet['I12'] = f'{mst}'
+            sheet['I17'] = f'{mst}'
             sheet['G16'] = tennhanvien
             sheet['C21'] = tennhanvien
             sheet['B26'] = tennhanvien
