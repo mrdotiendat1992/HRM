@@ -25,8 +25,6 @@ import sqlite3
 
 conn = sqlite3.connect('instance/db.sqlite')
 cursor = conn.cursor()
-count  = cursor.execute("SELECT count(*) FROM users").fetchone()[0]
-cursor.execute(f"INSERT INTO users VALUES ('{count+1}','25',N'Nguyễn Xuân Hoàng Phúc','NT2',N'Công ty cổ phần Nam Thuận Nghệ An','MGT','1','gd')")
-cursor.execute(f"INSERT INTO users VALUES ('{count+2}','28',N'Trần Lê Đại Dương','NT2',N'Công ty cổ phần Nam Thuận Nghệ An','MGT','1','gd')")
-conn.commit()
+count  = cursor.execute("SELECT Matkhau FROM users where Masothe = '13164'").fetchone()[0]
+print(count)
 conn.close()
