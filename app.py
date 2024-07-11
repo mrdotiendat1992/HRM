@@ -1686,7 +1686,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             print("Co ngay ket thuc")
             ngayketthuccacu = datetime.strptime(ngaybatdau, '%Y-%m-%d') - timedelta(days=1)
             ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
-            if datetime.strptime(ngaybatdau, '%Y-%m-%d') < datetime.strptime(ngayketthuc, '%Y-%m-%d'):
+            if datetime.strptime(ngaybatdau, '%Y-%m-%d') <= datetime.strptime(ngayketthuc, '%Y-%m-%d'):
                 ngaymoc = datetime(2054,12,31)
                 if chuadangkycalamviec(mst):
                     query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
