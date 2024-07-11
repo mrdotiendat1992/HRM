@@ -4,15 +4,67 @@ from app import *
 #          MAIN ROUTES           #
 ##################################
 
-if __name__ == '__main__':
-    handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1, encoding='utf-8')
-    handler.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-    )
-    handler.setFormatter(formatter)
-    app.logger.addHandler(handler)
-    app.logger.setLevel(logging.INFO)
+handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1, encoding='utf-8')
+handler.setLevel(logging.INFO)
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
+)
+handler.setFormatter(formatter)
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+
+@app.before_request
+def run_before_every_request():
+    if current_user.is_authenticated:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
+        if row[0]>0:
+            soluong_diemdanhbu = cursor.execute(f"""
+                SELECT 
+                    COUNT(*) as row_count 
+                FROM 
+                    Phan_quyen_thu_ky 
+                INNER JOIN 
+                    Diem_danh_bu
+                ON
+                    Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                WHERE 
+                    Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+            soluong_xinnghiphep = cursor.execute(f"""
+                SELECT 
+                    COUNT(*) as row_count 
+                FROM 
+                    Phan_quyen_thu_ky 
+                INNER JOIN 
+                    Xin_nghi_phep
+                ON
+                    Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                WHERE 
+                    Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+            soluong_xinnghikhongluong = cursor.execute(f"""
+                SELECT 
+                    COUNT(*) as row_count 
+                FROM 
+                    Phan_quyen_thu_ky 
+                INNER JOIN 
+                    Xin_nghi_khong_luong
+                ON
+                    Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                WHERE 
+                    Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+            conn.close()
+            g.notice={"Điểm danh bù":soluong_diemdanhbu,
+                   "Xin nghỉ phép": soluong_xinnghiphep,
+                   "Xin nghỉ không lương": soluong_xinnghikhongluong,
+                   "Số thông báo": soluong_diemdanhbu + soluong_xinnghiphep + soluong_xinnghikhongluong
+                   }
+        else:
+            g.notice={}
+            
+@app.context_processor
+def inject_notice():
+    return dict(notice=getattr(g, 'notice', {}))
 
 @app.route('/unauthorized')
 def unauthorized():
@@ -1355,7 +1407,7 @@ def xinnghiphep():
                             pagination=pagination,
                             count=count)
 
-@app.route("/muc7_1_5", methods=["GET"])
+@app.route("/muc7_1_5", methods=["GET","POST"])
 @login_required
 def xinnghikhongluong():
     if request.method == 'GET':
