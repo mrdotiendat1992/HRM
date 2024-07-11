@@ -1662,7 +1662,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
     except Exception as e:
         print(e)
 
-def chuadangkytangca(mst):
+def chuadangkycalamviec(mst):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1670,7 +1670,7 @@ def chuadangkytangca(mst):
         
         row = cursor.execute(query).fetchone()
         conn.close()
-        app.logger(row[0])
+        print(row[0])
         if row[0]==0:
             return True
     except Exception as e:
@@ -1688,7 +1688,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             ngayvecamacdinh = datetime.strptime(ngayketthuc, '%Y-%m-%d') + timedelta(days=1)
             if ngaybatdau < ngayketthuc:
                 ngaymoc = datetime(2054,12,31)
-                if chuadangkytangca(mst):
+                if chuadangkycalamviec(mst):
                     query = f"INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaybatdau}','{ngaymoc}','{camoi}')"
                 else:
                     query = f"""
