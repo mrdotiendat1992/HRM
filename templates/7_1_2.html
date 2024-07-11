@@ -52,25 +52,9 @@ input, select {
     <div class="content">
         <form method="GET" action="/muc7_1_2">
             <div class="form-group">
-                <label for="mst">Mã số thẻ:</label>
-                {% if request.args.get('mst') %}
-                <input id="mst" name="mst" value="{{ request.args.get('mst')  }}"></input>
-                {% else %}
-                <input id="mst" name="mst"></input>
-                {% endif %}
-                <label for="chuyen">Chuyền:</label>
-                {% if request.args.get('chuyen') %}
-                <input id="chuyen" name="chuyen" value="{{ request.args.get('chuyen')  }}"></input>
-                {% else %}
-                <input id="chuyen" name="chuyen"></input>
-                {% endif %}
-                <label for="bophan">Bộ phận:</label>
-                {% if request.args.get('bophan') %}
-                <input id="bophan" name="bophan" value="{{ request.args.get('bophan') }}"></input>
-                {% else %}
-                <input id="bophan" name="bophan"></input>
-                {% endif %}
-                <label for="ngay">Ngày</label>
+                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst')  }}"></input>
+                <input id="chuyen" name="chuyen" placeholder="Chuyền" value="{{ request.args.get('chuyen')  }}"></input>
+                <input id="bophan" name="bophan" placeholder="Bộ phận" value="{{ request.args.get('bophan') }}"></input>
                 <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                 <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
             </div>

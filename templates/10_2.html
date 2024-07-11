@@ -2,7 +2,7 @@
 {% block style%}
 <style>
     th, td {
-        text-align: center;
+        font-size: 11px;
     }
     th {
         color: white;
@@ -23,9 +23,9 @@
     #donsapdenhan {
         background-color: yellow;
         width: 150px;
-        text-align: center;
         font-weight: bold;
         margin-left: 30px;
+        text-align: center;
     }
     #donquahan {
         width: 150px;
@@ -65,8 +65,8 @@
         <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
         <div class="pagination">{{ pagination.links }}</div>
         <h5>Chú thích:</h5>
-        <span id="donsapdenhan">Sắp đến ngày nghỉ</span>
-        <span class="bg-info" id="donquahan">Đơn hết hạn</span>
+        <span id="donsapdenhan">Sắp đến hạn</span>
+        <span class="bg-info" id="donquahan">Đã hết hạn</span>
     </div>
     
     <table class="table table-bordered table-hover table-sm">
@@ -162,6 +162,13 @@
         </div>
     </div>
     <script>
+        function luudonxinnghiviec() {
+            if (confirm("Bạn muốn lưu đơn xon nghỉ này?")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
         function changeFormatDate(date){
             try{
                 return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
@@ -226,6 +233,21 @@
             // Đặt giá trị cho input ngày dự kiến nghỉ
             document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
         });
+        document.getElementById("form_ngaynopdon").addEventListener("change", function () {
+            // Lấy số ngày báo trước từ input
+            const daysNotice = parseInt(document.getElementById("form_ngaybaotruoc").value);
+    
+            // Lấy ngày nộp đơn từ input
+            const submitDateValue = document.getElementById("form_ngaynopdon").value;
+            const submitDate = new Date(submitDateValue);
+    
+            // Tính toán ngày dự kiến nghỉ
+            submitDate.setDate(submitDate.getDate() + daysNotice);
+            const expectedLeaveDateString = submitDate.toISOString().split('T')[0];
+    
+            // Đặt giá trị cho input ngày dự kiến nghỉ
+            document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
+        });
         document.addEventListener('DOMContentLoaded', (event) => {
             const rows = document.querySelectorAll('.highlightable');
             const currentDate = new Date();
@@ -243,13 +265,7 @@
                 }
             });
         });
-        function luudonxinnghiviec() {
-            if confirm("Bạn muốn lưu đơn xon nghỉ này?") {
-                return true;
-            } else {
-                return false;
-            }
-        }
+        
     </script>
 </div>
 

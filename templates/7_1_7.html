@@ -53,6 +53,7 @@
     }
     .pagination {
         margin-left: 20px;
+        font-size: 10px;
     }
 </style>
 {% endblock style %}
@@ -127,7 +128,7 @@
                 <b>Danh sách đăng kí tăng ca</b>
             </h3>
             <div style="display: flex; align-items: center; justify-content: center; margin-left: 50px;">
-                <h5 >Tổng : {{count}}</h5>
+                <h5 style="margin-right: 20px;">Tổng : {{count}}</h5>
                 <form action="/export_dstc" method="POST">
                     <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
                     <input type="text" id="phongban" name="phongban" value="{{ request.args.get('phongban', '') }}" hidden>

@@ -164,7 +164,11 @@
                     <td>{{row[5]}}</td>
                     <td class='date_en'>{{row[6]}}</td>
                     <td>{{row[7]}}</td>
+                    {% if row[8] %}
                     <td>{{row[8]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
                     <td>{{row[9]}}</td>
                     {% if row[9]=='Chờ kiểm tra'%}
                             <td>

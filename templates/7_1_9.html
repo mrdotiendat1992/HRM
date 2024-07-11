@@ -62,12 +62,9 @@
         <br>
         <form action="/muc7_1_9" method="GET">
             <div class="form-group">
-                <label for="mst">Mã số thẻ</label>
-                <input type="text" id="mst" name="mst" value={{request.args.get('mst', '')}}>
-                <label for="phongban">Phòng ban</label>
-                <input type="text" id="phongban" name="phongban" value={{request.args.get('phongban', '')}}>
-                <label for="phanloai">Phân loại</label>
-                <input type="text" id="phanloai" name="phanloai" value='{{request.args.get("phanloai", '')}}'>
+                <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
+                <input type="text" id="phongban" name="phongban" placeholder='Phòng ban' value={{request.args.get('phongban', '')}}>
+                <input type="text" id="phanloai" name="phanloai" placeholder='Phân loại' value='{{request.args.get("phanloai", '')}}'>
             </div>
             <div class="form-group">
                 <label for="tungay">Từ ngày</label>
