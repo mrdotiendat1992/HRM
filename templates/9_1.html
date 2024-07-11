@@ -10,8 +10,8 @@
         text-align: center;
         color: white;
     }
-    td {
-        text-align: left;
+    td, label, input, select, h5 {
+        font-weight:bold;
         color: #4e73df;
     }
     
@@ -36,39 +36,38 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-sm-9">
                                 <div class="form-group">
-                                    <label for="masothe">Mã số thẻ</label>
-                                    <input type="text" id="masothe" name="masothe" onchange="kiemtrathongtinnld()">
+                                    <input type="text" id="masothe" name="masothe" placeholder="Mã số thẻ" onchange="kiemtrathongtinnld()">
                                 </div>
                                 <form method="POST" action="/muc9_1">
-                                    <div class="form-group">
-                                        <input type="text" id="mst" name="mst" hidden>
-                                        <label for="hoten">Họ tên</label>
-                                        <input type="text" id="hoten" name="hoten" readonly>
-                                        <label for="chucvu">Chức vụ</label>
-                                        <input type="text" id="chucvu" name="chucvu" readonly>
-                                        <label for="bophan">Bộ phận</label>
-                                        <input type="text" id="bophan" name="bophan" readonly>
-                                        <label for="chuyento">Chuyền tổ</label>
-                                        <input type="text" id="chuyento" name="chuyento" readonly>
-                                        <label for="ngayvao">Ngày vào</label>
-                                        <input type="text" id="ngayvao" name="ngayvao" readonly>
-                                        <label for="diadiem">Địa điểm</label>
-                                        <input type="text" id="diadiem" name="diadiem" value="{{current_user.macongty}}" readonly>
-                                        <label for="ngayvipham">Ngày vi phạm</label>
-                                        <input type="date" id="ngayvipham" name="ngayvipham">
-                                        <label for="ngaylapbienban">Ngày lập biên bản</label>
-                                        <input type="date" id="ngaylapbienban" name="ngaylapbienban">
-                                        <label for="noidung">Nội dung vi phạm</label>
-                                        <textarea id="noidung" name="noidung" cols="50"></textarea >
-                                        <label for="bienphap">Biện pháp kỉ luật</label>
-                                        <select id="bienphap" name="bienphap">   
-                                            <option value="Khiển trách">Khiển trách </option>
-                                            <option value="Cách chức">Cách chức</option>
-                                            <option value="Kéo dài thời hạn nâng lương">Kéo dài thời hạn nâng lương</option>
-                                            <option value="Sa thải">Sa thải</option>
-                                        </select>
+                                    <input type="text" id="mst" name="mst" hidden>
+                                    <div class="row">
+                                        <div class="col">
+                                            <div style="display: flex; align-items: center;">
+                                                <input type="text" id="hoten" placeholder="Họ tên" name="hoten" readonly>
+                                                <input type="text" id="chucvu" placeholder="Chức danh" name="chucvu" readonly>
+                                            </div>
+                                            <div style="display: flex; align-items: center;"> 
+                                                <input type="text" id="bophan" placeholder="Phòng ban" name="bophan" readonly>
+                                                <input type="text" id="chuyento" placeholder="Chuyền" name="chuyento" readonly>
+                                            </div>  
+                                            <input type="text" id="ngayvao" placeholder="Ngày vào" name="ngayvao" readonly>
+                                        </div>
+                                        <div class="col">
+                                            <label for="ngayvipham">Ngày vi phạm</label>
+                                            <input type="date" id="ngayvipham" name="ngayvipham">
+                                            <label for="ngaylapbienban">Ngày lập biên bản</label>
+                                            <input type="date" id="ngaylapbienban" name="ngaylapbienban">
+                                            <textarea id="noidung" name="noidung" placeholder="Nội dung vi phạm ..." cols="30" rows="5"></textarea >
+                                            <label for="bienphap">Biện pháp kỉ luật</label>
+                                            <select id="bienphap" name="bienphap">   
+                                                <option value="Khiển trách">Khiển trách </option>
+                                                <option value="Cách chức">Cách chức</option>
+                                                <option value="Kéo dài thời hạn nâng lương">Kéo dài thời hạn nâng lương</option>
+                                                <option value="Sa thải">Sa thải</option>
+                                            </select>
+                                        </div>
                                     </div>
                             </div>
                         </div>

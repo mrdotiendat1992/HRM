@@ -2,34 +2,61 @@
 {% block style%}
 <style>
     table, th, td {
-        font-size: 11px;
+        font-size: 12px;
+        font-weight:bold;
+        color: black;
+        border-collapse: collapse;  
+        text-align: center;
     }
-
+    th {
+        text-align: center;
+        color: white;
+    }
+    table td,th {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+    }
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
+    }
+    .scroll-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    .content {
+        width: auto;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
-    <table class="table table-bordered">
-        <thead>
-            <tr class="table-primary">
-                <th>Ngày vào công ty</th>
-                <th>Ngày bắt đầu nghỉ việc</th>
-                <th>Chức vụ</th>
-                <th>Lý do nghỉ việc chính</th>
-                <th>Lý do chuyển sang công ty khác</th>
-                <th>Mức độ hài phòng với công việc</th>
-                <th>Mức độ hài lòng với mức thu nhập</th>
-                <th>Mức độ hài lòng với quản lý</th>
-                <th>Mức độ hài lòng với đồng nghệp</th>
-                <th>Mức độ hài lòng với môi trường làm việc</th>
-                <th>Có cân nhắc quay lại công ty trong tương lai?</th>
-                <th>Điểm thích nhất ở công ty</th>
-                <th>Điểm không thích nhất ở công ty</th>
-                <th>Góp ý xay dựng khác</th>
-            </tr>
-        </thead>
-        <tbody>
-        </tbody>
-    </table>
+<div class="scroll-container">
+    <div class="content">
+        <button type="button" class="btn btn-primary btn-sm" title="Thêm phỏng vấn nghỉ việc" data-toggle="modal" data-target="#requestModal"><i class="fas fa-plus"></i></button>
+        <table class="table table-bordered table-sm table-hover">
+            <thead>
+                <tr class="bg-primary">
+                    <th>Ngày vào công ty</th>
+                    <th>Ngày bắt đầu nghỉ việc</th>
+                    <th>Chức vụ</th>
+                    <th>Lý do nghỉ việc chính</th>
+                    <th>Lý do chuyển sang công ty khác</th>
+                    <th>Mức độ hài phòng với công việc</th>
+                    <th>Mức độ hài lòng với mức thu nhập</th>
+                    <th>Mức độ hài lòng với quản lý</th>
+                    <th>Mức độ hài lòng với đồng nghệp</th>
+                    <th>Mức độ hài lòng với môi trường làm việc</th>
+                    <th>Có cân nhắc quay lại công ty trong tương lai?</th>
+                    <th>Điểm thích nhất ở công ty</th>
+                    <th>Điểm không thích nhất ở công ty</th>
+                    <th>Góp ý xây dựng khác</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}
