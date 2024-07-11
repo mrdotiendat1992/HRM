@@ -52,9 +52,9 @@ input, select {
     <div class="content">
         <form method="GET" action="/muc7_1_2">
             <div class="form-group">
-                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst')  }}"></input>
-                <input id="chuyen" name="chuyen" placeholder="Chuyền" value="{{ request.args.get('chuyen')  }}"></input>
-                <input id="bophan" name="bophan" placeholder="Bộ phận" value="{{ request.args.get('bophan') }}"></input>
+                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '')  }}"></input>
+                <input id="chuyen" name="chuyen" placeholder="Chuyền" value="{{ request.args.get('chuyen', '')  }}"></input>
+                <input id="bophan" name="bophan" placeholder="Bộ phận" value="{{ request.args.get('bophan', '') }}"></input>
                 <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
                 <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
             </div>
