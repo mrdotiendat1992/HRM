@@ -2300,4 +2300,35 @@ def rutdonnghiviec(id):
     except Exception as e:
         print(e)
         return False
-    
+
+def laydanhsach_hopdong_theomst(mst):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM [HR].[dbo].[QUAN_LY_HD] WHERE MST='{mst}' AND NHA_MAY='{current_user.macongty}'"
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return [{
+            "Số thứ tự": row[0],
+            "Nhà máy": row[1],
+            "Mã số thẻ": row[2],
+            "Họ tên": row[3],
+            "Giới tính": row[4],
+            "Ngày sinh": row[5],
+            "Địa chỉ": row[6],
+            "Tạm trú": row[7],
+            "CCCD": row[8],
+            "Ngày cấp CCCD": row[9],
+            "Cấp bậc": row[10],
+            "Loại hợp đồng": row[11],
+            "Chức danh": row[12],
+            "Phòng ban": row[13],
+            "Chuyền": row[14],
+            "Lương cơ bản": row[15],
+            "Phụ cấp": row[16],
+            "Ngày ký hợp đồng": row[17],
+            "Ngày hết hạn hợp đồng": row[18]
+        } for row in rows]
+    except Exception as e:
+        print(e)
+        return []  
