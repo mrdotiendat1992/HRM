@@ -572,6 +572,8 @@ def thaydoithongtinlaodong():
             mucluong = request.form.get("mucluong").replace(',','')
             phucap = request.form.get("phucap").replace(',','')
             tienphucap = request.form.get("tienphucap")
+            nguoithan = request.form.get("nguoithan")
+            sdtnguoithan = request.form.get("sdtnguoithan")
             
             query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
             if thechamcong:
@@ -721,6 +723,16 @@ def thaydoithongtinlaodong():
                 query += f"Ngay_sinh_con_nho_5 = '{ngaysinhcon5}',"
             else:
                 query += f"Ngay_sinh_con_nho_5 = NULL,"
+            
+            if nguoithan:
+                query += f"Nguoi_than = N'{nguoithan}',"
+            else:
+                query += f"Nguoi_than = NULL," 
+                
+            if sdtnguoithan:
+                query += f"Sdt_Nguoi_than = '{sdtnguoithan}',"
+            else:
+                query += f"Sdt_Nguoi_than = NULL," 
             
             if jobtitlevn: 
                 query += f"Job_title_VN = N'{jobtitlevn}',"
