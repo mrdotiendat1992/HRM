@@ -823,7 +823,9 @@ def thaydoithongtinlaodong():
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            
+            if current_user.macongty == "NT2":
+                if not current_user.masothe == "4091":
+                    flash("Bạn không có quyền thay đổi thông tin người lao động !!!")
             cursor.execute(query)
             conn.commit()
             conn.close()
