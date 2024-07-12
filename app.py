@@ -1219,7 +1219,7 @@ def themnhanvienmoi(nhanvienmoi):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"INSERT INTO HR.Dbo.Danh_sach_CBCNV VALUES {nhanvienmoi}"
-        
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
