@@ -819,7 +819,7 @@ def thaydoithongtinlaodong():
             if trangthailamviec:
                 query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
             else:
-                query += f"trangthailamviec = NULL,"
+                query += f"Trang_thai_lam_viec = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
@@ -838,64 +838,12 @@ def thaydoithongtinlaodong():
 @roles_required('hr','sa','gd')
 def inhopdonglaodong():
     if request.method == "GET":
-        return render_template("3_3.html", page="3.3 In hợp đồng lao động")
-    elif request.method == "POST":
-        bophan = request.form.get("bophan")
-        kieuhopdong = request.form.get("kieuhopdong")
-        mst = request.form.get("mst")
-        ngaylamhopdong = request.form.get("ngayBatDau")[-2:]
-        thanglamhopdong = request.form.get("ngayBatDau")[5:7]
-        namlamhopdong = request.form.get("ngayBatDau")[:4]
-        ngayketthuchopdong = request.form.get("ngayKetThuc")[-2:]
-        thangketthuchopdong = request.form.get("ngayKetThuc")[5:7]
-        namketthuchopdong = request.form.get("ngayKetThuc")[:4]
-        tennhanvien = request.form.get("hoten")
-        ngaysinh = datetime.strptime(request.form.get("ngaysinh"), "%Y-%m-%d").strftime("%d/%m/%Y")
-        gioitinh = request.form.get("gioitinh")
-        thuongtru = request.form.get("thuongtru")
-        tamtru = request.form.get("tamtru")
-        cccd = request.form.get("cccd")
-        ngaycapcccd = datetime.strptime(request.form.get("ngaycapcccd"), "%Y-%m-%d").strftime("%d/%m/%Y")
-        mucluong = request.form.get("luongcoban").replace(',','')
-        chucvu = request.form.get("chucvu")
-        capbac= request.form.get("capbac")
-        phucap = request.form.get("phucap")
-        tongphucap = request.form.get("tienphucap")
-        songaythuviec = request.form.get("soNgay")
-        try:
-            file = inhopdongtheomau(kieuhopdong,
-                                            mst,
-                                            ngaylamhopdong,
-                                            thanglamhopdong,
-                                            namlamhopdong,
-                                            ngayketthuchopdong,
-                                            thangketthuchopdong,
-                                            namketthuchopdong,
-                                            tennhanvien,
-                                            ngaysinh,
-                                            gioitinh,
-                                            thuongtru,
-                                            tamtru,
-                                            cccd,
-                                            ngaycapcccd,
-                                            mucluong,
-                                            phucap,
-                                            tongphucap,
-                                            chucvu,
-                                            bophan,
-                                            capbac,
-                                            songaythuviec)
-            if file:
-                flash("Tải file hợp đồng thành công !!!")
-                return send_file(file, as_attachment=True, download_name="hopdonglaodong.xlsx")
-            else:
-                flash("Tải file hợp đồng thất bại !!!")
-
-                return redirect("/muc3_3")
-        except Exception as e:
-            print(e)
-            flash("Tải file hợp đồng thất bại !!!")
-            return redirect("/muc3_3")   
+        mst = request.args.get("mst")
+        if mst:
+            danhsach = laydanhsach_hopdong_theomst(mst)
+        else:
+            danhsach = []
+        return render_template("3_3.html", page="3.3 Quản lý hợp đồng lao động",danhsach=danhsach)
 
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
