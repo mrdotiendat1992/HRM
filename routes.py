@@ -730,9 +730,9 @@ def thaydoithongtinlaodong():
                 query += f"Nguoi_than = NULL," 
                 
             if sdtnguoithan:
-                query += f"Sdt_Nguoi_than = '{sdtnguoithan}',"
+                query += f"Sdt_Nguoithan = '{sdtnguoithan}',"
             else:
-                query += f"Sdt_Nguoi_than = NULL," 
+                query += f"Sdt_Nguoithan = NULL," 
             
             if jobtitlevn: 
                 query += f"Job_title_VN = N'{jobtitlevn}',"
