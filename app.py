@@ -2332,3 +2332,16 @@ def laydanhsach_hopdong_theomst(mst):
     except Exception as e:
         print(e)
         return []  
+
+def capnhat_stk(mst, stk, macongty):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Danh_sach_CBCNV SET So_tai_khoan=N'{stk}' WHERE MST='{mst}' AND Factory='{macongty}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False 
