@@ -1383,6 +1383,7 @@ def xinnghikhongluong():
                             pagination=pagination,
                             count=count)
     elif request.method == 'POST':
+        mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
         hoten = request.form.get("hoten")
         chucvu = request.form.get("chucvu")
@@ -1391,7 +1392,7 @@ def xinnghikhongluong():
         ngay = request.form.get("ngaynghi")
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
-        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
         data = []
         for row in danhsach:
             data.append({
@@ -1975,7 +1976,7 @@ def export_dslt():
 
 @app.route("/export_dsddb", methods=["POST"])
 def export_dsddb():
-    
+    mstquanly = request.form.get("mstquanly")
     mst = request.form.get("mst")
     chuyen = request.form.get("chuyen")
     bophan = request.form.get("bophan")
@@ -1986,7 +1987,7 @@ def export_dsddb():
     trangthai = request.form.get("trangthai")
     loaidiemdanh = request.form.get("loaidiemdanh")
     
-    rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai)
+    rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
     result = []
     for row in rows:
         result.append({
@@ -2011,7 +2012,7 @@ def export_dsddb():
 
 @app.route("/export_dsxnp", methods=["POST"])
 def export_dsxnp():
-    
+    mstquanly = request.form.get("mstquanly")
     mst = request.form.get("mst")
     hoten = request.form.get("hoten")
     chucvu = request.form.get("chucvu")
@@ -2020,7 +2021,7 @@ def export_dsxnp():
     ngay = request.form.get("ngaynghi")
     lydo = request.form.get("lydo")
     trangthai = request.form.get("trangthai")
-    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai)
+    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
     result = []
     for row in danhsach:
         result.append({
