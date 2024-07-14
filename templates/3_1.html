@@ -16,6 +16,7 @@ input, select {
 input[readonly] {
     border-style: none;
     outline: none;
+    background-color: transparent;
 }
 
 </style>
@@ -25,7 +26,7 @@ input[readonly] {
     <form action="/muc3_1" method="POST">
         <div class="form-group">
             <label for="anh">Ảnh</label>
-            <input type="text" id="anh" name="anh" style="width:200px;height:200px;" readonly>
+            <input type="text" id="anh" name="anh" style="width:200px;height:200px;">
             <label for="masothe">Mã số thẻ</label>
             <input type="text" id="masothe" name="masothe" readonly value={{masothe}}>
             

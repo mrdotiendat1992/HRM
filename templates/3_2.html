@@ -1,14 +1,23 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-label {
-    width:150px;
-    margin-left: 10px;
-}
-input, select {
-    margin-left: 10px;
-    width: 150px;
-}
+    label, input, select {
+        font-weight: bold;
+        color: #4e73df;
+    }
+    label {
+        width:120px;
+        margin-left: 10px;
+    }
+    input, select {
+        margin-left: 10px;
+        width: 150px;
+    }
+    input[readonly] {
+        border-style: none;
+        outline: none;
+        background-color: transparent;
+    }
 </style>
 {% endblock style %}
 {% block content %}
