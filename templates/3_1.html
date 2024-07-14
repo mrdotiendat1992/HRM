@@ -320,8 +320,10 @@ input[readonly] {
 
         document.getElementById("scan-qrcode").addEventListener("change", function() {
             var scanqrcode = document.getElementById("scan-qrcode").value
-            if (scanqrcode != "") {
-                var datacccd = scanqrcode.split("|");
+            var newvalue = scanqrcode.replace(/'/g, '');
+            document.getElementById("scan-qrcode").value = newvalue
+            if (newvalue != "") {
+                var datacccd = newvalue.split("|");
                 var datalength = datacccd.length;
                 if (datalength === 7) {
                     document.getElementById("cccd").value = datacccd[0];
