@@ -119,6 +119,7 @@
                 <th>Trình độ</th>
                 <th>Địa chỉ</th>
                 <th>Ngày hẹn đi làm</th>
+                <th>Ngày nhận việc</th>
                 <th>Kinh nghiệm</th>
                 <th>Mức lương</th>
                 <th>Có con nhỏ</th>
@@ -134,7 +135,6 @@
                 <th>Ngày sinh con nhỏ 5</th>
                 <th>Người thân</th>
                 <th>SĐT người thân</th>
-                <th>Ngày nhận việc</th>
                 <th>Ngày gửi</th>
                 <th>Ngày cập nhật</th>
                 <th>Hiệu suất</th>
@@ -162,6 +162,7 @@
                         <td><input type="text" name="hocvan" id="hocvan" value="{{ user['Học vấn'] }}"></input></td>
                         <td><input type="text" name="diachi" id="diachi" value="{{ user['Tạm trú'] }}"></input></td>
                         <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
+                        <td>{{ user["Ngày nhận việc"] }}</td>
                         <td>{{ user["Kinh nghiệm"] }}</td>
                         <td>{{ user["Mức lương"] }}</td>
                         <td><input type="text" name="connho" value="{{ user['Có con nhỏ'] }}"></td>
@@ -177,7 +178,6 @@
                         <td><input type="text" name="ngaysinhcon5" value="{{ user['Ngày sinh con 5'] }}"></td>
                         <td><input type="text" name="nguoithan" value="{{ user["Tên người thân"] }}"></td>
                         <td><input type="text" name="sdtnguoithan" value="{{ user["SĐT người thân"] }}"></td>
-                        <td>{{ user["Ngày nhận việc"] }}</td>
                         <td>{{ user["Ngày gửi"] }}</td>
                         {% if user["Ngày cập nhật"] %}
                         <td>{{ user["Ngày cập nhật"] }}</td>
@@ -230,13 +230,7 @@
                     <select id="newStatus" name="newStatus">
                         <option value="Đạt">Đạt</option>
                         <option value="Không đạt">Không đạt</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="luuhoso">Lưu hồ sơ:</label>
-                    <select id="luuhoso" name="luuhoso">
-                        <option value="Có">Có</option>
-                        <option value="Khôngt">Không</option>
+                        <option value="Lưu hồ sơ">Lưu hồ sơ</option>
                     </select>
                 </div>
                 <hr />
