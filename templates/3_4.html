@@ -61,7 +61,7 @@
     h5, #form_export {
         margin-right: 50px;
     }
-    label, input, select,td {
+    label, input, select,td, h3 {
         font-weight: bold;
         color: #4e73df;
     }
@@ -73,11 +73,6 @@
         margin-left: 10px;
         width: 150px;
     }
-    input[readonly] {
-        border-style: none;
-        outline: none;
-        background-color: transparent;
-    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -86,14 +81,14 @@
         <div style="display: flex; align-items: center;">
             <h5>Tổng: {{total}}</h5>
             <form method="post" id="form_export">
-                <input type="submit" class="btn btn-success" value="Xuất excel">
+                <input type="submit" class="btn btn-success btn-sm" value="Xuất excel">
             </form>
             <div class="pagination">{{ pagination.links }}</div>
         </div>
         <br>
-        <table class="table table-hover">
+        <table class="table table-hover table-sm table-bordered">
             <thead>
-                <tr class="table-primary">
+                <tr class="bg-primary">
                     <th></th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
@@ -119,9 +114,9 @@
                     <td>{{row[50]}}</td>
                     <td>{{row[46]}}</td>
                     <td>{{row[39]}}</td>
-                    <td >{{row[41]}}</td>
-                    <td >{{row[63]}}</td>
-                    <td >{{row[65]}}</td>
+                    <td class="date_en">{{row[41]}}</td>
+                    <td class="date_en">{{row[63]}}</td>
+                    <td class="date_en">{{row[65]}}</td>
                     <td class="date_en">{{row[67]}}</td>
                     <td>{{row[60]}}</td>
                 </tr>  
