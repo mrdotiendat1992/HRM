@@ -4,15 +4,6 @@ from app import *
 #          MAIN ROUTES           #
 ##################################
 
-handler = RotatingFileHandler('app.log', maxBytes=10000, backupCount=1, encoding='utf-8')
-handler.setLevel(logging.INFO)
-formatter = logging.Formatter(
-    '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-)
-handler.setFormatter(formatter)
-app.logger.addHandler(handler)
-app.logger.setLevel(logging.INFO)
-
 @app.before_request
 def run_before_every_request():
     if current_user.is_authenticated:
@@ -73,65 +64,25 @@ def unauthorized():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('blank.html'), 404
-
-@app.route('/admin', methods=["GET"])
-@login_required
-@roles_required('sa')
-def admin_template():
-    page = request.args.get('page', 1, type=int)
-    per_page = 10
-    mst = request.args.get('mst', None, type=str)
-    if mst:
-        users_paginated = Users.query.filter_by(masothe=mst).paginate(page=page, per_page=per_page, error_out=False)
-    else:
-        hoten = request.args.get('hoten', None, type=str)
-        if hoten:
-            users_paginated = Users.query.filter_by(hoten=hoten).paginate(page=page, per_page=per_page, error_out=False)
-        else:
-            users_paginated = Users.query.paginate(page=page, per_page=per_page, error_out=False)
-    cacrole= ['sa','user','hr','gd','luong','tnc','td','tbp']
-    return render_template('admin.html', users=users_paginated,cacrole=cacrole)
-
-@app.route('/register', methods=["POST"])
-def register():
-    if request.method == "POST":
-        if request.args.get("macongty") == "NT1":
-            tencty = "Công ty cổ phần sản xuất Nam Thuận"
-        elif request.args.get("macongty") == "NT2":
-            tencty = "Công ty cổ phần Nam Thuận Nghệ An"
-        elif request.args.get("macongty") == "NT0":    
-            tencty = "Công ty cổ phần tập đoàn Nam Thuận"
-        user = Users(masothe=request.args.get("masothe"),
-                     hoten=request.args.get("hoten"),
-                     phongban=request.args.get("phongban"),
-                     macongty=request.args.get("macongty"),
-                     matkhau=request.args.get("matkhau"),
-                     tencongty = tencty
-                     )
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except Exception as e:
-            return str(e)
-        return "OK"
  
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
-        user = Users.query.filter_by(
-            masothe=request.form.get("masothe"),
-            macongty=request.form.get("congty")).first()
-        if not user:
-            return redirect(url_for("login"))
-        if user.matkhau == request.form.get("matkhau"):
-            try:
+        try:
+            macongty = request.form['macongty']
+            masothe = request.form['masothe']
+            matkhau = request.form['matkhau']
+            print(macongty, masothe, matkhau)
+            user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()
+            print(user.phanquyen)            
+            if user and user.matkhau == matkhau:
                 login_user(user)
-                print(f"User {user.masothe} {user.macongty} logged in")
-            except Exception as e:
-                app.logger.error(f"Error during login: {e}")
-                flash('An error occurred. Please try again.')
-            return redirect(url_for("home"))
-        else:
+                return redirect(url_for('home'))
+            else:
+                return redirect(url_for("login"))
+        except Exception as e:
+            app.logger.error(f'Không thế đăng nhập {e} !!!')
+            flash(f'Không thế đăng nhập {e} !!!')
             return redirect(url_for("login"))
     return render_template("login.html")
 
@@ -141,8 +92,8 @@ def logout():
         logout_user()
         flash("Đăng xuất thành công")
     except Exception as e:
-        app.logger.error(f"Error during login: {e}")
-        flash('An error occurred. Please try again.')
+        app.logger.error(f'Không thế đăng xuất {e} !!!')
+        flash(f'Không thế đăng xuất {e} !!!')
     return redirect("/")
 
 @app.route("/doimatkhau", methods=['POST'])
@@ -2565,3 +2516,33 @@ def capnhatstk():
 @app.route("/taifile_capnhatstk", methods=["POST"])
 def taifile_capnhatstk():
     return send_file(FILE_MAU_CAPNHAT_STK, as_attachment=True)
+
+@app.route("/inhopdong", methods=["POST"])
+def inhopdong():
+    if request.method=="POST":
+        id = request.form.get("idhopdongin")
+        hopdong = lay_thongtin_hopdong_theo_id(id)
+        macongty = hopdong[1]
+        masothe = hopdong[2]
+        hoten = hopdong[3]
+        gioitinh = hopdong[4]
+        ngaysinh = datetime.strptime(hopdong[5], "%Y-%m-%d").strftime("%d/%m/%Y")
+        thuongtru = hopdong[6]
+        tamtru = hopdong[7]
+        cccd = hopdong[8]
+        ngaycapcccd = datetime.strptime(hopdong[9], "%Y-%m-%d").strftime("%d/%m/%Y")
+        capbac = hopdong[10]
+        loaihopdong = hopdong[11]
+        chucdanh = hopdong[12]
+        phongban = hopdong[13]
+        chuyen = hopdong[14]
+        luongcoban = hopdong[15]
+        phucap = hopdong[16]
+        ngaybatdau = datetime.strptime(hopdong[17], "%Y-%m-%d").strftime("%d/%m/%Y")
+        ngayketthuc = datetime.strptime(hopdong[18], "%Y-%m-%d").strftime("%d/%m/%Y")
+        file = inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
+        print(file)
+        if file:
+            return send_file(file, as_attachment=True, download_name="hopdong.xlsx")
+        else:
+            return redirect("/muc3_3")

@@ -51,7 +51,7 @@
                     <div class="card-body">
                         <h5 class="card-title"><b>{{row["Loại hợp đồng"]}}</b></h5>
                         <h6 class="card-subtitle"><i>{{row["Chức danh"]}}</i></h6>
-                        <p class="card-text">Bắt đầu: <b>{{row["Ngày ký hợp đồng"]}}</b></p>
+                        <p class="card-text">Bắt đầu: <b class="date_en">{{row["Ngày ký hợp đồng"]}}</b></p>
                     </div>
                 </div>
                 {% endfor %}
@@ -62,9 +62,18 @@
             <div id="hd_chitiet">
                 <h1 id="loaihopdong"></h1>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button class="btn btn-success btn-sm"><i class="fas fa-print"></i></button>
-                    <button class="btn btn-success btn-sm"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-success btn-sm"><i class="fas fa-trash"></i></button>
+                    <form action="/inhopdong" method="POST">
+                        <input type="hidden" id="idhopdongin" name="idhopdongin">
+                        <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-print"></i></button>
+                    </form>
+                    <form action="/suahopdong" method="POST">
+                        <input type="hidden" id="idhopdongsua" name="idhopdongsua">
+                        <button class="btn btn-success btn-sm" type="submit" ><i class="fas fa-edit"></i></button>
+                    </form>
+                    <form action="/xoahopdong" method="POST">
+                        <input type="hidden" id="idhopdongxoa" name="idhopdongxoa">
+                        <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-trash"></i></button>
+                    </form>
                 </div>
                 <hr>
                 <h3>Họ tên: <b id="hoten"></b></h3>
@@ -172,8 +181,10 @@
         
         return newFormat;
     }
+    
     function chitiethopdong(element) {
         var info = JSON.parse(element.dataset.info);
+        console.log(info)
         document.getElementById('loaihopdong').textContent = info['Loại hợp đồng'];
         document.getElementById('hoten').textContent = info['Họ tên'];
         document.getElementById('chucdanh').textContent = info['Chức danh'];
@@ -184,6 +195,9 @@
         document.getElementById('phucap').textContent = formatNumberWithCommas(info['Phụ cấp']) + ' VND';
         document.getElementById('ngayky').textContent = info['Ngày ký hợp đồng'];
         document.getElementById('ngayhethan').textContent = info['Ngày hết hạn hợp đồng'];
+        document.getElementById('idhopdongin').value = info['Số thứ tự'];
+        document.getElementById('idhopdongsua').value = info['Số thứ tự'];
+        document.getElementById('idhopdongxoa').value = info['Số thứ tự'];
     }
     function kiemtrathongtinnld() {
         axios({
@@ -214,5 +228,22 @@
                 }
             })
     }
+    // Function to get query parameters from the URL
+    function getQueryParam(param) {
+        var urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    function changeFormatDate(date){
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
 </script>
 {% endblock content %}
