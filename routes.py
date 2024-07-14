@@ -72,16 +72,15 @@ def login():
             macongty = request.form['macongty']
             masothe = request.form['masothe']
             matkhau = request.form['matkhau']
-            print(macongty, masothe, matkhau)
-            user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()
-            print(user.phanquyen)            
+            user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()    
             if user and user.matkhau == matkhau:
                 login_user(user)
+                app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
                 return redirect(url_for('home'))
             else:
                 return redirect(url_for("login"))
         except Exception as e:
-            app.logger.error(f'Không thế đăng nhập {e} !!!')
+            app.logger.error(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
             flash(f'Không thế đăng nhập {e} !!!')
             return redirect(url_for("login"))
     return render_template("login.html")
@@ -89,8 +88,8 @@ def login():
 @app.route("/logout", methods=["POST"])
 def logout():
     try:
+        flash(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
         logout_user()
-        flash("Đăng xuất thành công")
     except Exception as e:
         app.logger.error(f'Không thế đăng xuất {e} !!!')
         flash(f'Không thế đăng xuất {e} !!!')
