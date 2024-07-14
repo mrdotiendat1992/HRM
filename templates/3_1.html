@@ -361,7 +361,7 @@ input[readonly] {
                         data = response.data
                         console.log(data)
                         alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
-                        document.getElementById("dantoc").value = data["Dân tộc"];
+                        document.getElementById("dantoc").value = data["Dân tộc"].replace(/'/g, '');;
                         document.getElementById("tongiao").value = data["Tôn giáo"];
                         document.getElementById("dienthoai").value = data["Số điện thoại"];
                         document.getElementById("quoctich").value = data["Quốc tịch"];
@@ -428,7 +428,7 @@ input[readonly] {
                     data = response.data
                     console.log(data)
                     alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
-                    document.getElementById("dantoc").value = data["Dân tộc"];
+                    document.getElementById("dantoc").value = data["Dân tộc"].replace(/'/g, '');;
                     document.getElementById("tongiao").value = data["Tôn giáo"];
                     document.getElementById("dienthoai").value = data["Số điện thoại"];
                     document.getElementById("quoctich").value = data["Quốc tịch"];
