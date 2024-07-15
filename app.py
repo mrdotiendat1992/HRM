@@ -111,10 +111,11 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
 
 def laycatheochuyen(chuyen):
     try:
-        if chuyen in CA_THEO_CHUYEN:
-            return CA_THEO_CHUYEN[chuyen]
-        else:
-            return "A1-04"
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        row = cursor.execute(f"SELECT CA FROM GOI_Y_CA WHERE LINE = '{chuyen}'").fetchone()
+        conn.close()
+        return row[0]
     except Exception as e:
         print(e)
         return None
