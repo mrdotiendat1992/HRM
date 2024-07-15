@@ -74,21 +74,19 @@ def login():
             matkhau = request.form['matkhau']
             user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()    
             if user and user.matkhau == matkhau:
-                login_user(user)
-                app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
-                return redirect(url_for('home'))
-            else:
-                return redirect(url_for("login"))
+                if login_user(user):    
+                    app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
+                    return redirect(url_for('home'))
+            return redirect(url_for("login"))
         except Exception as e:
             app.logger.error(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
-            flash(f'Không thế đăng nhập {e} !!!')
             return redirect(url_for("login"))
     return render_template("login.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
     try:
-        flash(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
+        app.logger.info(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
         logout_user()
     except Exception as e:
         app.logger.error(f'Không thế đăng xuất {e} !!!')
@@ -811,6 +809,7 @@ def inhopdonglaodong():
 
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
+@roles_required('hr','sa','gd')
 def danhsachsaphethanhopdong():
     if request.method == "GET":
         danhsach = laydanhsachsaphethanhopdong()

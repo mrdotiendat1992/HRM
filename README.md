@@ -43,29 +43,34 @@ Webapp quản lý bằng sqlserver trên nền tảng flask python
 ## Phân quyền
 ```
     "/"         :  ALL
-    "/muc2.1"   :  HRD00, TNC00
-    "/muc2.2.1" :  TBP
-    "/muc2.2.2" :  HRD
-    "/muc3.1"   :  HRD
-    "/muc3.2"   :  HRD
-    "/muc3.3"   :  HRD
-    "/muc3.4"   :  ALL
-    "/muc6.1"   :  HRD
-    "/muc6.2"   :  ALL
-    "/muc7.1.1" :  HRD
+    "/muc2.1"   :  HRD, TNC, TD, GD, SA
+    "/muc2.2.1" :  TBP, GD, SA
+    "/muc2.2.2" :  HRD,TBP, GD, SA
+    "/muc3.1"   :  HRD, GD, SA
+    "/muc3.2"   :  HRD, GD, SA
+    "/muc3.3"   :  HRD, GD, SA
+    "/muc3.4"   :  HRD, GD, SA
+    "/muc5.1.1" :  TBP, GD, SA
+    "/muc5.1.2" :  GD, SA
+    "/muc5.1.3.1" :  TBP, GD, SA
+    "/muc5.1.3.2" :  TBP, GD, SA
+    "/muc6.1"   :  HRD, GD, SA
+    "/muc6.2"   :  HRD, GD, SA
+    "/muc7.1.1" :  HRD, GD, SA
     "/muc7.1.2" :  ALL
     "/muc7.1.3" :  ALL
     "/muc7.1.4" :  ALL
     "/muc7.1.5" :  ALL
-    "/muc7.1.6" :  HRD, THUKI
-    "/muc7.1.7" :  ALL
+    "/muc7.1.6" :  ALL
+    "/muc7.1.7" :  HRD, GD, SA, TK
     "/muc7.1.8" :  ALL
     "/muc7.1.9" :  ALL
-    "/muc7.1.10":  HRD (2MST)
-    "/muc8.1"   :  ALL 
-    "/muc8.2"   :  HRD 
-    "/muc9.1"   :  HRD
-    "/muc10.3"  :  HRD 
+    "/muc7.1.10":  ALL    
+    "/muc8.1"   :  HRD, GD, SA 
+    "/muc8.2"   :  HRD, GD, SA 
+    "/muc9.1"   :  HRD, GD, SA
+    "/muc10.2"  :  HRD, GD, SA 
+    "/muc10.3"  :  HRD, GD, SA 
 ```
 
 ## MST ảo
