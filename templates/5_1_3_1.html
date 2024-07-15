@@ -241,6 +241,14 @@
     </div>
 </div>
 <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const tds = document.querySelectorAll('td');
+        tds.forEach(td => {
+            if (td.textContent.trim() === 'None') {
+                td.textContent = '';
+            }
+        });
+    });
 </script>
 
 {% endblock content %}
