@@ -67,3 +67,18 @@ Webapp quản lý bằng sqlserver trên nền tảng flask python
     "/muc9.1"   :  HRD
     "/muc10.3"  :  HRD 
 ```
+
+## MST ảo
+### NT1:
+MST |  Tên                      | Phòng ban 
+2   | Lưu Thị Hằng              | IED
+3   | Nguyễn Thị Kim Anh        | IED
+5   | Nguyễn Hoàng Xuân Phúc    | MGT
+6   | Trần Lê ĐẠi Dương         | MGT
+
+### NT1:
+MST |  Tên                      | Phòng ban 
+19  | Nguyễn Thị Thắng          | IED
+23  | Vũ Thị Hương Lan          | IED
+25  | Nguyễn Hoàng Xuân Phúc    | MGT
+28  | Trần Lê ĐẠi Dương         | MGT
