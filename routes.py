@@ -330,135 +330,138 @@ def nhapthongtinlaodongmoi():
                                 cacca=cacca,
                                 macongty=macongty)
     elif request.method == "POST":
-
-        anh = f"N'{request.form.get("anh")}'"
-        masothe = f"'{request.form.get("masothe")}'"
-        thechamcong = f"'{int(request.form.get("masothe"))}'"
-        hoten = f"N'{request.form.get("hoten")}'"
-        ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
-        gioitinh = f"N'{request.form.get("gioitinh")}'"
-        cmt = f"'{request.form.get("cmt")}'"
-        cccd = f"'{request.form.get("cccd")}'"
-        ngaycapcccd = f"'{request.form.get("ngaycap")}'" if request.form.get("ngaycap") else "NULL"
-        thuongtru = f"N'{request.form.get("thuongtru")}'" if request.form.get("thuongtru") else "NULL"
-        noisinh = f"N'{request.form.get("noisinh")}'" if request.form.get("noisinh") else "NULL"
-        tamtru = f"N'{request.form.get("tamtru")}'" if request.form.get("tamtru") else "NULL"
-        quoctich = f"N'{request.form.get("quoctich")}'" if request.form.get("quoctich") else "NULL"
-        dantoc = f"N'{request.form.get("dantoc")}'" if request.form.get("dantoc") else "NULL"
-        tongiao = f"N'{request.form.get("tongiao")}'" if request.form.get("tongiao") else "NULL"
-        hocvan = f"N'{request.form.get("hocvan")}'" if request.form.get("hocvan") else "NULL"
-        thonxom = f"N'{request.form.get("thonxom")}'" if request.form.get("thonxom") else "NULL"
-        phuongxa = f"N'{request.form.get("phuongxa")}'" if request.form.get("phuongxa") else "NULL"
-        quanhuyen = f"N'{request.form.get("quanhuyen")}'" if request.form.get("quanhuyen") else "NULL"
-        tinhthanhpho = f"N'{request.form.get("tinhthanhpho")}'" if request.form.get("tinhthanhpho") else "NULL"
-        nganhang = f"N'{request.form.get("nganhang")}'" if request.form.get("nganhang") else "NULL"
-        sotaikhoan = f"'{request.form.get("sotaikhoan")}'" if request.form.get("sotaikhoan") else "NULL"
-        dienthoai = f"'{request.form.get("dienthoai")}'" if request.form.get("dienthoai") else "NULL"
-        sobhxh = f"'{request.form.get("sobhxh")}'" if request.form.get("sobhxh") else 'NULL'
-        masothue = f"'{request.form.get("masothue")}'" if request.form.get("masothue") else 'NULL'
-        connho = f"N'{request.form.get("connho")}'" if request.form.get("connho") else 'NULL'
-        tencon1 = f"N'{request.form.get("tenconnho1")}'" if request.form.get("tenconnho1") else 'NULL'
-        ngaysinhcon1 = f"'{request.form.get("ngaysinhcon1")}'" if request.form.get("ngaysinhcon1") else 'NULL'
-        tencon2 = f"N'{request.form.get("tenconnho2")}'" if request.form.get("tenconnho2") else 'NULL'
-        ngaysinhcon2 = f"'{request.form.get("ngaysinhcon2")}'" if request.form.get("ngaysinhcon2") else 'NULL'
-        tencon3 = f"N'{request.form.get("tenconnho3")}'" if request.form.get("tenconnho3") else 'NULL'
-        ngaysinhcon3 = f"'{request.form.get("ngaysinhcon3")}'" if request.form.get("ngaysinhcon3") else 'NULL'
-        tencon4 = f"N'{request.form.get("tenconnho4")}'" if request.form.get("tenconnho4") else 'NULL'
-        ngaysinhcon4 = f"'{request.form.get("ngaysinhcon4")}'" if request.form.get("ngaysinhcon4") else 'NULL'
-        tencon5 = f"N'{request.form.get("tenconnho5")}'" if request.form.get("tenconnho5") else 'NULL'
-        ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
-        jobdetailvn = f"N'{request.form.get("vitri")}'"
-        line = f"'{request.form.get("line")}'"
-        calamviec = f"'{request.form.get("calamviec")}'"
-        factory = f"'{current_user.macongty}'"
-        hccategory = f"N'{request.form.get("hccategory")}'"
-        gradecode = f"N'{request.form.get("gradecode")}'"
-        department = f"N'{request.form.get("phongban")}'"
-        chucvu = f"N'{request.form.get("chucvu")}'"
-        employeetype = f"N'{request.form.get("loailaodong")}'"
-        sectioncode = f"N'{request.form.get("mabophan")}'"
-        sectiondescription = f"N'{request.form.get("bophan")}'"
-        jobdetailen = f"N'{request.form.get("vitrien")}'"
-        positioncode = f"N'{request.form.get("mavitri")}'"
-        positioncodedescription = f"N'{request.form.get("tenvitri")}'"
-        nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
-        sdtnguoithan = f"N'{request.form.get("sdtnguoithan")}'" if request.form.get("sdtnguoithan") else 'NULL'
-        luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
-        tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
-        kieuhopdong = request.form.get("kieuhopdong")
-        if kieuhopdong == "HĐ thử việc":
-            kieuhopdong = "N'HĐ thử việc'"
-            ngaybatdauthuviec = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngayketthucthuviec = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngaybatdauhdcthl1 = "NULL"
-            ngayketthuchdcthl1 = "NULL"
-            ngaybatdauhdcthl2 = "NULL"
-            ngayketthuchdcthl2 = "NULL"
-            ngaybatdauhdvth = "NULL"
-        elif kieuhopdong == "HĐ có thời hạn 28 ngày":
-            kieuhopdong = "N'HĐ có thời hạn 28 ngày'"
-            ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngaybatdauhdcthl1 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuchdcthl1 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngaybatdauthuviec = "NULL"
-            ngayketthucthuviec = "NULL"
-            ngaybatdauhdcthl2 = "NULL"
-            ngayketthuchdcthl2 = "NULL"
-            ngaybatdauhdvth = "NULL"
-        elif kieuhopdong == "HĐ có thời hạn 1 năm":
-            kieuhopdong = "N'HĐ có thời hạn 1 năm'"
-            ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngaybatdauhdcthl2 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuchdcthl2 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-            ngaybatdauthuviec = "NULL"
-            ngayketthucthuviec = "NULL"
-            ngaybatdauhdcthl1 = "NULL"
-            ngayketthuchdcthl1 = "NULL"
-            ngaybatdauhdvth = "NULL"
-        elif kieuhopdong == "HĐ vô thời hạn":
-            kieuhopdong = "N'HĐ vô thời hạn'"
-            ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngayketthuc = 'NULL'
-            ngaybatdauhdvth = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            ngaybatdauthuviec = "NULL"
-            ngayketthucthuviec = "NULL"
-            ngaybatdauhdcthl1 = "NULL"
-            ngayketthuchdcthl1 = "NULL"
-            ngaybatdauhdcthl2 = "NULL"
-            ngayketthuchdcthl2 = "NULL"
-        else:
-            ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-            kieuhopdong = "NULL"
-            ngayketthuc = 'NULL'
-            ngaybatdauthuviec = "NULL"
-            ngayketthucthuviec = "NULL"
-            ngaybatdauhdcthl1 = "NULL"
-            ngayketthuchdcthl1 = "NULL"
-            ngaybatdauhdcthl2 = "NULL"
-            ngayketthuchdcthl2 = "NULL"
-            ngaybatdauhdvth = "NULL"
-        nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
-        if themnhanvienmoi(nhanvienmoi):
-            flash("Thêm lao động mới thành công !!!")
-            if themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31)):
-                flash("Tạo ca mặc định cho người mới thành công !!!")                
-                if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
-                    flash("Thêm lịch sử trạng thái cho người mới thành công !!!")
-                else:
-                    flash("Thêm lịch sử trạng thái cho người mới thất bại !!!")
+        try:
+            anh = f"N'{request.form.get("anh")}'"
+            masothe = f"'{request.form.get("masothe")}'"
+            thechamcong = f"'{int(request.form.get("masothe"))}'"
+            hoten = f"N'{request.form.get("hoten")}'"
+            ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
+            gioitinh = f"N'{request.form.get("gioitinh")}'"
+            cmt = f"'{request.form.get("cmt")}'"
+            cccd = f"'{request.form.get("cccd")}'"
+            ngaycapcccd = f"'{request.form.get("ngaycap")}'" if request.form.get("ngaycap") else "NULL"
+            thuongtru = f"N'{request.form.get("thuongtru")}'" if request.form.get("thuongtru") else "NULL"
+            noisinh = f"N'{request.form.get("noisinh")}'" if request.form.get("noisinh") else "NULL"
+            tamtru = f"N'{request.form.get("tamtru")}'" if request.form.get("tamtru") else "NULL"
+            quoctich = f"N'{request.form.get("quoctich")}'" if request.form.get("quoctich") else "NULL"
+            dantoc = f"N'{request.form.get("dantoc")}'" if request.form.get("dantoc") else "NULL"
+            tongiao = f"N'{request.form.get("tongiao")}'" if request.form.get("tongiao") else "NULL"
+            hocvan = f"N'{request.form.get("hocvan")}'" if request.form.get("hocvan") else "NULL"
+            thonxom = f"N'{request.form.get("thonxom")}'" if request.form.get("thonxom") else "NULL"
+            phuongxa = f"N'{request.form.get("phuongxa")}'" if request.form.get("phuongxa") else "NULL"
+            quanhuyen = f"N'{request.form.get("quanhuyen")}'" if request.form.get("quanhuyen") else "NULL"
+            tinhthanhpho = f"N'{request.form.get("tinhthanhpho")}'" if request.form.get("tinhthanhpho") else "NULL"
+            nganhang = f"N'{request.form.get("nganhang")}'" if request.form.get("nganhang") else "NULL"
+            sotaikhoan = f"'{request.form.get("sotaikhoan")}'" if request.form.get("sotaikhoan") else "NULL"
+            dienthoai = f"'{request.form.get("dienthoai")}'" if request.form.get("dienthoai") else "NULL"
+            sobhxh = f"'{request.form.get("sobhxh")}'" if request.form.get("sobhxh") else 'NULL'
+            masothue = f"'{request.form.get("masothue")}'" if request.form.get("masothue") else 'NULL'
+            connho = f"N'{request.form.get("connho")}'" if request.form.get("connho") else 'NULL'
+            tencon1 = f"N'{request.form.get("tenconnho1")}'" if request.form.get("tenconnho1") else 'NULL'
+            ngaysinhcon1 = f"'{request.form.get("ngaysinhcon1")}'" if request.form.get("ngaysinhcon1") else 'NULL'
+            tencon2 = f"N'{request.form.get("tenconnho2")}'" if request.form.get("tenconnho2") else 'NULL'
+            ngaysinhcon2 = f"'{request.form.get("ngaysinhcon2")}'" if request.form.get("ngaysinhcon2") else 'NULL'
+            tencon3 = f"N'{request.form.get("tenconnho3")}'" if request.form.get("tenconnho3") else 'NULL'
+            ngaysinhcon3 = f"'{request.form.get("ngaysinhcon3")}'" if request.form.get("ngaysinhcon3") else 'NULL'
+            tencon4 = f"N'{request.form.get("tenconnho4")}'" if request.form.get("tenconnho4") else 'NULL'
+            ngaysinhcon4 = f"'{request.form.get("ngaysinhcon4")}'" if request.form.get("ngaysinhcon4") else 'NULL'
+            tencon5 = f"N'{request.form.get("tenconnho5")}'" if request.form.get("tenconnho5") else 'NULL'
+            ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
+            jobdetailvn = f"N'{request.form.get("vitri")}'"
+            line = f"'{request.form.get("line")}'"
+            calamviec = f"'{request.form.get("calamviec")}'"
+            factory = f"'{current_user.macongty}'"
+            hccategory = f"N'{request.form.get("hccategory")}'"
+            gradecode = f"N'{request.form.get("gradecode")}'"
+            department = f"N'{request.form.get("phongban")}'"
+            chucvu = f"N'{request.form.get("chucvu")}'"
+            employeetype = f"N'{request.form.get("loailaodong")}'"
+            sectioncode = f"N'{request.form.get("mabophan")}'"
+            sectiondescription = f"N'{request.form.get("bophan")}'"
+            jobdetailen = f"N'{request.form.get("vitrien")}'"
+            positioncode = f"N'{request.form.get("mavitri")}'"
+            positioncodedescription = f"N'{request.form.get("tenvitri")}'"
+            nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
+            sdtnguoithan = f"N'{request.form.get("sdtnguoithan")}'" if request.form.get("sdtnguoithan") else 'NULL'
+            luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
+            tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
+            kieuhopdong = request.form.get("kieuhopdong")
+            if kieuhopdong == "HĐ thử việc":
+                kieuhopdong = "N'HĐ thử việc'"
+                ngaybatdauthuviec = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngayketthucthuviec = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngaybatdauhdcthl1 = "NULL"
+                ngayketthuchdcthl1 = "NULL"
+                ngaybatdauhdcthl2 = "NULL"
+                ngayketthuchdcthl2 = "NULL"
+                ngaybatdauhdvth = "NULL"
+            elif kieuhopdong == "HĐ có thời hạn 28 ngày":
+                kieuhopdong = "N'HĐ có thời hạn 28 ngày'"
+                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngaybatdauhdcthl1 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuchdcthl1 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngaybatdauthuviec = "NULL"
+                ngayketthucthuviec = "NULL"
+                ngaybatdauhdcthl2 = "NULL"
+                ngayketthuchdcthl2 = "NULL"
+                ngaybatdauhdvth = "NULL"
+            elif kieuhopdong == "HĐ có thời hạn 1 năm":
+                kieuhopdong = "N'HĐ có thời hạn 1 năm'"
+                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngaybatdauhdcthl2 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuchdcthl2 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
+                ngaybatdauthuviec = "NULL"
+                ngayketthucthuviec = "NULL"
+                ngaybatdauhdcthl1 = "NULL"
+                ngayketthuchdcthl1 = "NULL"
+                ngaybatdauhdvth = "NULL"
+            elif kieuhopdong == "HĐ vô thời hạn":
+                kieuhopdong = "N'HĐ vô thời hạn'"
+                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngayketthuc = 'NULL'
+                ngaybatdauhdvth = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                ngaybatdauthuviec = "NULL"
+                ngayketthucthuviec = "NULL"
+                ngaybatdauhdcthl1 = "NULL"
+                ngayketthuchdcthl1 = "NULL"
+                ngaybatdauhdcthl2 = "NULL"
+                ngayketthuchdcthl2 = "NULL"
             else:
-                flash("Tạo ca mặc định cho người mới thất bại !!!") 
-        else:
-            masothe = int(laymasothemoi())+1
-            cacvitri= laycacvitri()
-            cacto = laycacto()
-            cacca = laycacca()
-            flash("Thêm lao động mới thất bại !!!")
-        return redirect("/muc3_1")
+                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
+                kieuhopdong = "NULL"
+                ngayketthuc = 'NULL'
+                ngaybatdauthuviec = "NULL"
+                ngayketthucthuviec = "NULL"
+                ngaybatdauhdcthl1 = "NULL"
+                ngayketthuchdcthl1 = "NULL"
+                ngaybatdauhdcthl2 = "NULL"
+                ngayketthuchdcthl2 = "NULL"
+                ngaybatdauhdvth = "NULL"
+            nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
+            if themnhanvienmoi(nhanvienmoi):
+                flash("Thêm lao động mới thành công !!!")
+                if themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31)):
+                    app.logger.info("Tạo ca mặc định cho người mới thành công !!!")                
+                    # if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
+                    #     app.logger.info("Thêm lịch sử trạng thái cho người mới thành công !!!")
+                    # else:
+                    #     app.logger.info("Thêm lịch sử trạng thái cho người mới thất bại !!!")
+                else:
+                    app.logger.info("Tạo ca mặc định cho người mới thất bại !!!") 
+            else:
+                masothe = int(laymasothemoi())+1
+                cacvitri= laycacvitri()
+                cacto = laycacto()
+                cacca = laycacca()
+                flash("Thêm lao động mới thất bại !!!")
+        except Exception as e:
+            app.logger.error(f"Them lao dong moi that bai: {e} !!!")
+        finally:
+            return redirect("/muc3_1")
         
 @app.route("/muc3_2", methods=["GET","POST"])
 @login_required
@@ -2545,3 +2548,9 @@ def inhopdong():
             return send_file(file, as_attachment=True, download_name="hopdong.xlsx")
         else:
             return redirect("/muc3_3")
+
+@app.route("/timcacchucdanh", methods=["POST"])
+def timcacchucdanh():
+    tutimkiem = request.args.get("tutimkiem")
+    cacchucdanh = timkiemchucdanh(tutimkiem)
+    return jsonify(cacchucdanh)

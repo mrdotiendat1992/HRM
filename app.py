@@ -117,7 +117,7 @@ def laycatheochuyen(chuyen):
         conn.close()
         return row[0]
     except Exception as e:
-        app.logger.info(e)
+        app.logger.info(f"Loi kiem tra ca theo chuyen {e} !!!")
         return None
   
 def dieuchuyennhansu(mst,
@@ -196,8 +196,6 @@ def dichuyennghiviec(mst,
         query = f"""
 INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL)
 UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
-UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaynghiviec}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
-INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Nghỉ việc')
             """
         # app.logger.info(query)
         cursor.execute(query)
@@ -241,8 +239,6 @@ def dichuyennghithaisan(mst,
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL)
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ thai sản' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
-            UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaynghiviec}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
-            INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Nghỉ thai sản')
             """    
         cursor.execute(query)
         conn.commit()
@@ -285,8 +281,6 @@ def dichuyenthaisandilamlai(mst,
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodecu}')
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
-            UPDATE HR.dbo.Lich_su_trang_thai_lam_viec SET Den_ngay = '{truocngaydilamlai}' WHERE MST = '{mst}' AND Nha_may = '{current_user.macongty}' AND Den_ngay = '2054-12-31'
-            INSERT INTO HR.dbo.Lich_su_trang_thai_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31',N'Đang làm việc')
             """    
         # app.logger.info(query)
         cursor.execute(query)
@@ -1223,7 +1217,7 @@ def themnhanvienmoi(nhanvienmoi):
         conn.close()
         return True
     except Exception as e:
-        app.logger.info(e)
+        app.logger.info(f"Loi insert nhan vien moi: {e}")
         return False
 
 def xoadautrongten(s):
@@ -1242,29 +1236,6 @@ def xoadautrongten(s):
     s = re.sub(r'[Đ]', 'D', s)
     s = re.sub(r'[đ]', 'd', s)
     return s
-
-# def themnhanvienvaomita(mst,hoten):
-#     conn = pyodbc.connect(mcc_db)
-#     cursor = conn.cursor()
-#     tenchamcong = xoadautrongten(hoten)
-#     query = f"INSERT INTO MITACOSQL.Dbo.NHANVIEN (MaNhanVien,TenNhanVien,MaChamCong,TenChamCong) VALUES ('{mst}','{tenchamcong}','{mst}','{tenchamcong}')"
-#     
-#     cursor.execute(query)
-#     conn.commit()
-#     conn.close()
-
-def themlichsutrangthai(mst,tungay,denngay,trangthai):
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"INSERT INTO [HR].[dbo].[Lich_su_trang_thai_lam_viec] VALUES ('{mst}','{current_user.macongty}','{tungay}','{denngay}',N'{trangthai}')"
-        
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        app.logger.info(e)
-        return 
     
 def xoanhanvien(MST):
     try:
@@ -1708,14 +1679,12 @@ def chuadangkycalamviec(mst):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select count(*) from Dang_ky_ca_lam_viec where Factory='{current_user.macongty}' and MST='{mst}'"
-        
         row = cursor.execute(query).fetchone()
         conn.close()
-        app.logger.info(row[0])
         if row[0]==0:
             return True
     except Exception as e:
-        app.logger.info(e)
+        app.logger.info(f"Kiem tra da dang ky ca lam viec chua loi: {e} !!!")
         return False
         
 def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
@@ -1727,7 +1696,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if pd.notna(ngayketthuc):
-            # app.logger.info("Co ngay ket thuc")
+            app.logger.info("Co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngayvecamacdinh = ngayketthuc + timedelta(days=1)
             if ngaybatdau <= ngayketthuc:
@@ -1754,7 +1723,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             else:
                 flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
         else:
-            app.logger.info("KHong co ngay ket thuc")
+            app.logger.info("Khong co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngaymoc = datetime(2054,12,31)
             query = f"""
@@ -2358,3 +2327,15 @@ def lay_thongtin_hopdong_theo_id(id):
     except Exception as e:
         app.logger.info(f"Lay thong tin hop dong loi {e} !!!")
         return None
+    
+def timkiemchucdanh(tutimkiem):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select DISTINCT Detail_job_title_VN from HC_Name WHERE Detail_job_title_VN COLLATE Latin1_General_CI_AI LIKE N'%{tutimkiem}%'"
+        result = cursor.execute(query).fetchall()
+        conn.close()
+        return list(x[0] for x in result)
+    except Exception as e:
+        app.logger.info(f"Loi khi tim kiem cac chuc danh: {e} !!!")
+        return []
