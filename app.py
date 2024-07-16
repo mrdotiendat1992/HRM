@@ -2326,7 +2326,7 @@ def lay_thongtin_hopdong_theo_id(id):
         return result
     except Exception as e:
         app.logger.info(f"Lay thong tin hop dong loi {e} !!!")
-        return None
+        return ()
     
 def timkiemchucdanh(tutimkiem):
     try:

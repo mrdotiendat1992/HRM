@@ -2648,3 +2648,15 @@ def capnhathopdongtheofilemau():
     else:
         flash("Không tìm thấy dữ liệu hợp đồng !!!")
     return redirect("/muc3_3")
+
+@app.route("/suahopdong", methods=["POST"])
+def suahopdong():
+    try:
+        id = request.form.get('idhopdongsua')
+        if id:
+            hopdong = lay_thongtin_hopdong_theo_id(id)
+            return render_template("suahopdong.html",hopdong=hopdong)
+        return redirect("/muc3_3")
+    except Exception as e:
+        app.logger.info(e)
+        return redirect("/muc3_3")   

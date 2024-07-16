@@ -1,0 +1,55 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container">
+
+    <h5 class="modal-title" id="requestModalLabel">Hợp đồng lao động</h5>
+        
+    <form method="POST" action="/suahopdonglaodong">
+        <div class="form-group">
+            <input type="number" id="id_hopdong" name="id_hopdong" value={{hopdong[0]}}>
+            <input type="text" id="form_manhanvien" name="form_manhanvien" value={{hopdong[2]}}>
+            <input type="text" id="form_hovaten" name="form_hovaten" value={{hopdong[3]}}>
+            <input type="text" id="form_gioitinh" name="form_gioitinh" value={{hopdong[4]}}>
+            <input type="text" id="form_cccd" name="form_cccd"  value={{hopdong[8]}}>
+            <input type="text" id="form_thuongtru" name="form_thuongtru" value={{hopdong[6]}}>
+            <input type="text" id="form_tamtru" name="form_tamtru"  value={{hopdong[7]}}>
+            <input type="date" id="form_ngaysinh" name="form_ngaysinh" value={{hopdong[5]}}>
+            <input type="date" id="form_ngaycapcccd" name="form_ngaycapcccd" value={{hopdong[9]}} >
+            <input type="text" id="form_loaihopdong" name="form_loaihopdong" value='{{hopdong[11]}}'>
+            <label for="form_ngaykyhopdong">Ngày ký hợp đồng</label>
+            <input type="date" id="form_ngaykyhopdong" name="form_ngaykyhopdong">
+            <label for="form_ngayhethanhopdong">Ngày hết hạn hợp đồng</label>
+            <input type="date" id="form_ngayhethanhopdong" name="form_ngayhethanhopdong">
+            <input name="chucdanh" id="chucdanh" value={{hopdong[12]}}>
+            <input name="vitrien" id="vitrien" placeholder="Detail job title(EN)">
+            <input name="chuyen" id="chuyen" value={{hopdong[14]}}>
+            <input name="hccategory" id="hccategory" placeholder="Headcount category">
+            <input name="gradecode" id="gradecode" value={{hopdong[10]}} >
+            <input name="department" id="department" value={{hopdong[13]}}>
+            <input name="employeetype" id="employeetype" placeholder="Employee type">
+            <input name="sectioncode" id="sectioncode" placeholder="Section code">
+            <input name="sectiondescription" id="sectiondescription" placeholder="Section description">
+            <input name="positioncode" id="positioncode" placeholder="Position code">
+            <input name="positioncodedescription" id="positioncodedescription" placeholder="Position code description">
+            <input type="number" id="luongcoban" name="luongcoban" value={{hopdong[15]}}>
+            <input type="numer" name="phucap" id="phucap" value={{hopdong[16]}}>
+        </div>
+        <input class="btn btn-primary" value="Lưu lại" onclick="return luuhopdong()" type="submit"></input>
+            </form>
+        </div>
+    </div>
+<script>
+    function luuhopdong() {
+        if (confirm("Bạn muốn lưu hợp đồng?")) {
+            return true;
+        } else {
+            return false;
+        }
+    } 
+</script>
+{% endblock content %}
