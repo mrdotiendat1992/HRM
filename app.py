@@ -2363,15 +2363,44 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         app.logger.info(f"Loi khi them hop dong: {e} !!!")
         return False
     
-def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         if loaihopdong == "Hợp đồng thử việc":
             query = f"""
-            UPDATE Danh_sach_CBCNV SET Loai_hop_dong='{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}'
-            WHERE 
-            """
+                UPDATE Danh_sach_CBCNV SET Loai_hop_dong=N'{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}',
+                Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
+                WHERE Factory='{nhamay}' AND MST='{mst}'
+                """
+        elif loaihopdong == "Phụ lục hợp đồng":
+            query = f"""
+                UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}',
+                Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                WHERE Factory='{nhamay}' AND MST='{mst}'
+                """
+        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
+            query = f"""
+                UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1=='{ngayketthuc}',
+                Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                WHERE Factory='{nhamay}' AND MST='{mst}'
+                """
+        elif loaihopdong == "Hợp đồng vô thời hạn":
+            query = f"""
+                UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDKXDTH='{ngaybatdau}',
+                Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                WHERE Factory='{nhamay}' AND MST='{mst}'"""
+        if query:
+            print(query)
+            cursor.execute(query)
+            conn.commit()
+            conn.close()  
+        else:
+            print("Khong hieu loai hop dong")      
     except Exception as e:
         app.logger.info(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False

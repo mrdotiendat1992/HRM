@@ -828,9 +828,16 @@ def inhopdonglaodong():
         phucap = request.form.get("phucap")
         ngaybatdau = request.form.get("form_ngaykyhopdong")
         ngayketthuc = request.form.get("form_ngayhethanhopdong")
+        vitrien = request.form.get("vitrien")
+        employeetype = request.form.get("employeetype")
+        positioncode = request.form.get("positioncode")
+        postitioncodedescription = request.form.get("postitioncodedescription")
+        hccategory = request.form.get("hccategory")
+        sectioncode = request.form.get("sectioncode")
+        sectiondescription = request.form.get("sectiondescription")
         if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
             flash("Thêm hợp đồng thành công !!!")
-            capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
+            capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
         else:
             flash("Thêm hợp đồng thất bại")
         return redirect("/muc3_3")
@@ -2582,7 +2589,7 @@ def timcacchucdanh():
 
 @app.route("/taifilethemhopdongmau", methods=["POST"])
 def taifilethemhopdongmau():
-    return send_file(FILE_MAU_THEM_HOPDONG, as_attachment=True, download_name="themhopdong.xlsx")\
+    return send_file(FILE_MAU_THEM_HOPDONG, as_attachment=True, download_name="themhopdong.xlsx")
         
 @app.route("/capnhathopdongtheofilemau", methods=["POST"])
 def capnhathopdongtheofilemau():
@@ -2605,14 +2612,35 @@ def capnhathopdongtheofilemau():
                 ngaycapcccd = row['Ngày cấp cccd']
                 capbac = row['Cấp bậc']
                 loaihopdong = row['Loại hợp đồng']
-                chucdanh = row['Chức danh']
-                phongban = row['Phòng ban']
-                chuyen = row['Chuyền']
                 luongcoban = row['Lương cơ bản']
                 phucap = row['Phụ cấp']
                 ngaybatdau = row['Ngày bắt đầu HĐ']
                 ngayketthuc = row['Ngày kết thúc HĐ']
-                themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc)
+                chucdanh = row['Chức danh']
+                phongban = row['Phòng ban']
+                chuyen = row['Chuyền']
+                hcname= layhcname(chucdanh,chuyen)
+                print(hcname)
+                if hcname:
+                    vitrien = hcname[2]
+                    employeetype = hcname[3]
+                    posotioncode = hcname[4]
+                    postitioncodedescription = hcname[5]
+                    hccategory = hcname[7]
+                    sectioncode = hcname[10]
+                    sectiondescription = hcname[11]
+                else:
+                    vitrien = 'NULL'
+                    employeetype = 'NULL'
+                    posotioncode = 'NULL'
+                    postitioncodedescription = 'NULL'
+                    hccategory = 'NULL'
+                    sectioncode = 'NULL'
+                    sectiondescription = 'NULL'
+                if themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc):
+                    print("Them HD ok")
+                if capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
+                    print("Cap nhap HD ok")
             flash("Cập nhật hợp đồng thành công !!!")
         except Exception as e:
             app.logger.info(f"Cap nhat hop dong loi: {e}")

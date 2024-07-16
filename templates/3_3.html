@@ -357,7 +357,7 @@
 
     function doivitri() {
         var vitri = document.getElementById("chucdanh").value
-        if (vitri.length < 5) {
+        if (vitri && vitri.length < 5) {
             document.getElementById("vitrien").value = "";
             document.getElementById("gradecode").value = "";
             document.getElementById("sectioncode").value = "";
