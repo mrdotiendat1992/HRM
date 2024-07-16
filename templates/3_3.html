@@ -107,6 +107,15 @@
                     <div class="container">
                         <div class="row">
                             <div class="col">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <form method="POST" action="/taifilethemhopdongmau">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Tải file mẫu"></input>
+                                    </form>
+                                    <form method="POST" action="/capnhathopdongtheofilemau" enctype = "multipart/form-data">
+                                        <input type="file" id="file" name="file">
+                                        <input type="submit" class="btn btn-success btn-sm" value="Cập nhật hợp đồng"></input>
+                                    </form>
+                                </div>
                                 <div class="form-group">
                                     <label for="masothe">Mã số thẻ</label>
                                     <input type="text" id="masothe" name="masothe" onchange="kiemtrathongtinnld()">
@@ -180,7 +189,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                    <input class="btn btn-primary" value="Thêm"></input>
+                    <input class="btn btn-primary" value="Thêm" onclick="return luuhopdong()" type="submit"></input>
                 </div>
             </form>
             </div>
@@ -445,7 +454,13 @@
         .catch(function (error) {
             console.log(error);
         });
-    })
-
+    })  
+    function luuhopdong() {
+        if (confirm("Bạn muốn lưu hợp đồng?")) {
+            return true;
+        } else {
+            return false;
+        }
+    } 
 </script>
 {% endblock content %}

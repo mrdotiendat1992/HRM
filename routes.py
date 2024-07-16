@@ -809,6 +809,31 @@ def inhopdonglaodong():
         else:
             danhsach = []
         return render_template("3_3.html", page="3.3 Quản lý hợp đồng lao động",danhsach=danhsach)
+    elif request.method == "POST":
+        nhamay = current_user.macongty
+        mst = request.form.get("form_manhanvien")
+        hoten = request.form.get("form_hovaten")
+        gioitinh = request.form.get("form_gioitinh")
+        ngaysinh =  request.form.get("form_ngaysinh")
+        thuongtru = request.form.get("form_thuongtru")
+        tamtru = request.form.get("form_tamtru")
+        cccd = request.form.get("form_cccd")
+        ngaycapcccd = request.form.get("form_ngaycapcccd")
+        capbac =  request.form.get("gradecode")
+        loaihopdong = request.form.get("form_loaihopdong")
+        chucdanh = request.form.get("chucdanh")
+        phongban = request.form.get("department")
+        chuyen = request.form.get("chuyen")
+        luongcoban = request.form.get("luongcoban")
+        phucap = request.form.get("phucap")
+        ngaybatdau = request.form.get("form_ngaykyhopdong")
+        ngayketthuc = request.form.get("form_ngayhethanhopdong")
+        if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+            flash("Thêm hợp đồng thành công !!!")
+            capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
+        else:
+            flash("Thêm hợp đồng thất bại")
+        return redirect("/muc3_3")
 
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
@@ -2554,3 +2579,44 @@ def timcacchucdanh():
     tutimkiem = request.args.get("tutimkiem")
     cacchucdanh = timkiemchucdanh(tutimkiem)
     return jsonify(cacchucdanh)
+
+@app.route("/taifilethemhopdongmau", methods=["POST"])
+def taifilethemhopdongmau():
+    return send_file(FILE_MAU_THEM_HOPDONG, as_attachment=True, download_name="themhopdong.xlsx")\
+        
+@app.route("/capnhathopdongtheofilemau", methods=["POST"])
+def capnhathopdongtheofilemau():
+    file = request.files.get("file")
+    if file:
+        try:
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+            filepath = os.path.join(FOLDER_NHAP, f"themhopdong_{thoigian}.xlsx")
+            file.save(filepath)
+            data = pd.read_excel(filepath, dtype={0: str,1: str}).to_dict(orient="records")
+            for row in data:
+                nhamay = row['Mã công ty']
+                mst = row['MST']
+                hoten = row['Họ tên']
+                gioitinh = row['Giới tính']
+                ngaysinh = row['Ngày sinh']
+                thuongtru = row['Địa chỉ thường trú']
+                tamtru = row["Địa chỉ tạm trú"]
+                cccd = row['CCCD']
+                ngaycapcccd = row['Ngày cấp cccd']
+                capbac = row['Cấp bậc']
+                loaihopdong = row['Loại hợp đồng']
+                chucdanh = row['Chức danh']
+                phongban = row['Phòng ban']
+                chuyen = row['Chuyền']
+                luongcoban = row['Lương cơ bản']
+                phucap = row['Phụ cấp']
+                ngaybatdau = row['Ngày bắt đầu HĐ']
+                ngayketthuc = row['Ngày kết thúc HĐ']
+                themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc)
+            flash("Cập nhật hợp đồng thành công !!!")
+        except Exception as e:
+            app.logger.info(f"Cap nhat hop dong loi: {e}")
+            flash(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
+    else:
+        flash("Không tìm thấy dữ liệu hợp đồng !!!")
+    return redirect("/muc3_3")

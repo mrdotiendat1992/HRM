@@ -2339,3 +2339,39 @@ def timkiemchucdanh(tutimkiem):
     except Exception as e:
         app.logger.info(f"Loi khi tim kiem cac chuc danh: {e} !!!")
         return []
+    
+def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        try:
+            ngayketthuc = f"'{ngayketthuc}'" if isinstance(ngayketthuc, pd.Timestamp) else 'NULL'
+        except:
+            ngayketthuc = 'NULL'
+        query = f"""
+        INSERT INTO QUAN_LY_HD VALUES (
+            '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
+            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', {ngayketthuc}  
+        )
+        """
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"Loi khi them hop dong: {e} !!!")
+        return False
+    
+def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        if loaihopdong == "Hợp đồng thử việc":
+            query = f"""
+            UPDATE Danh_sach_CBCNV SET Loai_hop_dong='{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}'
+            WHERE 
+            """
+    except Exception as e:
+        app.logger.info(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
+        return False
