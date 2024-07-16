@@ -46,7 +46,7 @@
                 {% for row in danhsach %}
                 {% if row["Loại hợp đồng"]=='Hợp đồng thử việc' %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #3399ff; color: white;">
-                {% elif row["Loại hợp đồng"]=='Hợp đồng có thời hạn 1 năm' or row["Loại hợp đồng"].include('có thời hạn')%}
+                {% elif 'có thời hạn' in row["Loại hợp đồng"] %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #339933; color: white;">
                 {% elif row["Loại hợp đồng"]=='Hợp đồng vô thời hạn' %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ffcc00; color: white;">
@@ -143,8 +143,8 @@
                                         <label for="form_loaihopdong">Loại hợp đồng</label>
                                         <select id="form_loaihopdong" name="form_loaihopdong">
                                             <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
-                                            <option value="Hợp đồng có thời hợp 28 ngày">Hợp đồng có thời hợp 28 ngày</option>
-                                            <option value="Hợp đồng có thời hợp 1 năm">Hợp đồng có thời hợp 1 năm</option>
+                                            <option value="Hợp đồng có thời hạn 28 ngày">Hợp đồng có thời hạn 28 ngày</option>
+                                            <option value="Hợp đồng có thời hạn 1 năm">Hợp đồng có thời hạn 1 năm</option>
                                             <option value="Hợp đồng vô thời hạn">Hợp đồng vô thời hạn</option>
                                             <option value="Phụ lục hợp đồng">Phụ lục hợp đồng</option>
                                             <input type="number" id="form_songayhopdong" name="form_songayhopdong" min="0" style="width:60px;margin-left:10px;">
@@ -316,6 +316,10 @@
         calculateEndDate();
     });
 
+    document.getElementById("form_ngaykyhopdong").addEventListener("change", function() {
+        calculateEndDate();
+    });
+
     function calculateEndDate() {
         const kieuhopdong = document.getElementById("form_loaihopdong").value;
         const soNgay = document.getElementById("form_songayhopdong").value;
@@ -329,12 +333,12 @@
             if (kieuhopdong === "Hợp đồng thử việc" && soNgay) {
                 endDate = new Date(startDate);
                 endDate.setDate(startDate.getDate() + parseInt(soNgay)-1);
-            } else if (kieuhopdong === "Hợp đồng có thời hợp 28 ngày") {
+            } else if (kieuhopdong === "Hợp đồng có thời hạn 28 ngày") {
                 endDate = new Date(startDate);
                 endDate.setDate(startDate.getDate()+27);
                 document.getElementById("form_songayhopdong").value = 28;
                 document.getElementById("form_songayhopdong").disabled = true;
-            } else if (kieuhopdong === "Hợp đồng có thời hợp 1 năm") {
+            } else if (kieuhopdong === "Hợp đồng có thời hạn 1 năm") {
                 endDate = new Date(startDate);
                 endDate.setDate(startDate.getDate()+364);
                 document.getElementById("form_songayhopdong").value = 365;
@@ -375,7 +379,6 @@
         })
             .then(function (response) {
                 var data = response.data
-                console.log(data)
                 if (response.data != "") {
                     console.log(data)
                     if (Array.isArray(data)) {
