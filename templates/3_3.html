@@ -46,7 +46,7 @@
                 {% for row in danhsach %}
                 {% if row["Loại hợp đồng"]=='Hợp đồng thử việc' %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #3399ff; color: white;">
-                {% elif row["Loại hợp đồng"]=='Hợp đồng có thời hạn 1 năm' %}
+                {% elif row["Loại hợp đồng"]=='Hợp đồng có thời hạn 1 năm' or row["Loại hợp đồng"].includes('có thời hạn')%}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #339933; color: white;">
                 {% elif row["Loại hợp đồng"]=='Hợp đồng vô thời hạn' %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ffcc00; color: white;">

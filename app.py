@@ -2367,6 +2367,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
+        
         if loaihopdong == "Hợp đồng thử việc":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Loai_hop_dong=N'{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}',
@@ -2381,7 +2382,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
                 """
-        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
+        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hợp 1 năm":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1=='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
@@ -2394,6 +2395,8 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'"""
+        else:
+            query = None
         if query:
             print(query)
             cursor.execute(query)
