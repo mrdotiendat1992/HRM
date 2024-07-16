@@ -2344,15 +2344,10 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        try:
-            ngayketthuc = f"'{ngayketthuc}'" if isinstance(ngayketthuc, pd.Timestamp) else 'NULL'
-        except:
-            ngayketthuc = 'NULL'
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
-            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', {ngayketthuc}  
-        )
+            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', '{ngayketthuc}')
         """
         print(query)
         cursor.execute(query)
@@ -2361,7 +2356,20 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         return True
     except Exception as e:
         app.logger.info(f"Loi khi them hop dong: {e} !!!")
-        return False
+        query = f"""
+        INSERT INTO QUAN_LY_HD VALUES (
+            '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
+            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', NULL )
+        """
+        print(query)
+        cursor.execute(query)
+        try:
+            conn.commit()
+            conn.close()
+            return True
+        except Exception as e:
+            app.logger.info(f"Loi khi them hop dong: {e} !!!")   
+            return False
     
 def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
     try:
@@ -2382,9 +2390,9 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
                 """
-        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hợp 1 năm":
+        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
             query = f"""
-                UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1=='{ngayketthuc}',
+                UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
