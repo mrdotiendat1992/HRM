@@ -1,48 +1,81 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-
+    label, input {
+        width: 120px;
+        text-align: right;
+        font-size: 12px;
+        font-weight: bold;
+        color: #4e73df;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container">
 
     <h5 class="modal-title" id="requestModalLabel">Hợp đồng lao động</h5>
-        
+    <hr/>
     <form method="POST" action="/suahopdonglaodong">
         <div class="form-group">
-            <input type="number" id="id_hopdong" name="id_hopdong" value={{hopdong[0]}}>
-            <input type="text" id="form_manhanvien" name="form_manhanvien" value={{hopdong[2]}}>
-            <input type="text" id="form_hovaten" name="form_hovaten" value={{hopdong[3]}}>
-            <input type="text" id="form_gioitinh" name="form_gioitinh" value={{hopdong[4]}}>
-            <input type="text" id="form_cccd" name="form_cccd"  value={{hopdong[8]}}>
-            <input type="text" id="form_thuongtru" name="form_thuongtru" value={{hopdong[6]}}>
-            <input type="text" id="form_tamtru" name="form_tamtru"  value={{hopdong[7]}}>
-            <input type="date" id="form_ngaysinh" name="form_ngaysinh" value={{hopdong[5]}}>
-            <input type="date" id="form_ngaycapcccd" name="form_ngaycapcccd" value={{hopdong[9]}} >
-            <input type="text" id="form_loaihopdong" name="form_loaihopdong" value='{{hopdong[11]}}'>
-            <label for="form_ngaykyhopdong">Ngày ký hợp đồng</label>
-            <input type="date" id="form_ngaykyhopdong" name="form_ngaykyhopdong">
-            <label for="form_ngayhethanhopdong">Ngày hết hạn hợp đồng</label>
-            <input type="date" id="form_ngayhethanhopdong" name="form_ngayhethanhopdong">
-            <input name="chucdanh" id="chucdanh" value={{hopdong[12]}}>
-            <input name="vitrien" id="vitrien" placeholder="Detail job title(EN)">
+            <input type="number" id="id_hopdong" name="id_hopdong" value={{hopdong[0]}} hidden>
+            <label for="masothe">Mã nhân viên</label>
+            <input type="text" id="masothe" name="masothe" value={{hopdong[2]}} readonly>
+            <label for="hovaten">Họ và tên</label>
+            <input type="text" id="hovaten" name="hovaten" value='{{hopdong[3]}}'>
+            <label for="gioitinh">Giới tính</label>
+            <input type="text" id="gioitinh" name="gioitinh" value={{hopdong[4]}}>
+        </div>
+
+        <div class="form-group">
+            <label for="ngaysinh">Ngày sinh</label>
+            <input type="date" id="ngaysinh" name="ngaysinh" value={{hopdong[5]}}>
+            <label for="cccd">CCCD</label>
+            <input type="text" id="cccd" name="cccd"  value={{hopdong[8]}}>
+            <label for="ngaycapcccd">Ngày cấp</label>
+            <input type="date" id="ngaycapcccd" name="ngaycapcccd" value={{hopdong[9]}} >
+        </div>
+
+        <div class="form-group">
+            <label for="thuongtru">Thường trú</label>
+            <input type="text" id="thuongtru" name="thuongtru" value='{{hopdong[6]}}'>
+            <label for="tamtru">Tạm trú</label>
+            <input type="text" id="tamtru" name="tamtru"  value='{{hopdong[7]}}'>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label for="loaihopdong">Loại hợp đồng</label>
+            <input type="text" id="loaihopdong" name="loaihopdong" value='{{hopdong[11]}}'>
+            <label for="ngaykyhopdong">Ngày ký hợp đồng</label>
+            <input type="date" id="ngaykyhopdong" name="ngaykyhopdong" value={{hopdong[17]}}>
+            <label for="ngayhethanhopdong">Ngày hết hạn hợp đồng</label>
+            <input type="date" id="ngayhethanhopdong" name="ngayhethanhopdong" value={{hopdong[18]}}>
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label for="chucdanh">Chức danh</label>
+            <input name="chucdanh" id="chucdanh" value='{{hopdong[12]}}'>
+            <label for="chuyen">Chuyền</label>
             <input name="chuyen" id="chuyen" value={{hopdong[14]}}>
-            <input name="hccategory" id="hccategory" placeholder="Headcount category">
+            <label for="gradecode">Grade Code</label>
             <input name="gradecode" id="gradecode" value={{hopdong[10]}} >
+            <label for="department">Department</label>
             <input name="department" id="department" value={{hopdong[13]}}>
-            <input name="employeetype" id="employeetype" placeholder="Employee type">
-            <input name="sectioncode" id="sectioncode" placeholder="Section code">
-            <input name="sectiondescription" id="sectiondescription" placeholder="Section description">
-            <input name="positioncode" id="positioncode" placeholder="Position code">
-            <input name="positioncodedescription" id="positioncodedescription" placeholder="Position code description">
+        </div>
+        <hr/>
+        <div class="form-group">
+            <label for="luongcoban">Lương cơ bản</label>
             <input type="number" id="luongcoban" name="luongcoban" value={{hopdong[15]}}>
+            <label for="phucap">Phụ cấp</label>
             <input type="numer" name="phucap" id="phucap" value={{hopdong[16]}}>
         </div>
-        <input class="btn btn-primary" value="Lưu lại" onclick="return luuhopdong()" type="submit"></input>
+
+        <duv style="display: flex; align-items: center; justify-content: center;">
+            <input class="btn btn-primary" value="Lưu lại" onclick="return luuhopdong()" type="submit"></input>
             </form>
+            <button class="btn btn-secondary" onclick="window.location.href='/muc3_3'" style="margin-left:100px;">Quay lại</button>
         </div>
     </div>
+</div>
 <script>
     function luuhopdong() {
         if (confirm("Bạn muốn lưu hợp đồng?")) {

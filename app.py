@@ -2376,14 +2376,15 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         
-        if loaihopdong == "Hợp đồng thử việc":
-            query = f"""
-                UPDATE Danh_sach_CBCNV SET Loai_hop_dong=N'{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}',
-                Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
-                WHERE Factory='{nhamay}' AND MST='{mst}'
-                """
-        elif loaihopdong == "Phụ lục hợp đồng":
+        # if loaihopdong == "Hợp đồng thử việc":
+        #     query = f"""
+        #         UPDATE Danh_sach_CBCNV SET Loai_hop_dong=N'{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}',
+        #         Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
+        #         Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
+        #         WHERE Factory='{nhamay}' AND MST='{mst}'
+        #         """
+        # el
+        if loaihopdong == "Phụ lục hợp đồng":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
@@ -2394,14 +2395,14 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
                 """
         elif loaihopdong == "Hợp đồng vô thời hạn":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDKXDTH='{ngaybatdau}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'"""
         else:
             query = None
@@ -2410,8 +2411,30 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
             cursor.execute(query)
             conn.commit()
             conn.close()  
+            return True
         else:
-            print("Khong hieu loai hop dong")      
+            print("Khong hieu loai hop dong")    
+            return False
+    except Exception as e:
+        app.logger.info(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
+        return False
+    
+def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,
+                           loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,chucdanh,phongban,luongcoban,phucap):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        ngayketthuc = f"'{ngayketthuc}'" if ngayketthuc else 'NULL'
+        query = f"""
+        update QUAN_LY_HD set MST='{masothe}',HO_TEN=N'{hoten}',GIOI_TINH='{gioitinh}',NGAY_SINH='{ngaysinh}',DIA_CHI=N'{thuongtru}',TAM_TRU=N'{tamtru}',
+        CCCD='{cccd}',NGAY_CAP='{ngaycapcccd}',LOAI_HD=N'{loaihopdong}',CHUC_DANH=N'{chucdanh}',PHONG_BAN='{phongban}',CHUYEN='{chuyen}',CAP_BAC='{capbac}',
+        LCB='{luongcoban}',PHU_CAP='{phucap}',NGAY_KY='{ngaybatdau}',NGAY_HET_HAN={ngayketthuc} where ID='{id}'
+        """
+        # print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()  
+        return True
     except Exception as e:
         app.logger.info(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False

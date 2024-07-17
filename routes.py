@@ -2660,3 +2660,39 @@ def suahopdong():
     except Exception as e:
         app.logger.info(e)
         return redirect("/muc3_3")   
+    
+@app.route("/suahopdonglaodong", methods=["POST"])
+def suahopdonglaodong():
+    try:
+        id = request.form.get('id_hopdong')
+        
+        masothe = request.form.get('masothe')
+        hoten = request.form.get('hovaten')
+        gioitinh = request.form.get('gioitinh')
+        ngaysinh = request.form.get('ngaysinh')
+        thuongtru = request.form.get('thuongtru')
+        tamtru = request.form.get('tamtru')
+        cccd = request.form.get('cccd')
+        ngaycapcccd = request.form.get('ngaycapcccd')
+        
+        loaihopdong = request.form.get('loaihopdong')
+        ngaybatdau = request.form.get('ngaykyhopdong')
+        ngayketthuc = request.form.get('ngayhethanhopdong')
+        
+        chuyen = request.form.get('chuyen')
+        capbac = request.form.get('gradecode')
+        chucdanh = request.form.get('chucdanh')
+        phongban = request.form.get('department')
+        
+        luongcoban = request.form.get('luongcoban')
+        phucap = request.form.get('phucap')
+        
+        if thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,
+                                  ngaycapcccd,loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,
+                                  chucdanh,phongban,luongcoban,phucap):
+            flash(f"Cập nhật hợp đồng số {id} thành công !!!")
+        else:
+            flash(f"Cập nhật hợp đồng số {id} thất bại !!!")
+    except Exception as e:
+        app.logger.info(e)
+    return redirect("/muc3_3")  
