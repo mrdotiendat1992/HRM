@@ -154,6 +154,8 @@
                         <td style= "background-color: green; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% elif user["Trạng thái"] == "Không đạt" %}
                         <td style= "background-color: black; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
+                        {% elif user["Trạng thái"] == "Lưu hồ sơ" %}
+                        <td style= "background-color: yellow; color: red; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% else %}
                         <td><b class="status" onclick="openModal(this)">Không</b></td>
                         {% endif %}
