@@ -96,7 +96,7 @@ def logout():
 @app.route("/doimatkhau", methods=['POST'])
 def doimatkhau():
     macongty = request.form.get("macongty")
-    masothe = request.form.get("masothe")
+    masothe = request.form.get("masothe_doi")
     matkhaumoi = request.form.get("matkhaumoi")
     try:
         if doimatkhautaikhoan(macongty,masothe,matkhaumoi):
