@@ -144,7 +144,7 @@
                 <th>Chuyền tổ</th>
                 <th>Phòng ban</th>
                 <th>Trạng thái</th>
-                <th>Ghi chú</th>
+                <th>Ngày vào</th>
             </tr>
         </thead>
         <tbody>
@@ -157,11 +157,7 @@
                     <td>{{ user["Line"] }}</td>
                     <td>{{ user["Department"] }}</td>
                     <td>{{ user["Trạng thái"] }}</td>
-                    {% if user["Ghi chú"] %}
-                    <td>{{ user["Ghi chú"] }}</td>
-                    {% else %}
-                    <td></td>
-                    {% endif %}
+                    <td>{{ user["Ngày vào"] }}</td>
                 </tr>
             {% endfor %}
         </tbody>
