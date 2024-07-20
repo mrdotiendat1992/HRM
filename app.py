@@ -2438,3 +2438,17 @@ def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
     except Exception as e:
         app.logger.info(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False
+    
+def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into Diem_danh_bu values ('{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"
+        print(query)
+        # cursor.execute(query)
+        # conn.commit()
+        # conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"Loi khi them diem danh bu: {e} !!!")
+        return False

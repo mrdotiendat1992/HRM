@@ -93,7 +93,7 @@ input, select {
             </thead>
             <tbody>
                 {% for row in danhsach %}
-                <tr data-info='{{ row  | safe }}'>
+                <tr data-info='{{ row  | tojson| safe }}' class="loichamcong">
                     <td>{{row["MST"]}}</td>
                     <td class="sticky">{{row["Họ tên"]}}</td>
                     <td>{{row["Chuyền tổ"]}}</td>
@@ -120,6 +120,74 @@ input, select {
                 {% endfor %}
             </tbody>
         </table>
+        <!-- Modal structure -->
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel">Thông tin chi tiết lỗi chấm công</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Mã số thẻ:</strong> <span id="modalMST"></span></p>
+                <p><strong>Họ tên:</strong> <span id="modalHoTen"></span></p>
+                <p><strong>Chuyền tổ:</strong> <span id="modalChuyenTo"></span></p>
+                <p><strong>Chức danh:</strong> <span id="modalChucDanh"></span></p>
+                <p><strong>Ngày:</strong> <span id="modalNgay"></span></p>
+                <p><strong>Giờ vào:</strong> <span id="modalGioVao"></span></p>
+                <p><strong>Giờ ra:</strong> <span id="modalGioRa"></span></p>
+                <p><strong>Số phút thiếu:</strong> <span id="modalSoPhutThieu"></span></p>
+                <p><strong>Phép tồn:</strong> <span id="modalPhepTon"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#diemdanhbuModal">Điểm danh bù</button>
+                <div class="modal fade" id="diemdanhbuModal" tabindex="-1" role="dialog" aria-labelledby="diemdanhbuModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="diemdanhbuModalLabel">Điểm danh bù</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="/diemdanhbu">
+                                <p><input type="text" readonly class="form-control" name="masothe_diemdanhbu" id="diemdanhbuModalMST"></input></p>
+                                <p><input type="text" readonly class="form-control" name="hoten_diemdanhbu" id="diemdanhbuModalHoTen"></input></p>
+                                <p><input type="text" readonly class="form-control" name="chuyento_diemdanhbu" id="diemdanhbuModalChuyenTo"></input></p>
+                                <input type="hidden" class="form-control" readonly name="chucdanh_diemdanhbu" id="diemdanhbuModalChucDanh">
+                                <input type="hidden" class="form-control" readonly name="phongban_diemdanhbu" id="diemdanhbuModalPhongban">
+                                <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_diemdanhbu" id="diemdanhbuModalNgay"></input></div></p>
+                                <p><div style="display: flex; align-items: center;"><b>Giờ vào:</b> <input type="time" disabled class="form-control" name="giovao_diemdanhbu" id="diemdanhbuModalGioVao"></div></p>
+                                <p><div style="display: flex; align-items: center;"><b>Giờ ra:</b> <input type="time" disabled class="form-control" name="giora_diemdanhbu" id="diemdanhbuModalGioRa"></input></div></p>
+                                <p>
+                                    <div style="display: flex; align-items: center;">
+                                        <strong>Lý do:</strong> 
+                                        <select class="form-control" name="lydo_diemdanhbu">
+                                            <option value="Quên thẻ">Quên thẻ</option>
+                                            <option value="Quên dập thẻ">Quên dập thẻ</option>
+                                            <option value="Lỗi máy chấm công">Lỗi máy chấm công</option>
+                                            <option value="Đi công tác">Đi công tác</option>
+                                        </select>
+                                    </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary btn-sm" value="Điểm danh" onclick="return diemdanhbu()"></input/>
+                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-primary btn-sm">Xin nghỉ phép</button>
+                <button type="button" class="btn btn-primary btn-sm">Xin nghỉ không lương</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+            </div>
+        </div>
+    </div>
+</div>
     </div>
 </div>
 <script>
@@ -129,10 +197,104 @@ input, select {
         } catch {
             return "";    
     }}
+
+    function compareTimeUp(time1, time2) {
+        const [hours1, minutes1] = time1.split(':').map(Number);
+        const [hours2, minutes2] = time2.split(':').map(Number);
+        return (hours1 > hours2) || (hours1 === hours2 && minutes1 > minutes2);
+    }
+
+    function compareTimeDown(time1, time2) {
+        const [hours1, minutes1] = time1.split(':').map(Number);
+        const [hours2, minutes2] = time2.split(':').map(Number);
+        return (hours1 < hours2) || (hours1 === hours2 && minutes1 < minutes2);
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+
+        const rows = document.querySelectorAll('.loichamcong');
+        const modal = document.getElementById('infoModal');
+        const diemdanhbumodal = document.getElementById('diemdanhbuModal');
+
+        const modalMST = document.getElementById('modalMST');
+        const modalHoTen = document.getElementById('modalHoTen');
+        const modalChuyenTo = document.getElementById('modalChuyenTo');
+        const modalChucDanh = document.getElementById('modalChucDanh');
+        const modalNgay = document.getElementById('modalNgay');
+        const modalGioVao = document.getElementById('modalGioVao');
+        const modalGioRa = document.getElementById('modalGioRa');
+        const modalSoPhutThieu = document.getElementById('modalSoPhutThieu');
+        const modalPhepTon = document.getElementById('modalPhepTon');
+
+        const diemdanhbuModalMST = document.getElementById('diemdanhbuModalMST');
+        const diemdanhbuModalHoTen = document.getElementById('diemdanhbuModalHoTen');
+        const diemdanhbuModalChuyenTo = document.getElementById('diemdanhbuModalChuyenTo');
+        const diemdanhbuModalPhongban = document.getElementById('diemdanhbuModalPhongban');
+        const diemdanhbuModalChucDanh = document.getElementById('diemdanhbuModalChucDanh');
+        const diemdanhbuModalNgay = document.getElementById('diemdanhbuModalNgay');
+        const diemdanhbuModalGioVao = document.getElementById('diemdanhbuModalGioVao');
+        const diemdanhbuModalGioRa = document.getElementById('diemdanhbuModalGioRa');
+    
+        rows.forEach(row => {
+            row.addEventListener('click', () => {
+                const data = JSON.parse(row.getAttribute('data-info'));
+                
+                modalMST.textContent = data["MST"];
+                modalHoTen.textContent = data["Họ tên"];
+                modalChuyenTo.textContent = data["Chuyền tổ"];
+                modalChucDanh.textContent = data["Chức danh"];
+                modalNgay.textContent = data["Ngày"];
+                modalGioVao.textContent = data["Giờ vào"] || '';
+                modalGioRa.textContent = data["Giờ ra"] || '';
+                modalSoPhutThieu.textContent = data["Số phút thiếu"];
+                modalPhepTon.textContent = data["Phép tồn"];
+
+                diemdanhbuModalMST.value = data["MST"];
+                diemdanhbuModalHoTen.value = data["Họ tên"];
+                diemdanhbuModalChuyenTo.value = data["Chuyền tổ"];
+                diemdanhbuModalChucDanh.value = data["Chức danh"];
+                diemdanhbuModalPhongban.value = data["Bộ phận"];
+                diemdanhbuModalNgay.value = data["Ngày"];
+                if(data["Giờ vào"]) {
+                    diemdanhbuModalGioVao.value = data["Giờ vào"] || '';
+                    if (compareTimeUp(data["Giờ vào"], '07:30')) {
+                        diemdanhbuModalGioVao.disabled = false;
+                    }
+                } else {
+                    diemdanhbuModalGioVao.disabled = false;
+                }
+                if (data["Giờ ra"]) {
+                    diemdanhbuModalGioRa.value = data["Giờ ra"] || '';
+                    if (compareTimeDown(data["Giờ ra"], '16:30')) {
+                        diemdanhbuModalGioRa.disabled = false;
+                    }
+                } else {
+                    diemdanhbuModalGioRa.disabled = false;
+                }
+                
+                $(modal).modal('show');
+            });
+        });
     });
+    
+    function diemdanhbu() {
+        if (diemdanhbuModalGioVao.value == '') {
+            alert("Vui lòng nhập giờ vào !!!");
+            return false;
+        }
+        if (diemdanhbuModalGioRa.value == '') {
+            alert("Vui không nhận giờ ra !!!");
+            return false;
+        }
+        if (confirm("Bạn có chắc chắn với các thông tin là chính xác ?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
 </script>
 {% endblock content %}

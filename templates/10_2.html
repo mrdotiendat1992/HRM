@@ -93,7 +93,11 @@
                 <td>{{row[6]}}</td>
                 <td class="ngay-nopdon">{{row[7]}}</td>
                 <td class="ngay-nghi">{{row[8]}}</td>
-                {% if row[9] %}<td>{{row[9]}}</td>{% else %}<td></td>{% endif %}
+                {% if row[9] %}
+                    <td>{{row[9]}}</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
                 <form method="post" action="/rutdonxinnghiviec">
                     <input type="text" name="id" value="{{row[0]}}" hidden>
                     <td><input class="btn-danger btn-sm" type="submit" value="Rút đơn"></input></td>
@@ -248,6 +252,12 @@
             // Đặt giá trị cho input ngày dự kiến nghỉ
             document.getElementById("form_ngaydukiennghi").value = expectedLeaveDateString;
         });
+
+        function reverse_date(date) {
+            var new_date =  date.split("/")[2] + "-" + date.split("/")[1] + "-" + date.split("/")[0];
+            console.log(new_date)
+            return new_date
+        }
         document.addEventListener('DOMContentLoaded', (event) => {
             const rows = document.querySelectorAll('.highlightable');
             const currentDate = new Date();
@@ -256,8 +266,8 @@
     
             rows.forEach(row => {
                 const dateCell = row.querySelector('.ngay-nghi');
-                const dateValue = new Date(dateCell.textContent);
-    
+                const dateValue = new Date(reverse_date(dateCell.textContent));
+                console.log(dateValue)
                 if (dateValue >= currentDate && dateValue <= futureDate) {
                     row.classList.add('highlight');
                 } else if (dateValue < currentDate) {

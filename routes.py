@@ -2715,3 +2715,30 @@ def load_qr_code():
     else:
         qr_file = "linkphanmem.png"
     return render_template("qr_code.html", qr_file = qr_file, page="QR CODE")
+
+@app.route("/diemdanhbu", methods=["POST"])
+def diemdanhbu_web():
+    if request.method == "POST":
+        masothe = request.form.get("masothe_diemdanhbu")
+        hoten = request.form.get("hoten_diemdanhbu")
+        chuyen = request.form.get("chuyento_diemdanhbu")
+        phongban = request.form.get("phongban_diemdanhbu")
+        chucdanh = request.form.get("chucdanh_diemdanhbu")
+        ngay = request.form.get("ngay_diemdanhbu")
+        giovao = request.form.get("giovao_diemdanhbu")
+        giora = request.form.get("giora_diemdanhbu")
+        lydo = request.form.get("lydo_diemdanhbu")
+        trangthai = "Chờ kiểm tra"
+        if giovao:
+            loaidiemdanh = "Điểm danh vào"
+            if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
+                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thành công !!!")
+            else:
+                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
+        if giora:
+            loaidiemdanh = "Điêm danh ra"
+            if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giora,lydo,trangthai):
+                flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
+            else:
+                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
+        return redirect(f"/muc7_1_3?mst={masothe}")

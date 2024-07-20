@@ -20,11 +20,8 @@ import pyodbc
 #     conn1.commit()
 #     conn1.close()
 
-
-import sqlite3
-
-conn = sqlite3.connect('instance/db.sqlite')
-cursor = conn.cursor()
-count  = cursor.execute("SELECT Matkhau FROM users where Masothe = '13164'").fetchone()[0]
-print(count)
-conn.close()
+# conn = sqlite3.connect('instance/db.sqlite')
+# cursor = conn.cursor()
+# count  = cursor.execute("SELECT Matkhau FROM users where Masothe = '13164'").fetchone()[0]
+# print(count)
+# conn.close()
