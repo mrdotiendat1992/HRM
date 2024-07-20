@@ -1,0 +1,20 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+    #qrcode {
+        margin-left: 200px;
+    }
+    img {
+        width: 500px;
+        height: 500px;
+    }
+</style>
+{% endblock style %}
+{% block content %}
+<div id="qrcode">
+    <img src="static/img/qr/{{qr_file}}" alt="qr_code">
+</div>
+
+<script>
+</script>
+{% endblock content %}

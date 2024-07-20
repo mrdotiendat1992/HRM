@@ -2696,3 +2696,22 @@ def suahopdonglaodong():
     except Exception as e:
         app.logger.info(e)
     return redirect("/muc3_3")  
+
+@app.route("/qr_code", methods=["GET"])
+def load_qr_code():
+    kieu_qr = request.args.get("qr")
+    if kieu_qr=="hp_diemdanhbu":
+        qr_file = "hp_diemdanhbu.jpg"
+    elif kieu_qr=="na_diemdanhbu":
+        qr_file = "na_diemdanhbu.jpg"
+    elif kieu_qr=="hp_xinnghiphep":
+        qr_file = "hp_xinnghiphep.jpg"
+    elif kieu_qr=="na_xinnghiphep":
+        qr_file = "na_xinnghiphep.jpg"
+    elif kieu_qr=="hp_xinnghikhongluong":
+        qr_file = "hp_xinnghikhongluong.jpg"
+    elif kieu_qr=="na_xinnghikhongluong":
+        qr_file = "na_xinnghikhongluong.jpg"    
+    else:
+        qr_file = "linkphanmem.png"
+    return render_template("qr_code.html", qr_file = qr_file, page="QR CODE")

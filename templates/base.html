@@ -12,14 +12,12 @@
     <title>Phần mềm quản lý nhân sự</title>
     <!-- Custom fonts for this template-->
     <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <!-- Custom styles for this template-->
     <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
     {% block style %}
-    
+        
     {% endblock style %}
 </head>
 
@@ -271,7 +269,24 @@
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <img src="static/img/qr/linkphanmem.png" alt="qr_phanmem" style="width:30px; height:30px;">
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 200px;">
+                            <a class="dropdown-item" href="/qr_code?qr=hp_diemdanhbu"><b>Điểm danh bù HP</b></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/qr_code?qr=hp_xinnghiphep"><b>Xin nghỉ phép HP</b></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/qr_code?qr=hp_xinnghikhongluong"><b>Xin nghỉ không lương HP</b></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/qr_code?qr=na_diemdanhbu"><b>Điểm danh bù NA</b></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/qr_code?qr=na_xinnghiphep"><b>Xin nghỉ phép NA</b></a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="/qr_code?qr=na_xinnghikhongluong"><b>Xin nghỉ không lương NA</b></a>
+                        </div>
+                    </div>
                     <div class="d-none d-sm-inline-block" style="margin-left:25%;">
                         <h3 style="margin-top:10px;margin-bottom:2px;text-align:center;color:#4e73df;"><b>NAM THUẬN</b></h3>
                         <p style="margin-bottom:10px;text-align:center;color:#4e73df;"><b>PHẦN MỀM QUẢN LÝ NHÂN SỰ</b></p>
