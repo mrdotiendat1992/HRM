@@ -2742,3 +2742,35 @@ def diemdanhbu_web():
             else:
                 flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
         return redirect(f"/muc7_1_3?mst={masothe}")
+    
+@app.route("/xinnghiphep", methods=["POST"])
+def xinnghiphep_web():
+    masothe = request.form.get("masothe_xinnghiphep")
+    hoten = request.form.get("hoten_xinnghiphep")
+    chuyen = request.form.get("chuyento_xinnghiphep")
+    phongban = request.form.get("phongban_xinnghiphep")
+    chucdanh = request.form.get("chucdanh_xinnghiphep")
+    ngay = request.form.get("ngay_xinnghiphep")
+    sophut = request.form.get("sophut_xinnghiphep")
+    trangthai = "Chờ kiểm tra"
+    if xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
+    else:
+        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
+    return redirect(f"/muc7_1_4?mst={masothe}")
+
+@app.route("/xinnghikhongluong", methods=["POST"])
+def xinnghiphep_web():
+    masothe = request.form.get("masothe_xinnghikhongluong")
+    hoten = request.form.get("hoten_xinnghikhongluong")
+    chuyen = request.form.get("chuyento_xinnghikhongluong")
+    phongban = request.form.get("phongban_xinnghikhongluong")
+    chucdanh = request.form.get("chucdanh_xinnghikhongluong")
+    ngay = request.form.get("ngay_xinnghikhongluong")
+    sophut = request.form.get("sophut_xinnghikhongluong")
+    trangthai = "Chờ kiểm tra"
+    if xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
+    else:
+        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
+    return redirect(f"/muc7_1_4?mst={masothe}")

@@ -121,73 +121,126 @@ input, select {
             </tbody>
         </table>
         <!-- Modal structure -->
-<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="infoModalLabel">Thông tin chi tiết lỗi chấm công</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <p><strong>Mã số thẻ:</strong> <span id="modalMST"></span></p>
-                <p><strong>Họ tên:</strong> <span id="modalHoTen"></span></p>
-                <p><strong>Chuyền tổ:</strong> <span id="modalChuyenTo"></span></p>
-                <p><strong>Chức danh:</strong> <span id="modalChucDanh"></span></p>
-                <p><strong>Ngày:</strong> <span id="modalNgay"></span></p>
-                <p><strong>Giờ vào:</strong> <span id="modalGioVao"></span></p>
-                <p><strong>Giờ ra:</strong> <span id="modalGioRa"></span></p>
-                <p><strong>Số phút thiếu:</strong> <span id="modalSoPhutThieu"></span></p>
-                <p><strong>Phép tồn:</strong> <span id="modalPhepTon"></span></p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#diemdanhbuModal">Điểm danh bù</button>
-                <div class="modal fade" id="diemdanhbuModal" tabindex="-1" role="dialog" aria-labelledby="diemdanhbuModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="diemdanhbuModalLabel">Điểm danh bù</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form method="POST" action="/diemdanhbu">
-                                <p><input type="text" readonly class="form-control" name="masothe_diemdanhbu" id="diemdanhbuModalMST"></input></p>
-                                <p><input type="text" readonly class="form-control" name="hoten_diemdanhbu" id="diemdanhbuModalHoTen"></input></p>
-                                <p><input type="text" readonly class="form-control" name="chuyento_diemdanhbu" id="diemdanhbuModalChuyenTo"></input></p>
-                                <input type="hidden" class="form-control" readonly name="chucdanh_diemdanhbu" id="diemdanhbuModalChucDanh">
-                                <input type="hidden" class="form-control" readonly name="phongban_diemdanhbu" id="diemdanhbuModalPhongban">
-                                <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_diemdanhbu" id="diemdanhbuModalNgay"></input></div></p>
-                                <p><div style="display: flex; align-items: center;"><b>Giờ vào:</b> <input type="time" disabled class="form-control" name="giovao_diemdanhbu" id="diemdanhbuModalGioVao"></div></p>
-                                <p><div style="display: flex; align-items: center;"><b>Giờ ra:</b> <input type="time" disabled class="form-control" name="giora_diemdanhbu" id="diemdanhbuModalGioRa"></input></div></p>
-                                <p>
-                                    <div style="display: flex; align-items: center;">
-                                        <strong>Lý do:</strong> 
-                                        <select class="form-control" name="lydo_diemdanhbu">
-                                            <option value="Quên thẻ">Quên thẻ</option>
-                                            <option value="Quên dập thẻ">Quên dập thẻ</option>
-                                            <option value="Lỗi máy chấm công">Lỗi máy chấm công</option>
-                                            <option value="Đi công tác">Đi công tác</option>
-                                        </select>
+        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="infoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="infoModalLabel">Thông tin chi tiết lỗi chấm công</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Mã số thẻ:</strong> <span id="modalMST"></span></p>
+                        <p><strong>Họ tên:</strong> <span id="modalHoTen"></span></p>
+                        <p><strong>Chuyền tổ:</strong> <span id="modalChuyenTo"></span></p>
+                        <p><strong>Chức danh:</strong> <span id="modalChucDanh"></span></p>
+                        <p><strong>Ngày:</strong> <span id="modalNgay"></span></p>
+                        <p><strong>Giờ vào:</strong> <span id="modalGioVao"></span></p>
+                        <p><strong>Giờ ra:</strong> <span id="modalGioRa"></span></p>
+                        <p><strong>Số phút thiếu:</strong> <span id="modalSoPhutThieu"></span></p>
+                        <p><strong>Phép tồn:</strong> <span id="modalPhepTon"></span></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#diemdanhbuModal">Điểm danh bù</button>
+                        <div class="modal fade" id="diemdanhbuModal" tabindex="-1" role="dialog" aria-labelledby="diemdanhbuModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="diemdanhbuModalLabel">Điểm danh bù</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                </p>
-                            </div>
-                            <div class="modal-footer">
-                                <input type="submit" class="btn btn-primary btn-sm" value="Điểm danh" onclick="return diemdanhbu()"></input/>
-                                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    <div class="modal-body">
+                                        <form method="POST" action="/diemdanhbu">
+                                        <p><input type="text" readonly class="form-control" name="masothe_diemdanhbu" id="diemdanhbuModalMST"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="hoten_diemdanhbu" id="diemdanhbuModalHoTen"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="chuyento_diemdanhbu" id="diemdanhbuModalChuyenTo"></input></p>
+                                        <input type="hidden" class="form-control" readonly name="chucdanh_diemdanhbu" id="diemdanhbuModalChucDanh">
+                                        <input type="hidden" class="form-control" readonly name="phongban_diemdanhbu" id="diemdanhbuModalPhongban">
+                                        <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_diemdanhbu" id="diemdanhbuModalNgay"></input></div></p>
+                                        <p><div style="display: flex; align-items: center;"><b>Giờ vào:</b> <input type="time" disabled class="form-control" name="giovao_diemdanhbu" id="diemdanhbuModalGioVao"></div></p>
+                                        <p><div style="display: flex; align-items: center;"><b>Giờ ra:</b> <input type="time" disabled class="form-control" name="giora_diemdanhbu" id="diemdanhbuModalGioRa"></input></div></p>
+                                        <p>
+                                            <div style="display: flex; align-items: center;">
+                                                <strong>Lý do:</strong> 
+                                                <select class="form-control" name="lydo_diemdanhbu">
+                                                    <option value="Quên thẻ">Quên thẻ</option>
+                                                    <option value="Quên dập thẻ">Quên dập thẻ</option>
+                                                    <option value="Lỗi máy chấm công">Lỗi máy chấm công</option>
+                                                    <option value="Đi công tác">Đi công tác</option>
+                                                </select>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Điểm danh" onclick="return diemdanhbu()"></input/>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#xinnghiphepModal">Xin nghỉ phép</button>
+                        <div class="modal fade" id="xinnghiphepModal" tabindex="-1" role="dialog" aria-labelledby="xinnghiphepModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="xinnghiphepModalLabel">Xin nghỉ phép</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="/xinnghiphep">
+                                        <p><input type="text" readonly class="form-control" name="masothe_xinnghiphep" id="xinnghiphepModalMST"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="hoten_xinnghiphep" id="xinnghiphepModalHoTen"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="chuyento_xinnghiphep" id="xinnghiphepModalChuyenTo"></input></p>
+                                        <input type="hidden" class="form-control" readonly name="chucdanh_xinnghiphep" id="xinnghiphepModalChucDanh">
+                                        <input type="hidden" class="form-control" readonly name="phongban_xinnghiphep" id="xinnghiphepModalPhongban">
+                                        <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_xinnghiphep" id="xinnghiphepModalNgay"></input></div></p>
+                                        <p><div style="display: flex; align-items: center;"><strong>Số phút:</strong> <input type="text" readonly class="form-control" name="sophut_xinnghiphep" id="xinnghiphepModalSophut"></input></div></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Xin nghỉ phép" onclick="return xinnghiphep()"></input/>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#xinnghikhongluongModal">Xin nghỉ không lương</button>
+                        <div class="modal fade" id="xinnghikhongluongModal" tabindex="-1" role="dialog" aria-labelledby="xinnghikhongluongModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="xinnghikhongluongModalLabel">Xin nghỉ không lương</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="/xinnghikhongluong">
+                                        <p><input type="text" readonly class="form-control" name="masothe_xinnghikhongluong" id="xinnghikhongluongModalMST"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="hoten_xinnghikhongluong" id="xinnghikhongluongModalHoTen"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="chuyento_xinnghikhongluong" id="xinnghikhongluongModalChuyenTo"></input></p>
+                                        <input type="hidden" class="form-control" readonly name="chucdanh_xinnghikhongluong" id="xinnghikhongluongModalChucDanh">
+                                        <input type="hidden" class="form-control" readonly name="phongban_xinnghikhongluong" id="xinnghikhongluongModalPhongban">
+                                        <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_xinnghikhongluong" id="xinnghikhongluongModalNgay"></input></div></p>
+                                        <p><div style="display: flex; align-items: center;"><strong>Số phút:</strong> <input type="text" readonly class="form-control" name="sophut_xinnghikhongluong" id="xinnghikhongluongModalSophut"></input></div></p>
+                                        <p><div style="display: flex; align-items: center;"><strong>Lý do:</strong> <input type="text" class="form-control" name="lydo_xinnghikhongluong" id="xinnghikhongluongModalLydo"></input></div></p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Xin nghỉ không lương" onclick="return xinnghikhongluong()"></input/>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary btn-sm">Xin nghỉ phép</button>
-                <button type="button" class="btn btn-primary btn-sm">Xin nghỉ không lương</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
             </div>
         </div>
-    </div>
-</div>
     </div>
 </div>
 <script>
@@ -237,7 +290,23 @@ input, select {
         const diemdanhbuModalNgay = document.getElementById('diemdanhbuModalNgay');
         const diemdanhbuModalGioVao = document.getElementById('diemdanhbuModalGioVao');
         const diemdanhbuModalGioRa = document.getElementById('diemdanhbuModalGioRa');
-    
+
+        const xinnghiphepModalMST = document.getElementById('xinnghiphepModalMST');
+        const xinnghiphepModalHoTen = document.getElementById('xinnghiphepModalHoTen');
+        const xinnghiphepModalChuyenTo = document.getElementById('xinnghiphepModalChuyenTo');
+        const xinnghiphepModalPhongban = document.getElementById('xinnghiphepModalPhongban');
+        const xinnghiphepModalChucDanh = document.getElementById('xinnghiphepModalChucDanh');
+        const xinnghiphepModalNgay = document.getElementById('xinnghiphepModalNgay');
+        const xinnghiphepModalSophut = document.getElementById('xinnghiphepModalSophut');
+
+        const xinnghikhongluongModalMST = document.getElementById('xinnghikhongluongModalMST');
+        const xinnghikhongluongModalHoTen = document.getElementById('xinnghikhongluongModalHoTen');
+        const xinnghikhongluongModalChuyenTo = document.getElementById('xinnghikhongluongModalChuyenTo');
+        const xinnghikhongluongModalPhongban = document.getElementById('xinnghikhongluongModalPhongban');
+        const xinnghikhongluongModalChucDanh = document.getElementById('xinnghikhongluongModalChucDanh');
+        const xinnghikhongluongModalNgay = document.getElementById('xinnghiphepModalNgay');
+        const xinnghikhongluongModalSophut = document.getElementById('xinnghiphepModalSophut');
+
         rows.forEach(row => {
             row.addEventListener('click', () => {
                 const data = JSON.parse(row.getAttribute('data-info'));
@@ -258,6 +327,23 @@ input, select {
                 diemdanhbuModalChucDanh.value = data["Chức danh"];
                 diemdanhbuModalPhongban.value = data["Bộ phận"];
                 diemdanhbuModalNgay.value = data["Ngày"];
+
+                xinnghiphepModalMST.value = data["MST"];
+                xinnghiphepModalHoTen.value = data["Họ tên"];
+                xinnghiphepModalChuyenTo.value = data["Chuyền tổ"];
+                xinnghiphepModalChucDanh.value = data["Chức danh"];
+                xinnghiphepModalPhongban.value = data["Bộ phận"];
+                xinnghiphepModalNgay.value = data["Ngày"];
+                xinnghiphepModalSophut.value = data["Số phút thiếu"];
+
+                xinnghikhongluongModalMST.value = data["MST"];
+                xinnghikhongluongModalHoTen.value = data["Họ tên"];
+                xinnghikhongluongModalChuyenTo.value = data["Chuyền tổ"];
+                xinnghikhongluongModalChucDanh.value = data["Chức danh"];
+                xinnghikhongluongModalPhongban.value = data["Bộ phận"];
+                xinnghikhongluongModalNgay.value = data["Ngày"];
+                xinnghikhongluongModalSophut.value = data["Số phút thiếu"];
+
                 if(data["Giờ vào"]) {
                     diemdanhbuModalGioVao.value = data["Giờ vào"] || '';
                     if (compareTimeUp(data["Giờ vào"], '07:30')) {
@@ -289,6 +375,22 @@ input, select {
             alert("Vui không nhận giờ ra !!!");
             return false;
         }
+        if (confirm("Bạn có chắc chắn với các thông tin là chính xác ?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function xinnghiphep() {
+        if (confirm("Bạn có chắc chắn với các thông tin là chính xác ?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function xinnghiphep() {
         if (confirm("Bạn có chắc chắn với các thông tin là chính xác ?")) {
             return true;
         } else {

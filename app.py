@@ -2443,7 +2443,7 @@ def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,gio
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"insert into Diem_danh_bu values ('{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"
+        query = f"insert into Diem_danh_bu values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"
         print(query)
         # cursor.execute(query)
         # conn.commit()
@@ -2451,4 +2451,32 @@ def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,gio
         return True
     except Exception as e:
         app.logger.info(f"Loi khi them diem danh bu: {e} !!!")
+        return False
+    
+def them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into Xin_nghi_phep values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',NULL,N'{trangthai}')"
+        print(query)
+        # cursor.execute(query)
+        # conn.commit()
+        # conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"Loi khi them xin nghi phep: {e} !!!")
+        return False
+    
+def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into Xin_nghi_khongluong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',NULL,N'{trangthai}')"
+        print(query)
+        # cursor.execute(query)
+        # conn.commit()
+        # conn.close()
+        return True
+    except Exception as e:
+        app.logger.info(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
