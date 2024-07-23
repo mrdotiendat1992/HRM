@@ -2760,7 +2760,7 @@ def xinnghiphep_web():
     return redirect(f"/muc7_1_4?mst={masothe}")
 
 @app.route("/xinnghikhongluong", methods=["POST"])
-def xinnghiphep_web():
+def xinnghikhongluong_web():
     masothe = request.form.get("masothe_xinnghikhongluong")
     hoten = request.form.get("hoten_xinnghikhongluong")
     chuyen = request.form.get("chuyento_xinnghikhongluong")
