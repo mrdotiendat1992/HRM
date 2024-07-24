@@ -959,11 +959,12 @@ def nhapkpi():
                 data = pd.read_excel(filepath).to_dict(orient="records")
                 delete_kpidata(current_user.masothe,current_user.macongty)
                 for row in data[1:]:
-                    # app.logger.info(row)
                     values=[]
-                    for row in row.items():
-                        values.append(row[1].replace("'",""))
-                    insert_kpidata(current_user.masothe,current_user.macongty,values)
+                    for x in row.items():
+                        values.append(x[1])
+                    if not insert_kpidata(current_user.masothe,current_user.macongty,values):
+                        flash("Upload new KPI failed: Cannot insert data !!!")
+                        return redirect("/muc5_1_1")
                 guimailthongbaodaguikpi(current_user.macongty,current_user.masothe,current_user.hoten)
                 flash("Upload new KPI successfully !!!")
             else:
@@ -2775,3 +2776,6 @@ def xinnghikhongluong_web():
     else:
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
     return redirect(f"/muc7_1_4?mst={masothe}")
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0",port=81)

@@ -1986,11 +1986,12 @@ def quanly_tuchoi_xinnghikhongluong(id):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        app.logger.info(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         
 def laydanhsachcahientai(mst,chuyen, phongban):
     try:
@@ -2022,12 +2023,12 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-
+        app.logger.info(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return []
 
 def laydanhsachkpichuaduyet(mst,macongty):
@@ -2039,13 +2040,14 @@ def laydanhsachkpichuaduyet(mst,macongty):
             query += f"and MST='{mst}'"
         if macongty:
             query += f"and Nha_may='{macongty}' " 
+        app.logger.info(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         if not mst:
             return []
         return rows
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return []  
    
 def laydanhsachkpidaduyet(mst,macongty):
@@ -2062,7 +2064,7 @@ def laydanhsachkpidaduyet(mst,macongty):
         conn.close()
         return rows
     except Exception as e:
-        app.logger.info(e)
+        app.logger.inerrorfo(e)
         return []
       
 def roles_required(*roles):
@@ -2086,14 +2088,14 @@ def delete_kpidata(masothe,macongty):
         conn.close()
         return True    
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return False
     
 def insert_kpidata(masothe:str,macongty:str,values:list):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        if values[0]!=macongty or values[1]!=masothe:
+        if values[0]!=macongty or values[1]!=str(masothe):
             return False
         query = f"insert into KPI_Data values ("
         for value in values:
@@ -2107,12 +2109,13 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
             query += value
         query += "'Waiting for approval',GETDATE())" 
         query = query.replace("'nan'","NULL") 
+        app.logger.info(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
-        return True    
+        return True
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return False
     
 def guimailthongbaodaguikpi(nhamay,mst,hoten):
@@ -2125,7 +2128,7 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
         conn.commit()
         conn.close()
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return False
     
 def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
@@ -2482,3 +2485,4 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
     except Exception as e:
         app.logger.info(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
+    

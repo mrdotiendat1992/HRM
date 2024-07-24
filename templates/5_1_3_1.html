@@ -246,16 +246,15 @@
             </tbody>
         </table>
     </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const tds = document.querySelectorAll('td');
-        tds.forEach(td => {
-            if (td.textContent.trim() === 'None') {
-                td.textContent = '';
-            }
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const tds = document.querySelectorAll('td');
+            tds.forEach(td => {
+                if (td.textContent.trim() === 'None') {
+                    td.textContent = '';
+                }
+            });
         });
-    });
-</script>
-
+    </script>
+</div>
 {% endblock content %}
