@@ -349,7 +349,19 @@
                                             <span class="font-weight-bold">Bạn có {{notice["Xin nghỉ không lương"]}} đơn xin nghỉ không lương chưa được duyệt</span>
                                         </div>
                                     </a>
-                                    {% endif %}                                           
+                                    {% endif %} 
+                                    {% if notice["Danh sách lỗi thẻ"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_2?chuyen={{notice["Line"]}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-info">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Chuyền {{notice["Line"]}} của bạn có {{notice["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
+                                        </div>
+                                    </a>
+                                    {% endif %}                                             
 
                                 </a>
                                 <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>

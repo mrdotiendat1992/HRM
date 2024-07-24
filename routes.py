@@ -6,52 +6,63 @@ from app import *
 
 @app.before_request
 def run_before_every_request():
-    if current_user.is_authenticated:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
-        if row[0]>0:
-            soluong_diemdanhbu = cursor.execute(f"""
-                SELECT 
-                    COUNT(*) as row_count 
-                FROM 
-                    Phan_quyen_thu_ky 
-                INNER JOIN 
-                    Diem_danh_bu
-                ON
-                    Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
-                WHERE 
-                    Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
-            soluong_xinnghiphep = cursor.execute(f"""
-                SELECT 
-                    COUNT(*) as row_count 
-                FROM 
-                    Phan_quyen_thu_ky 
-                INNER JOIN 
-                    Xin_nghi_phep
-                ON
-                    Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
-                WHERE 
-                    Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
-            soluong_xinnghikhongluong = cursor.execute(f"""
-                SELECT 
-                    COUNT(*) as row_count 
-                FROM 
-                    Phan_quyen_thu_ky 
-                INNER JOIN 
-                    Xin_nghi_khong_luong
-                ON
-                    Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
-                WHERE 
-                    Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
-            conn.close()
-            g.notice={"Điểm danh bù":soluong_diemdanhbu,
-                   "Xin nghỉ phép": soluong_xinnghiphep,
-                   "Xin nghỉ không lương": soluong_xinnghikhongluong,
-                   "Số thông báo": soluong_diemdanhbu + soluong_xinnghiphep + soluong_xinnghikhongluong
-                   }
-        else:
-            g.notice={}
+    try:
+        if current_user.is_authenticated:
+            conn = pyodbc.connect(used_db)
+            cursor = conn.cursor()
+            row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
+            if row[0]>0:
+                soluong_diemdanhbu = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        Phan_quyen_thu_ky 
+                    INNER JOIN 
+                        Diem_danh_bu
+                    ON
+                        Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                    WHERE 
+                        Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+                soluong_xinnghiphep = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        Phan_quyen_thu_ky 
+                    INNER JOIN 
+                        Xin_nghi_phep
+                    ON
+                        Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                    WHERE 
+                        Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+                soluong_xinnghikhongluong = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        Phan_quyen_thu_ky 
+                    INNER JOIN 
+                        Xin_nghi_khong_luong
+                    ON
+                        Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                    WHERE 
+                        Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
+                conn.close()
+                g.notice={"Điểm danh bù":soluong_diemdanhbu,
+                    "Xin nghỉ phép": soluong_xinnghiphep,
+                    "Xin nghỉ không lương": soluong_xinnghikhongluong,
+                    "Số thông báo": soluong_diemdanhbu + soluong_xinnghiphep + soluong_xinnghikhongluong
+                    }
+            else:
+                chuyen,capbac = lay_chuyen_va_capbac(current_user.macongty,current_user.masothe)
+                # print(chuyen)
+                if bool(re.fullmatch(r'\d*S\d*', chuyen)) and chuyen.count('S') == 1 and capbac == "O3":
+                    soluong_loithe = cursor.execute(f"select count(*) from Danh_sach_loi_the where Chuyen_to = '{chuyen}'").fetchone()[0]
+                    conn.close()
+                    g.notice={"Danh sách lỗi thẻ":soluong_loithe,"Line":chuyen,"Số thông báo":soluong_loithe}
+                else:
+                    g.notice={}
+    except Exception as e:
+        app.logger.error(f"Loi khi tao thong bao {e}")      
+        g.notice={}
             
 @app.context_processor
 def inject_notice():
@@ -2742,7 +2753,7 @@ def diemdanhbu_web():
                 flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
             else:
                 flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
-        return redirect(f"/muc7_1_3?mst={masothe}")
+        return redirect(f"/muc7_1_2?chuyen={chuyen}")
     
 @app.route("/xinnghiphep", methods=["POST"])
 def xinnghiphep_web():
@@ -2758,7 +2769,7 @@ def xinnghiphep_web():
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
     else:
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
-    return redirect(f"/muc7_1_4?mst={masothe}")
+    return redirect(f"/muc7_1_2?chuyen={chuyen}")
 
 @app.route("/xinnghikhongluong", methods=["POST"])
 def xinnghikhongluong_web():
@@ -2775,7 +2786,7 @@ def xinnghikhongluong_web():
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
     else:
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
-    return redirect(f"/muc7_1_4?mst={masothe}")
+    return redirect(f"/muc7_1_2?chuyen={chuyen}")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0",port=81)

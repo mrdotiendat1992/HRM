@@ -2485,4 +2485,18 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
     except Exception as e:
         app.logger.info(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
-    
+
+def lay_chuyen_va_capbac(macongty, mst):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Line ,Grade_code from Danh_sach_CBCNV where The_cham_cong='{mst} 'and Factory='{macongty}'"
+        row = cursor.execute(query).fetchone()
+        conn.close()
+        if row:
+            return row[0],row[1]
+        else:
+            return None
+    except Exception as e:
+        app.logger.info(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
+        return None
