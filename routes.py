@@ -813,46 +813,49 @@ def thaydoithongtinlaodong():
 @login_required
 @roles_required('hr','sa','gd')
 def inhopdonglaodong():
-    if request.method == "GET":
-        mst = request.args.get("mst")
-        if mst:
-            danhsach = laydanhsach_hopdong_theomst(mst)
-        else:
-            danhsach = []
-        return render_template("3_3.html", page="3.3 Quản lý hợp đồng lao động",danhsach=danhsach)
-    elif request.method == "POST":
-        nhamay = current_user.macongty
-        mst = request.form.get("form_manhanvien")
-        hoten = request.form.get("form_hovaten")
-        gioitinh = request.form.get("form_gioitinh")
-        ngaysinh =  request.form.get("form_ngaysinh")
-        thuongtru = request.form.get("form_thuongtru")
-        tamtru = request.form.get("form_tamtru")
-        cccd = request.form.get("form_cccd")
-        ngaycapcccd = request.form.get("form_ngaycapcccd")
-        capbac =  request.form.get("gradecode")
-        loaihopdong = request.form.get("form_loaihopdong")
-        chucdanh = request.form.get("chucdanh")
-        phongban = request.form.get("department")
-        chuyen = request.form.get("chuyen")
-        luongcoban = request.form.get("luongcoban")
-        phucap = request.form.get("phucap")
-        ngaybatdau = request.form.get("form_ngaykyhopdong")
-        ngayketthuc = request.form.get("form_ngayhethanhopdong")
-        vitrien = request.form.get("vitrien")
-        employeetype = request.form.get("employeetype")
-        positioncode = request.form.get("positioncode")
-        postitioncodedescription = request.form.get("postitioncodedescription")
-        hccategory = request.form.get("hccategory")
-        sectioncode = request.form.get("sectioncode")
-        sectiondescription = request.form.get("sectiondescription")
-        if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
-            flash("Thêm hợp đồng thành công !!!")
-            capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
-        else:
-            flash("Thêm hợp đồng thất bại")
+    try:
+        if request.method == "GET":
+            mst = request.args.get("mst")
+            if mst:
+                danhsach = laydanhsach_hopdong_theomst(mst)
+            else:
+                danhsach = []
+            return render_template("3_3.html", page="3.3 Quản lý hợp đồng lao động",danhsach=danhsach)
+        elif request.method == "POST":
+            nhamay = current_user.macongty
+            mst = request.form.get("form_manhanvien")
+            hoten = request.form.get("form_hovaten")
+            gioitinh = request.form.get("form_gioitinh")
+            ngaysinh =  request.form.get("form_ngaysinh")
+            thuongtru = request.form.get("form_thuongtru")
+            tamtru = request.form.get("form_tamtru")
+            cccd = request.form.get("form_cccd")
+            ngaycapcccd = request.form.get("form_ngaycapcccd")
+            capbac =  request.form.get("gradecode")
+            loaihopdong = request.form.get("form_loaihopdong")
+            chucdanh = request.form.get("chucdanh")
+            phongban = request.form.get("department")
+            chuyen = request.form.get("chuyen")
+            luongcoban = request.form.get("luongcoban")
+            phucap = request.form.get("phucap")
+            ngaybatdau = request.form.get("form_ngaykyhopdong")
+            ngayketthuc = request.form.get("form_ngayhethanhopdong")
+            vitrien = request.form.get("vitrien")
+            employeetype = request.form.get("employeetype")
+            positioncode = request.form.get("positioncode")
+            postitioncodedescription = request.form.get("postitioncodedescription")
+            hccategory = request.form.get("hccategory")
+            sectioncode = request.form.get("sectioncode")
+            sectiondescription = request.form.get("sectiondescription")
+            if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+                flash("Thêm hợp đồng thành công !!!")
+                capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
+            else:
+                flash("Thêm hợp đồng thất bại")
+            return redirect("/muc3_3")
+    except:
         return redirect("/muc3_3")
-
+    
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
