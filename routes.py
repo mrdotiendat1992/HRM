@@ -53,7 +53,6 @@ def run_before_every_request():
                     }
             else:
                 chuyen,capbac = lay_chuyen_va_capbac(current_user.macongty,current_user.masothe)
-                # print(chuyen)
                 if bool(re.fullmatch(r'\d*S\d*', chuyen)) and chuyen.count('S') == 1 and ((current_user.macongty=="NT1" and capbac == "O3") or (current_user.macongty=="NT2" and capbac == "C1")):
                     soluong_loithe = cursor.execute(f"select count(*) from Danh_sach_loi_the where Chuyen_to = '{chuyen}'").fetchone()[0]
                     conn.close()
@@ -2635,7 +2634,6 @@ def capnhathopdongtheofilemau():
                 phongban = row['Phòng ban']
                 chuyen = row['Chuyền']
                 hcname= layhcname(chucdanh,chuyen)
-                print(hcname)
                 if hcname:
                     vitrien = hcname[2]
                     employeetype = hcname[3]
@@ -2653,9 +2651,9 @@ def capnhathopdongtheofilemau():
                     sectioncode = 'NULL'
                     sectiondescription = 'NULL'
                 if themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc):
-                    print("Them HD ok")
+                    app.logger.info("Them HD ok")
                 if capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
-                    print("Cap nhap HD ok")
+                    app.logger.info("Cap nhap HD ok")
             flash("Cập nhật hợp đồng thành công !!!")
         except Exception as e:
             app.logger.info(f"Cap nhat hop dong loi: {e}")
