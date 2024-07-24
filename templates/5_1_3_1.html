@@ -77,12 +77,19 @@
         <div style="display: flex; align-items: center;">
             <p><b>Company</b></p>
             <a class="btn btn-outline-primary btn-sm" href="/muc5_1_3_1?company=NT1">NT1</a>
-            <a class="btn btn-outline-primary btn-sm" href="/muc5_1_3_1?company=NT2">NT2</a>
+            <a class="btn btn-outline-success btn-sm" href="/muc5_1_3_1?company=NT2">NT2</a>
+            <a class="btn btn-outline-info btn-sm" href="/muc5_1_3_1?company=">ALL</a>
         </div>
         <div style="display: flex; align-items: center; overflow-x: auto;">
             <p><b>PIC</b></p>
             {% for quanly in danhsachquanly %}
-            <a class="btn btn-outline-info btn-sm" href="/muc5_1_3_1?company={{request.args.get('company','NT1')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            {% if request.args.get('company') == 'NT1' %}
+            <a class="btn btn-outline-primary btn-sm" href="/muc5_1_3_1?company={{request.args.get('company','')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            {% elif request.args.get('company') == 'NT2' %}
+            <a class="btn btn-outline-success btn-sm" href="/muc5_1_3_1?company={{request.args.get('company','')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            {% else %}
+            <a class="btn btn-outline-info btn-sm" href="/muc5_1_3_1?company={{request.args.get('company','')}}&mst={{quanly['mst']}}">{{quanly['hoten']}}</a>
+            {% endif %}
             {% endfor %}
         </div>
         <hr/>        

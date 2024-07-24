@@ -962,7 +962,7 @@ def nhapkpi():
                     # app.logger.info(row)
                     values=[]
                     for row in row.items():
-                        values.append(row[1])
+                        values.append(row[1].replace("'",""))
                     insert_kpidata(current_user.masothe,current_user.macongty,values)
                 guimailthongbaodaguikpi(current_user.macongty,current_user.masothe,current_user.hoten)
                 flash("Upload new KPI successfully !!!")

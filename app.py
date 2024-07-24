@@ -2030,7 +2030,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         app.logger.info(e)
         return []
 
-def laydanhsachkpichuaduyet(mst:None,macongty:None):
+def laydanhsachkpichuaduyet(mst,macongty):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -2048,7 +2048,7 @@ def laydanhsachkpichuaduyet(mst:None,macongty:None):
         app.logger.info(e)
         return []  
    
-def laydanhsachkpidaduyet(mst:None,macongty:None):
+def laydanhsachkpidaduyet(mst,macongty):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -2057,10 +2057,9 @@ def laydanhsachkpidaduyet(mst:None,macongty:None):
             query += f"and MST='{mst}'"
         if macongty:
             query += f"and Nha_may='{macongty}' " 
+        query += f"order by Nha_may asc, MST asc"
         rows = cursor.execute(query).fetchall()
         conn.close()
-        if not mst:
-            return []
         return rows
     except Exception as e:
         app.logger.info(e)
@@ -2155,20 +2154,20 @@ def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
         app.logger.info(e)
         return False
     
-def laydanhsachquanly(macongty:None):
+def laydanhsachquanly(macongty):
     try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
         if macongty:
-            conn = pyodbc.connect(used_db)
-            cursor = conn.cursor()
             query = f"select distinct MST,Ho_ten from KPI_Data where Nha_may='{macongty}'"  
-            rows = cursor.execute(query).fetchall()
-            conn.close()
-            result=[]
-            for row  in rows:
-                result.append({"mst":row[0],"hoten":row[1]})
-            return result
         else:
-            return []        
+            query = "select distinct MST,Ho_ten from KPI_Data"
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        result=[]
+        for row  in rows:
+            result.append({"mst":row[0],"hoten":row[1]})
+        return result        
     except Exception as e:
         app.logger.info(e)
         return []
