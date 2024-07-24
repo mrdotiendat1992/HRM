@@ -54,7 +54,7 @@ def run_before_every_request():
             else:
                 chuyen,capbac = lay_chuyen_va_capbac(current_user.macongty,current_user.masothe)
                 # print(chuyen)
-                if bool(re.fullmatch(r'\d*S\d*', chuyen)) and chuyen.count('S') == 1 and capbac == "O3":
+                if bool(re.fullmatch(r'\d*S\d*', chuyen)) and chuyen.count('S') == 1 and ((current_user.macongty=="NT1" and capbac == "O3") or (current_user.macongty=="NT2" and capbac == "C1")):
                     soluong_loithe = cursor.execute(f"select count(*) from Danh_sach_loi_the where Chuyen_to = '{chuyen}'").fetchone()[0]
                     conn.close()
                     g.notice={"Danh sách lỗi thẻ":soluong_loithe,"Line":chuyen,"Số thông báo":soluong_loithe}
