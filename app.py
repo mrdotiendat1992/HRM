@@ -303,7 +303,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
             if macongty == "NT1":
                 if capbac in ["O2","O1","M3","M2","M1"]:
                     try:
-                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days
+                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                         workbook = openpyxl.load_workbook(FILE_MAU_HDTV_NT1_O2_TROLEN)
                         sheet = workbook.active
                         sheet['E4'] = f'Số: PC/{masothe}'
