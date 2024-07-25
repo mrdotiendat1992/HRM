@@ -974,7 +974,7 @@ def nhapkpi():
                 for row in data[1:]:
                     values=[]
                     for x in row.items():
-                        values.append(x[1])
+                        values.append(str(x[1]).replace("'","") if x[1] else "")
                     if not insert_kpidata(current_user.masothe,current_user.macongty,values):
                         flash("Upload new KPI failed: Cannot insert data !!!")
                         return redirect("/muc5_1_1")
