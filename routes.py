@@ -2766,7 +2766,7 @@ def xinnghiphep_web():
     ngay = request.form.get("ngay_xinnghiphep")
     sophut = request.form.get("sophut_xinnghiphep")
     trangthai = "Chờ kiểm tra"
-    if xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+    if them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
     else:
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
@@ -2783,7 +2783,7 @@ def xinnghikhongluong_web():
     sophut = request.form.get("sophut_xinnghikhongluong")
     lydo = request.form.get("lydo_xinnghikhongluong")
     trangthai = "Chờ kiểm tra"
-    if xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
+    if them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
     else:
         flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
