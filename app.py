@@ -331,7 +331,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         return None
                 else:
                     try:
-                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days
+                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                         workbook = openpyxl.load_workbook(FILE_MAU_HDTV_NT1_DUOI_O2)
                         sheet = workbook.active
                         sheet['E4'] = f'Số: PC/{masothe}'
@@ -359,7 +359,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         return None
             elif macongty == "NT2":
                 try:
-                    songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days
+                    songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                     workbook = openpyxl.load_workbook(FILE_MAU_HDTV_NT2)
                     sheet = workbook.active
                     sheet['E4'] = f'Số: PC/{masothe}'
