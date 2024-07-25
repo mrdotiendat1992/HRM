@@ -80,6 +80,7 @@
                 <th>Ngày nộp đơn</th>
                 <th>Ngày nghỉ dự kiến</th>
                 <th>Ghi chú</th>
+                <th>Trạng thái</th>
                 <th></th>
             </tr>
         </thead>
@@ -98,6 +99,7 @@
                 {% else %}
                     <td></td>
                 {% endif %}
+                <td>{{row[10]}}</td>
                 <form method="post" action="/rutdonxinnghiviec">
                     <input type="text" name="id" value="{{row[0]}}" hidden>
                     <td><input class="btn-danger btn-sm" type="submit" value="Rút đơn"></input></td>
