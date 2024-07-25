@@ -43,27 +43,6 @@
         z-index: 10;
     }
     
-    .dots::after {
-        content: '';
-        display: inline-block;
-        animation: dots 1.5s steps(3, end) infinite;
-    }
-
-    @keyframes dots {
-        0%, 20% {
-            content: '';
-        }
-        40% {
-            content: '.';
-        }
-        60% {
-            content: '..';
-        }
-        80%, 100% {
-            content: '...';
-        }
-    }
-
     a, form {
         margin-left: 20px;
     }
@@ -187,7 +166,7 @@
                 <tr>
                     <td>{{dong[1]}}</td>
                     <td>{{dong[2]}}</td>
-                    <td>{{dong[3]}}</td>
+                    <td class="sticky">{{dong[3]}}</td>
                     <td>{{dong[4]}}</td>
                     <td>{{dong[5]}}</td>
                     <td>{{dong[6]}}</td>
