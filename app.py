@@ -2017,7 +2017,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             Dang_ky_ca_lam_viec.Factory = '{current_user.macongty}' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
         """
         if mst:
-            query += f" AND Dang_ky_ca_lam_viec.MST LIKE '%{mst}%'"
+            query += f" AND Dang_ky_ca_lam_viec.MST = '{mst}'"
         if chuyen:
             query += f" AND Danh_sach_CBCNV.Line LIKE '%{chuyen}%'"
         if phongban:
@@ -2217,24 +2217,31 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM Cho_nghi_viec WHERE Nha_may = '{current_user.macongty}' "
+        query = f"""
+        SELECT Cho_nghi_viec.*, Danh_sach_CBCNV.Trang_thai_lam_viec
+        FROM Cho_nghi_viec
+        LEFT JOIN Danh_sach_CBCNV
+        ON Cho_nghi_viec.MST = Danh_sach_CBCNV.MST 
+        AND Cho_nghi_viec.Nha_may = Danh_sach_CBCNV.Factory
+        WHERE Nha_may = '{current_user.macongty}'
+        """
         if mst:
-            query += f" AND MST = '{mst}'"
+            query += f" AND Cho_nghi_viec.MST = '{mst}'"
         if hoten:
-            query += f" AND Ho_ten LIKE N'%{hoten}%'"
+            query += f" AND Cho_nghi_viec.Ho_ten LIKE N'%{hoten}%'"
         if chuyen:
-            query += f" AND Chuyen_to LIKE N'%{chuyen}%'"
+            query += f" AND Cho_nghi_viec.Chuyen_to LIKE N'%{chuyen}%'"
         if phongban:
-            query += f" AND Bo_phan LIKE '%{phongban}%'"
+            query += f" AND Cho_nghi_viec.Bo_phan LIKE '%{phongban}%'"
         if ngaynopdon:
-            query += f" AND Ngay_nop_don = '{ngaynopdon}'"
+            query += f" AND Cho_nghi_viec.Ngay_nop_don = '{ngaynopdon}'"
         if ngaynghi:
-            query += f" AND Ngay_nghi_du_kien = '{ngaynghi}'" 
+            query += f" AND Cho_nghi_viec.Ngay_nghi_du_kien = '{ngaynghi}'" 
         if saphethan:
             ngayhientai = datetime.now().date()
             ngaynghisapden = datetime.now().date() + timedelta(days=7)
-            query += f" AND Ngay_nghi_du_kien >= '{ngayhientai}' AND Ngay_nghi_du_kien <= '{ngaynghisapden}'"   
-        query += "ORDER BY Ngay_nghi_du_kien DESC,Ngay_nop_don DESC"  
+            query += f" AND Cho_nghi_viec.Ngay_nghi_du_kien >= '{ngayhientai}' AND Cho_nghi_viec.Ngay_nghi_du_kien <= '{ngaynghisapden}'"   
+        query += "ORDER BY Cho_nghi_viec.Ngay_nghi_du_kien DESC,Cho_nghi_viec.Ngay_nop_don DESC"  
         # app.logger.info(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
