@@ -296,9 +296,9 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         ngaylamhopdong = ngaybatdau.split("/")[0]
         thanglamhopdong = ngaybatdau.split("/")[1]
         namlamhopdong = ngaybatdau.split("/")[2]
-        ngayketthuchopdong = ngayketthuc.split("/")[0]
-        thangketthuchopdong = ngayketthuc.split("/")[1]
-        namketthuchopdong = ngayketthuc.split("/")[2]
+        ngayketthuchopdong = ngayketthuc.split("/")[0] if ngayketthuc else None
+        thangketthuchopdong = ngayketthuc.split("/")[1] if ngayketthuc else None 
+        namketthuchopdong = ngayketthuc.split("/")[2] if ngayketthuc else None
         if loaihopdong == "Hợp đồng thử việc":
             if macongty == "NT1":
                 if capbac in ["O2","O1","M3","M2","M1"]:
