@@ -2483,7 +2483,7 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"insert into Xin_nghi_khongluong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
+        query = f"insert into Xin_nghi_khong_luong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
         print(query)
         cursor.execute(query)
         conn.commit()
