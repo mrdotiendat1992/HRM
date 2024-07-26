@@ -2790,4 +2790,4 @@ def xinnghikhongluong_web():
     return redirect(f"/muc7_1_2?chuyen={chuyen}")
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=81)
+    app.run(host="0.0.0.0",port=81,debug=True)

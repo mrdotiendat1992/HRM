@@ -1,62 +1,298 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-    table, th, td {
-        font-size: 12px;
-        font-weight:bold;
-        color: black;
-        border-collapse: collapse;  
-        text-align: center;
+    img {
+        width: 100%;
+        z-index: 0;
     }
-    th {
-        text-align: center;
-        color: white;
-    }
-    table td,th {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        max-width: 200px; /* Adjust based on your requirement */
-    }
-    td, label, p, input, h5 {
-        color: #4e73df;
+    input {
+        position: absolute;
+        z-index: 10;
+        background-color: red;
+        vertical-align: middle;
+        border-style: none;
+        justify-content: center;
         font-weight: bold;
     }
-    .scroll-container {
-        width: 100%;
-        overflow-x: auto;
+    #hoten {
+        top: 400px;
+        left: 330px;
+        height: 100px;
     }
-    .content {
-        width: auto;
+    #masothe {
+        top: 400px;
+        left: 545px;
+        height: 100px;
+        width: 100px;
+    }
+    #bophan {
+        top: 400px;
+        left: 655px;
+        height: 100px;
+        width: 120px;
+    }
+    #chucdanh {
+        top: 400px;
+        left: 780px;
+        height: 100px;
+        width: 120px;
+    }
+    #ngayvao {
+        top: 400px;
+        left: 903px;
+        height: 100px;
+        width: 140px;
+    }
+    #ngaynghi {
+        top: 400px;
+        left: 1048px;
+        height: 100px;
+        width: 200px;
+    }
+    #lydo_suckhoe {
+        top: 600px;
+        left: 350px;
+    }
+    #lydo_canhan {
+        top: 600px;
+        left: 820px;
+    }
+    #lydo_moitruonglamviec {
+        top: 665px;
+        left: 350px;
+    }
+    #lydo_thoigianlamviec {
+        top: 665px;
+        left: 820px;
+    }
+    #lydo_chedoluongthuong {
+        top: 745px;
+        left: 350px;
+    }
+    #lydo_quydinhnghiemngat {
+        top: 745px;
+        left: 820px;
+    }
+    #lydo_sothichcanhan {
+        top: 810px;
+        left: 350px;
+    }
+    #lydo_quanly {
+        top: 810px;
+        left: 820px;
+    }
+    #lydo_cohoithangtien {
+        top: 880px;
+        left: 350px;
+    }
+    #lydo_vanhoa {
+        top: 880px;
+        left: 820px;
+    }
+    #lydo_khac {
+        top: 980px;
+        left: 350px;
+    }
+    #lydo_khac_chitiet {
+        top: 974px;
+        left: 755px;
+        width: 450px;
+    }
+    #mucdo_banchatcongviec {
+        top: 1187px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_banchatcongviec {
+        top: 1195px;
+        left: 810px;
+    }
+    #a_banchatcongviec {
+        top: 1195px;
+        left: 855px;
+    }
+    #s_banchatcongviec {
+        top: 1195px;
+        left: 890px;
+    }
+    #ghichu_banchatcongviec {
+        top: 1187px;
+        left: 930px;
+        width: 300px;
+    }
+    #mucdo_khoiluongcongviec {
+        top: 1243px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_khoiluongcongviec {
+        top: 1248px;
+        left: 810px;
+    }
+    #a_khoiluongcongviec {
+        top: 1248px;
+        left: 855px;
+    }
+    #s_khoiluongcongviec {
+        top: 1248px;
+        left: 890px;
+    }
+    #quanhieu_khoiluongcongviec {
+        top: 1248px;
+        left: 940px;
+    }
+    #khongdu_khoiluongcongviec {
+        top: 1248px;
+        left: 1100px;
+    }
+    #mucdo_thoigianlamviec {
+        top: 1308px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_thoigianlamviec {
+        top: 1308px;
+        left: 810px;
+    }
+    #a_thoigianlamviec {
+        top: 1308px;
+        left: 855px;
+    }
+    #s_thoigianlamviec {
+        top: 1308px;
+        left: 890px;
+    }
+    #ghichu_thoigianlamviec {
+        top: 1308px;
+        left: 930px;
+        width: 300px;
+    }
+    #mucdo_mucdohailong {
+        top: 1365px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_mucdohailong {
+        top: 1365px;
+        left: 810px;
+    }
+    #a_mucdohailong {
+        top: 1365px;
+        left: 855px;
+    }
+    #s_mucdohailong {
+        top: 1365px;
+        left: 890px;
+    }
+    #ghichu_mucdohailong {
+        top: 1365px;
+        left: 930px;
+        width: 300px;
+    }
+    #mucdo_cohoithangtien {
+        top: 1430px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_cohoithangtien {
+        top: 1430px;
+        left: 810px;
+    }
+    #a_cohoithangtien {
+        top: 1430px;
+        left: 855px;
+    }
+    #s_cohoithangtien {
+        top: 1430px;
+        left: 890px;
+    }
+    #ghichu_cohoithangtien {
+        top: 1430px;
+        left: 930px;
+        width: 300px;
+    }
+    #mucdo_cohoidaotao {
+        top: 1480px;
+        left: 706px;
+        width: 80px;
+    }
+    #u_cohoidaotao {
+        top: 1480px;
+        left: 810px;
+    }
+    #a_cohoidaotao {
+        top: 1480px;
+        left: 855px;
+    }
+    #s_cohoidaotao {
+        top: 1480px;
+        left: 890px;
+    }
+    #ghichu_cohoidaotao {
+        top: 1480px;
+        left: 930px;
+        width: 300px;
     }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="scroll-container">
-    <div class="content">
-        <button type="button" class="btn btn-primary btn-sm" title="Thêm phỏng vấn nghỉ việc" data-toggle="modal" data-target="#requestModal"><i class="fas fa-plus"></i></button>
-        <table class="table table-bordered table-sm table-hover">
-            <thead>
-                <tr class="bg-primary">
-                    <th>Ngày vào công ty</th>
-                    <th>Ngày bắt đầu nghỉ việc</th>
-                    <th>Chức vụ</th>
-                    <th>Lý do nghỉ việc chính</th>
-                    <th>Lý do chuyển sang công ty khác</th>
-                    <th>Mức độ hài phòng với công việc</th>
-                    <th>Mức độ hài lòng với mức thu nhập</th>
-                    <th>Mức độ hài lòng với quản lý</th>
-                    <th>Mức độ hài lòng với đồng nghệp</th>
-                    <th>Mức độ hài lòng với môi trường làm việc</th>
-                    <th>Có cân nhắc quay lại công ty trong tương lai?</th>
-                    <th>Điểm thích nhất ở công ty</th>
-                    <th>Điểm không thích nhất ở công ty</th>
-                    <th>Góp ý xây dựng khác</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
-    </div>
-</div>
+    <img src="static/img/form/phongvannghiviec/trang1.jpg" alt="10_1_1.png">
+    <img src="static/img/form/phongvannghiviec/trang2.jpg" alt="10_1_2.png">
+    <input type="text" name="hoten" id="hoten">
+    <input type="text" name="masothe" id="masothe">
+    <input type="text" name="bophan" id="bophan">
+    <input type="text" name="chucdanh" id="chucdanh">
+    <input type="date" name="ngayvao" id="ngayvao">
+    <input type="date" name="ngaynghi" id="ngaynghi">
+
+    <input type="checkbox" name="lydo_suckhoe" id="lydo_suckhoe">
+    <input type="checkbox" name="lydo_canhan" id="lydo_canhan">
+    <input type="checkbox" name="lydo_moitruonglamviec" id="lydo_moitruonglamviec">
+    <input type="checkbox" name="lydo_thoigianlamviec" id="lydo_thoigianlamviec">
+    <input type="checkbox" name="lydo_chedoluongthuong" id="lydo_chedoluongthuong">
+    <input type="checkbox" name="lydo_quydinhnghiemngat" id="lydo_quydinhnghiemngat">
+    <input type="checkbox" name="lydo_sothichcanhan" id="lydo_sothichcanhan">
+    <input type="checkbox" name="lydo_quanly" id="lydo_quanly">
+    <input type="checkbox" name="lydo_cohoithangtien" id="lydo_cohoithangtien">
+    <input type="checkbox" name="lydo_vanhoa" id="lydo_vanhoa">
+    <input type="checkbox" name="lydo_khac" id="lydo_khac">
+    <input type="text" name="lydo_khac_chitiet" id="lydo_khac_chitiet">
+
+    <input type="text" name="mucdo_banchatcongviec" id="mucdo_banchatcongviec">
+    <input type="checkbox" name="u_banchatcongviec" id="u_banchatcongviec">
+    <input type="checkbox" name="a_banchatcongviec" id="a_banchatcongviec">
+    <input type="checkbox" name="s_banchatcongviec" id="s_banchatcongviec">
+    <input type="text" name="ghichu_banchatcongviec" id="ghichu_banchatcongviec">
+
+    <input type="text" name="mucdo_khoiluongcongviec" id="mucdo_khoiluongcongviec">
+    <input type="checkbox" name="u_khoiluongcongviec" id="u_khoiluongcongviec">
+    <input type="checkbox" name="a_khoiluongcongviec" id="a_khoiluongcongviec">
+    <input type="checkbox" name="s_khoiluongcongviec" id="s_khoiluongcongviec">
+    <input type="checkbox" name="quanhieu_khoiluongcongviec" id="quanhieu_khoiluongcongviec">
+    <input type="checkbox" name="khongdu_khoiluongcongviec" id="khongdu_khoiluongcongviec">
+    
+    <input type="text" name="mucdo_thoigianlamviec" id="mucdo_thoigianlamviec">
+    <input type="checkbox" name="u_thoigianlamviec" id="u_thoigianlamviec">
+    <input type="checkbox" name="a_thoigianlamviec" id="a_thoigianlamviec">
+    <input type="checkbox" name="s_thoigianlamviec" id="s_thoigianlamviec">
+    <input type="text" name="ghichu_thoigianlamviec" id="ghichu_thoigianlamviec">
+
+    <input type="text" name="mucdo_mucdohailong" id="mucdo_mucdohailong">
+    <input type="checkbox" name="u_mucdohailong" id="u_mucdohailong">
+    <input type="checkbox" name="a_mucdohailong" id="a_mucdohailong">
+    <input type="checkbox" name="s_mucdohailong" id="s_mucdohailong">
+    <input type="text" name="ghichu_mucdohailong" id="ghichu_mucdohailong">
+
+    <input type="text" name="mucdo_cohoithangtien" id="mucdo_cohoithangtien">
+    <input type="checkbox" name="u_cohoithangtien" id="u_cohoithangtien">
+    <input type="checkbox" name="a_cohoithangtien" id="a_cohoithangtien">
+    <input type="checkbox" name="s_cohoithangtien" id="s_cohoithangtien">
+    <input type="text" name="ghichu_cohoithangtien" id="ghichu_cohoithangtien">
+
+    <input type="text" name="mucdo_cohoidaotao" id="mucdo_cohoidaotao">
+    <input type="checkbox" name="u_cohoidaotao" id="u_cohoidaotao">
+    <input type="checkbox" name="a_cohoidaotao" id="a_cohoidaotao">
+    <input type="checkbox" name="s_cohoidaotao" id="s_cohoidaotao">
+    <input type="text" name="ghichu_cohoidaotao" id="ghichu_cohoidaotao">
+
 {% endblock content %}
