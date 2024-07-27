@@ -1625,7 +1625,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-       app.logger.info(e)  
+        app.logger.info(e)  
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1656,7 +1656,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-       app.logger.info(e)  
+        app.logger.info(e)  
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1737,7 +1737,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             flash("Đổi ca thành công", "success")
             return True
     except Exception as e:
-       app.logger.info(e)   
+        app.logger.info(e)   
         return False 
         
 def laycahientai(mst):
