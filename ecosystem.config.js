@@ -1,8 +1,8 @@
 module.exports = {
     apps: [
       {
-        name: 'sah-app',
-        script: 'app.py',
+        name: 'hr-app',
+        script: 'routes.py',
         interpreter: 'python',
         watch: true,
         env: {
