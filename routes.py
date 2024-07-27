@@ -455,7 +455,7 @@ def nhapthongtinlaodongmoi():
             if themnhanvienmoi(nhanvienmoi):
                 flash("Thêm lao động mới thành công !!!")
                 themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31))
-                    app.logger.error("Tạo ca mặc định cho người mới thành công !!!")                
+                    # app.logger.error("Tạo ca mặc định cho người mới thành công !!!")                
                     # if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
                     #     app.logger.info("Thêm lịch sử trạng thái cho người mới thành công !!!")
                     # else:
