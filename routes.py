@@ -60,7 +60,7 @@ def run_before_every_request():
                 else:
                     g.notice={}
     except Exception as e:
-        print(f"Loi khi tao thong bao {e}")      
+        flash(f"Loi khi tao thong bao {e}")      
         g.notice={}
             
 @app.context_processor
@@ -85,21 +85,21 @@ def login():
             user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()    
             if user and user.matkhau == matkhau:
                 if login_user(user):    
-                    print(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
+                    flash(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
                     return redirect(url_for('home'))
             return redirect(url_for("login"))
         except Exception as e:
-            print(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
+            flash(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
             return redirect(url_for("login"))
     return render_template("login.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
     try:
-        print(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
+        flash(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
         logout_user()
     except Exception as e:
-        print(f'Không thế đăng xuất {e} !!!')
+        flash(f'Không thế đăng xuất {e} !!!')
         flash(f'Không thế đăng xuất {e} !!!')
     return redirect("/")
 
@@ -455,13 +455,13 @@ def nhapthongtinlaodongmoi():
             if themnhanvienmoi(nhanvienmoi):
                 flash("Thêm lao động mới thành công !!!")
                 themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31))
-                    # print("Tạo ca mặc định cho người mới thành công !!!")                
+                    # flash("Tạo ca mặc định cho người mới thành công !!!")                
                     # if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
-                    #     print("Thêm lịch sử trạng thái cho người mới thành công !!!")
+                    #     flash("Thêm lịch sử trạng thái cho người mới thành công !!!")
                     # else:
-                    #     print("Thêm lịch sử trạng thái cho người mới thất bại !!!")
+                    #     flash("Thêm lịch sử trạng thái cho người mới thất bại !!!")
             #     else:
-            #         print("Tạo ca mặc định cho người mới thất bại !!!") 
+            #         flash("Tạo ca mặc định cho người mới thất bại !!!") 
             # else:
                 masothe = int(laymasothemoi())+1
                 cacvitri= laycacvitri()
@@ -469,7 +469,7 @@ def nhapthongtinlaodongmoi():
                 cacca = laycacca()
                 flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
-            print(f"Them lao dong moi that bai: {e} !!!")
+            flash(f"Them lao dong moi that bai: {e} !!!")
         finally:
             return redirect("/muc3_1")
         
@@ -804,7 +804,7 @@ def thaydoithongtinlaodong():
             conn.close()
             flash("Cập nhật thông tin người lao động thành công !!!")
         except Exception as e:
-            print(e)
+            flash(e)
             flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
@@ -983,7 +983,7 @@ def nhapkpi():
             else:
                 flash("Upload new KPI failed: Cannot found data !!!")
         except Exception as e:
-            print(f"Upload new KPI failed {e} !!!")
+            flash(f"Upload new KPI failed {e} !!!")
             flash("Upload new KPI failed !!!")
         return redirect("/muc5_1_1")
 
@@ -1111,7 +1111,7 @@ def dieuchuyen():
                                 )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                print(e)
+                flash(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
             
@@ -1126,7 +1126,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                print(e)
+                flash(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Nghỉ thai sản":
@@ -1160,7 +1160,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                print(e)
+                flash(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Thai sản đi làm lại":
@@ -1194,7 +1194,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                print(e)
+                flash(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         return redirect(f"/muc6_1")
@@ -1470,12 +1470,12 @@ def danhsachxinnghikhac():
                                 row["Loại nghỉ"]
                             )
                         except Exception as e:
-                            print(e)
+                            flash(e)
                             break
                 flash("Cập nhật xin nghỉ khác thành công !!!")
         except Exception as e:
             flash("Cập nhật xin nghỉ khác thất bại !!!")
-            print(e)
+            flash(e)
         return redirect("/muc7_1_6")
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
@@ -1654,7 +1654,7 @@ def xulykiluat():
                 flash("Thêm biên bản kỷ luật thành công !!!")
         except Exception as ex:
             flash("Thêm biên bản kỷ luật thất bại !!!")
-            print(ex)
+            flash(ex)
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -1741,7 +1741,7 @@ def inchamduthopdong():
 
                 return redirect("/muc10_3")
         except Exception as e:
-            print(e)
+            flash(e)
             return redirect("/muc10_3")  
 
 #############################################
@@ -1775,7 +1775,7 @@ def capnhattrangthaiungvien():
         else:
             return {"status": "fail"}, 400
     except Exception as e:
-        print(e)
+        flash(e)
         return {"status": "fail"}, 400
 
 @app.route("/laythongtincccd", methods=["POST"])
@@ -1914,7 +1914,7 @@ def dangkitangcanhom():
                             else:
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            print(e)   
+                            flash(e)   
                     else:
                         flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
@@ -2121,7 +2121,7 @@ def doicacanhan():
         flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        print(e)
+        flash(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
     
@@ -2141,14 +2141,14 @@ def doicanhom():
                     danhsach = laydanhsachusertheoline(chuyen)
                 else:
                     file = request.files.get("file")
-                    print(file)
+                    flash(file)
                     if file:
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                         filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
                         file.save(filepath)
                         data = pd.read_excel(filepath).to_dict(orient="records")
                         for row in data:
-                            print(row)
+                            flash(row)
                             themdoicamoi(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
@@ -2162,7 +2162,7 @@ def doicanhom():
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        print(e)
+        flash(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
         
@@ -2520,7 +2520,7 @@ def taifilemaukp():
             return send_file(file, as_attachment=True)
             
         except Exception as e:
-            print(e)
+            flash(e)
             flash("Download file error !!!")
             return redirect("/muc5_1_1")
 
@@ -2535,7 +2535,7 @@ def rutdonxinnghiviec():
                 flash("Rút đơn nghỉ việc thất bại !!!")
             return redirect("/muc10_2")
         except Exception as e:
-            print(e)
+            flash(e)
             flash(f"Rút đơn bị lỗi ({e}) !!!")
             return redirect("/muc10_2")    
         
@@ -2589,7 +2589,7 @@ def inhopdong():
         ngaybatdau = datetime.strptime(hopdong[17], "%Y-%m-%d").strftime("%d/%m/%Y")
         ngayketthuc = datetime.strptime(hopdong[18], "%Y-%m-%d").strftime("%d/%m/%Y") if hopdong[18] else None
         file = inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
-        print(file)
+        flash(file)
         if file:
             return send_file(file, as_attachment=True, download_name="hopdong.xlsx")
         else:
@@ -2651,12 +2651,12 @@ def capnhathopdongtheofilemau():
                     sectioncode = 'NULL'
                     sectiondescription = 'NULL'
                 if themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc):
-                    print("Them HD ok")
+                    flash("Them HD ok")
                 if capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
-                    print("Cap nhap HD ok")
+                    flash("Cap nhap HD ok")
             flash("Cập nhật hợp đồng thành công !!!")
         except Exception as e:
-            print(f"Cap nhat hop dong loi: {e}")
+            flash(f"Cap nhat hop dong loi: {e}")
             flash(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
     else:
         flash("Không tìm thấy dữ liệu hợp đồng !!!")
@@ -2671,7 +2671,7 @@ def suahopdong():
             return render_template("suahopdong.html",hopdong=hopdong)
         return redirect("/muc3_3")
     except Exception as e:
-        print(e)
+        flash(e)
         return redirect("/muc3_3")   
     
 @app.route("/suahopdonglaodong", methods=["POST"])
@@ -2707,7 +2707,7 @@ def suahopdonglaodong():
         else:
             flash(f"Cập nhật hợp đồng số {id} thất bại !!!")
     except Exception as e:
-        print(e)
+        flash(e)
     return redirect("/muc3_3")  
 
 @app.route("/qr_code", methods=["GET"])
@@ -2757,7 +2757,7 @@ def diemdanhbu_web():
                     flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
             return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        print(f"Them diem danh bu loi {e}")
+        flash(f"Them diem danh bu loi {e}")
         flash(f"Thêm điểm danh bù lỗi: {str(e)}")
         return redirect("/muc7_1_2")
     
@@ -2778,7 +2778,7 @@ def xinnghiphep_web():
             flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
         return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        print(f"Them xin nghi phep loi {e}")
+        flash(f"Them xin nghi phep loi {e}")
         flash(f"Thêm xin nghỉ phép lỗi: {str(e)}")
         return redirect("/muc7_1_2")
 
@@ -2800,7 +2800,7 @@ def xinnghikhongluong_web():
             flash(f"Thêm xin nghỉ không lương cho {hoten} vào ngày {ngay} thất bại !!!")
         return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        print(f"Them xin nghi khong luong loi {e}")
+        flash(f"Them xin nghi khong luong loi {e}")
         flash(f"Thêm xin nghỉ không lương lỗi: {str(e)}")
         return redirect("/muc7_1_2")
 
@@ -2862,10 +2862,10 @@ if __name__ == "__main__":
         try:
             serve(app, host="0.0.0.0", port=81)
         except subprocess.CalledProcessError as e:
-            print(f"Flask gap loi: {e}")
-            print("Đang khoi dong flask...")
+            flash(f"Flask gap loi: {e}")
+            flash("Đang khoi dong flask...")
             time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
         except Exception as e:
-            print(f"Loi khong xac dinh: {e}")
-            print("Đang khoi dong lai flask ...")
+            flash(f"Loi khong xac dinh: {e}")
+            flash("Đang khoi dong lai flask ...")
             time.sleep(1)
