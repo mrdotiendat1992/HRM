@@ -15,7 +15,6 @@ app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
-app.config['UPLOAD_FOLDER'] = r'./static/uploads'
 
 db = SQLAlchemy(app)
 
