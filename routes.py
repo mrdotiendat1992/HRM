@@ -454,15 +454,15 @@ def nhapthongtinlaodongmoi():
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
             if themnhanvienmoi(nhanvienmoi):
                 flash("Thêm lao động mới thành công !!!")
-                if themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31)):
-                    app.logger.info("Tạo ca mặc định cho người mới thành công !!!")                
+                themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31))
+                    app.logger.error("Tạo ca mặc định cho người mới thành công !!!")                
                     # if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
                     #     app.logger.info("Thêm lịch sử trạng thái cho người mới thành công !!!")
                     # else:
                     #     app.logger.info("Thêm lịch sử trạng thái cho người mới thất bại !!!")
-                else:
-                    app.logger.info("Tạo ca mặc định cho người mới thất bại !!!") 
-            else:
+            #     else:
+            #         app.logger.info("Tạo ca mặc định cho người mới thất bại !!!") 
+            # else:
                 masothe = int(laymasothemoi())+1
                 cacvitri= laycacvitri()
                 cacto = laycacto()
@@ -804,7 +804,7 @@ def thaydoithongtinlaodong():
             conn.close()
             flash("Cập nhật thông tin người lao động thành công !!!")
         except Exception as e:
-            app.logger.info(e)
+            app.logger.error(e)
             flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
@@ -1111,7 +1111,7 @@ def dieuchuyen():
                                 )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                app.logger.error(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
             
@@ -1126,7 +1126,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                app.logger.error(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Nghỉ thai sản":
@@ -1160,7 +1160,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                app.logger.error(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         elif loaidieuchuyen=="Thai sản đi làm lại":
@@ -1194,7 +1194,7 @@ def dieuchuyen():
                             )
                 flash("Điều chuyển thành công !!!")
             except Exception as e:
-                app.logger.info(e)
+                app.logger.error(e)
                 flash("Điều chuyển thất bại !!!")
                 return redirect(f"/muc6_1")
         return redirect(f"/muc6_1")
@@ -1470,12 +1470,12 @@ def danhsachxinnghikhac():
                                 row["Loại nghỉ"]
                             )
                         except Exception as e:
-                            app.logger.info(e)
+                            app.logger.error(e)
                             break
                 flash("Cập nhật xin nghỉ khác thành công !!!")
         except Exception as e:
             flash("Cập nhật xin nghỉ khác thất bại !!!")
-            app.logger.info(e)
+            app.logger.error(e)
         return redirect("/muc7_1_6")
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
@@ -1741,7 +1741,7 @@ def inchamduthopdong():
 
                 return redirect("/muc10_3")
         except Exception as e:
-            app.logger.info(e)
+            app.logger.error(e)
             return redirect("/muc10_3")  
 
 #############################################
@@ -1775,7 +1775,7 @@ def capnhattrangthaiungvien():
         else:
             return {"status": "fail"}, 400
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return {"status": "fail"}, 400
 
 @app.route("/laythongtincccd", methods=["POST"])
@@ -1914,7 +1914,7 @@ def dangkitangcanhom():
                             else:
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            app.logger.info(e)   
+                            app.logger.error(e)   
                     else:
                         flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
@@ -2121,7 +2121,7 @@ def doicacanhan():
         flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
     
@@ -2162,7 +2162,7 @@ def doicanhom():
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         flash("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
         return redirect("/muc7_1_1")
         
@@ -2520,7 +2520,7 @@ def taifilemaukp():
             return send_file(file, as_attachment=True)
             
         except Exception as e:
-            app.logger.info(e)
+            app.logger.error(e)
             flash("Download file error !!!")
             return redirect("/muc5_1_1")
 
@@ -2535,7 +2535,7 @@ def rutdonxinnghiviec():
                 flash("Rút đơn nghỉ việc thất bại !!!")
             return redirect("/muc10_2")
         except Exception as e:
-            app.logger.info(e)
+            app.logger.error(e)
             flash(f"Rút đơn bị lỗi ({e}) !!!")
             return redirect("/muc10_2")    
         
@@ -2671,7 +2671,7 @@ def suahopdong():
             return render_template("suahopdong.html",hopdong=hopdong)
         return redirect("/muc3_3")
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
         return redirect("/muc3_3")   
     
 @app.route("/suahopdonglaodong", methods=["POST"])
@@ -2707,7 +2707,7 @@ def suahopdonglaodong():
         else:
             flash(f"Cập nhật hợp đồng số {id} thất bại !!!")
     except Exception as e:
-        app.logger.info(e)
+        app.logger.error(e)
     return redirect("/muc3_3")  
 
 @app.route("/qr_code", methods=["GET"])
