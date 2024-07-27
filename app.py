@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+
 from const import *
 
 # Cấu hình kết nối SQL Server
