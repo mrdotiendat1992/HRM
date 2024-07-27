@@ -2859,15 +2859,15 @@ def taidanhsachdonxinnghiviec():
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
 
-if __name__ == "__main__":
-    while True:
-        try:
-            serve(app, host="0.0.0.0", port=81)
-        except subprocess.CalledProcessError as e:
-            flash(f"Flask gap loi: {e}")
-            flash("Đang khoi dong flask...")
-            time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
-        except Exception as e:
-            flash(f"Loi khong xac dinh: {e}")
-            flash("Đang khoi dong lai flask ...")
-            time.sleep(1)
+# if __name__ == "__main__":
+#     while True:
+#         try:
+#             serve(app, host="0.0.0.0", port=81)
+#         except subprocess.CalledProcessError as e:
+#             flash(f"Flask gap loi: {e}")
+#             flash("Đang khoi dong flask...")
+#             time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
+#         except Exception as e:
+#             flash(f"Loi khong xac dinh: {e}")
+#             flash("Đang khoi dong lai flask ...")
+#             time.sleep(1)
