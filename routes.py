@@ -2731,63 +2731,141 @@ def load_qr_code():
 
 @app.route("/diemdanhbu", methods=["POST"])
 def diemdanhbu_web():
-    if request.method == "POST":
-        masothe = request.form.get("masothe_diemdanhbu")
-        hoten = request.form.get("hoten_diemdanhbu")
-        chuyen = request.form.get("chuyento_diemdanhbu")
-        phongban = request.form.get("phongban_diemdanhbu")
-        chucdanh = request.form.get("chucdanh_diemdanhbu")
-        ngay = request.form.get("ngay_diemdanhbu")
-        giovao = request.form.get("giovao_diemdanhbu")
-        giora = request.form.get("giora_diemdanhbu")
-        lydo = request.form.get("lydo_diemdanhbu")
-        trangthai = "Chờ kiểm tra"
-        if giovao:
-            loaidiemdanh = "Điểm danh vào"
-            if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
-                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thành công !!!")
-            else:
-                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
-        if giora:
-            loaidiemdanh = "Điêm danh ra"
-            if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giora,lydo,trangthai):
-                flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
-            else:
-                flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
-        return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    try:
+        if request.method == "POST":
+            masothe = request.form.get("masothe_diemdanhbu")
+            hoten = request.form.get("hoten_diemdanhbu")
+            chuyen = request.form.get("chuyento_diemdanhbu")
+            phongban = request.form.get("phongban_diemdanhbu")
+            chucdanh = request.form.get("chucdanh_diemdanhbu")
+            ngay = request.form.get("ngay_diemdanhbu")
+            giovao = request.form.get("giovao_diemdanhbu")
+            giora = request.form.get("giora_diemdanhbu")
+            lydo = request.form.get("lydo_diemdanhbu")
+            trangthai = "Chờ kiểm tra"
+            if giovao:
+                loaidiemdanh = "Điểm danh vào"
+                if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
+                    flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thành công !!!")
+                else:
+                    flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
+            if giora:
+                loaidiemdanh = "Điêm danh ra"
+                if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giora,lydo,trangthai):
+                    flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
+                else:
+                    flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
+            return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    except Exception as e:
+        app.logger.error(f"Them diem danh bu loi {e}")
+        flash(f"Thêm điểm danh bù lỗi: {str(e)}")
+        return redirect("/muc7_1_2")
     
 @app.route("/xinnghiphep", methods=["POST"])
 def xinnghiphep_web():
-    masothe = request.form.get("masothe_xinnghiphep")
-    hoten = request.form.get("hoten_xinnghiphep")
-    chuyen = request.form.get("chuyento_xinnghiphep")
-    phongban = request.form.get("phongban_xinnghiphep")
-    chucdanh = request.form.get("chucdanh_xinnghiphep")
-    ngay = request.form.get("ngay_xinnghiphep")
-    sophut = request.form.get("sophut_xinnghiphep")
-    trangthai = "Chờ kiểm tra"
-    if them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
-        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
-    else:
-        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
-    return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    try:
+        masothe = request.form.get("masothe_xinnghiphep")
+        hoten = request.form.get("hoten_xinnghiphep")
+        chuyen = request.form.get("chuyento_xinnghiphep")
+        phongban = request.form.get("phongban_xinnghiphep")
+        chucdanh = request.form.get("chucdanh_xinnghiphep")
+        ngay = request.form.get("ngay_xinnghiphep")
+        sophut = request.form.get("sophut_xinnghiphep")
+        trangthai = "Chờ kiểm tra"
+        if them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
+            flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
+        else:
+            flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
+        return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    except Exception as e:
+        app.logger.error(f"Them xin nghi phep loi {e}")
+        flash(f"Thêm xin nghỉ phép lỗi: {str(e)}")
+        return redirect("/muc7_1_2")
 
 @app.route("/xinnghikhongluong", methods=["POST"])
 def xinnghikhongluong_web():
-    masothe = request.form.get("masothe_xinnghikhongluong")
-    hoten = request.form.get("hoten_xinnghikhongluong")
-    chuyen = request.form.get("chuyento_xinnghikhongluong")
-    phongban = request.form.get("phongban_xinnghikhongluong")
-    chucdanh = request.form.get("chucdanh_xinnghikhongluong")
-    ngay = request.form.get("ngay_xinnghikhongluong")
-    sophut = request.form.get("sophut_xinnghikhongluong")
-    lydo = request.form.get("lydo_xinnghikhongluong")
-    trangthai = "Chờ kiểm tra"
-    if them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
-        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thành công !!!")
-    else:
-        flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
-    return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    try:
+        masothe = request.form.get("masothe_xinnghikhongluong")
+        hoten = request.form.get("hoten_xinnghikhongluong")
+        chuyen = request.form.get("chuyento_xinnghikhongluong")
+        phongban = request.form.get("phongban_xinnghikhongluong")
+        chucdanh = request.form.get("chucdanh_xinnghikhongluong")
+        ngay = request.form.get("ngay_xinnghikhongluong")
+        sophut = request.form.get("sophut_xinnghikhongluong")
+        lydo = request.form.get("lydo_xinnghikhongluong")
+        trangthai = "Chờ kiểm tra"
+        if them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
+            flash(f"Thêm xin nghỉ không lương cho {hoten} vào ngày {ngay} thành công !!!")
+        else:
+            flash(f"Thêm xin nghỉ không lương cho {hoten} vào ngày {ngay} thất bại !!!")
+        return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    except Exception as e:
+        app.logger.error(f"Them xin nghi khong luong loi {e}")
+        flash(f"Thêm xin nghỉ không lương lỗi: {str(e)}")
+        return redirect("/muc7_1_2")
+
+@app.route("/taidanhsachdonxinnghiviec", methods=["POST"])
+def taidanhsachdonxinnghiviec():
+    mst = request.form.get("mst")
+    hoten = request.form.get("hoten")
+    chuyen = request.form.get("chuyen")
+    phongban = request.form.get("phongban")
+    ngaynopdon = request.form.get("ngaynopdon")
+    ngaynghi = request.form.get("ngaynghi")
+    sapdenhan = request.form.get("sapdenhan")
+    danhsach = laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,sapdenhan)
+    data = [{
+        "Mã số thẻ": row[2],
+        "Họ tên": row[3],
+        "Chức danh": row[4],
+        "Chuyền": row[5],
+        "Phòng ban": row[6],
+        "Ngày nộp đơn": row[7],
+        "Ngày nghỉ dự kiến": row[8],
+        "Ghi chú": row[9],
+        "Trạng thái làm việc": row[10]
+    } for row in danhsach]
+    df = DataFrame(data)
+    output = BytesIO()
+    with ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    # Điều chỉnh độ rộng cột
+    output.seek(0)
+    workbook = openpyxl.load_workbook(output)
+    sheet = workbook.active
+
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column_letter].width = adjusted_width
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+    # Trả file về cho client
+    response = make_response(output.read())
+    response.headers['Content-Disposition'] = f'attachment; filename=danhsach_donxinghiviec_{time_stamp}.xlsx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    return response  
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0",port=81,debug=True)
+    while True:
+        try:
+            app.run(debug=False, host="0.0.0.0", port=81)
+        except subprocess.CalledProcessError as e:
+            app.logger.error(f"Flask gap loi: {e}")
+            print("Đang khoi dong flask...")
+            time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
+        except Exception as e:
+            app.logger.error(f"Loi khong xac dinh: {e}")
+            print("Đang khoi dong lai flask ...")
+            time.sleep(1)

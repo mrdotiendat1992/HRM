@@ -2491,7 +2491,7 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
     except Exception as e:
         app.logger.info(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
-
+laydanhsach_chonghiviec
 def lay_chuyen_va_capbac(macongty, mst):
     try:
         conn = pyodbc.connect(used_db)

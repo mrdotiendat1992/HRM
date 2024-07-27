@@ -60,13 +60,22 @@
         </div>
     </form>
     
-    <div style="display: flex; align-items: center;">
+    <div style="display: flex; align-items: center; space-between: around;">
         <p>Tổng: <b>{{count}}</b></p> 
         <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
         <div class="pagination">{{ pagination.links }}</div>
         <h5>Chú thích:</h5>
         <span id="donsapdenhan">Sắp đến hạn</span>
         <span class="bg-info" id="donquahan">Đã hết hạn</span>
+        <form action="/taidanhsachdonxinnghiviec" method="post" style="margin-left: 20px;" >
+            <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+            <input type="hidden" name="hoten" value="{{request.args.get('hoten', '')}}">
+            <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
+            <input type="hidden" name="phongban" value="{{request.args.get('phongban', '')}}">
+            <input type="hidden" name="ngaynopdon" value="{{request.args.get('ngaynopdon', '')}}">
+            <input type="hidden" name="ngaynghi" value="{{request.args.get('ngaynghi', '')}}">
+            <button type="submit" class="btn btn-success btn-sm" id="dangky"><i class="fas fa-download"></i></button>
+        </form>
     </div>
     
     <table class="table table-bordered table-hover table-sm">
