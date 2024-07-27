@@ -2860,7 +2860,7 @@ def taidanhsachdonxinnghiviec():
 if __name__ == "__main__":
     while True:
         try:
-            app.run(debug=False, host="0.0.0.0", port=81)
+            app.run(debug=True, host="0.0.0.0", port=81)
         except subprocess.CalledProcessError as e:
             print(f"Flask gap loi: {e}")
             print("Đang khoi dong flask...")
