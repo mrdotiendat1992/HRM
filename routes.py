@@ -47,7 +47,7 @@ def run_before_every_request():
                         Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
                         Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and MST_QL='{current_user.masothe}'""").fetchone()[0]
-                conn.close()
+                
                 g.notice={"Điểm danh bù":soluong_diemdanhbu,
                     "Xin nghỉ phép": soluong_xinnghiphep,
                     "Xin nghỉ không lương": soluong_xinnghikhongluong,
@@ -57,19 +57,21 @@ def run_before_every_request():
                 chuyen,capbac = lay_chuyen_va_capbac(current_user.macongty,current_user.masothe)
                 if bool(re.fullmatch(r'\d*S\d*', chuyen)) and chuyen.count('S') == 1 and ((current_user.macongty=="NT1" and capbac == "O3") or (current_user.macongty=="NT2" and capbac == "C1")):
                     soluong_loithe = cursor.execute(f"select count(*) from Danh_sach_loi_the where Chuyen_to = '{chuyen}'").fetchone()[0]
-                    conn.close()
+                    
                     g.notice={"Danh sách lỗi thẻ":soluong_loithe,"Line":chuyen,"Số thông báo":soluong_loithe}
                 else:
                     g.notice={}
-            so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Phan_quyen_thu_ky 
-                                                           where MST='{current_user.masothe}' and Trang_thai=N''""")
+            so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra'""").fetchone()[0]
+            g.notice["personal"]={"Điểm danh bù":{"Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra}}
+            conn.close()
     except Exception as e:
         flash(f"Loi khi tao thong bao {e}")      
         g.notice={}
             
 @app.context_processor
 def inject_notice():
-    return dict(notice=getattr(g, 'notice', {}))
+    return dict(notice=getattr(g, 'notice', {}),personal = getattr(g, 'personal', {}))
 
 @app.route('/unauthorized')
 def unauthorized():
