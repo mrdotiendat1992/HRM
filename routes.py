@@ -61,6 +61,8 @@ def run_before_every_request():
                     g.notice={"Danh sách lỗi thẻ":soluong_loithe,"Line":chuyen,"Số thông báo":soluong_loithe}
                 else:
                     g.notice={}
+            so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Phan_quyen_thu_ky 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N''""")
     except Exception as e:
         flash(f"Loi khi tao thong bao {e}")      
         g.notice={}
@@ -2859,15 +2861,15 @@ def taidanhsachdonxinnghiviec():
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
 
-# if __name__ == "__main__":
-#     while True:
-#         try:
-#             serve(app, host="0.0.0.0", port=81)
-#         except subprocess.CalledProcessError as e:
-#             flash(f"Flask gap loi: {e}")
-#             flash("Đang khoi dong flask...")
-#             time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
-#         except Exception as e:
-#             flash(f"Loi khong xac dinh: {e}")
-#             flash("Đang khoi dong lai flask ...")
-#             time.sleep(1)
+if __name__ == "__main__":
+    while True:
+        try:
+            serve(app, host="0.0.0.0", port=81, _quiet=True, threads=8)
+        except subprocess.CalledProcessError as e:
+            flash(f"Flask gap loi: {e}")
+            flash("Đang khoi dong flask...")
+            time.sleep(1)  # Đợi một khoảng thời gian trước khi khởi động lại
+        except Exception as e:
+            flash(f"Loi khong xac dinh: {e}")
+            flash("Đang khoi dong lai flask ...")
+            time.sleep(1)
