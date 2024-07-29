@@ -67,33 +67,54 @@ def run_before_every_request():
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_diemdanhbu_dapheduyet = cursor.execute(f"""select count(*) from Diem_danh_bu 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_diemdanhbu_bituchoi = cursor.execute(f"""select count(*) from Diem_danh_bu 
+                                                           where MST='{current_user.masothe}' and Trang_thai LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]           
             so_don_diemdanhbu = cursor.execute(f"""select count(*) from Diem_danh_bu 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
-            so_don = so_don_diemdanhbu
+
             so_don_xinnghiphep_chuakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep_dakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghiphep_bituchoi = cursor.execute(f"""select count(*) from Xin_nghi_phep 
+                                                           where MST='{current_user.masothe}' and Trang_thai= LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
+            so_don_xinnghikhongluong_chuakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhongluong_dakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhongluong_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhongluong_bituchoi = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai= LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhongluong = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
-            
-            
-            so_don = so_don_diemdanhbu + so_don_xinnghiphep
+            so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong
             g.notice["personal"]={"Điểm danh bù":{
                                                     "Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra,
                                                     "Đã kiểm tra": so_don_diemdanhbu_dakiemtra,
                                                     "Đã phê duyệt": so_don_diemdanhbu_dapheduyet,
+                                                    "Bị từ chối": so_don_diemdanhbu_bituchoi,
                                                     "Tổng": so_don_diemdanhbu
                                                 },
                                   "Xin nghỉ phép":{
                                                     "Chưa kiểm tra":so_don_xinnghiphep_chuakiemtra,
                                                     "Đã kiểm tra": so_don_xinnghiphep_dakiemtra,
                                                     "Đã phê duyệt": so_don_xinnghiphep_dapheduyet,
-                                                    "Tổng": so_don_xinnghiphep
+                                                    "Tổng": so_don_xinnghiphep,
+                                                    "Bị từ chối": so_don_xinnghiphep_bituchoi,
+                                                },
+                                  "Xin nghỉ không lương":{
+                                                    "Chưa kiểm tra":so_don_xinnghikhongluong_chuakiemtra,
+                                                    "Đã kiểm tra": so_don_xinnghikhongluong_dakiemtra,
+                                                    "Đã phê duyệt": so_don_xinnghikhongluong_dapheduyet,
+                                                    "Tổng": so_don_xinnghikhongluong,
+                                                    "Bị từ chối": so_don_xinnghikhongluong_bituchoi,
                                                 },
                                   "Tổng":so_don
                                                   }
