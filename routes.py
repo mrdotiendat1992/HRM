@@ -62,8 +62,41 @@ def run_before_every_request():
                 else:
                     g.notice={}
             so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
-                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra'""").fetchone()[0]
-            g.notice["personal"]={"Điểm danh bù":{"Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra}}
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_diemdanhbu_dakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_diemdanhbu_dapheduyet = cursor.execute(f"""select count(*) from Diem_danh_bu 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_diemdanhbu = cursor.execute(f"""select count(*) from Diem_danh_bu 
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don = so_don_diemdanhbu
+            so_don_xinnghiphep_chuakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghiphep_dakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghiphep_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_phep 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghiphep = cursor.execute(f"""select count(*) from Xin_nghi_phep 
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            
+            
+            
+            
+            so_don = so_don_diemdanhbu + so_don_xinnghiphep
+            g.notice["personal"]={"Điểm danh bù":{
+                                                    "Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra,
+                                                    "Đã kiểm tra": so_don_diemdanhbu_dakiemtra,
+                                                    "Đã phê duyệt": so_don_diemdanhbu_dapheduyet,
+                                                    "Tổng": so_don_diemdanhbu
+                                                },
+                                  "Xin nghỉ phép":{
+                                                    "Chưa kiểm tra":so_don_xinnghiphep_chuakiemtra,
+                                                    "Đã kiểm tra": so_don_xinnghiphep_dakiemtra,
+                                                    "Đã phê duyệt": so_don_xinnghiphep_dapheduyet,
+                                                    "Tổng": so_don_xinnghiphep
+                                                },
+                                  "Tổng":so_don
+                                                  }
             conn.close()
     except Exception as e:
         flash(f"Loi khi tao thong bao {e}")      

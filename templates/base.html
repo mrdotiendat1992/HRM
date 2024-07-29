@@ -299,13 +299,47 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="far fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice["personal"]['Điểm danh bù']["Chưa kiểm tra"]}}</span>
+                                <span class="badge badge-danger badge-counter">{{notice["personal"]['Tổng']}}</span>
                             </a>
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Thông báo
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center">
+                                    <div class="mr-3">
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                            <span class="badge badge-danger badge-counter">{{notice["personal"]['Điểm danh bù']['Tổng']}}</span>
+                                        </div>
+                                    </div>
+                                    <div  class="mr-3">
+                                        <span class="font-weight-bold">Điểm danh bù</span>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item d-flex align-items-center" style="flex-direction: row;">
+                                    <div>
+                                        <div class="icon-circle bg-primary">
+                                            <i class="fas fa-file-alt text-white"></i>
+                                            <span class="badge badge-danger badge-counter">{{notice["personal"]['Xin nghỉ phép']['Tổng']}}</span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <b>Xin nghỉ phép</b>
+                                    </div>
+                                    <div id="muc7_1_4" style="display: block; width: 100%;">
+                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chưa+kiểm+tra">Chưa kiểm tra: {{notice["personal"]['Xin nghỉ phép']['Chưa kiểm tra']}}</a>
+                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{notice["personal"]['Xin nghỉ phép']['Đã kiểm tra']}}</a>
+                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{notice["personal"]['Xin nghỉ phép']['Đã phê duyệt']}}</a>
+                                    </div>
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
+                            </div>
                         </li>
                     
                             
                         <div class="topbar-divider d-none d-sm-block"></div>
-                        {% if notice %}
+                        {% if notice['Số thông báo'] %}
                         
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
