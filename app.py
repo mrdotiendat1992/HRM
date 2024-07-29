@@ -1270,7 +1270,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         
-        query = f"SELECT * FROM HR.dbo.Danh_sach_loi_the WHERE Nha_may = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Danh_sach_loi_the_3 WHERE Nha_may = '{current_user.macongty}'"
         if mst:
             query += f"AND MST LIKE '%{mst}%' "
         if chuyen:
@@ -1316,8 +1316,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None):
             "Phép tồn": row[14],
             "Phút nghỉ không lương": row[15],
             "Phút nghỉ khác": row[16],
-            "Email thư ký": row[17],
-            "Email trưởng bộ phận": row[18]
+            "Trạng thái": row[18]
             })
         return result
     except Exception as e:

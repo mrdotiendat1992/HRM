@@ -93,7 +93,11 @@ input, select {
             </thead>
             <tbody>
                 {% for row in danhsach %}
+                {% if row["Trạng thái"] == "Đã gửi" %}
+                <tr data-info='{{ row  | tojson| safe }}' class="loichamcong" style="background-color: yellow;">
+                {% else %}
                 <tr data-info='{{ row  | tojson| safe }}' class="loichamcong">
+                {% endif %}
                     <td>{{row["MST"]}}</td>
                     <td class="sticky">{{row["Họ tên"]}}</td>
                     <td>{{row["Chuyền tổ"]}}</td>
@@ -313,7 +317,8 @@ input, select {
         rows.forEach(row => {
             row.addEventListener('click', () => {
                 const data = JSON.parse(row.getAttribute('data-info'));
-                
+                var trangthai = data["Trạng thái"];
+
                 modalMST.textContent = data["MST"];
                 modalHoTen.textContent = data["Họ tên"];
                 modalChuyenTo.textContent = data["Chuyền tổ"];
@@ -363,8 +368,11 @@ input, select {
                 } else {
                     diemdanhbuModalGioRa.disabled = false;
                 }
-                
-                $(modal).modal('show');
+                if (trangthai == 'Đã gửi') {
+                } else {
+                    $(modal).modal('show');
+                }
+                    
             });
         });
     });
