@@ -79,7 +79,7 @@ def run_before_every_request():
             so_don_xinnghiphep_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep_bituchoi = cursor.execute(f"""select count(*) from Xin_nghi_phep 
-                                                           where MST='{current_user.masothe}' and Trang_thai= LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+                                                           where MST='{current_user.masothe}' and Trang_thai LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
@@ -90,7 +90,7 @@ def run_before_every_request():
             so_don_xinnghikhongluong_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghikhongluong_bituchoi = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
-                                                           where MST='{current_user.masothe}' and Trang_thai= LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+                                                           where MST='{current_user.masothe}' and Trang_thai LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghikhongluong = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
