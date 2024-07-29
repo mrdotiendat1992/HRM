@@ -287,6 +287,42 @@
                             <a class="dropdown-item" href="/qr_code?qr=na_xinnghikhongluong"><b>Xin nghỉ không lương NA</b></a>
                         </div>
                     </div>
+
+                    <div class="btn-group dropright">
+                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <i class="far fa-bell fa-fw"></i>
+                            <span class="badge badge-danger badge-counter">{{ notice['personal']['Tổng'] }}</span>
+                        </button>
+                        <div class="dropdown-menu">
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item" href="/muc7_1_3?mst={{current_user.masothe}}">Điểm danh bù <span class="badge badge-danger badge-counter">{{ notice['personal']["Điểm danh bù"]['Tổng'] }}</span></a> 
+                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Điểm danh bù"]["Chưa kiểm tra"] }}</a>
+                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Điểm danh bù"]["Đã kiểm tra"] }}</a>
+                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{ notice['personal']["Điểm danh bù"]["Đã phê duyệt"] }}</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item" href="/muc7_1_4?mst={{current_user.masothe}}">Xin nghỉ phép <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ phép"]['Tổng'] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Xin nghỉ phép"]["Chưa kiểm tra"] }} </a>
+                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Xin nghỉ phép"]["Đã kiểm tra"] }}</a>
+                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{ notice['personal']["Xin nghỉ phép"]["Đã phê duyệt"] }}</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item" href="#">Xin nghỉ không lương</a>
+                                <a class="dropdown-item small" href="#">Chưa kiểm tra</a>
+                                <a class="dropdown-item small" href="#">Đã kiểm tra</a>
+                                <a class="dropdown-item small" href="#">Đã phê duyệt</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <div class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#">Xin nghỉ khác</a>
+                            </div>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
+                        </div>
+                    </div>
+                      
                     <div class="d-none d-sm-inline-block" style="margin-left:25%;">
                         <h3 style="margin-top:10px;margin-bottom:2px;text-align:center;color:#4e73df;"><b>NAM THUẬN</b></h3>
                         <p style="margin-bottom:10px;text-align:center;color:#4e73df;"><b>PHẦN MỀM QUẢN LÝ NHÂN SỰ</b></p>
@@ -294,50 +330,7 @@
                     
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="far fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice["personal"]['Tổng']}}</span>
-                            </a>
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Thông báo
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                            <span class="badge badge-danger badge-counter">{{notice["personal"]['Điểm danh bù']['Tổng']}}</span>
-                                        </div>
-                                    </div>
-                                    <div  class="mr-3">
-                                        <span class="font-weight-bold">Điểm danh bù</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" style="flex-direction: row;">
-                                    <div>
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                            <span class="badge badge-danger badge-counter">{{notice["personal"]['Xin nghỉ phép']['Tổng']}}</span>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <b>Xin nghỉ phép</b>
-                                    </div>
-                                    <div id="muc7_1_4" style="display: block; width: 100%;">
-                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chưa+kiểm+tra">Chưa kiểm tra: {{notice["personal"]['Xin nghỉ phép']['Chưa kiểm tra']}}</a>
-                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{notice["personal"]['Xin nghỉ phép']['Đã kiểm tra']}}</a>
-                                        <a  href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{notice["personal"]['Xin nghỉ phép']['Đã phê duyệt']}}</a>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
-                            </div>
-                        </li>
-                    
-                            
+                                                    
                         <div class="topbar-divider d-none d-sm-block"></div>
                         {% if notice['Số thông báo'] %}
                         
@@ -553,6 +546,9 @@
 
     <!-- Page level custom scripts -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <script>
         setTimeout(function() {
             var alert = document.querySelector('.alert');
@@ -561,9 +557,10 @@
                 alert.classList.add('fade');
                 setTimeout(function() {
                     alert.remove();
-                }, 500); // Wait for the fade-out transition to complete
+                }, 1000); // Wait for the fade-out transition to complete
             }
-        }, 5000); // 5 seconds
+        }, 10000); // 10 seconds
+        
     </script>
 </body>
 

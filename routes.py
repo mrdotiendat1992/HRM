@@ -62,7 +62,7 @@ def run_before_every_request():
                 else:
                     g.notice={}
             so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
-                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_diemdanhbu_dakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_diemdanhbu_dapheduyet = cursor.execute(f"""select count(*) from Diem_danh_bu 
@@ -71,7 +71,7 @@ def run_before_every_request():
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don = so_don_diemdanhbu
             so_don_xinnghiphep_chuakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
-                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chưa kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep_dakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_phep 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_xinnghiphep_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_phep 
