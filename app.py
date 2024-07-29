@@ -1420,7 +1420,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         else:
             query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "   
             if mst:
-                query += f"AND MST LIKE '%{mst}%' "
+                query += f"AND MST = '{mst}' "
             if hoten:
                 query += f"AND Ho_ten LIKE N'%{hoten}%' "
             if chucvu:
@@ -1464,7 +1464,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         else:            
             query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
             if mst:
-                query += f"AND MST LIKE '%{mst}%'"
+                query += f"AND MST = '{mst}'"
             if hoten:
                 query += f"AND Ho_ten LIKE N'%{hoten}%'"
             if chucvu:
@@ -1504,7 +1504,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
             
             query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
             if mst:
-                query += f"AND MST LIKE '%{mst}%'"
+                query += f"AND MST LIKE '{mst}'"
             if hoten:
                 query += f"AND Ho_ten LIKE N'%{hoten}%'"
             if chucvu:
