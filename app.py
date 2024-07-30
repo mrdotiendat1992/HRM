@@ -2490,7 +2490,22 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
     except Exception as e:
         print(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
-laydanhsach_chonghiviec
+
+def them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
+    try:
+        ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        # query = f"insert into Xin_nghi_khong_luong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
+        
+        # cursor.execute(query)
+        # conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi khi them xin nghi khac: {e} !!!")
+        return False
+
 def lay_chuyen_va_capbac(macongty, mst):
     try:
         conn = pyodbc.connect(used_db)

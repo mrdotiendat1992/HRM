@@ -243,6 +243,53 @@ input, select {
                                 </div>
                             </div>
                         </div>
+                        <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#xinnghikhacModal">Xin nghỉ không lương</button>
+                        <div class="modal fade" id="xinnghikhacModal" tabindex="-1" role="dialog" aria-labelledby="xinnghikhongluongModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="xinnghikhacModalLabel">Xin nghỉ khác</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form method="POST" action="/xinnghikhongluong">
+                                        <p><input type="text" readonly class="form-control" name="masothe_xinnghikhac" id="xinnghikhacModalMST"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="hoten_xinnghikhac" id="xinnghikhacModalHoTen"></input></p>
+                                        <p><input type="text" readonly class="form-control" name="chuyento_xinnghikhac" id="xinnghikhacModalChuyenTo"></input></p>
+                                        <input type="hidden" class="form-control" readonly name="chucdanh_xinnghikhac" id="xinnghikhacModalChucDanh">
+                                        <input type="hidden" class="form-control" readonly name="phongban_xinnghikhac" id="xinnghikhacModalPhongban">
+                                        <p><div style="display: flex; align-items: center;"><strong>Ngày:</strong> <input type="text" readonly class="form-control" name="ngay_xinnghikhac" id="xinnghikhacModalNgay"></input></div></p>
+                                        <p><div style="display: flex; align-items: center;"><strong>Số phút:</strong> <input type="text" readonly class="form-control" name="sophut_xinnghikhac" id="xinnghikhacModalSophut"></input></div></p>
+                                        <p>
+                                            <div style="display: flex; align-items: center;"><strong>Lý do:</strong> 
+                                                <select class="form-control" name="lydo_xinnghikhac" id="xinnghikhacModalLydo" required>
+                                                    <option value="CL">Nghỉ bù (CL)</option>
+                                                    <option value="UP01">Nghỉ không lương không ảnh hưởng tuân thủ nội quy (UP01)</option>
+                                                    <option value="AL01">Nghỉ phép không ảnh hưởng tuân thủ nội quy (AL01)</option>
+                                                    <option value="PH">Nghỉ lễ, tết (PH)</option>
+                                                    <option value="PL01">Nghỉ kết hôn (PL01)</option>
+                                                    <option value="PL02">Nghỉ tang (PL02)</option>
+                                                    <option value="PL03">Nghỉ con kết hôn (PL03)</option>
+                                                    <option value="PO">Nghỉ hưởng nguyên lương (PO)</option>
+                                                    <option value="SL">Nghỉ ốm, con ốm (SL)</option>
+                                                    <option value="OCL">Nghỉ tai nạn lao động (OCL)</option>
+                                                    <option value="BL">Công tác (BL)</option>
+                                                    <option value="ML02">Nghỉ vợ sinh (ML02)</option>
+                                                    <option value="ML03">Khám thai (ML03)</option>
+                                                </select>
+                                            </div>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="submit" class="btn btn-primary btn-sm" value="Xin nghỉ" onclick="return xinnghikhac()"></input/>
+                                    </form>
+                                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                     </div>
                 </div>
@@ -314,6 +361,14 @@ input, select {
         const xinnghikhongluongModalNgay = document.getElementById('xinnghikhongluongModalNgay');
         const xinnghikhongluongModalSophut = document.getElementById('xinnghikhongluongModalSophut');
 
+        const xinnghikhacModalMST = document.getElementById('xinnghikhacModalMST');
+        const xinnghikhacModalHoTen = document.getElementById('xinnghikhacModalHoTen');
+        const xinnghikhacModalChuyenTo = document.getElementById('xinnghikhacModalChuyenTo');
+        const xinnghikhacModalPhongban = document.getElementById('xinnghikhacModalPhongban');
+        const xinnghikhacModalChucDanh = document.getElementById('xinnghikhacModalChucDanh');
+        const xinnghikhacModalNgay = document.getElementById('xinnghikhacModalNgay');
+        const xinnghikhacModalSophut = document.getElementById('xinnghikhacModalSophut');
+
         rows.forEach(row => {
             row.addEventListener('click', () => {
                 const data = JSON.parse(row.getAttribute('data-info'));
@@ -351,6 +406,14 @@ input, select {
                 xinnghikhongluongModalPhongban.value = data["Bộ phận"];
                 xinnghikhongluongModalNgay.value = data["Ngày"];
                 xinnghikhongluongModalSophut.value = data["Số phút thiếu"];
+
+                xinnghikhacModalMST.value = data["MST"];
+                xinnghikhacModalHoTen.value = data["Họ tên"];
+                xinnghikhacModalChuyenTo.value = data["Chuyền tổ"];
+                xinnghikhacModalChucDanh.value = data["Chức danh"];
+                xinnghikhacModalPhongban.value = data["Bộ phận"];
+                xinnghikhacModalNgay.value = data["Ngày"];
+                xinnghikhacModalSophut.value = data["Số phút thiếu"];
 
                 if(data["Giờ vào"]) {
                     diemdanhbuModalGioVao.value = data["Giờ vào"] || '';
@@ -409,5 +472,12 @@ input, select {
         }
     }
     
+    function xinnghikhac() {
+        if (confirm("Bạn có chắc chắn với các thông tin là chính xác ?")) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 </script>
 {% endblock content %}

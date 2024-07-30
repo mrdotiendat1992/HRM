@@ -95,6 +95,9 @@ def run_before_every_request():
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
             so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong
+            so_lan_loi_cham_cong = cursor.execute(f"""select count(*) from Danh_sach_loi_the_3 
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            
             g.notice["personal"]={"Điểm danh bù":{
                                                     "Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra,
                                                     "Đã kiểm tra": so_don_diemdanhbu_dakiemtra,
@@ -116,7 +119,8 @@ def run_before_every_request():
                                                     "Tổng": so_don_xinnghikhongluong,
                                                     "Bị từ chối": so_don_xinnghikhongluong_bituchoi,
                                                 },
-                                  "Tổng":so_don
+                                  "Tổng":so_don,
+                                  "Lỗi chấm công": so_lan_loi_cham_cong
                                                   }
             conn.close()
     except Exception as e:
@@ -2817,7 +2821,7 @@ def diemdanhbu_web():
                     flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
             return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        flash(f"Them diem danh bu loi {e}")
+        print(f"Them diem danh bu loi {e}")
         flash(f"Thêm điểm danh bù lỗi: {str(e)}")
         return redirect("/muc7_1_2")
     
@@ -2838,7 +2842,7 @@ def xinnghiphep_web():
             flash(f"Thêm xin nghỉ phép cho {hoten} vào ngày {ngay} thất bại !!!")
         return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        flash(f"Them xin nghi phep loi {e}")
+        print(f"Them xin nghi phep loi {e}")
         flash(f"Thêm xin nghỉ phép lỗi: {str(e)}")
         return redirect("/muc7_1_2")
 
@@ -2860,10 +2864,32 @@ def xinnghikhongluong_web():
             flash(f"Thêm xin nghỉ không lương cho {hoten} vào ngày {ngay} thất bại !!!")
         return redirect(f"/muc7_1_2?chuyen={chuyen}")
     except Exception as e:
-        flash(f"Them xin nghi khong luong loi {e}")
+        print(f"Them xin nghi khong luong loi {e}")
         flash(f"Thêm xin nghỉ không lương lỗi: {str(e)}")
         return redirect("/muc7_1_2")
 
+@app.route("/xinnghikhac", methods=["POST"])
+def xinnghikhac_web():
+    try:
+        masothe = request.form.get("masothe_xinnghikhac")
+        hoten = request.form.get("hoten_xinnghikhac")
+        chuyen = request.form.get("chuyento_xinnghikhac")
+        phongban = request.form.get("phongban_xinnghikhac")
+        chucdanh = request.form.get("chucdanh_xinnghikhac")
+        ngay = request.form.get("ngay_xinnghikhac")
+        sophut = request.form.get("sophut_xinnghikhac")
+        lydo = request.form.get("lydo_xinnghikhac")
+        trangthai = "Chờ kiểm tra"
+        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
+            flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
+        else:
+            flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
+        return redirect(f"/muc7_1_2?chuyen={chuyen}")
+    except Exception as e:
+        print(f"Them xin nghi khac loi {e}")
+        flash(f"Thêm xin nghỉ khác lỗi: {str(e)}")
+        return redirect("/muc7_1_2")
+    
 @app.route("/taidanhsachdonxinnghiviec", methods=["POST"])
 def taidanhsachdonxinnghiviec():
     mst = request.form.get("mst")

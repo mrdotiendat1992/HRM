@@ -295,6 +295,10 @@
                         </button>
                         <div class="dropdown-menu">
                             <div class="dropdown-submenu">
+                                <a class="dropdown-item" href="/muc7_1_2?mst={{current_user.masothe}}">Lỗi chấm công <span class="badge badge-warning badge-counter">{{ notice['personal']["Lỗi chấm công"] }}</span></a> 
+                            </div>
+                            <div class="dropdown-divider"></div>
+                                <div class="dropdown-submenu">
                                 <a class="dropdown-item" href="/muc7_1_3?mst={{current_user.masothe}}">Điểm danh bù <span class="badge badge-danger badge-counter">{{ notice['personal']["Điểm danh bù"]['Tổng'] }}</span></a> 
                                 <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Điểm danh bù"]["Chưa kiểm tra"] }}</a>
                                 <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Điểm danh bù"]["Đã kiểm tra"] }}</a>
