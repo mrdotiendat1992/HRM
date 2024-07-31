@@ -339,7 +339,7 @@
                     <ul class="navbar-nav ml-auto">
                                                     
                         <div class="topbar-divider d-none d-sm-block"></div>
-                        {% if notice['Số thông báo'] %}
+                        {% if notice["Quản lý"] %}
                         
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
@@ -347,7 +347,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice['Số thông báo']}}</span>
+                                <span class="badge badge-danger badge-counter">{{notice["Quản lý"]['Số thông báo']}}</span>
                             </a>
                             
                             <!-- Dropdown - Alerts -->
@@ -357,7 +357,7 @@
                                     Thông báo
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
-                                    {% if notice["Điểm danh bù"] %}
+                                    {% if notice["Quản lý"]["Điểm danh bù"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-primary">
@@ -365,11 +365,11 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Bạn có {{notice["Điểm danh bù"]}} đơn điểm danh bù chưa được duyệt</span>
+                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Điểm danh bù"]}} đơn điểm danh bù cần bạn phê duyệt</span>
                                         </div>
                                     </a>
                                     {% endif %}  
-                                    {% if notice["Xin nghỉ phép"] %}
+                                    {% if notice["Quản lý"]["Xin nghỉ phép"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_4?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-success">
@@ -377,11 +377,11 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Bạn có {{notice["Xin nghỉ phép"]}} đơn xin nghỉ phép chưa được duyệt</span>
+                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ phép"]}} đơn xin nghỉ phép cần bạn phê duyệt</span>
                                         </div>
                                     </a>
                                     {% endif %}  
-                                    {% if notice["Xin nghỉ không lương"] %}
+                                    {% if notice["Quản lý"]["Xin nghỉ không lương"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_5?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-warning">
@@ -389,11 +389,71 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Bạn có {{notice["Xin nghỉ không lương"]}} đơn xin nghỉ không lương chưa được duyệt</span>
+                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ không lương"]}} đơn xin nghỉ không lương cần bạn phê duyệt</span>
+                                        </div>
+                                    </a>
+                                    {% endif %}                                       
+                                </a>
+                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
+                            </div>
+                        </li>
+                        {% endif %}
+
+                        {% if notice["Thư ký"] %}
+                        
+                        <!-- Nav Item - Alerts -->
+                        <li class="nav-item dropdown no-arrow mx-1">
+                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fas fa-bell fa-fw"></i>
+                                <!-- Counter - Alerts -->
+                                <span class="badge badge-danger badge-counter">{{notice["Thư ký"]['Số thông báo']}}</span>
+                            </a>
+                            
+                            <!-- Dropdown - Alerts -->
+                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="alertsDropdown">
+                                <h6 class="dropdown-header">
+                                    Thông báo
+                                </h6>
+                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    {% if notice["Thư ký"]["Điểm danh bù"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?chuyen={{g.notice["Thư ký"]["Line"]}}&trangthai=Chờ+kiểm+tra">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-primary">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Điểm danh bù"]}} đơn điểm danh bù cần bạn kiểm tra.</span>
+                                        </div>
+                                    </a>
+                                    {% endif %}  
+                                    {% if notice["Thư ký"]["Xin nghỉ phép"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_4?mstquanly={{current_user.masothe}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-success">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ phép"]}} đơn xin nghỉ phép cần bạn kiểm tra.</span>
+                                        </div>
+                                    </a>
+                                    {% endif %}  
+                                    {% if notice["Thư ký"]["Xin nghỉ không lương"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_5?mstquanly={{current_user.masothe}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-warning">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ không lương"]}} đơn xin nghỉ cần bạn kiểm tra.</span>
                                         </div>
                                     </a>
                                     {% endif %} 
-                                    {% if notice["Danh sách lỗi thẻ"] %}
+                                    {% if notice["Thư ký"]["Danh sách lỗi thẻ"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_2?chuyen={{notice["Line"]}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-info">
@@ -401,7 +461,7 @@
                                             </div>
                                         </div>
                                         <div>
-                                            <span class="font-weight-bold">Chuyền {{notice["Line"]}} của bạn có {{notice["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
+                                            <span class="font-weight-bold">Chuyền {{notice["Thư ký"]["Line"]}} của bạn có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
                                         </div>
                                     </a>
                                     {% endif %}                                             
@@ -411,6 +471,7 @@
                             </div>
                         </li>
                         {% endif %}
+
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"

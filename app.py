@@ -2,17 +2,31 @@
 
 from const import *
 
-# Cấu hình kết nối SQL Server
-params = urllib.parse.quote_plus(
-    "DRIVER={ODBC Driver 17 for SQL Server};"
-    "SERVER=172.16.60.100;"
-    "DATABASE=HR;"
-    "UID=huynguyen;"
-    "PWD=Namthuan@123;"
-)
-
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+
+if sys.argv[1] == "1":
+    # Cấu hình kết nối SQL Server
+    params = urllib.parse.quote_plus(
+                    "DRIVER={ODBC Driver 17 for SQL Server};"
+                    "SERVER=172.16.60.100;"
+                    "DATABASE=HR;"
+                    "UID=huynguyen;"
+                    "PWD=Namthuan@123;"
+                )
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+elif sys.argv[1] == "2":
+    # Cấu hình kết nối SQL Server
+    params = urllib.parse.quote_plus(
+                "DRIVER={ODBC Driver 17 for SQL Server};"
+                "SERVER=DESKTOP-G635SF6;"
+                "DATABASE=HR;"
+                "Trusted_Connection=yes;"
+            )
+    app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+    
+else:
+    sys.exit()
+    
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
 
@@ -59,10 +73,10 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         cursor.execute(query)
         conn.commit()
         conn.close()
-        flash("Đổi mật khẩu thành công !!!")
+        print("Đổi mật khẩu thành công !!!")
         return True        
     except Exception as e:
-        flash(f"Doi mat khau that bai {e} !!!")
+        print(f"Doi mat khau that bai {e} !!!")
         print(e)
         return False
 
@@ -102,7 +116,7 @@ def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,
         cursor.execute(query)
         conn.commit()
         conn.close()
-        flash("Cập nhật trạng thái ứng viên thành công !!!")
+        print("Cập nhật trạng thái ứng viên thành công !!!")
         return True
     except Exception as e:
         print(f"Cap nhat trang thai ung vien that bai {e} !!!")
@@ -1716,10 +1730,10 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
-                flash("Đổi ca thành công", "success")
+                print("Đổi ca thành công", "success")
                 return True
             else:
-                flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
+                print("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
         else:
             print("Khong co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
@@ -1735,7 +1749,7 @@ def themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             cursor.execute(query)
             conn.commit()
             conn.close()
-            flash("Đổi ca thành công", "success")
+            print("Đổi ca thành công", "success")
             return True
     except Exception as e:
         print(e)   
@@ -2062,7 +2076,7 @@ def laydanhsachkpidaduyet(mst,macongty):
         conn.close()
         return rows
     except Exception as e:
-        app.logger.inerrorfo(e)
+        print
         return []
       
 def roles_required(*roles):
