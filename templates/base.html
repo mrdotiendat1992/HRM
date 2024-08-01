@@ -291,39 +291,39 @@
                     <div class="btn-group dropright">
                         <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                             <i class="far fa-bell fa-fw"></i>
-                            <span class="badge badge-danger badge-counter">{{ notice['personal']['Tổng'] }}</span>
+                            <span class="badge badge-danger badge-counter">{{ notice['personal']['Lỗi chấm công'] }}</span>
                         </button>
                         <div class="dropdown-menu">
                             <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_2?mst={{current_user.masothe}}">Lỗi chấm công <span class="badge badge-warning badge-counter">{{ notice['personal']["Lỗi chấm công"] }}</span></a> 
+                                <a class="dropdown-item" href="/muc7_1_2?mst={{current_user.masothe}}">Lỗi chấm công <span class="badge badge-danger badge-counter">{{ notice['personal']["Lỗi chấm công"] }}</span></a> 
                             </div>
                             <div class="dropdown-divider"></div>
                                 <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_3?mst={{current_user.masothe}}">Điểm danh bù <span class="badge badge-danger badge-counter">{{ notice['personal']["Điểm danh bù"]['Tổng'] }}</span></a> 
-                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Điểm danh bù"]["Chưa kiểm tra"] }}</a>
-                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Điểm danh bù"]["Đã kiểm tra"] }}</a>
+                                <a class="dropdown-item" href="/muc7_1_3?mst={{current_user.masothe}}">Điểm danh bù <span class="badge badge-primary badge-counter">{{ notice['personal']["Điểm danh bù"]['Tổng'] }}</span></a> 
+                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: <span class="badge badge-danger badge-counter">{{ notice['personal']["Điểm danh bù"]["Chưa kiểm tra"] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: <span class="badge badge-warning badge-counter">{{ notice['personal']["Điểm danh bù"]["Đã kiểm tra"] }}</span></a>
                                 <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{ notice['personal']["Điểm danh bù"]["Đã phê duyệt"] }}</a>
                                 <a class="dropdown-item small" href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{ notice['personal']["Điểm danh bù"]["Bị từ chối"] }}</a>
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_4?mst={{current_user.masothe}}">Xin nghỉ phép <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ phép"]['Tổng'] }}</span></a>
-                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Xin nghỉ phép"]["Chưa kiểm tra"] }} </a>
-                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Xin nghỉ phép"]["Đã kiểm tra"] }}</a>
+                                <a class="dropdown-item" href="/muc7_1_4?mst={{current_user.masothe}}">Xin nghỉ phép <span class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ phép"]['Tổng'] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Chưa kiểm tra"] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: <span class="badge badge-warning badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Đã kiểm tra"] }}</span></a>
                                 <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{ notice['personal']["Xin nghỉ phép"]["Đã phê duyệt"] }}</a>
                                 <a class="dropdown-item small" href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{ notice['personal']["Xin nghỉ phép"]["Bị từ chối"] }}</a>
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_5?mst={{current_user.masothe}}">Xin nghỉ không lương</a>
-                                <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: {{ notice['personal']["Xin nghỉ không lương"]["Chưa kiểm tra"] }}</a>
-                                <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: {{ notice['personal']["Xin nghỉ không lương"]["Đã kiểm tra"] }}</a>
+                                <a class="dropdown-item" href="/muc7_1_5?mst={{current_user.masothe}}">Xin nghỉ không lương <span class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ không lương"]['Tổng'] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra: <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ không lương"]["Chưa kiểm tra"] }}</span></a>
+                                <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra: <span class="badge badge-warning badge-counter">{{ notice['personal']["Xin nghỉ không lương"]["Đã kiểm tra"] }}</span></a>
                                 <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt: {{ notice['personal']["Xin nghỉ không lương"]["Đã phê duyệt"] }}</a>
                                 <a class="dropdown-item small" href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{ notice['personal']["Xin nghỉ không lương"]["Bị từ chối"] }}</a>
                             </div>
                             <div class="dropdown-divider"></div>
                             <div class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="/muc7_1_6?mst={{current_user.masothe}}">Xin nghỉ khác</a>
+                                <a class="dropdown-item dropdown-toggle" href="/muc7_1_6?mst={{current_user.masothe}}">Xin nghỉ khác <span class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ khác"]['Tổng'] }}</span></a>
                             </div>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
@@ -461,7 +461,11 @@
                                             </div>
                                         </div>
                                         <div>
+                                            {% if not notice["Thư ký"]["Line"] %}
+                                            <span class="font-weight-bold">Các chuyền bạn quản lý có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
+                                            {% else %}
                                             <span class="font-weight-bold">Chuyền {{notice["Thư ký"]["Line"]}} của bạn có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
+                                            {% endif %}
                                         </div>
                                     </a>
                                     {% endif %}                                             

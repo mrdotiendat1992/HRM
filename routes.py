@@ -60,14 +60,19 @@ def run_before_every_request():
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
             # print(f"Thuky: {row}")
             if row[0]>0:
-                chuyen, capbac = lay_chuyen_va_capbac(current_user.macongty, current_user.masothe)
                 cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
-                query_kiemtra_loithe = ("select count(*) from Danh_sach_loi_the where Chuyen_to = ''")
-                for chuyen in cac_chuyen_thuky_quanly:
-                    query_kiemtra_loithe += f"OR Chuyen_to = '{chuyen}'"
-                print(query_kiemtra_loithe)
+                query_kiemtra_loithe = f"""SELECT  COUNT(*)
+                    FROM 
+                        Danh_sach_loi_the_3
+                    INNER JOIN 
+                        Phan_quyen_thu_ky
+                    ON
+                        Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
+                    WHERE 
+                        Phan_quyen_thu_ky.MST='{current_user.masothe}' and Trang_thai is null """
+                # print(query_kiemtra_loithe)
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
-                print(f"Loi the: {soluong_loithe}")
+                # print(f"Loi the: {soluong_loithe}")
                 thuky_soluong_diemdanhbu = cursor.execute(f"""
                 SELECT 
                     COUNT(*) as row_count 
@@ -105,7 +110,7 @@ def run_before_every_request():
                                     "Điểm danh bù":thuky_soluong_diemdanhbu,
                                     "Xin nghỉ phép": thuky_soluong_xinnghiphep,
                                     "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
-                                    "Lines":cac_chuyen_thuky_quanly,
+                                    "Line":cac_chuyen_thuky_quanly[0] if len(cac_chuyen_thuky_quanly)==1 else "",
                                     "Số thông báo":soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
             else:
                 g.notice["Thư ký"]={}
@@ -166,6 +171,13 @@ def run_before_every_request():
                                                     "Đã phê duyệt": so_don_xinnghikhongluong_dapheduyet,
                                                     "Tổng": so_don_xinnghikhongluong,
                                                     "Bị từ chối": so_don_xinnghikhongluong_bituchoi,
+                                                },
+                                  "Xin nghỉ khác":{
+                                                    "Chưa kiểm tra":0,
+                                                    "Đã kiểm tra": 0,
+                                                    "Đã phê duyệt": 0,
+                                                    "Tổng": 0,
+                                                    "Bị từ chối": 0,
                                                 },
                                   "Tổng":so_don,
                                   "Lỗi chấm công": so_lan_loi_cham_cong
