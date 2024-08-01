@@ -57,53 +57,57 @@ def run_before_every_request():
                     }
             else:
                 g.notice["Quản lý"]={}
-                row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
-                print(f"Thuky: {row}")
-                if row[0]>0:
-                    chuyen, capbac = lay_chuyen_va_capbac(current_user.macongty, current_user.masothe)
-                    soluong_loithe = cursor.execute(f"select count(*) from Danh_sach_loi_the where Chuyen_to = '{chuyen}'").fetchone()[0]
-                    print(f"Loi the: {soluong_loithe}")
-                    thuky_soluong_diemdanhbu = cursor.execute(f"""
+            row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
+            print(f"Thuky: {row}")
+            if row[0]>0:
+                chuyen, capbac = lay_chuyen_va_capbac(current_user.macongty, current_user.masothe)
+                cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
+                query_kiemtra_loithe = ("select count(*) from Danh_sach_loi_the where Chuyen_to = ''")
+                for chuyen in cac_chuyen_thuky_quanly:
+                    query_kiemtra_loithe += f"OR Chuyen_to = '{chuyen}'"
+                soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
+                print(f"Loi the: {soluong_loithe}")
+                thuky_soluong_diemdanhbu = cursor.execute(f"""
+                SELECT 
+                    COUNT(*) as row_count 
+                FROM 
+                    Phan_quyen_thu_ky 
+                INNER JOIN 
+                    Diem_danh_bu
+                ON
+                    Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                WHERE 
+                    Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                thuky_soluong_xinnghiphep = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
                         Phan_quyen_thu_ky 
                     INNER JOIN 
-                        Diem_danh_bu
+                        Xin_nghi_phep
                     ON
-                        Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                        Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
-                        Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
-                    thuky_soluong_xinnghiphep = cursor.execute(f"""
-                        SELECT 
-                            COUNT(*) as row_count 
-                        FROM 
-                            Phan_quyen_thu_ky 
-                        INNER JOIN 
-                            Xin_nghi_phep
-                        ON
-                            Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
-                        WHERE 
-                            Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
-                    thuky_soluong_xinnghikhongluong = cursor.execute(f"""
-                        SELECT 
-                            COUNT(*) as row_count 
-                        FROM 
-                            Phan_quyen_thu_ky 
-                        INNER JOIN 
-                            Xin_nghi_khong_luong
-                        ON
-                            Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
-                        WHERE 
-                            Xin_nghi_khong_luong.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
-                    g.notice["Thư ký"]={"Danh sách lỗi thẻ":soluong_loithe,
-                                        "Điểm danh bù":thuky_soluong_diemdanhbu,
-                                        "Xin nghỉ phép": thuky_soluong_xinnghiphep,
-                                        "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
-                                        "Line":chuyen,
-                                        "Số thông báo":soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
-                else:
-                    g.notice["Thư ký"]={}
+                        Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                thuky_soluong_xinnghikhongluong = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        Phan_quyen_thu_ky 
+                    INNER JOIN 
+                        Xin_nghi_khong_luong
+                    ON
+                        Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                    WHERE 
+                        Xin_nghi_khong_luong.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                g.notice["Thư ký"]={"Danh sách lỗi thẻ":soluong_loithe,
+                                    "Điểm danh bù":thuky_soluong_diemdanhbu,
+                                    "Xin nghỉ phép": thuky_soluong_xinnghiphep,
+                                    "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
+                                    "Lines":cac_chuyen_thuky_quanly,
+                                    "Số thông báo":soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
+            else:
+                g.notice["Thư ký"]={}
             so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_diemdanhbu_dakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
@@ -139,7 +143,7 @@ def run_before_every_request():
             
             so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong
             so_lan_loi_cham_cong = cursor.execute(f"""select count(*) from Danh_sach_loi_the_3 
-                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]           
             
             g.notice["personal"]={"Điểm danh bù":{
                                                     "Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra,
@@ -1398,11 +1402,12 @@ def khaibaochamcong():
 @app.route("/muc7_1_2", methods=["GET","POST"])
 @login_required
 def loichamcong():
+    mstthuky = request.args.get("mstthuky")
     mst = request.args.get("mst")
     chuyen = request.args.get("chuyen")
     bophan = request.args.get("bophan")
     ngay = request.args.get("ngay")
-    danhsach = laydanhsachloithe(mst,chuyen,bophan,ngay)
+    danhsach = laydanhsachloithe(mst,chuyen,bophan,ngay,mstthuky)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -1420,6 +1425,7 @@ def loichamcong():
 @app.route("/muc7_1_3", methods=["GET"])
 @login_required
 def diemdanhbu():
+    mstthuky = request.args.get("mstthuky")
     mstquanly = request.args.get("mstquanly")
     mst = request.args.get("mst")
     hoten = request.args.get("hoten")
@@ -1432,7 +1438,7 @@ def diemdanhbu():
     trangthai = request.args.get("trangthai")
     danh_sach_chuyen = laydanhsachchuyen()
     danh_sach_bophan = laydanhsachbophan()
-    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly)
+    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly,mstthuky)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -1452,6 +1458,7 @@ def diemdanhbu():
 @app.route("/muc7_1_4", methods=["GET"])
 @login_required
 def xinnghiphep():
+    mstthuky = request.args.get("mstthuky")
     mstquanly = request.args.get("mstquanly")
     mst = request.args.get("mst")
     hoten = request.args.get("hoten")
@@ -1461,7 +1468,7 @@ def xinnghiphep():
     ngay = request.args.get("ngaynghi")
     lydo = request.args.get("lydo")
     trangthai = request.args.get("trangthai")
-    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
     count = len(danhsach)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -1480,6 +1487,7 @@ def xinnghiphep():
 @login_required
 def xinnghikhongluong():
     if request.method == 'GET':
+        mstthuky = request.args.get("mstthuky")
         mstquanly = request.args.get("mstquanly")
         mst = request.args.get("mst")
         hoten = request.args.get("hoten")
@@ -1489,7 +1497,7 @@ def xinnghikhongluong():
         ngay = request.args.get("ngaynghi")
         lydo = request.args.get("lydo")
         trangthai = request.args.get("trangthai")
-        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2461,7 +2469,7 @@ def quanlypheduyetdiemdanhbu():
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
             if mstdiemdanh==mstduyet:
-                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
                 return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
@@ -2530,7 +2538,7 @@ def quanlypheduyetxinnghiphep():
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
             if mstxinnghiphep==mstduyet:
-                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
                 return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
@@ -2602,7 +2610,7 @@ def quanlypheduyetnghikhongluong():
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
             if mstxinnghikhongluong==mstduyet:
-                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ thư ký !!!")
+                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
                 return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    

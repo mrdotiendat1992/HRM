@@ -418,7 +418,7 @@
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
                                     {% if notice["Thư ký"]["Điểm danh bù"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?chuyen={{g.notice["Thư ký"]["Line"]}}&trangthai=Chờ+kiểm+tra">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?mstthuky={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-primary">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -430,7 +430,7 @@
                                     </a>
                                     {% endif %}  
                                     {% if notice["Thư ký"]["Xin nghỉ phép"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_4?mstquanly={{current_user.masothe}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_4?mstthuky={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-success">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -442,7 +442,7 @@
                                     </a>
                                     {% endif %}  
                                     {% if notice["Thư ký"]["Xin nghỉ không lương"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_5?mstquanly={{current_user.masothe}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_5?mstthuky={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-warning">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -454,7 +454,7 @@
                                     </a>
                                     {% endif %} 
                                     {% if notice["Thư ký"]["Danh sách lỗi thẻ"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_2?chuyen={{notice["Line"]}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_2?mstthuky={{current_user.masothe}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-info">
                                                 <i class="fas fa-file-alt text-white"></i>
