@@ -208,6 +208,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                     </form>
@@ -224,6 +226,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
                                     </form>
                                 </div>
@@ -244,6 +248,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                                     </form>
                                     <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
@@ -259,6 +265,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                                     </form>
                                 </div>

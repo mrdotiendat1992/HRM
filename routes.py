@@ -14,7 +14,7 @@ def run_before_every_request():
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
-            # print(f"Quanly: {row}")
+            g.notice["Tổng"] = 0
             if row[0]>0:
                 quanly_soluong_diemdanhbu = cursor.execute(f"""
                     SELECT 
@@ -55,6 +55,7 @@ def run_before_every_request():
                     "Xin nghỉ không lương": quanly_soluong_xinnghikhongluong,
                     "Số thông báo": quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong
                     }
+                g.notice["Tổng"] = g.notice["Tổng"] + quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong
             else:
                 g.notice["Quản lý"]={}
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
@@ -112,8 +113,10 @@ def run_before_every_request():
                                     "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
                                     "Line":cac_chuyen_thuky_quanly[0] if len(cac_chuyen_thuky_quanly)==1 else "",
                                     "Số thông báo":soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
+                g.notice["Tổng"] = g.notice["Tổng"] + soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong
             else:
                 g.notice["Thư ký"]={}
+            
             so_don_diemdanhbu_chuakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
                                                            where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             so_don_diemdanhbu_dakiemtra = cursor.execute(f"""select count(*) from Diem_danh_bu 
@@ -2442,24 +2445,29 @@ def thukykiemtradiemdanhbu():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if thuky_duoc_phanquyen(mstduyet,chuyen):
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_diemdanhbu(id)
-                    print(f"Thư ký {current_user.hoten} đã kiểm tra phiếu điểm danh bù số {id} !!!")
-                    return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+                    flash(f"Thư ký {current_user.hoten} đã kiểm tra phiếu điểm danh bù số {id} !!!")
                 else:
                     thuky_tuchoi_diemdanhbu(id)
-                    print(f"Thư ký {current_user.hoten} đã từ chối điểm danh bù phiếu số {id}  !!!")
-                    return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+                    flash(f"Thư ký {current_user.hoten} đã từ chối điểm danh bù phiếu số {id}  !!!")
             else:
-                print(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
-            return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+                flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
         except Exception as e:
-            print(f"Lỗi thư ký điểm danh bù: {e}")
-            return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            flash(f"Lỗi thư ký điểm danh bù: {e}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            else:
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         
 @app.route("/quanly_pheduyet_diemdanhbu", methods=["POST"])
 def quanlypheduyetdiemdanhbu():
@@ -2479,9 +2487,10 @@ def quanlypheduyetdiemdanhbu():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             if mstdiemdanh==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
-                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_diemdanhbu(id)
@@ -2491,10 +2500,15 @@ def quanlypheduyetdiemdanhbu():
                     print(f"Quản lý {current_user.hoten} đã từ chối điểm danh bù cho phiếu số {id}  !!!")
             else:
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
-            return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt điểm danh bù: {e}")
-            return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            else:  
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
 
 @app.route("/thuky_kiemtra_xinnghiphep", methods=["POST"])
 def thukykiemtraxinnghiphep():
@@ -2512,6 +2526,8 @@ def thukykiemtraxinnghiphep():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             # if mstxinnghiphep==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
@@ -2519,18 +2535,22 @@ def thukykiemtraxinnghiphep():
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghiphep(id)
                     print(f"Thư ký {current_user.hoten} đã kiểm tra phiếu xin nghỉ phép số {id} !!!")
-                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
                 else:
                     thuky_tuchoi_xinnghiphep(id)
                     print(f"Thư ký {current_user.hoten} từ chối phiếu nghỉ phép số {id} !!!")
-                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             else:
                 print(f"{current_user.hoten} không có quyền kiểm tra !!!")
-            return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
         except Exception as e:
             print(f"Lỗi thư ký kiểm tra xin nghỉ phép: {e}")
             return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
-        
+        if mst_quanly:
+            return redirect(f"/muc7_1_4?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_4?mst_thuky={mst_thuky}")
+            else:  
+                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
+
 @app.route("/quanly_pheduyet_xinnghiphep", methods=["POST"])
 def quanlypheduyetxinnghiphep():
     if request.method == "POST":
@@ -2548,24 +2568,28 @@ def quanlypheduyetxinnghiphep():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             if mstxinnghiphep==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
-                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghiphep(id)
                     print(f"Quản lý {current_user.hoten} đã hê duyệt cho phiếu xin nghỉ phép số {id} !!!")
-                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
                 else:
                     quanly_tuchoi_xinnghiphep(id)
                     print(f"Quản lý {current_user.hoten} từ chối hê duyệt phiếu xin nghỉ phép số {id}  !!!")
-                    return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
             else:
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
-            return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ phép: {e}")
-            return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_4?mst_thuky={mst_thuky}")
+            else:  
+                return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
         
 @app.route("/thuky_kiemtra_xinnghikhongluong", methods=["POST"])
 def thukykiemtraxinnghikhongluong():
@@ -2584,6 +2608,8 @@ def thukykiemtraxinnghikhongluong():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             # if mstxinnghikhongluong==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -2591,17 +2617,20 @@ def thukykiemtraxinnghikhongluong():
                 if kiemtra == "Kiểm tra":    
                     thuky_dakiemtra_xinnghikhongluong(id)
                     print(f"Thư ký {current_user.hoten} đã kiểm tra cho phiếu xin nghỉ không lương số {id} !!!")
-                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
                 else:
                     thuky_tuchoi_xinnghikhongluong(id)
                     print(f"Thư ký {current_user.hoten} từ chối kiểm tra phiếu xin nghỉ không lương số {id}  !!!")
-                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             else:
                 print(f"{current_user.hoten} không có quyền kiểm tra !!!")
-            return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         except Exception as e:
             print(f"Lỗi thư ký kiểm tra xin nghỉ không lương: {e}")
-            return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_5?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_5?mst_thuky={mst_thuky}")
+            else:
+                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         
 @app.route("/quanly_pheduyet_xinnghikhongluong", methods=["POST"])
 def quanlypheduyetnghikhongluong():
@@ -2620,24 +2649,28 @@ def quanlypheduyetnghikhongluong():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
             if mstxinnghikhongluong==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
-                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
                     quanly_pheduyet_xinnghikhongluong(id)
                     print(f"Quản lý {current_user.hoten} đã phê duyệt cho phiếu xin nghỉ không lương số {id} !!!")
-                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
                 else:
                     quanly_tuchoi_xinnghikhongluong(id)
                     print(f"Quản lý {current_user.hoten} ttừ chối phê duyệt phiếu xin nghỉ không lương số {id}  !!!")
-                    return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
             else:
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
-            return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ không lương: {e}")
-            return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_5?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_5?mst_thuky={mst_thuky}")
+            else:   
+                return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
   
 @app.route("/taifilemaukp", methods=["GET"])
 def taifilemaukp():

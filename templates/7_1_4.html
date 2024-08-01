@@ -107,7 +107,8 @@
                 <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                 <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                 <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
@@ -203,6 +204,8 @@
                                         <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                     </form>
                                     <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
@@ -216,6 +219,8 @@
                                         <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
                                     </form>
                                 </div>
@@ -234,6 +239,8 @@
                                         <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                                     </form>
                                     <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
@@ -247,6 +254,8 @@
                                         <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                                         <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                                     </form>
                                 </div>

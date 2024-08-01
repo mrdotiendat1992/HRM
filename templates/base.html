@@ -339,7 +339,7 @@
                     <ul class="navbar-nav ml-auto">
                                                     
                         <div class="topbar-divider d-none d-sm-block"></div>
-                        {% if notice["Quản lý"] %}
+                        
                         
                         <!-- Nav Item - Alerts -->
                         <li class="nav-item dropdown no-arrow mx-1">
@@ -347,7 +347,7 @@
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fas fa-bell fa-fw"></i>
                                 <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice["Quản lý"]['Số thông báo']}}</span>
+                                <span class="badge badge-danger badge-counter">{{notice["Tổng"]}}</span>
                             </a>
                             
                             <!-- Dropdown - Alerts -->
@@ -357,6 +357,7 @@
                                     Thông báo
                                 </h6>
                                 <a class="dropdown-item d-flex align-items-center" href="#">
+                                    {% if notice["Quản lý"] %}
                                     {% if notice["Quản lý"]["Điểm danh bù"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?mstquanly={{current_user.masothe}}">
                                         <div class="mr-3">
@@ -393,30 +394,9 @@
                                         </div>
                                     </a>
                                     {% endif %}                                       
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
-                            </div>
-                        </li>
-                        {% endif %}
+                                    {% endif %}
 
-                        {% if notice["Thư ký"] %}
-                        
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice["Thư ký"]['Số thông báo']}}</span>
-                            </a>
-                            
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Thông báo
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
+                                    {% if notice["Thư ký"] %}
                                     {% if notice["Thư ký"]["Điểm danh bù"] %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc7_1_3?mstthuky={{current_user.masothe}}">
                                         <div class="mr-3">
