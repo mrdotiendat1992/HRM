@@ -1287,11 +1287,11 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
             query = f"""
                     SELECT  *
                     FROM 
-                        Danh_sach_loi_the
+                        Danh_sach_loi_the_3
                     INNER JOIN 
                         Phan_quyen_thu_ky
                     ON
-                        Danh_sach_loi_the.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
+                        Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
                         Phan_quyen_thu_ky.MST='{mstthuky}' and Trang_thai is null """
         else:
