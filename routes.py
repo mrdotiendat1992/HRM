@@ -65,8 +65,9 @@ def run_before_every_request():
                 query_kiemtra_loithe = ("select count(*) from Danh_sach_loi_the where Chuyen_to = ''")
                 for chuyen in cac_chuyen_thuky_quanly:
                     query_kiemtra_loithe += f"OR Chuyen_to = '{chuyen}'"
+                print(query_kiemtra_loithe)
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
-                # print(f"Loi the: {soluong_loithe}")
+                print(f"Loi the: {soluong_loithe}")
                 thuky_soluong_diemdanhbu = cursor.execute(f"""
                 SELECT 
                     COUNT(*) as row_count 
@@ -2866,7 +2867,7 @@ def diemdanhbu_web():
                 else:
                     print(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
             if giora:
-                loaidiemdanh = "Điêm danh ra"
+                loaidiemdanh = "Điểm danh ra"
                 if them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giora,lydo,trangthai):
                     print(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
                 else:
