@@ -1628,13 +1628,11 @@ def dangkytangca():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        messages = get_printed_messages()
         return render_template("7_1_7.html", 
                                page="7.1.7 Đăng ký tăng ca",
                                danhsach=paginated_rows,
                                pagination=pagination,
-                               count=count,
-                               messages=messages
+                               count=count
                                )
     elif request.method == "POST":
         data = []
