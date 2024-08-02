@@ -100,6 +100,16 @@
                     <td class="date_en">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
+                    {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
+                    <td>Chờ kiểm tra</td>
+                    {% else %}
+                    <td>{{row[5]}}</td>
+                    {% endif %}
+                    {% if row[6] and row[6] == 'OK' %}
+                    <td>{{row[6]}}</td>
+                    {% else %}
+                    <td style="color: red;">Chưa</td>
+                    {% endif %}
                 </tr>  
                 {% endfor %}
             </tbody>

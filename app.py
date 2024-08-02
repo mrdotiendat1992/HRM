@@ -2547,7 +2547,7 @@ def them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,tra
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
+        query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'Chưa')"
         # print(query)
         cursor.execute(query)
         conn.commit()
