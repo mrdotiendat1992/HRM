@@ -305,10 +305,49 @@ def home():
             
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu,ghichu)      
         df = pd.DataFrame(users)
-        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công")        
-        return send_file(os.path.join(FOLDER_XUAT, f"danhsachnhanvien_{thoigian}.xlsx"), as_attachment=True)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Adjust column width and format the header row
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # Adjust column widths
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        # Save the modified workbook to the output BytesIO object
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        
+        # Generate the timestamp for the filename
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        
+        # Return the file to the client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
@@ -1168,49 +1207,98 @@ def baocaoytd():
 @login_required
 @roles_required('hr','sa','gd')
 def dieuchuyen():
-    
-    if request.method == "POST":
-        mst = request.form["mst"]
-        loaidieuchuyen = request.form["loaidieuchuyen"]
-        ngaydieuchuyen = request.form.get("ngaydieuchuyen")
-        ghichu = request.form.get("ghichu")
-        
-        vitricu = request.form.get("vitricu")
-        vitrimoi = request.form.get("vitrimoi")
-        
-        vitriencu = request.form.get("vitriencu")
-        vitrienmoi = request.form.get("vitrienmoi")
-        
-        chuyencu = request.form.get("chuyencu")
-        chuyenmoi = request.form.get("chuyenmoi")
-        
-        gradecodecu = request.form.get("gradecodecu")
-        gradecodemoi = request.form.get("gradecodemoi")
-        
-        sectioncodecu = request.form.get("sectioncodecu")
-        sectioncodemoi = request.form.get("sectioncodemoi")
-        
-        hccategorycu = request.form.get("hccategorycu")
-        hccategorymoi = request.form.get("hccategorymoi")
-        
-        departmentcu = request.form.get("departmentcu")
-        departmentmoi = request.form.get("departmentmoi")
-        
-        sectiondescriptioncu = request.form.get("sectiondescriptioncu")
-        sectiondescriptionmoi = request.form.get("sectiondescriptionmoi")
-        
-        employeetypecu = request.form.get("employeetypecu") 
-        employeetypemoi = request.form.get("employeetypemoi")
-        
-        positioncodecu = request.form.get("positioncodecu") 
-        positioncodemoi = request.form.get("positioncodemoi") 
-        
-        positioncodedescriptioncu = request.form.get("positioncodedescriptioncu") 
-        positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi") 
-        
-        if loaidieuchuyen == "Chuyển vị trí":
-            try:
-                dieuchuyennhansu(mst,
+    try:
+        if request.method == "POST":
+            mst = request.form["mst"]
+            loaidieuchuyen = request.form["loaidieuchuyen"]
+            ngaydieuchuyen = request.form.get("ngaydieuchuyen")
+            ghichu = request.form.get("ghichu")
+            
+            vitricu = request.form.get("vitricu")
+            vitrimoi = request.form.get("vitrimoi")
+            
+            vitriencu = request.form.get("vitriencu")
+            vitrienmoi = request.form.get("vitrienmoi")
+            
+            chuyencu = request.form.get("chuyencu")
+            chuyenmoi = request.form.get("chuyenmoi")
+            
+            gradecodecu = request.form.get("gradecodecu")
+            gradecodemoi = request.form.get("gradecodemoi")
+            
+            sectioncodecu = request.form.get("sectioncodecu")
+            sectioncodemoi = request.form.get("sectioncodemoi")
+            
+            hccategorycu = request.form.get("hccategorycu")
+            hccategorymoi = request.form.get("hccategorymoi")
+            
+            departmentcu = request.form.get("departmentcu")
+            departmentmoi = request.form.get("departmentmoi")
+            
+            sectiondescriptioncu = request.form.get("sectiondescriptioncu")
+            sectiondescriptionmoi = request.form.get("sectiondescriptionmoi")
+            
+            employeetypecu = request.form.get("employeetypecu") 
+            employeetypemoi = request.form.get("employeetypemoi")
+            
+            positioncodecu = request.form.get("positioncodecu") 
+            positioncodemoi = request.form.get("positioncodemoi") 
+            
+            positioncodedescriptioncu = request.form.get("positioncodedescriptioncu") 
+            positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi") 
+            
+            if loaidieuchuyen == "Chuyển vị trí":
+                try:
+                    dieuchuyennhansu(mst,
+                                    loaidieuchuyen,
+                                    vitricu,
+                                    vitrimoi,
+                                    chuyencu,
+                                    chuyenmoi,
+                                    gradecodecu,
+                                    gradecodemoi,
+                                    sectioncodecu,
+                                    sectioncodemoi,
+                                    hccategorycu,
+                                    hccategorymoi,
+                                    departmentcu,
+                                    departmentmoi,
+                                    sectiondescriptioncu,
+                                    sectiondescriptionmoi,
+                                    employeetypecu,
+                                    employeetypemoi,
+                                    positioncodedescriptioncu,
+                                    positioncodedescriptionmoi,
+                                    positioncodecu,
+                                    positioncodemoi,
+                                    vitriencu,
+                                    vitrienmoi,
+                                    ngaydieuchuyen,
+                                    ghichu
+                                    )
+                    print("Điều chuyển thành công !!!")
+                except Exception as e:
+                    print(e)
+                    print("Điều chuyển thất bại !!!")
+                    return redirect(f"/muc6_1")
+                
+            elif loaidieuchuyen == "Nghỉ việc":
+                try:
+                    dichuyennghiviec(mst,
+                        vitricu,
+                        chuyencu,
+                        gradecodecu,
+                        ngaydieuchuyen,
+                        ghichu
+                                )
+                    print("Điều chuyển thành công !!!")
+                except Exception as e:
+                    print(e)
+                    print("Điều chuyển thất bại !!!")
+                    return redirect(f"/muc6_1")
+            elif loaidieuchuyen=="Nghỉ thai sản":
+                try:
+                    dichuyennghithaisan(mst,
                                 loaidieuchuyen,
                                 vitricu,
                                 vitrimoi,
@@ -1237,96 +1325,48 @@ def dieuchuyen():
                                 ngaydieuchuyen,
                                 ghichu
                                 )
-                print("Điều chuyển thành công !!!")
-            except Exception as e:
-                print(e)
-                print("Điều chuyển thất bại !!!")
-                return redirect(f"/muc6_1")
-            
-        elif loaidieuchuyen == "Nghỉ việc":
-            try:
-                dichuyennghiviec(mst,
-                    vitricu,
-                    chuyencu,
-                    gradecodecu,
-                    ngaydieuchuyen,
-                    ghichu
-                            )
-                print("Điều chuyển thành công !!!")
-            except Exception as e:
-                print(e)
-                print("Điều chuyển thất bại !!!")
-                return redirect(f"/muc6_1")
-        elif loaidieuchuyen=="Nghỉ thai sản":
-            try:
-                dichuyennghithaisan(mst,
-                            loaidieuchuyen,
-                            vitricu,
-                            vitrimoi,
-                            chuyencu,
-                            chuyenmoi,
-                            gradecodecu,
-                            gradecodemoi,
-                            sectioncodecu,
-                            sectioncodemoi,
-                            hccategorycu,
-                            hccategorymoi,
-                            departmentcu,
-                            departmentmoi,
-                            sectiondescriptioncu,
-                            sectiondescriptionmoi,
-                            employeetypecu,
-                            employeetypemoi,
-                            positioncodedescriptioncu,
-                            positioncodedescriptionmoi,
-                            positioncodecu,
-                            positioncodemoi,
-                            vitriencu,
-                            vitrienmoi,
-                            ngaydieuchuyen,
-                            ghichu
-                            )
-                print("Điều chuyển thành công !!!")
-            except Exception as e:
-                print(e)
-                print("Điều chuyển thất bại !!!")
-                return redirect(f"/muc6_1")
-        elif loaidieuchuyen=="Thai sản đi làm lại":
-            try:
-                dichuyenthaisandilamlai(mst,
-                            loaidieuchuyen,
-                            vitricu,
-                            vitrimoi,
-                            chuyencu,
-                            chuyenmoi,
-                            gradecodecu,
-                            gradecodemoi,
-                            sectioncodecu,
-                            sectioncodemoi,
-                            hccategorycu,
-                            hccategorymoi,
-                            departmentcu,
-                            departmentmoi,
-                            sectiondescriptioncu,
-                            sectiondescriptionmoi,
-                            employeetypecu,
-                            employeetypemoi,
-                            positioncodedescriptioncu,
-                            positioncodedescriptionmoi,
-                            positioncodecu,
-                            positioncodemoi,
-                            vitriencu,
-                            vitrienmoi,
-                            ngaydieuchuyen,
-                            ghichu
-                            )
-                print("Điều chuyển thành công !!!")
-            except Exception as e:
-                print(e)
-                print("Điều chuyển thất bại !!!")
-                return redirect(f"/muc6_1")
-        return redirect(f"/muc6_1")
-    else:  
+                    print("Điều chuyển thành công !!!")
+                except Exception as e:
+                    print(e)
+                    print("Điều chuyển thất bại !!!")
+                    return redirect(f"/muc6_1")
+            elif loaidieuchuyen=="Thai sản đi làm lại":
+                try:
+                    dichuyenthaisandilamlai(mst,
+                                loaidieuchuyen,
+                                vitricu,
+                                vitrimoi,
+                                chuyencu,
+                                chuyenmoi,
+                                gradecodecu,
+                                gradecodemoi,
+                                sectioncodecu,
+                                sectioncodemoi,
+                                hccategorycu,
+                                hccategorymoi,
+                                departmentcu,
+                                departmentmoi,
+                                sectiondescriptioncu,
+                                sectiondescriptionmoi,
+                                employeetypecu,
+                                employeetypemoi,
+                                positioncodedescriptioncu,
+                                positioncodedescriptionmoi,
+                                positioncodecu,
+                                positioncodemoi,
+                                vitriencu,
+                                vitrienmoi,
+                                ngaydieuchuyen,
+                                ghichu
+                                )
+                    print("Điều chuyển thành công !!!")
+                except Exception as e:
+                    print(e)
+                    print("Điều chuyển thất bại !!!")
+                    return redirect(f"/muc6_1")
+            return redirect(f"/muc6_1")
+    except Exception as e:
+        print(e)
         cacvitri= laycacvitri()
         return render_template("6_1.html",
                             cacvitri=cacvitri,
@@ -1373,25 +1413,30 @@ def lichsucongtac():
 @roles_required('hr','sa','gd')
 def khaibaochamcong():
     if request.method == "GET":
-        mst = request.args.get("mst")
-        chuyen = request.args.get("chuyen") 
-        phongban = request.args.get("phongban") 
-        rows = laydanhsachcahientai(mst,chuyen,phongban)
-        count = len(rows)
-        current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
-        total = len(rows)
-        start = (current_page - 1) * per_page
-        end = start + per_page
-        paginated_rows = rows[start:end]
-        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        cacca = laycacca()
-        return render_template("7_1_1.html",
-                                page="7.1.1 Đổi ca làm việc",
-                                danhsach=paginated_rows,
-                                pagination=pagination,
-                                count=count,
-                                cacca=cacca)
+        try:
+            mst = request.args.get("mst")
+            chuyen = request.args.get("chuyen") 
+            phongban = request.args.get("phongban") 
+            rows = laydanhsachcahientai(mst,chuyen,phongban)
+            count = len(rows)
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(rows)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = rows[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            cacca = laycacca()
+            return render_template("7_1_1.html",
+                                    page="7.1.1 Đổi ca làm việc",
+                                    danhsach=paginated_rows,
+                                    pagination=pagination,
+                                    count=count,
+                                    cacca=cacca)
+        except:
+            return render_template("7_1_1.html",
+                                    page="7.1.1 Đổi ca làm việc",
+                                    danhsach=[])
     elif request.method == "POST":
         mst = request.form.get("mst")
         chuyen = request.form.get("chuyen") 

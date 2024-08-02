@@ -4,27 +4,30 @@ from const import *
 
 app = Flask(__name__)
 
-if sys.argv[1] == "1":
-    # Cấu hình kết nối SQL Server
-    params = urllib.parse.quote_plus(
+try:
+    if sys.argv[1] == "1":
+        # Cấu hình kết nối SQL Server
+        params = urllib.parse.quote_plus(
+                        "DRIVER={ODBC Driver 17 for SQL Server};"
+                        "SERVER=172.16.60.100;"
+                        "DATABASE=HR;"
+                        "UID=huynguyen;"
+                        "PWD=Namthuan@123;"
+                    )
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+    elif sys.argv[1] == "2":
+        # Cấu hình kết nối SQL Server
+        params = urllib.parse.quote_plus(
                     "DRIVER={ODBC Driver 17 for SQL Server};"
-                    "SERVER=172.16.60.100;"
+                    "SERVER=DESKTOP-G635SF6;"
                     "DATABASE=HR;"
-                    "UID=huynguyen;"
-                    "PWD=Namthuan@123;"
+                    "Trusted_Connection=yes;"
                 )
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
-elif sys.argv[1] == "2":
-    # Cấu hình kết nối SQL Server
-    params = urllib.parse.quote_plus(
-                "DRIVER={ODBC Driver 17 for SQL Server};"
-                "SERVER=DESKTOP-G635SF6;"
-                "DATABASE=HR;"
-                "Trusted_Connection=yes;"
-            )
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
-    
-else:
+        app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+        
+    else:
+        sys.exit()
+except:
     sys.exit()
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -2544,8 +2547,7 @@ def them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,tra
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        # query = f"insert into Xin_nghi_khong_luong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
-        
+        query = "INSERT INTO Xin_nghi_khac VALUES ()"
         # cursor.execute(query)
         # conn.commit()
         conn.close()
