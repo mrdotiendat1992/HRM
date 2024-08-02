@@ -34,6 +34,7 @@
     input {
         margin-left: 10px;
         font-size: 10px;
+        width: 50px;
     }
 </style>
 {% endblock style %}
@@ -89,6 +90,9 @@
                         {% else %}
                         <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()"></th>
                         {% endif %}
+
+                        <th>Trạng thái</th>
+                        <th>Nhận giấy tờ</th>
                     </tr>
                 </form>
             </thead>
