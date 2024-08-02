@@ -41,28 +41,13 @@
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <div class="row">
-            <div class="col">
-                <form action = "/taifilexinnghiphepkhacmau" method = "POST">
-                    <input type="submit" value="Tải file mẫu" class="btn btn-primary btn-sm"></input>
-                </form>
-            </div>
-            <div class="col">
-                <form action = "/muc7_1_6" method = "POST" enctype = "multipart/form-data">
-                    <input type="file" name="file">
-                    <input type="submit" value="Đăng ký" class="btn btn-primary btn-sm"></input>
-                    <br>    
-                </form>
-            </div>  
-        </div>  
-        <hr />
         <div style="display: flex; align-items: center;">
             <h5><b>Tổng: {{count}}</b></h5>
             <form method="POST" action="/export_dsxnk">
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
                 <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
+                <button type="submit" class="btn btn-success btn-sm">Xuất Excel"</button>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
         </div>
@@ -105,9 +90,11 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
-                    <td>Chờ kiểm tra</td>
+                    <td>Chờ kiểm tra <button class="btn btn-primary btn-sm">Kiểm tra</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
                     {% else %}
-                    <td>{{row[5]}}</td>
+                        {% if row[5] == 'Đã kiểm tra'  %}
+                            <td>Đã kiểm tra <button class="btn btn-primary btn-sm">Phê duyệt</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                        {% endif %}
                     {% endif %}
                     {% if row[6] and row[6] == 'OK' %}
                     <td>{{row[6]}}</td>
