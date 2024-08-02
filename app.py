@@ -2371,7 +2371,7 @@ def capnhat_stk(mst, stk, macongty):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        print(f"Cap nhat so tai khoan loi {e}")
         return False 
     
 def lay_thongtin_hopdong_theo_id(id):
@@ -2383,7 +2383,7 @@ def lay_thongtin_hopdong_theo_id(id):
         conn.close()
         return result
     except Exception as e:
-        print(f"Lay thong tin hop dong loi {e} !!!")
+        flash(f"Lay thong tin hop dong loi {e} !!!")
         return ()
     
 def timkiemchucdanh(tutimkiem):
@@ -2413,7 +2413,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi khi them hop dong: {e} !!!")
+        flash(f"Loi khi them hop dong co ngay ket thuc: {e} !!!")
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
@@ -2426,7 +2426,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             conn.close()
             return True
         except Exception as e:
-            print(f"Loi khi them hop dong: {e} !!!")   
+            flash(f"Loi khi them hop dong bo di ngay ket thuc: {e} !!!")   
             return False
     
 def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
@@ -2474,7 +2474,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
             print("Khong hieu loai hop dong")    
             return False
     except Exception as e:
-        print(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
+        flash(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False
     
 def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,
@@ -2494,7 +2494,7 @@ def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         conn.close()  
         return True
     except Exception as e:
-        print(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
+        flash(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False
     
 def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
@@ -2509,7 +2509,7 @@ def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,gio
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi khi them diem danh bu: {e} !!!")
+        flash(f"Loi khi them diem danh bu: {e} !!!")
         return False
     
 def them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangthai):
@@ -2524,7 +2524,7 @@ def them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangtha
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi khi them xin nghi phep: {e} !!!")
+        flash(f"Loi khi them xin nghi phep: {e} !!!")
         return False
     
 def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
@@ -2539,7 +2539,7 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi khi them xin nghi khong luong: {e} !!!")
+        flash(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
 
 def them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
@@ -2547,13 +2547,14 @@ def them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,tra
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = "INSERT INTO Xin_nghi_khac VALUES ()"
-        # cursor.execute(query)
-        # conn.commit()
+        query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
+        # print(query)
+        cursor.execute(query)
+        conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi khi them xin nghi khac: {e} !!!")
+        flash(f"Loi khi them xin nghi khac: {e} !!!")
         return False
 
 def lay_chuyen_va_capbac(macongty, mst):
