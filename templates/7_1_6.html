@@ -90,16 +90,17 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
-                    <td>Chờ kiểm tra <button class="btn btn-primary btn-sm">Kiểm tra</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
-                    {% else %}
-                        {% if row[5] == 'Đã kiểm tra'  %}
-                            <td>Đã kiểm tra <button class="btn btn-primary btn-sm">Phê duyệt</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                        <td>Chờ kiểm tra <button class="btn btn-primary btn-sm">Kiểm tra</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                        <td>Chưa nhận</td>
+                    {% elif row[5] == 'Đã kiểm tra'  %}
+                        <td>Đã kiểm tra <button class="btn btn-primary btn-sm">Phê duyệt</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                        <td>Chưa nhận</td>
+                    {% elif row[5] == 'Đã phê duyệt'  %}
+                        {% if row[6] == 'Đã nhận' %}
+                            <td>{{row[6]}}</td>
+                        {% else %}
+                            <td style="color: red;">Chưa nhận <button class="btn btn-primary btn-sm">Nhận</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
                         {% endif %}
-                    {% endif %}
-                    {% if row[6] == 'Đã nhận' %}
-                    <td>{{row[6]}}</td>
-                    {% else %}
-                    <td style="color: red;">Chưa nhận <button class="btn btn-primary btn-sm">Nhận</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
                     {% endif %}
                 </tr>  
                 {% endfor %}

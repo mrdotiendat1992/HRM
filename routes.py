@@ -883,7 +883,7 @@ def thaydoithongtinlaodong():
                 query += f"Position_code_description = NULL,"  
             
             if chucvu: 
-                query += f"Chuc_vu = '{chucvu}',"
+                query += f"Chuc_vu = N'{chucvu}',"
             else:
                 query += f"Chuc_vu = NULL," 
                 
