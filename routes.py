@@ -3091,12 +3091,13 @@ def taidanhsachdonxinnghiviec():
 
 @app.route("/capnhat_lichsu_congtac", methods=["POST"])
 def capnhat_lichsu_congtac():
+    
+    mst_filter = request.form.get("mst_filter")
+    mst = request.form.get("mst")
+    ngaythuchien = request.form.get("ngaythuchien")
+    phanloai = request.form.get("phanloai")
+    ghichumoi = request.form.get("ghichu")   
     try:
-        mst_filter = request.form.get("mst_filter")
-        mst = request.form.get("mst")
-        ngaythuchien = request.form.get("ngaythuchien")
-        phanloai = request.form.get("phanloai")
-        ghichumoi = request.form.get("ghichu")
         if capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
             print(f"Cap nhat Lich su cong tac mst={mst} thanh cong")
         else:
@@ -3104,3 +3105,19 @@ def capnhat_lichsu_congtac():
     except Exception as e:
         print(f"Loi khi cap nhat lich su cong tac ({e})")
     return redirect(f"/muc6_2?mst={mst_filter}")
+
+@app.route("/suadoi_dangky_ca", methods=["POST"])
+def suadoi_dangky_ca():
+    mst_filter = request.form.get("mst_filter")
+    chuyen_filter = request.form.get("chuyen_filter")
+    bophan_filter = request.form.get("bophan_filter")
+    id = request.form.get("id")
+    camoi = request.form.get("ca")
+    try:
+        if sua_dangky_ca(id,camoi):
+            print(f"Sua dang ký ca id = {id} thanh cong")
+        else:
+            print(f"Sua dang ký ca id = {id} that bai")
+    except Exception as e:
+        print(f"Loi khi cap nhat lich su cong tac ({e})")
+    return redirect(f"/muc7_1_1?mst={mst_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}")

@@ -46,6 +46,10 @@
     #excel {
         margin-left: 20px;
     }
+    input_ca {
+        border: none;
+        outline: none;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -237,21 +241,28 @@
                     <th>Họ tên</th>
                     <th>Chuyền</th>
                     <th>Phòng ban</th>
-                    <th>Ca hiện tại</th>
+                    <th>Ca</th>
                     <th>Đổi từ ngày</th>
                     <th>Đến ngày</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td>{{row[1]}}</td>
-                    <td>{{row[2]}}</td>
-                    <td>{{row[3]}}</td>
-                    <td>{{row[4]}}</td>
-                    <td>{{row[5]}}</td>
-                    <td class="date_en">{{row[6]}}</td>
-                    <td class="date_en">{{row[7]}}</td>
+                    <form action="/suadoi_dangky_ca" method="POST">
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
+                        <input type="hidden" name="chuyen_filter" value={{request.args.get('mst', '')}}></input>
+                        <input type="hidden" name="bophan_filter" value={{request.args.get('mst', '')}}></input>
+                        <input type="hidden" name="id" value={{row[8]}}></input>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td><input class="input_ca" name="ca" value={{row[5]}} onchange='this.form.submit()'></td>
+                        <td class="date_en">{{row[6]}}</td>
+                        <td class="date_en">{{row[7]}}</td>
+                    </form>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -2058,6 +2058,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             Dang_ky_ca_lam_viec.Ca,
             Dang_ky_ca_lam_viec.Tu_ngay,
             Dang_ky_ca_lam_viec.Den_ngay
+            Dang_ky_ca_lam_viec.ID
         FROM 
             Dang_ky_ca_lam_viec
         INNER JOIN 
@@ -2592,3 +2593,17 @@ def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
     except Exception as e:
         print(e)
         return False
+
+def sua_dangky_ca(id,camoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_ca_lam_viec set Ca = N'{camoi}' where ID ='{id}' "
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False   
