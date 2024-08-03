@@ -3099,3 +3099,4 @@ def capnhat_lichsu_congtac():
             print(f"Cap nhat Lich su cong tac ID={id} that bai")
     except Exception as e:
         print(f"Loi khi cap nhat lich su cong tac ({e})")
+    return redirect("/muc6_2")
