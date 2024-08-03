@@ -739,6 +739,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
                 "Phân loại": row[10],
                 "Ngày thực hiện": row[7],
                 "Ghi chú": row[11] if row[1] else '',
+                "ID": row[12]
             })
         conn.commit()
         conn.close()
@@ -2571,3 +2572,16 @@ def lay_chuyen_va_capbac(macongty, mst):
     except Exception as e:
         print(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
         return None
+    
+def capnhat_ghichu_lichsu_congtac(id,ghichumoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where ID='{id}'"
+        row = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False

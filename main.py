@@ -2,10 +2,6 @@ from routes import *
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print("Usage: python main.py <type_run>")
-        print("<type_run>:")
-        print("  1 - Chạy phần mềm với các thông số sản phẩm")
-        print("  2 - Chạy phần mềm với các thư viện")
         sys.exit(1)
 
     try:
@@ -13,6 +9,7 @@ if __name__ == "__main__":
         if type_run == "1":  # Chạy phần mềm với các thông số sản phẩm
             while True:
                 try:
+                    print("PRODUCT")
                     serve(app, host="0.0.0.0", port=81, _quiet=True, threads=8)
                 except subprocess.CalledProcessError as e:
                     print(f"Flask gặp lỗi: {e}")
@@ -25,6 +22,7 @@ if __name__ == "__main__":
                 else:
                     break
         elif type_run == "2":  # Chạy phần mềm với các thư viện
+            print("DEVELOPER")
             serve(app, host="0.0.0.0", port=81, _quiet=True, threads=8)
         else:
             print("Invalid type_run. Use 1 or 2.")

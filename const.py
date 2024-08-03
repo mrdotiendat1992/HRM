@@ -1,6 +1,17 @@
 from lib import *
 
-used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+if len(sys.argv) < 2:
+    sys.exit(1)
+try:
+    type_run = sys.argv[1]
+    if type_run == "1":  # Chạy phần mềm với các thông số sản phẩm
+        used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+    elif type_run == "2":  # Chạy phần mềm với các có tham số phát triển
+        used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
+    else:
+        sys.exit()
+except:
+    used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
 # mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
 
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat\nhap')

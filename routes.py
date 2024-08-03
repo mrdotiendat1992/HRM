@@ -187,8 +187,7 @@ def run_before_every_request():
                                                   }
             conn.close()
         # print(g.notice)
-    except Exception as e:
-        print(f"Loi khi tao thong bao {e}")      
+    except Exception as e:      
         g.notice={}
             
 @app.context_processor
@@ -1365,6 +1364,11 @@ def dieuchuyen():
                     print("Điều chuyển thất bại !!!")
                     return redirect(f"/muc6_1")
             return redirect(f"/muc6_1")
+        elif request.method == "GET":
+            cacvitri= laycacvitri()
+            return render_template("6_1.html",
+                            cacvitri=cacvitri,
+                            page="6.1 Điều chuyển chức vụ, bộ phận")
     except Exception as e:
         print(e)
         cacvitri= laycacvitri()
@@ -3083,3 +3087,15 @@ def taidanhsachdonxinnghiviec():
     response.headers['Content-Disposition'] = f'attachment; filename=danhsach_donxinghiviec_{time_stamp}.xlsx'
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response   
+
+@app.route("/capnhat_lichsu_congtac", methods=["POST"])
+def capnhat_lichsu_congtac():
+    try:
+        id = request.form.get("id")
+        ghichumoi = request.form.get("ghichu")
+        if capnhat_ghichu_lichsu_congtac(id,ghichumoi):
+            print(f"Cap nhat Lich su cong tac ID={id} thanh cong")
+        else:
+            print(f"Cap nhat Lich su cong tac ID={id} that bai")
+    except Exception as e:
+        print(f"Loi khi cap nhat lich su cong tac ({e})")
