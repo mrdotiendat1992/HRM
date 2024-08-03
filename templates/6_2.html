@@ -22,6 +22,10 @@ input, select, label {
     margin-left: 50px;
     margin-right: 50px;
 }
+.ghichumoi {
+    outline: none;
+    border: none;
+}
 </style>
 {% endblock style %}
 {% block content %}
@@ -81,7 +85,7 @@ input, select, label {
                     <td>{{row["Phòng ban mới"]}}</td>
                     <td>{{row["Phân loại"]}}</td>
                     <td class='date_en'>{{row["Ngày thực hiện"]}}</td>
-                    <td><input name="ghichu" value='{{row["Ghi chú"]}}'></input></td>
+                    <td><input class="ghichumoi" name="ghichu" value='{{row["Ghi chú"]}}'></input><button type="submit" class="btn btn-primary btn-sm">Lưu</button></td>
                 </form>
             </tr>
             {% endfor %}
