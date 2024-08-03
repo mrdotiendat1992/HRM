@@ -175,7 +175,7 @@ def dieuchuyennhansu(mst,
         camoi = laycatheochuyen(chuyenmoi)
         query3 = f"""
         UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
-        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{mst}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
+        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
         """
         print(query3)
         cursor.execute(query3)
