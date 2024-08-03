@@ -325,7 +325,7 @@ input[readonly] {
             if (newvalue != "") {
                 var datacccd = newvalue.split("|");
                 var datalength = datacccd.length;
-                if (datalength === 7) {
+                if (datalength >= 7) {
                     document.getElementById("cccd").value = datacccd[0];
                     document.getElementById("hoten").value = datacccd[2];
                     document.getElementById("cmt").value = datacccd[1];
@@ -351,6 +351,8 @@ input[readonly] {
                     document.getElementById("phuongxa").value = diachi_data[1];
                     document.getElementById("quanhuyen").value = diachi_data[2];
                     document.getElementById("tinhthanhpho").value = diachi_data[3];
+                } else {
+
                 }
                 document.getElementById("quoctich").value = "Việt Nam";
                 axios({

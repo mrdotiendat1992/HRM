@@ -31,6 +31,7 @@ input, select, label {
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
+    <button type="button" class="btn btn-primary btn-sm">Nhập điều chuyển hàng loạt</button>
     <form method="get">
         <div class="form-group">
             <input type="text" id="mst" name="mst" value='{{request.args.get('mst', '')}}' onchange="this.form.submit()" placeholder="Mã số thẻ">
