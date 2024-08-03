@@ -2057,7 +2057,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             Danh_sach_CBCNV.Department,
             Dang_ky_ca_lam_viec.Ca,
             Dang_ky_ca_lam_viec.Tu_ngay,
-            Dang_ky_ca_lam_viec.Den_ngay
+            Dang_ky_ca_lam_viec.Den_ngay,
             Dang_ky_ca_lam_viec.ID
         FROM 
             Dang_ky_ca_lam_viec
@@ -2075,7 +2075,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        # 
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
