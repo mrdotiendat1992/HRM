@@ -3091,9 +3091,11 @@ def taidanhsachdonxinnghiviec():
 @app.route("/capnhat_lichsu_congtac", methods=["POST"])
 def capnhat_lichsu_congtac():
     try:
-        id = request.form.get("id")
+        mst = request.form.get("mst")
+        ngaythuchien = request.form.get("ngaythuchien")
+        phanloai = request.form.get("phanloai")
         ghichumoi = request.form.get("ghichu")
-        if capnhat_ghichu_lichsu_congtac(id,ghichumoi):
+        if capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
             print(f"Cap nhat Lich su cong tac ID={id} thanh cong")
         else:
             print(f"Cap nhat Lich su cong tac ID={id} that bai")

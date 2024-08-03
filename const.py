@@ -12,7 +12,6 @@ try:
         sys.exit()
 except:
     used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
-# mccdb = r"Driver={SQL Server}; Server=10.0.0.252\SQLEXPRESS; Database=MITACOSQL; UID=sa;PWD=Namthuan1;"
 
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat\nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat\xuat')

@@ -2573,11 +2573,11 @@ def lay_chuyen_va_capbac(macongty, mst):
         print(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
         return None
     
-def capnhat_ghichu_lichsu_congtac(id,ghichumoi):
+def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where ID='{id}'"
+        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where MST='{mst}' and Ngay_thuc_hien='{ngaythuchien}' and Phan_loai='{phanloai}'"
         row = cursor.execute(query)
         conn.commit()
         conn.close()
