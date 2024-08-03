@@ -202,6 +202,7 @@ def dichuyennghiviec(mst,
                     vitricu,
                     chuyencu,
                     gradecodecu,
+                    hccategorycu,
                     ngaydieuchuyen,
                     ghichu
                    ):
@@ -210,7 +211,7 @@ def dichuyennghiviec(mst,
         cursor = conn.cursor()
         truocngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
-INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL)
+INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
 UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """
         # 

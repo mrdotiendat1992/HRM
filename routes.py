@@ -1287,6 +1287,7 @@ def dieuchuyen():
                         vitricu,
                         chuyencu,
                         gradecodecu,
+                        hccategorycu,
                         ngaydieuchuyen,
                         ghichu
                                 )
