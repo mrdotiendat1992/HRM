@@ -2575,10 +2575,16 @@ def lay_chuyen_va_capbac(macongty, mst):
     
 def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
     try:
+        
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where MST='{mst}' and Ngay_thuc_hien='{ngaythuchien}' and Phan_loai='{phanloai}'"
-        row = cursor.execute(query)
+        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where MST='{mst}' and Phan_loai='{phanloai}' "
+        if ngaythuchien == 'None':
+            query+= "and Ngay_thuc_hien is null "
+        else:
+            query+= f"and Ngay_thuc_hien = '{ngaythuchien}'"
+        print(query)
+        cursor.execute(query)
         conn.commit()
         conn.close()
         return True
