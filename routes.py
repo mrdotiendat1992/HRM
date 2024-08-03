@@ -3091,6 +3091,7 @@ def taidanhsachdonxinnghiviec():
 @app.route("/capnhat_lichsu_congtac", methods=["POST"])
 def capnhat_lichsu_congtac():
     try:
+        mst_filter = request.form.get("mst_filter")
         mst = request.form.get("mst")
         ngaythuchien = request.form.get("ngaythuchien")
         phanloai = request.form.get("phanloai")
@@ -3101,4 +3102,4 @@ def capnhat_lichsu_congtac():
             print(f"Cap nhat Lich su cong tac mst={mst} that bai")
     except Exception as e:
         print(f"Loi khi cap nhat lich su cong tac ({e})")
-    return redirect("/muc6_2")
+    return redirect(f"/muc6_2?mst={mst_filter}")

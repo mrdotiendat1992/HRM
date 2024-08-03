@@ -73,6 +73,7 @@ input, select, label {
             {% for row in danhsach %}
             <tr data-info='{{ row  | safe }}'>
                 <form action='/capnhat_lichsu_congtac' method='POST'>
+                    <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
                     <input type="hidden" name="mst" value={{row["MST"]}}></input>
                     <input type="hidden" name="ngaythuchien" value={{row["Ngày thực hiện"]}}></input>
                     <input type="hidden" name="phanloai" value='{{row["Phân loại"]}}'></input>
