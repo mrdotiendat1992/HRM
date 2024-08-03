@@ -2578,7 +2578,7 @@ def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
         
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where MST='{mst}' and Phan_loai='{phanloai}' "
+        query = f"UPDATE Lich_su_Cong_tac set Ghi_chu = N'{ghichumoi}' where MST='{int(mst)}' and Phan_loai='{phanloai}' and Nha_may='{current_user.macongty}' "
         if ngaythuchien == 'None':
             query+= "and Ngay_thuc_hien is null "
         else:
