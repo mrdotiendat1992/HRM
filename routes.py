@@ -3096,9 +3096,9 @@ def capnhat_lichsu_congtac():
         phanloai = request.form.get("phanloai")
         ghichumoi = request.form.get("ghichu")
         if capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
-            print(f"Cap nhat Lich su cong tac ID={id} thanh cong")
+            print(f"Cap nhat Lich su cong tac mst={mst} thanh cong")
         else:
-            print(f"Cap nhat Lich su cong tac ID={id} that bai")
+            print(f"Cap nhat Lich su cong tac mst={mst} that bai")
     except Exception as e:
         print(f"Loi khi cap nhat lich su cong tac ({e})")
     return redirect("/muc6_2")
