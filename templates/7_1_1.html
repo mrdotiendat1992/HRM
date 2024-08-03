@@ -46,7 +46,7 @@
     #excel {
         margin-left: 20px;
     }
-    input_ca {
+    .input_ca {
         border: none;
         outline: none;
     }
@@ -252,8 +252,8 @@
                 <tr data-info='{{ row  | safe }}'>
                     <form action="/suadoi_dangky_ca" method="POST">
                         <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
-                        <input type="hidden" name="chuyen_filter" value={{request.args.get('mst', '')}}></input>
-                        <input type="hidden" name="bophan_filter" value={{request.args.get('mst', '')}}></input>
+                        <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
+                        <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
                         <input type="hidden" name="id" value={{row[8]}}></input>
                         <td>{{row[1]}}</td>
                         <td>{{row[2]}}</td>
