@@ -10,11 +10,10 @@ from app import *
 def run_before_every_request():
     try:
         if current_user.is_authenticated:
-            g.notice={"f12":f12}
+            g.notice={"f12":f12, "Tổng":0}
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
-            g.notice["Tổng"] = 0
             if row[0]>0:
                 quanly_soluong_diemdanhbu = cursor.execute(f"""
                     SELECT 
