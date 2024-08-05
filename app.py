@@ -18,13 +18,13 @@ params = urllib.parse.quote_plus(
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 
 # Cấu hình kết nối SQL Server
-params = urllib.parse.quote_plus(
-            "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=DESKTOP-G635SF6;"
-            "DATABASE=HR;"
-            "Trusted_Connection=yes;"
-        )
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+# params = urllib.parse.quote_plus(
+#             "DRIVER={ODBC Driver 17 for SQL Server};"
+#             "SERVER=DESKTOP-G635SF6;"
+#             "DATABASE=HR;"
+#             "Trusted_Connection=yes;"
+#         )
+# app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
