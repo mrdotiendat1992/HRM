@@ -3202,6 +3202,7 @@ def on_off_f12():
 @app.route("/dangky_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
+        chuyen = request.args.get("chuyen")
         danhsach = danhsach_tangca(chuyen)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
