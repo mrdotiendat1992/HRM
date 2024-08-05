@@ -1,17 +1,8 @@
 from lib import *
 
-if len(sys.argv) < 2:
-    sys.exit(1)
-try:
-    type_run = sys.argv[1]
-    if type_run == "1":  # Chạy phần mềm với các thông số sản phẩm
-        used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
-    elif type_run == "2":  # Chạy phần mềm với các có tham số phát triển
-        used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
-    else:
-        sys.exit()
-except:
-    used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
+used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+
+# used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
 
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat\nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat\xuat')

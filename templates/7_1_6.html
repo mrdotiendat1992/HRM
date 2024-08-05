@@ -90,7 +90,14 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
-                        <td>Chờ kiểm tra <button class="btn btn-primary btn-sm">Kiểm tra</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                        <td>Chờ kiểm tra 
+                            <form action="/thuky_kiemtra_xinnghikhac" method="POST">
+                                <input name="id" value="{{row[7]}}" hidden></input>
+                                <input name="mst" value="{{request.args.get('mst', '')}}" hidden></input>
+                                <input name="ngaynghi" value="{{request.args.get('ngaynghi', '')}}" hidden></input>
+                                <button class="btn btn-primary btn-sm">Kiểm tra</button> 
+                            </form>
+                            <button class="btn btn-danger btn-sm">Từ chối</button></td>
                         <td>Chưa nhận</td>
                     {% elif row[5] == 'Đã kiểm tra'  %}
                         <td>Đã kiểm tra <button class="btn btn-primary btn-sm">Phê duyệt</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>

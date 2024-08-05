@@ -10,7 +10,7 @@ from app import *
 def run_before_every_request():
     try:
         if current_user.is_authenticated:
-            g.notice={}
+            g.notice={"f12":f12}
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
@@ -186,7 +186,7 @@ def run_before_every_request():
                                   "Lỗi chấm công": so_lan_loi_cham_cong
                                                   }
             conn.close()
-        # print(g.notice)
+        print(g.notice["f12"])
     except Exception as e:      
         g.notice={}
             
@@ -1922,23 +1922,42 @@ def inchamduthopdong():
                 return redirect("/muc10_3")
         except Exception as e:
             print(e)
-            return redirect("/muc10_3")  
+            return redirect("/muc10_3") 
+        
+@app.route("/muc_12", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd','tk')
+def khong_kiem_xuong():
+    try:
+        if request.method=="GET":
+            return render_template("12.html")
+        else:
+            return "OK"
+    except Exception as e:
+        print(e)
+        return "NOT OK"
 
 #############################################
 #                "OTHER ENDPOINT"           #
 #############################################
 
-@app.route("/thaydoiphanquyen", methods=["POST"])
-def thaydoiphanquyen():
-    if request.method == "POST":
-        userid= request.form["id"]
-        newrole = request.form["newrole"]
-        user = Users.query.filter_by(id=userid).first()
-        if user:
-            user.role = newrole
-            db.session.commit()
-        return redirect("/admin")
+# @app.route("/thaydoiphanquyen", methods=["POST"])
+# def thaydoiphanquyen():
+#     if request.method == "POST":
+#         userid= request.form["id"]
+#         newrole = request.form["newrole"]
+#         user = Users.query.filter_by(id=userid).first()
+#         if user:
+#             user.role = newrole
+#             db.session.commit()
+#         return redirect("/admin")
     
+@app.route("/admin", methods=["GET"])
+@login_required
+@roles_required('sa')
+def admin_page():
+    return render_template("admin.html")
+
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
     if request.method == "POST":        
@@ -2721,7 +2740,84 @@ def quanlypheduyetnghikhongluong():
                 return redirect(f"/muc7_1_5?mst_thuky={mst_thuky}")
             else:   
                 return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
-  
+
+@app.route("/thuky_kiemtra_xinnghikhac", methods=["POST"])
+def thukykiemtraxinnghikhac():
+    if request.method == "POST":
+        try:
+            mst_filter = request.form["mst_filter"]
+            ngay_filter = request.form["ngay_filter"]
+            trangthai_filter = request.form["trangthai_filter"]
+            chuyen = request.form["chuyen"]
+            mstduyet = current_user.masothe
+            kiemtra = request.form["kiemtra"]
+            id = request.form["id"]
+            mstdiemdanh = request.form["mst_diemdanh"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
+            # if mstdiemdanh==mstduyet:
+            #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+            #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            if thuky_duoc_phanquyen(mstduyet,chuyen):
+                if kiemtra == "Kiểm tra":    
+                    thuky_dakiemtra_xinnghikhac(id)
+                    flash(f"Thư ký {current_user.hoten} đã kiểm tra phiếu xin nghỉ khác số {id} !!!")
+                else:
+                    thuky_tuchoi_xinnghikhac(id)
+                    flash(f"Thư ký {current_user.hoten} đã từ chối xin nghỉ khác phiếu số {id}  !!!")
+            else:
+                flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
+        except Exception as e:
+            flash(f"Lỗi thư ký xin nghỉ khác: {e}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            else:
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+        
+@app.route("/quanly_pheduyet_xinnghikhac", methods=["POST"])
+def quanlypheduyetxinnghikhac():
+    if request.method == "POST":
+        try:
+            mst_filter = request.form["mst_filter"]
+            hoten_filter = request.form["hoten_filter"]
+            chucvu_filter = request.form["chucvu_filter"]
+            chuyen_filter = request.form["chuyen_filter"]
+            bophan_filter = request.form["bophan_filter"]
+            loaidiemdanh_filter = request.form["loaidiemdanh_filter"]
+            ngay_filter = request.form["ngay_filter"]
+            lydo_filter = request.form["lydo_filter"]
+            trangthai_filter = request.form["trangthai_filter"]
+            chuyen = request.form["chuyen"]
+            mstduyet = current_user.masothe
+            pheduyet = request.form["pheduyet"]
+            id = request.form["id"]
+            mstdiemdanh = request.form["mst_diemdanh"]
+            mst_quanly = request.form.get("mst_quanly")
+            mst_thuky = request.form.get("mst_thuky")
+            if mstdiemdanh==mstduyet:
+                print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
+            if quanly_duoc_phanquyen(mstduyet,chuyen):
+                if pheduyet == "Phê duyệt":    
+                    quanly_pheduyet_xinnghikhac(id)
+                    print(f"Quản lý {current_user.hoten} đã phê duyệt xin nghỉ khác cho phiếu số {id} !!!")
+                else:
+                    quanly_tuchoi_xinnghikhac(id)
+                    print(f"Quản lý {current_user.hoten} đã từ chối xin nghỉ khác cho phiếu số {id}  !!!")
+            else:
+                print(f"{current_user.hoten} không có quyền phê duyệt !!!")
+        except Exception as e:
+            print(f"Lỗi quản lý phê duyệt xin nghỉ khác: {e}")
+        if mst_quanly:
+            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        else:
+            if mst_thuky:
+                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            else:  
+                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+ 
 @app.route("/taifilemaukp", methods=["GET"])
 def taifilemaukp():
     if request.method == "GET":
@@ -3121,3 +3217,17 @@ def suadoi_dangky_ca():
     except Exception as e:
         print(f"Loi khi cap nhat lich su cong tac ({e})")
     return redirect(f"/muc7_1_1?mst={mst_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}")
+
+@app.route("/bat_tat_12", methods=["POST"])
+def on_off_f12():
+    global f12
+    try:
+        if request.method == "POST":
+            if f12 == True:
+                f12 = False
+            else:
+                f12 = True
+    except Exception as e:
+        print(e)
+        f12 = False
+    return jsonify({"f12":f12})

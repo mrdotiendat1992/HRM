@@ -4,31 +4,27 @@ from const import *
 
 app = Flask(__name__)
 
-try:
-    if sys.argv[1] == "1":
-        # Cấu hình kết nối SQL Server
-        params = urllib.parse.quote_plus(
-                        "DRIVER={ODBC Driver 17 for SQL Server};"
-                        "SERVER=172.16.60.100;"
-                        "DATABASE=HR;"
-                        "UID=huynguyen;"
-                        "PWD=Namthuan@123;"
-                    )
-        app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
-    elif sys.argv[1] == "2":
-        # Cấu hình kết nối SQL Server
-        params = urllib.parse.quote_plus(
-                    "DRIVER={ODBC Driver 17 for SQL Server};"
-                    "SERVER=DESKTOP-G635SF6;"
-                    "DATABASE=HR;"
-                    "Trusted_Connection=yes;"
-                )
-        app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
-        
-    else:
-        sys.exit()
-except:
-    sys.exit()
+f12 = False
+    
+
+# Cấu hình kết nối SQL Server
+params = urllib.parse.quote_plus(
+                "DRIVER={ODBC Driver 17 for SQL Server};"
+                "SERVER=172.16.60.100;"
+                "DATABASE=HR;"
+                "UID=huynguyen;"
+                "PWD=Namthuan@123;"
+            )
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+
+# Cấu hình kết nối SQL Server
+params = urllib.parse.quote_plus(
+            "DRIVER={ODBC Driver 17 for SQL Server};"
+            "SERVER=DESKTOP-G635SF6;"
+            "DATABASE=HR;"
+            "Trusted_Connection=yes;"
+        )
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
@@ -1858,52 +1854,40 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
     except Exception as e:
         print(e)
 
-def themxinnghikhac(macongty,mst,ngaynghi,tongsophut,loainghi):
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"INSERT INTO [HR].[dbo].Xin_nghi_khac VALUES ('{macongty}','{mst}','{ngaynghi}','{tongsophut}',N'{loainghi}')"
-        
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
-    except Exception as e:
-        print(e)
+# def xoadulieuchamcong2ngay():
+#     try:
+#         conn = pyodbc.connect(used_db)
+#         cursor = conn.cursor()
+#         query = f"Delete from Check_in_out where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23) and Nha_may = 'NT1';"
+#         cursor.execute(query)
+#         conn.commit()
+#         conn.close()
+#         return True
+#     except Exception as e:
+#         print(e)
+#         return False
 
-def xoadulieuchamcong2ngay():
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"Delete from Check_in_out where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23) and Nha_may = 'NT1';"
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
-        return True
-    except Exception as e:
-        print(e)
-        return False
-
-def themdulieuchamcong2ngay():
-    try:
-        xoadulieuchamcong2ngay()
-        conn = pyodbc.connect(mccdb)
-        cursor = conn.cursor()
-        query = f"""
-	    select 'NT1',MaChamCong,NgayCham,GioCham,TenMay from checkinout 
-	    where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23)"""
-        rows = cursor.execute(query).fetchall()
-        conn.close()
-        conn1 = pyodbc.connect(used_db)
-        cursor1 = conn1.cursor()
-        query1 = "insert into Check_in_out(Nha_may,Machamcong,NgayCham,GioCham,TenMay) values(?,?,?,?,?)"
-        for row in rows:
-            cursor1.execute(query1, row)
-        conn1.commit()
-        conn1.close()
-        return True
-    except Exception as e:
-        print(e)
-        return False
+# def themdulieuchamcong2ngay():
+#     try:
+#         xoadulieuchamcong2ngay()
+#         conn = pyodbc.connect(mccdb)
+#         cursor = conn.cursor()
+#         query = f"""
+# 	    select 'NT1',MaChamCong,NgayCham,GioCham,TenMay from checkinout 
+# 	    where CONVERT(varchar, NgayCham, 23) >= CONVERT(varchar, DATEADD(DAY, -2, GETDATE()), 23)"""
+#         rows = cursor.execute(query).fetchall()
+#         conn.close()
+#         conn1 = pyodbc.connect(used_db)
+#         cursor1 = conn1.cursor()
+#         query1 = "insert into Check_in_out(Nha_may,Machamcong,NgayCham,GioCham,TenMay) values(?,?,?,?,?)"
+#         for row in rows:
+#             cursor1.execute(query1, row)
+#         conn1.commit()
+#         conn1.close()
+#         return True
+#     except Exception as e:
+#         print(e)
+#         return False
     
 def thuky_dakiemtra_diemdanhbu(id):
     try:
@@ -2038,6 +2022,64 @@ def quanly_tuchoi_xinnghikhongluong(id):
         cursor = conn.cursor()
         query = f"UPDATE HR.dbo.Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
         # 
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def thuky_dakiemtra_xinnghikhac(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khac SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def thuky_tuchoi_xinnghikhac(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khac SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def quanly_pheduyet_xinnghikhac(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khac SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+    
+def quanly_tuchoi_xinnghikhac(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_khac SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+    except Exception as e:
+        print(e)
+
+def thuky_dakiemtra_xinnghiphep(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE HR.dbo.Xin_nghi_phep SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = N'{id}'"
+        
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2607,3 +2649,4 @@ def sua_dangky_ca(id,camoi):
     except Exception as e:
         print(e)
         return False   
+    
