@@ -2744,16 +2744,12 @@ def quanlypheduyetnghikhongluong():
 def thukykiemtraxinnghikhac():
     if request.method == "POST":
         try:
-            mst_filter = request.form["mst_filter"]
-            ngay_filter = request.form["ngay_filter"]
-            trangthai_filter = request.form["trangthai_filter"]
-            chuyen = request.form["chuyen"]
+            mst = request.form.get("mst_xinnghikhac")
+            mst_filter = request.form.get("mst_filter")
+            chuyen = lay_chuyen_theo_mst(mst)
             mstduyet = current_user.masothe
-            kiemtra = request.form["kiemtra"]
+            kiemtra = request.form.get("kiemtra")
             id = request.form["id"]
-            mstdiemdanh = request.form["mst_diemdanh"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -2768,35 +2764,20 @@ def thukykiemtraxinnghikhac():
                 flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
         except Exception as e:
             flash(f"Lỗi thư ký xin nghỉ khác: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
-        else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
-            else:
-                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+        return redirect(f"/muc7_1_6?mst={mst_filter}")
         
 @app.route("/quanly_pheduyet_xinnghikhac", methods=["POST"])
 def quanlypheduyetxinnghikhac():
     if request.method == "POST":
         try:
-            mst_filter = request.form["mst_filter"]
-            hoten_filter = request.form["hoten_filter"]
-            chucvu_filter = request.form["chucvu_filter"]
-            chuyen_filter = request.form["chuyen_filter"]
-            bophan_filter = request.form["bophan_filter"]
-            loaidiemdanh_filter = request.form["loaidiemdanh_filter"]
-            ngay_filter = request.form["ngay_filter"]
-            lydo_filter = request.form["lydo_filter"]
-            trangthai_filter = request.form["trangthai_filter"]
-            chuyen = request.form["chuyen"]
+            mst = request.form.get("mst_xinnghikhac")
+            mst_filter = request.form.get("mst_filter")
+            chuyen = lay_chuyen_theo_mst(mst)
             mstduyet = current_user.masothe
-            pheduyet = request.form["pheduyet"]
+            pheduyet = request.form.get("pheduyet")
+            print(pheduyet)
             id = request.form["id"]
-            mstdiemdanh = request.form["mst_diemdanh"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
-            if mstdiemdanh==mstduyet:
+            if mst==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
                 if pheduyet == "Phê duyệt":    
@@ -2809,14 +2790,31 @@ def quanlypheduyetxinnghikhac():
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ khác: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
-        else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
-            else:  
-                return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
- 
+        return redirect(f"/muc7_1_6?mst={mst_filter}")
+
+@app.route("/nhansu_nhangiayto_xinnghikhac", methods=["POST"])
+def nhansunhangiaytoxinnghikhac():
+    if request.method == "POST":
+        try:
+            mst_filter = request.form.get("mst_filter")
+            id = request.form["id"]
+            nhangiayto = request.form.get("nhangiayto")
+            # if mstdiemdanh==mstduyet:
+            #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
+            #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==4091):
+                if nhangiayto == "Có":    
+                    nhansu_nhangiayto_xinnghikhac(id)
+                    flash(f"Thư ký {current_user.hoten} đã nhận giấy tờ cho phiếu xin nghỉ khác số {id} !!!")
+                else:
+                    nhansu_khongnhangiayto_xinnghikhac(id)
+                    flash(f"Thư ký {current_user.hoten} không nhận được giấy tờ cho phiếu số {id}  !!!")
+            else:
+                flash(f"{current_user.hoten} không có quyền nhận giấy tờ, vui lòng liên hệ HRD !!!")
+        except Exception as e:
+            flash(f"Lỗi thư ký xin nghỉ khác: {e}")
+        return redirect(f"/muc7_1_6?mst={mst_filter}")
+
 @app.route("/taifilemaukp", methods=["GET"])
 def taifilemaukp():
     if request.method == "GET":

@@ -16,7 +16,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 200px; /* Adjust based on your requirement */
         color: white;color: #4e73df;
         font-weight: bold;
     }
@@ -34,7 +33,6 @@
     input {
         margin-left: 10px;
         font-size: 10px;
-        width: 50px;
     }
 </style>
 {% endblock style %}
@@ -47,7 +45,7 @@
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
                 <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                <button type="submit" class="btn btn-success btn-sm">Xuất Excel"</button>
+                <button type="submit" class="btn btn-success btn-sm">Xuất Excel</button>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
         </div>
@@ -56,26 +54,10 @@
             <thead>
                 <form action = "/muc7_1_6" method = "GET">
                     <tr class="bg-primary">
-                        {% if request.args.get('mst') %}
-                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()" value="{{request.args.get('mst')}}"></th>
-                        {% else %}
-                        <th>Mã số thẻ<input type='text' id='mst' name='mst' onchange="this.form.submit()"></th>
-                        {% endif %}
-
-                        {% if request.args.get('ngaynghi') %}
-                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()" value="{{request.args.get('ngaynghi')}}"></th>
-                        {% else %}
-                        <th>Ngày nghỉ <input type='date' id='ngaynghi' name='ngaynghi' onchange="this.form.submit()"></th>
-                        {% endif %}
-
+                        <th>Mã số thẻ</th>
+                        <th>Ngày nghỉ </th>
                         <th>Tổng số phút</th>
-
-                        {% if request.args.get('loainghi') %}
-                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()" value="{{request.args.get('loainghi')}}"></th>
-                        {% else %}
-                        <th>Loại nghỉ <input type='text' id='loainghi' name='loainghi' onchange="this.form.submit()"></th>
-                        {% endif %}
-
+                        <th>Loại nghỉ</th>
                         <th>Trạng thái</th>
                         <th>Nhận giấy tờ</th>
                     </tr>
@@ -90,25 +72,62 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
-                        <td>Chờ kiểm tra 
+                        <td style="display: flex;" >Chờ kiểm tra 
                             <form action="/thuky_kiemtra_xinnghikhac" method="POST">
-                                <input name="id" value="{{row[7]}}" hidden></input>
-                                <input name="mst" value="{{request.args.get('mst', '')}}" hidden></input>
-                                <input name="ngaynghi" value="{{request.args.get('ngaynghi', '')}}" hidden></input>
-                                <button class="btn btn-primary btn-sm">Kiểm tra</button> 
+                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="submit" class="btn btn-warning btn-sm" id="kiemtra" name="kiemtra" value="Kiểm tra">
                             </form>
-                            <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                            <form action="/thuky_kiemtra_xinnghikhac" method="POST">
+                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
+                            </form>
+                        </td>
                         <td>Chưa nhận</td>
-                    {% elif row[5] == 'Đã kiểm tra'  %}
-                        <td>Đã kiểm tra <button class="btn btn-primary btn-sm">Phê duyệt</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                    {% elif row[5] == 'Đã kiểm tra' or row[5] == 'Đã kiểm tra'  %}
+                        <td style="display: flex;" >
+                            Đã kiểm tra 
+                            <form action="/quanly_pheduyet_xinnghikhac" method="POST">
+                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="submit" class="btn btn-warning btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
+                            </form>
+                            <form action="/quanly_pheduyet_xinnghikhac" method="POST">
+                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
+                            </form>
+                        </td>
                         <td>Chưa nhận</td>
-                    {% elif row[5] == 'Đã phê duyệt'  %}
+                    {% elif row[5] == 'Đã phê duyệt' or row[5] == 'Đã phê duyệt' %}
                         <td>Đã phê duyệt </td>
-                        {% if row[6] == 'Đã nhận' %}
+                        {% if row[6] == 'Đã nhận' %}
                             <td>{{row[6]}}</td>
                         {% else %}
-                            <td style="color: red;">Chưa nhận <button class="btn btn-primary btn-sm">Nhận</button> <button class="btn btn-danger btn-sm">Từ chối</button></td>
+                            <td style="display: flex;">
+                                Chưa nhận 
+                                <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                    <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                    <input type="hidden" name="id" value="{{row[7]}}">
+                                    <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="submit" class="btn btn-warning btn-sm" id="nhangiayto" name="nhangiayto" value="Có">
+                                </form>
+                                <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                    <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                    <input type="hidden" name="id" value="{{row[7]}}">
+                                    <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="submit" class="btn btn-danger btn-sm" id="nhangiayto" name="nhangiayto" value="Không">
+                                </form>
+                            </td>
                         {% endif %}
+                    {% else %}
+                        <td>{{row[5]}} </td>
+                        <td></td>
                     {% endif %}
                 </tr>  
                 {% endfor %}
