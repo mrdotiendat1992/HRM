@@ -186,7 +186,7 @@ def run_before_every_request():
                                   "Lỗi chấm công": so_lan_loi_cham_cong
                                                   }
             conn.close()
-        print(g.notice["f12"])
+        # print(g.notice["f12"])
     except Exception as e:      
         g.notice={}
             
