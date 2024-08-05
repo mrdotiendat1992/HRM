@@ -1627,37 +1627,7 @@ def danhsachxinnghikhac():
                                page="7.1.6 Danh sách xin nghỉ khác", 
                                danhsach=paginated_rows,
                                 pagination=pagination,
-                                count=count,)
-    elif request.method == "POST":
-        try:
-            if 'file' not in request.files:
-                return redirect("/muc7_1_6")
-            file = request.files['file']
-            if file.filename == '':
-                return redirect("/muc7_1_6")
-            if file:
-                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-                filepath = os.path.join(app.config['UPLOAD_FOLDER'], f"xinnghikhac_{thoigian}.xlsx")
-                file.save(filepath)
-                data = pd.read_excel(filepath).to_dict(orient="records")
-                for row in data:
-                    if row["Mã số thẻ"]!=np.nan:
-                        try:
-                            themxinnghikhac(
-                                row["Mã công ty"],
-                                int(row["Mã số thẻ"]),
-                                row["Ngày nghỉ"],
-                                int(row["Tổng số phút"]),
-                                row["Loại nghỉ"]
-                            )
-                        except Exception as e:
-                            print(e)
-                            break
-                print("Cập nhật xin nghỉ khác thành công !!!")
-        except Exception as e:
-            print("Cập nhật xin nghỉ khác thất bại !!!")
-            print(e)
-        return redirect("/muc7_1_6")
+                                count=count)
 
 @app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
@@ -1923,7 +1893,7 @@ def inchamduthopdong():
             print(e)
             return redirect("/muc10_3") 
         
-@app.route("/muc_12", methods=["GET","POST"])
+@app.route("/muc12", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd','tk')
 def khong_kiem_xuong():
