@@ -3198,3 +3198,20 @@ def on_off_f12():
         print(e)
         f12 = False
     return jsonify({"f12":f12})
+
+@app.route("/dangky_tangca_web", methods=["GET","POST"])
+def dangky_tangca_bangweb():
+    if request.method=="GET":
+        danhsach = danhsach_tangca(chuyen)
+        count = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("dangky_tangca_web.html",
+                               danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=count)

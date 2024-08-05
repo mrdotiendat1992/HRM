@@ -2678,3 +2678,6 @@ def lay_chuyen_theo_mst(mst):
     except Exception as e:
         print(e)
         return None 
+    
+def danhsach_tangca(chuyen):
+    return []
