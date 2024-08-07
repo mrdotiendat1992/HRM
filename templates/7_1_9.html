@@ -63,6 +63,7 @@
         <form action="/muc7_1_9" method="GET">
             <div class="form-group">
                 <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
+                <input type="text" id="chuyen" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
                 <input type="text" id="phongban" name="phongban" placeholder='Phòng ban' value={{request.args.get('phongban', '')}}>
                 <input type="text" id="phanloai" name="phanloai" placeholder='Phân loại' value='{{request.args.get("phanloai", '')}}'>
             </div>

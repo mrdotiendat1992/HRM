@@ -4,8 +4,7 @@ from const import *
 
 app = Flask(__name__)
 
-f12 = False
-    
+f12 = True    
 
 # Cấu hình kết nối SQL Server
 params = urllib.parse.quote_plus(
@@ -1363,13 +1362,15 @@ def laydanhsachbophan():
             print(e)
             return []
 
-def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_tu_dong WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE N'%{phongban}%'"
         if tungay:
@@ -1387,13 +1388,15 @@ def laydanhsachchamcong(mst=None,  phongban=None, tungay=None, denngay=None, pha
             print(e)
             return []
 
-def laydanhsachchamcongchot(mst=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
             query += f" AND MST LIKE '%{mst}%'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
         if tungay:
@@ -2679,5 +2682,151 @@ def lay_chuyen_theo_mst(mst):
         print(e)
         return None 
     
-def danhsach_tangca(chuyen):
-    return []
+def danhsach_tangca(chuyen,ngay):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where Chuyen_to='{chuyen}' and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC"
+        # print(query)
+        cursor = cursor.execute(query)
+        rows = cursor.fetchall()
+        result = [{
+            "ID": row[17],
+            "Nhà máy": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Chức danh": row[3],
+            "Chuyền": row[4],
+            "Phòng ban": row[5],
+            "Ngày": row[6],
+            "Tăng ca sáng": row[7][:5] if row[7] else "",
+            "Tăng ca sáng thực tế": row[8][:5] if row[8] else "",
+            "Giờ tăng ca": row[9][:5] if row[9] else "",
+            "Giờ tăng ca thực tế": row[10][:5] if row[10] else "",
+            "Tăng ca đêm": row[11][:5] if row[11] else "",
+            "Tăng ca đêm thực tế": row[12][:5] if row[12] else "",
+            "Ca": row[13],
+            "Giờ vào": row[14][:5] if row[14] else "",
+            "Giờ ra": row[15][:5] if row[15] else "",
+            "HR phê duyệt": row[16]           
+            } for row in rows]
+        # print(result)
+        conn.close()
+        return result
+    except:
+        return []
+
+def laychuyen_quanly(masothe,macongty):
+    try:
+        if (int(masothe) == 2833 and macongty == "NT1") or (int(masothe) == 4091 and macongty == "NT2"):
+            conn = pyodbc.connect(used_db)
+            cursor = conn.cursor()
+            query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where NHA_MAY='{macongty}'"
+            cursor = cursor.execute(query)
+            rows = cursor.fetchall()
+            result = [row[0] for row in rows]
+            conn.close()
+        else:
+            conn = pyodbc.connect(used_db)
+            cursor = conn.cursor()
+            query = f"select Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where MST='{masothe}' and NHA_MAY='{macongty}'"
+            # print(query)
+            cursor = cursor.execute(query)
+            rows = cursor.fetchall()
+            result = [row[0] for row in rows]
+            # print(result)
+            conn.close()
+        return result
+    except:
+        return []
+
+def capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_tang_ca SET "
+        if tangcasang:
+            query += f"Tang_ca_sang = '{tangcasang}',"
+        else:
+            query += "Tang_ca_sang = NULL,"
+        if tangcasangthucte:
+            query += f"Tang_ca_sang_thuc_te = '{tangcasangthucte}',"
+        else:
+            query += "Tang_ca_sang_thuc_te = NULL,"
+        if tangca:
+            query += f"Gio_tang_ca = '{tangca}',"
+        else:
+            query += "Gio_tang_ca = NULL,"
+        if tangcathucte:
+            query += f"Gio_tang_ca_thuc_te = '{tangcathucte}',"
+        else:
+            query += "Gio_tang_ca_thuc_te = NULL,"
+        if tangcadem:
+            query += f"Tang_ca_dem = '{tangcadem}',"
+        else:
+            query += "Tang_ca_dem = NULL,"
+        if tangcademthucte:
+            query += f"Tang_ca_dem_thuc_te = '{tangcadem}'"
+        else:
+            query += "Tang_ca_dem_thuc_te = NULL"
+        query += f" WHERE ID='{id}'"
+        # print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return cursor
+    except:
+        return False
+    
+def nhansu_bopheduyet_tangca(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return cursor
+    except:
+        return False 
+    
+def nhansu_pheduyet_tangca(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_tang_ca SET HR='OK' WHERE ID='{id}'"
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return cursor
+    except:
+        return False 
+        
+def tat_function_12():
+    try:
+        config = ConfigParser()
+        config.read("f12.ini")
+        config["F12"]={"ON":0}
+        with open("f12.ini", "w") as configfile:
+            config.write(configfile)
+    except Exception as e:
+        return False
+    
+def bat_function_12():
+    try:
+        config = ConfigParser()
+        config.read("f12.ini")
+        config["F12"]={"ON":1}
+        with open("f12.ini", "w") as configfile:
+            config.write(configfile)
+        return config.get("F12","ON")
+    except Exception as e:
+        return False
+
+def trang_thai_function_12():
+    try:
+        config = ConfigParser()
+        config.read("f12.ini")
+        return config.get("F12","ON")
+    except Exception as e:
+        return None

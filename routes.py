@@ -10,6 +10,7 @@ from app import *
 def run_before_every_request():
     try:
         if current_user.is_authenticated:
+            f12 = trang_thai_function_12()
             g.notice={"f12":f12, "Tổng":0}
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
@@ -185,10 +186,10 @@ def run_before_every_request():
                                   "Lỗi chấm công": so_lan_loi_cham_cong
                                                   }
             conn.close()
-        # print(g.notice["f12"])
     except Exception as e:      
         g.notice={}
-            
+    # print(g.notice)
+    
 @app.context_processor
 def inject_notice():
     return dict(notice=getattr(g, 'notice', {}),personal = getattr(g, 'personal', {}))
@@ -1681,11 +1682,12 @@ def dangkytangca():
 def chamcongtudong():
     
     mst = request.args.get("mst")
+    chuyen = request.args.get("chuyen")
     phongban = request.args.get("phongban")
     tungay = request.args.get("tungay")
     denngay = request.args.get("denngay")
     phanloai = request.args.get("phanloai")
-    rows = laydanhsachchamcong(mst,phongban,tungay,denngay,phanloai)
+    rows = laydanhsachchamcong(mst,chuyen,phongban,tungay,denngay,phanloai)
     count = len(rows)
     current_page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 10
@@ -1895,7 +1897,6 @@ def inchamduthopdong():
         
 @app.route("/muc12", methods=["GET","POST"])
 @login_required
-@roles_required('hr','sa','gd','tk')
 def khong_kiem_xuong():
     try:
         if request.method=="GET":
@@ -1925,7 +1926,8 @@ def khong_kiem_xuong():
 @login_required
 @roles_required('sa')
 def admin_page():
-    return render_template("admin.html")
+    trangthai = trang_thai_function_12()
+    return render_template("admin.html",trangthai=trangthai)
 
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
@@ -2286,11 +2288,11 @@ def doicacanhan():
         ngaybatdau = request.form.get("ngaybatdau")
         ngayketthuc = request.form.get("ngayketthuc")
         themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
-        print(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
+        flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        print(e)
-        print("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
+        app.logger.error(e)
+        flash(f"Đổi ca bị lỗi, {e} !!!")
         return redirect("/muc7_1_1")
     
 @app.route("/doicanhom", methods=["POST"])
@@ -2327,11 +2329,11 @@ def doicanhom():
             for user in danhsach:
                 themdoicamoi(user['MST'],laycahientai(user['MST']),camoi,ngaybatdau,ngayketthuc)
             cacmst = [user['MST'] for user in danhsach]
-            print(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
+            flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        print(e)
-        print("Đổi ca bị lỗi, bạn vui lòng kiểm tra lại !!!")
+        app.logger.error(e)
+        flash(f"Đổi ca bị lỗi, {e} !!!")
         return redirect("/muc7_1_1")
         
 @app.route("/laycatheomst", methods=["POST"])
@@ -3185,25 +3187,31 @@ def suadoi_dangky_ca():
         print(f"Loi khi cap nhat lich su cong tac ({e})")
     return redirect(f"/muc7_1_1?mst={mst_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}")
 
-@app.route("/bat_tat_12", methods=["POST"])
-def on_off_f12():
-    global f12
+@app.route("/bat_12", methods=["POST"])
+def on_f12():
     try:
         if request.method == "POST":
-            if f12 == True:
-                f12 = False
-            else:
-                f12 = True
+            bat_function_12()
     except Exception as e:
         print(e)
-        f12 = False
-    return jsonify({"f12":f12})
+    return redirect("/admin")
 
-@app.route("/dangky_tangca_web", methods=["GET","POST"])
+@app.route("/tat_12", methods=["POST"])
+def off_f12():
+    try:
+        if request.method == "POST":
+            tat_function_12()
+    except Exception as e:
+        print(e)
+    return redirect("/admin")
+
+@app.route("/dangki_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
         chuyen = request.args.get("chuyen")
-        danhsach = danhsach_tangca(chuyen)
+        ngay = request.args.get("ngay")    
+        cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
+        danhsach = danhsach_tangca(chuyen,ngay)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -3213,6 +3221,60 @@ def dangky_tangca_bangweb():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("dangky_tangca_web.html",
+                               cacchuyen=cacchuyen,
                                danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=count)
+        
+@app.route("/capnhat_tangca", methods=["POST"])
+def capnhat_tangca():
+    if request.method=="POST":
+        
+        id = request.form.get("id")
+        tangcasang = request.form.get("tangcasang")
+        tangcasangthucte = request.form.get("tangcasangthucte")
+        tangca = request.form.get("tangca")
+        tangcathucte = request.form.get("tangcathucte")
+        tangcadem = request.form.get("tangcadem")
+        tangcademthucte = request.form.get("tangcademthucte")
+        
+        chuyen_filter = request.form.get("chuyen_filter")
+        ngay_filter = request.form.get("ngay_filter")
+        try:  
+            if capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
+                flash(f"Cập nhật tăng ca id = {id} thành công")
+            else:
+                flash(f"Cập nhật tăng ca id = {id} thất bại")
+        except Exception as e:   
+            flash(f"Loi khi cap nhat tang ca ({e})")
+        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+    
+@app.route("/bopheduyet_tangca", methods=["POST"])   
+def bopheduyet_tangca():
+    if request.method=="POST":
+        chuyen_filter = request.form.get("chuyen_filter")
+        ngay_filter = request.form.get("ngay_filter")
+        id = request.form.get("id")
+        try:
+            if nhansu_bopheduyet_tangca(id):
+                flash(f"Bỏ phê duyệt tăng ca ID = {id}")
+            else:
+                flash(f"Bỏ phê duyệt tăng ca ID = {id} không được")
+        except Exception as e:   
+            flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
+        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+
+@app.route("/pheduyet_tangca", methods=["POST"])   
+def pheduyet_tangca():
+    if request.method=="POST":
+        chuyen_filter = request.form.get("chuyen_filter")
+        ngay_filter = request.form.get("ngay_filter")
+        id = request.form.get("id")
+        try:
+            if nhansu_pheduyet_tangca(id):
+                flash(f"Phê duyệt tăng ca ID = {id}")
+            else:
+                flash(f"Phê duyệt tăng ca ID = {id} không được")
+        except Exception as e:   
+            flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
+        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
