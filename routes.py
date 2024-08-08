@@ -3091,7 +3091,8 @@ def xinnghikhac_web():
         sophut = request.form.get("sophut_xinnghikhac")
         lydo = request.form.get("lydo_xinnghikhac")
         trangthai = "Chờ kiểm tra"
-        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
+        nhangiayto = "Chưa"
+        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai,nhangiayto):
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
         else:
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
@@ -3300,3 +3301,30 @@ def chamcong_sang_web():
                                 pagination=pagination,
                                 count=count,
                                 ngay=ngay)
+        
+@app.route("/nhansu_themxinnghikhac", methods=["POST"])
+def nhansu_them_xinnghikhac():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"themxinnghikhac_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath, dtype={0: str,1: str}).to_dict(orient="records")
+                for row in data:
+                    try:
+                        masothe = row['Mã số thẻ']
+                        ngaynghi = str(row['Ngày nghỉ'])[:10]
+                        sophut = int(row['Tổng số phút'])
+                        loainghi = row['Loại nghỉ']
+                        trangthai = "Đã phê duyệt"
+                        nhangiayto = "Đã nhận"
+                        them_xinnghikhac(masothe,ngaynghi,sophut,loainghi,trangthai,nhangiayto)
+                    except Exception as e:
+                        print(e)
+                        break
+            except Exception as e:
+                print(e)
+        return redirect("/muc7_1_6")
+        

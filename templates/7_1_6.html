@@ -39,8 +39,38 @@
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; align-items: center; gap:20px;">
             <h5><b>Tổng: {{count}}</b></h5>
+            <button data-toggle="modal" data-target="#myModal" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Thêm số lượng lớn</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <form method="POST" action="/taifilexinnghiphepkhacmau">
+                                    <input type="submit" class="btn btn-success btn-sm" value="Tải file mẫu">
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <form method="POST" action="/nhansu_themxinnghikhac" enctype="multipart/form-data">
+                                    <input type="file" id="file" name="file">
+                                    <input type="submit" class="btn btn-success btn-sm" value="Tải lên">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <form method="POST" action="/export_dsxnk">
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
