@@ -2830,3 +2830,36 @@ def trang_thai_function_12():
         return config.get("F12","ON")
     except Exception as e:
         return None
+    
+def danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"""WITH Bao_com_1_max AS (
+                    SELECT *,
+                        ROW_NUMBER() OVER (PARTITION BY MaChamCong ORDER BY Gio_vao DESC) AS rn
+                    FROM Bao_com_1
+                    WHERE NgayCham = '{ngay}'
+                )
+                SELECT Danh_sach_CBCNV.The_cham_cong,
+                    Danh_sach_CBCNV.Ho_ten,
+                    Danh_sach_CBCNV.Line,
+                    Danh_sach_CBCNV.Department,
+                    Bao_com_1_max.*
+                FROM Danh_sach_CBCNV
+                LEFT JOIN Bao_com_1_max
+                ON Bao_com_1_max.MaChamCong = Danh_sach_CBCNV.The_cham_cong
+                AND Bao_com_1_max.rn = 1
+                WHERE Danh_sach_CBCNV.Factory = 'NT1'
+                AND Danh_sach_CBCNV.Trang_thai_lam_viec = N'Đang làm việc' """
+        if chuyen:
+            query += f"and Danh_sach_CBCNV.Line = '{chuyen}'"
+        if bophan:
+            query += f"and Danh_sach_CBCNV.Department = '{bophan}'"
+        print(query)
+        cursor = cursor.execute(query)
+        rows = cursor.fetchall()
+        result = [row for row in rows if row[-1]] if cochamcong == "co" else  [row for row in rows if not row[-1]]
+        return result
+    except Exception as e:
+        return []

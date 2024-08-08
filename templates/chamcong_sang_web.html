@@ -1,0 +1,99 @@
+{% extends "12.html" %}
+
+{% block style %}
+    .scroll {
+        margin: 10px;
+        overflow-x: scroll;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    .form {
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: 15px;
+        font-weight: bold; 
+    }
+    table td {  
+        color:blue;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+{% endblock style %}
+    
+{% block content %}
+<div class="scroll">
+    <br>
+    
+        <h1>Danh sách chấm công sáng {{ ngay.strftime('%d-%m-%Y') }}</h1>
+        
+        <div class="form">
+            <h3>Tổng {{count}}</h3>
+            <form method="GET">
+                <input type="hidden" id="cochamcong" name="cochamcong" value="co">
+                <input type="hidden" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                <input type="hidden" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                <input type="submit" class="btn btn-primary btn-sm" value="Danh sách có chấm công">
+            </form>
+            <form method="GET">
+                <input type="hidden" id="cochamcong" name="cochamcong" value="khong">
+                <input type="hidden" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                <input type="hidden" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                <input type="submit" class="btn btn-danger btn-sm" value="Danh sách không chấm công">
+            </form>
+            <form method="GET">
+                <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" placeholder="Chuyền"  onchange="this.form.submit()">
+                <input type="text" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" placeholder="Bộ phận"  onchange="this.form.submit()">
+                
+            </form>
+            <div class="pagination">{{ pagination.links }}</div>
+        </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr class="bg-primary">
+                    <th>STT</th>
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chuyền</th>
+                    <th>Bộ phận</th>
+                    <th>Giờ chấm</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                    <tr data='{{row | safe }}'>
+                        <td>{{loop.index}}</td>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td class="gio">{{row[7]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+<script>
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const gio_vao = document.querySelectorAll('.gio');
+
+        gio_vao.forEach(gio => {
+            if (gio.textContent.trim() === 'None') {
+                gio.textContent = '';
+                gio.style.backgroundColor = '#e60000';
+            }
+        });
+    });
+
+</script>
+{% endblock content %}

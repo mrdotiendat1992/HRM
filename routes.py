@@ -3278,3 +3278,25 @@ def pheduyet_tangca():
         except Exception as e:   
             flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
         return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+    
+@app.route("/chamcong_sang_web", methods=["GET","POST"])
+def chamcong_sang_web():
+    if request.method=="GET":
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        cochamcong = request.args.get("cochamcong")
+        ngay = datetime.now().date()     
+        danhsach = danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong)
+        count = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 20
+        total = len(danhsach)
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("chamcong_sang_web.html",
+                               danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=count,
+                                ngay=ngay)
