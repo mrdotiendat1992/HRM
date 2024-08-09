@@ -85,6 +85,9 @@
                 <form action = "/muc7_1_6" method = "GET">
                     <tr class="bg-primary">
                         <th>Mã số thẻ</th>
+                        <th>Họ tên</th>
+                        <th>Chuyền</th>
+                        <th>Phòng ban</th>
                         <th>Ngày nghỉ </th>
                         <th>Tổng số phút</th>
                         <th>Loại nghỉ</th>
@@ -98,6 +101,9 @@
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
                     <td>{{row[1]}}</td>
+                    <td>{{row[8]}}</td>
+                    <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
                     <td class="date_en">{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>

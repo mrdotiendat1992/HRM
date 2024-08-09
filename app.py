@@ -1843,22 +1843,31 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT *  FROM [HR].[dbo].Xin_nghi_khac where Nha_may='{current_user.macongty}' "
+        query = f"""
+        SELECT  Xin_nghi_khac.*,
+                Danh_sach_CBCNV.Ho_ten,
+                Danh_sach_CBCNV.Line,
+                Danh_sach_CBCNV.Department
+        FROM Xin_nghi_khac
+        JOIN Danh_sach_CBCNV
+        ON Xin_nghi_khac.MST = Danh_sach_CBCNV.The_cham_Cong and Xin_nghi_khac.Nha_may = Danh_sach_CBCNV.Factory
+        where Xin_nghi_khac.Nha_may='{current_user.macongty}' """
         
         if mst:
-            query += f"AND MST='{mst}'" 
+            query += f"AND Xin_nghi_khac.MST='{mst}'" 
         if ngaynghi:
-            query += f"AND Ngay_nghi = '{ngaynghi}'" 
+            query += f"AND Xin_nghi_khac.Ngay_nghi = '{ngaynghi}'" 
         if loainghi:
-            query += f"AND Loai_nghi = N'{loainghi}'"
+            query += f"AND Xin_nghi_khac.Loai_nghi = N'{loainghi}'"
             
-        query += " ORDER BY Ngay_nghi DESC, MST ASC"
+        query += " ORDER BY Xin_nghi_khac.Ngay_nghi DESC, Xin_nghi_khac.MST ASC"
         
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows 
     except Exception as e:
         print(e)
+        return []
 
 # def xoadulieuchamcong2ngay():
 #     try:

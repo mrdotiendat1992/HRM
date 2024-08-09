@@ -3301,6 +3301,51 @@ def chamcong_sang_web():
                                 pagination=pagination,
                                 count=count,
                                 ngay=ngay)
+    else:
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        cochamcong = request.args.get("cochamcong")
+        ngay = datetime.now().date()     
+        danhsach = danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong)
+        data = [{
+        "Mã số thẻ": row[0],
+        "Họ tên": row[1],
+        "Chuyền": row[2],
+        "Phòng ban": row[3],
+        "Ngày": row[6],
+        "Giờ vào": row[7]
+        } for row in danhsach]
+        df = DataFrame(data)
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_chamcongsang_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response   
         
 @app.route("/nhansu_themxinnghikhac", methods=["POST"])
 def nhansu_them_xinnghikhac():
