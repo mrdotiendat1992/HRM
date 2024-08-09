@@ -3356,7 +3356,7 @@ def nhansu_them_xinnghikhac():
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(FOLDER_NHAP, f"themxinnghikhac_{thoigian}.xlsx")
                 file.save(filepath)
-                data = pd.read_excel(filepath, dtype={0: str,1: str}).to_dict(orient="records")
+                data = pd.read_excel(filepath ).to_dict(orient="records")
                 for row in data:
                     try:
                         masothe = int(row['Mã số thẻ'])
@@ -3365,9 +3365,13 @@ def nhansu_them_xinnghikhac():
                         loainghi = row['Loại nghỉ']
                         trangthai = "Đã phê duyệt"
                         nhangiayto = "Đã nhận"
-                        them_xinnghikhac(masothe,ngaynghi,sophut,loainghi,trangthai,nhangiayto)
+                        print(masothe,ngaynghi,sophut,loainghi)
+                        if them_xinnghikhac(masothe,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
+                            print("OK")
+                        else:
+                            print(data.index(row),"Failed")
                     except Exception as e:
-                        print(e)
+                        print(f"Loi them dong xin nghi khac: {e}")
                         break
             except Exception as e:
                 print(e)
