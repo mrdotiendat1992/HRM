@@ -2397,11 +2397,37 @@ def export_dscc():
                 'Phân loại': row[20]
             }
         )
-    df = pd.DataFrame(result)
-    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), index=False)
-    
-    return send_file(os.path.join(FOLDER_XUAT, f"bangcong_{thoigian}.xlsx"), as_attachment=True)
+    df = DataFrame(result)
+    output = BytesIO()
+    with ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    # Điều chỉnh độ rộng cột
+    output.seek(0)
+    workbook = openpyxl.load_workbook(output)
+    sheet = workbook.active
+
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column_letter].width = adjusted_width
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+    # Trả file về cho client
+    response = make_response(output.read())
+    response.headers['Content-Disposition'] = f'attachment; filename=bang_chamcong_{time_stamp}.xlsx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    return response  
 
 @app.route("/export_dscctt", methods=["POST"])
 def export_dscctt():
