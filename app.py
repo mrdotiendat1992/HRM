@@ -2477,7 +2477,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', '{ngayketthuc}')
         """
-        # 
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2489,7 +2489,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{luongcoban}', '{phucap}', '{ngaybatdau}', NULL )
         """
-        # 
+        print(query)
         cursor.execute(query)
         try:
             conn.commit()

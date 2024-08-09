@@ -2938,7 +2938,7 @@ def capnhathopdongtheofilemau():
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
             filepath = os.path.join(FOLDER_NHAP, f"themhopdong_{thoigian}.xlsx")
             file.save(filepath)
-            data = pd.read_excel(filepath, dtype={0: str,1: str}).to_dict(orient="records")
+            data = pd.read_excel(filepath).to_dict(orient="records")
             for row in data:
                 nhamay = row['Mã công ty']
                 mst = row['MST']
