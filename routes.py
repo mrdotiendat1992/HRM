@@ -3092,7 +3092,7 @@ def xinnghikhac_web():
         lydo = request.form.get("lydo_xinnghikhac")
         trangthai = "Chờ kiểm tra"
         nhangiayto = "Chưa"
-        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai,nhangiayto):
+        if them_xinnghikhac(masothe,ngay,sophut,lydo,trangthai,nhangiayto):
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
         else:
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
@@ -3314,7 +3314,7 @@ def nhansu_them_xinnghikhac():
                 data = pd.read_excel(filepath, dtype={0: str,1: str}).to_dict(orient="records")
                 for row in data:
                     try:
-                        masothe = row['Mã số thẻ']
+                        masothe = int(row['Mã số thẻ'])
                         ngaynghi = str(row['Ngày nghỉ'])[:10]
                         sophut = int(row['Tổng số phút'])
                         loainghi = row['Loại nghỉ']
