@@ -2370,11 +2370,8 @@ def export_dscc():
     denngay = request.form.get("denngay")
     phanloai = request.form.get("phanloai")
     danhsach = laydanhsachchamcong(mst,phongban,tungay,denngay,phanloai)
-    result = []
-    for row in danhsach:
-        result.append(
-            {
-                'Nhà máy': row[0],
+    result = [
+            {'Nhà máy': row[0],
                 'MST': row[1],
                 'Họ tên': row[2],
                 'Chức danh': row[3],
@@ -2394,10 +2391,10 @@ def export_dscc():
                 'Phút nghỉ không lương': row[17],
                 'Phút nghỉ khác': row[18],
                 'Loại nghỉ khác': row[19],
-                'Phân loại': row[20]
-            }
-        )
+                'Phân loại': row[20]}
+        for row in danhsach]
     df = DataFrame(result)
+    print(df)
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False)
