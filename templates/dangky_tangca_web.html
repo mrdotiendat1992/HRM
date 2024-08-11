@@ -110,7 +110,7 @@
                         <td class="gio">{{row["Giờ vào"]}}</td>
                         <td class="gio">{{row["Giờ ra"]}}</td>
                 
-                        {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==4091) %}
+                        {% if ('HRD' in current_user.phongban) %}
                         <td>
                             <form action='/bopheduyet_tangca' method='POST'>
                                 <input type="hidden" name="id" value="{{row['ID']}}">
@@ -145,7 +145,7 @@
                         <td class="gio">{{row["Giờ vào"]}}</td>
                         <td class="gio">{{row["Giờ ra"]}}</td>
                     </form>
-                        {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==4091) %}
+                        {% if ('HRD' in current_user.phongban) %}
                         <td>
                             <form action='/pheduyet_tangca' method='POST'>
                                 <input class="btn-primary btn-sm" type="submit" value="Phê duyệt"></input>
