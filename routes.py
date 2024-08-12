@@ -186,8 +186,9 @@ def run_before_every_request():
                                   "Lỗi chấm công": so_lan_loi_cham_cong
                                                   }
             conn.close()
-    except Exception as e:      
-        g.notice={}
+    except Exception as e:  
+        f12 = trang_thai_function_12()    
+        g.notice={"f12":f12}
     # print(g.notice)
     
 @app.context_processor
@@ -1432,7 +1433,7 @@ def khaibaochamcong():
             paginated_rows = rows[start:end]
             pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
             cacca = laycacca()
-            print(paginated_rows)
+            # print(paginated_rows)
             return render_template("7_1_1.html",
                                     page="7.1.1 Đổi ca làm việc",
                                     danhsach=paginated_rows,
@@ -3292,13 +3293,13 @@ def off_f12():
 @app.route("/dangki_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
-        chuyen = request.args.get("chuyen")
+        chuyen = request.args.getlist("chuyen")
         ngay = request.args.get("ngay")    
         cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
         danhsach = danhsach_tangca(chuyen,ngay)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 100
         total = len(danhsach)
         start = (page - 1) * per_page
         end = start + per_page

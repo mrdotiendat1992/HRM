@@ -16,7 +16,7 @@ params = urllib.parse.quote_plus(
             )
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 
-# # Cấu hình kết nối SQL Server
+# Cấu hình kết nối SQL Server
 # params = urllib.parse.quote_plus(
 #             "DRIVER={ODBC Driver 17 for SQL Server};"
 #             "SERVER=DESKTOP-G635SF6;"
@@ -2728,7 +2728,10 @@ def danhsach_tangca(chuyen,ngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where Chuyen_to='{chuyen}' and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC"
+        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where "
+        for ch in chuyen:
+            query += f" Chuyen_to='{ch}' or"
+        query = query[:-2] + f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC"
         # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
@@ -2760,7 +2763,7 @@ def danhsach_tangca(chuyen,ngay):
 
 def laychuyen_quanly(masothe,macongty):
     try:
-        if (int(masothe) == 2833 and macongty == "NT1") or (int(masothe) == 4091 and macongty == "NT2"):
+        if "HRD" in current_user.phongban:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where NHA_MAY='{macongty}'"

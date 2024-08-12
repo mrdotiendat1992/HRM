@@ -1,14 +1,8 @@
 {% extends "12.html" %}
 
 {% block style %}
-    #main_window {
-        display: flex;
-        gap: 50px;
-    }
-    #danhsachchuyen {
-        width: 150px;
-    }
-    #danhsachtangca {
+    .scroll {
+        margin: 10px;
         overflow-x: scroll;
     }
     th, td {
@@ -32,63 +26,59 @@
         left: 50px;
         z-index: 2;
     }
+    #form {
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: 15px;
+        font-weight: bold;   
+    }
     .pagination {
         font-size: 10px;
     }
     .highlightable {
         background-color: yellow;
     }
+    input,select, td {
+        color: blue;
+        outline: none;
+        border: none;
+    }
 {% endblock style %}
     
 {% block content %}
-<div class="container-fluid" id="main_window">
-    <div id="danhsachchuyen">
-        <table class="table table-bordered">
-            <form method='GET'>
-            <tbody>
-                <tr>
-                    <th>
-                        <button type="submit" class="btn btn-outline-primary btn-sm">Xem</button>
-                    </th>
-                    <th>
-                        <button id="select-toggle-btn" class="btn btn-outline-primary btn-sm" onclick="toggleSelectAll(event)">Chọn hết</button>    
-                    </th>
-                </tr>
-                <tr>
-                    <th colspan="2">
-                        <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}">
-                    </th>
-                </tr>
-
+<div class="scroll">
+    <br>    
+    <form method="GET">
+        <div id="form">
+            <h1>Danh sách đăng ký tăng ca</h1>
+            <select id="form-chuyen" id="chuyen" name="chuyen" multiple>
                 {% for chuyen in cacchuyen %}
-                <tr>
-                    <td>{{chuyen}}</td>
-                    <td>
-                        {% if chuyen in request.args.getlist('chuyen') %}
-                        <input type="checkbox" name="chuyen" value="{{chuyen}}" checked>
-                        {% else %}
-                        <input type="checkbox" name="chuyen" value="{{chuyen}}">
-                        {% endif %}
-                    </td>
-                </tr>
+                    {% if chuyen in request.args.getlist('chuyen') %}
+                        <option value="{{chuyen}}" selected>{{chuyen}}</option>
+                    {% else %}
+                        <option value="{{chuyen}}">{{chuyen}}</option>
+                    {% endif %}
                 {% endfor %}
-            </tbody>
-        </form>
-        </table>
-    </div>
-    <div>
-        <div id="header">
-            <h3>Danh sách tăng ca</h3>
-            <h5><b>Tổng: {{count}}</b></h5>
-            <div class="pagination">{{pagination.links}}</div>
+            </select>
+            <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}"  onchange="this.form.submit()">
+            <input class="btn btn-primary btn-sm" type="submit" value="Xem"></input>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
-        <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
+    </form>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
             <thead>
                 <tr class="bg-primary">
                     <th>MST</th>
                     <th>Họ tên</th>
+                    <th>Chức danh</th>
                     <th>Chuyền</th>
                     <th>Phòng ban</th>
+                    <th>Ngày</th>
                     <th>Tăng ca sáng</th>
                     <th>Tăng ca sáng thực tế</th>
                     <th>Giờ tăng ca</th>
@@ -107,8 +97,10 @@
                 <tr class="highlightable">
                     <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
+                        <td>{{row["Chức danh"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
                         <td>{{row["Phòng ban"]}}</td>
+                        <td class="ngay">{{row["Ngày"]}}</td>
                         <td class="gio">{{row["Tăng ca sáng"]}}</td>
                         <td class="gio">{{row["Tảng ca sáng thực tế"]}}</td>
                         <td class="gio">{{row["Giờ tăng ca"]}}</td>
@@ -140,8 +132,10 @@
                         <input type="hidden" name= "ngay_filter" value = {{request.args.get('ngay', '')}}>
                         <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
+                        <td>{{row["Chức danh"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
                         <td>{{row["Phòng ban"]}}</td>
+                        <td class="ngay">{{row["Ngày"]}}</td>
                         <td class="gio"><input type="time" name="tangcasang" value='{{row["Tăng ca sáng"]}}' oninput="this.form.submit()" onchange="handleChange()"></input></td>
                         <td class="gio"><input type="time" name="tangcasangthucte" value={{row["Tăng ca sáng thực tế"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
                         <td class="gio"><input type="time" name="tangca" value={{row["Giờ tăng ca"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
@@ -171,29 +165,34 @@
             </tbody>
         </table>
     </div>
-</div>  
+</div>
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        updateToggleButton();
-
-        // Function to toggle select all/deselect all
-        window.toggleSelectAll = function(event) {
-            event.preventDefault();
-            let checkboxes = document.querySelectorAll('input[type="checkbox"][name="chuyen"]');
-            let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-
-            checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
-
-            updateToggleButton();
+    function handleChange(input) {
+        if (input.value) {
+            input.form.submit();
         }
-
-        // Function to update button text based on checkbox states
-        function updateToggleButton() {
-            let checkboxes = document.querySelectorAll('input[type="checkbox"][name="chuyen"]');
-            let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
-            let button = document.getElementById("select-toggle-btn");
-            button.textContent = allChecked ? "Bỏ chọn hết" : "Chọn hết";
+    }
+    function changeFormatDate(date) {
+        if (date !== 'None') {
+            return date.split('-').reverse().join('/');
         }
+        return '';
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const tds = document.querySelectorAll('td');
+        tds.forEach(td => {
+            if (td.textContent.trim() === 'None') {
+                td.textContent = '';
+            }
+        });
+
+        const ngays = document.querySelectorAll('.ngay');
+        ngays.forEach(ngay => {
+            if (ngay.textContent.trim() !== 'None') {
+                ngay.textContent = changeFormatDate(ngay.textContent);
+            }
+        });
+
     });
 </script>
 {% endblock content %}
