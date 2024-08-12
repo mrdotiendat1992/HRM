@@ -16,7 +16,7 @@ params = urllib.parse.quote_plus(
             )
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 
-# Cấu hình kết nối SQL Server
+# # Cấu hình kết nối SQL Server
 # params = urllib.parse.quote_plus(
 #             "DRIVER={ODBC Driver 17 for SQL Server};"
 #             "SERVER=DESKTOP-G635SF6;"
@@ -2142,7 +2142,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        print(query)
+        # print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2678,6 +2678,35 @@ def sua_dangky_ca(id,camoi):
     except Exception as e:
         print(e)
         return False   
+
+
+def suadoi_ngaybatdau_ca_dangky_ca(id,ngaybatdau_camoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_ca_lam_viec set Tu_ngay = '{ngaybatdau_camoi}' where ID ='{id}' "
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False   
+    
+def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Dang_ky_ca_lam_viec set Den_ngay = '{ngayketthuc_camoi}' where ID ='{id}' "
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False  
     
 def lay_chuyen_theo_mst(mst):
     try:

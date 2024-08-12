@@ -1432,6 +1432,7 @@ def khaibaochamcong():
             paginated_rows = rows[start:end]
             pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
             cacca = laycacca()
+            print(paginated_rows)
             return render_template("7_1_1.html",
                                     page="7.1.1 Đổi ca làm việc",
                                     danhsach=paginated_rows,
@@ -3231,6 +3232,38 @@ def suadoi_dangky_ca():
     camoi = request.form.get("ca")
     try:
         if sua_dangky_ca(id,camoi):
+            print(f"Sua dang ký ca id = {id} thanh cong")
+        else:
+            print(f"Sua dang ký ca id = {id} that bai")
+    except Exception as e:
+        print(f"Loi khi cap nhat lich su cong tac ({e})")
+    return redirect(f"/muc7_1_1?mst={mst_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}")
+
+@app.route("/suadoi_ngaybatdau_ca", methods=["POST"])
+def suadoi_ngaybatdau_ca():
+    mst_filter = request.form.get("mst_filter")
+    chuyen_filter = request.form.get("chuyen_filter")
+    bophan_filter = request.form.get("bophan_filter")
+    id = request.form.get("id")
+    ngaybatdau_camoi = request.form.get("ngaybatdau_ca")
+    try:
+        if suadoi_ngaybatdau_ca_dangky_ca(id,ngaybatdau_camoi):
+            print(f"Sua dang ký ca id = {id} thanh cong")
+        else:
+            print(f"Sua dang ký ca id = {id} that bai")
+    except Exception as e:
+        print(f"Loi khi cap nhat lich su cong tac ({e})")
+    return redirect(f"/muc7_1_1?mst={mst_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}")
+
+@app.route("/suadoi_ngayketthuc_ca", methods=["POST"])
+def suadoi_ngayketthuc_ca():
+    mst_filter = request.form.get("mst_filter")
+    chuyen_filter = request.form.get("chuyen_filter")
+    bophan_filter = request.form.get("bophan_filter")
+    id = request.form.get("id")
+    ngayketthuc_camoi = request.form.get("ngayketthuc_ca")
+    try:
+        if suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
             print(f"Sua dang ký ca id = {id} thanh cong")
         else:
             print(f"Sua dang ký ca id = {id} that bai")

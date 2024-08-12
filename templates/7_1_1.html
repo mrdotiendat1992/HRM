@@ -250,19 +250,37 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <form action="/suadoi_dangky_ca" method="POST">
-                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
-                        <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
-                        <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
-                        <input type="hidden" name="id" value={{row[8]}}></input>
-                        <td>{{row[1]}}</td>
-                        <td>{{row[2]}}</td>
-                        <td>{{row[3]}}</td>
-                        <td>{{row[4]}}</td>
-                        <td><input class="input_ca" name="ca" value={{row[5]}} onchange='this.form.submit()'> </td>
-                        <td class="date_en">{{row[6]}}</td>
-                        <td class="date_en">{{row[7]}}</td>
-                    </form>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>
+                        <form action="/suadoi_dangky_ca" method="POST">
+                            <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
+                            <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
+                            <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
+                            <input type="hidden" name="id" value={{row[8]}}></input>
+                            <input class="input_ca" name="ca" value={{row[5]}} onchange='this.form.submit()'> 
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/suadoi_ngaybatdau_ca" method="POST">
+                            <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
+                            <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
+                            <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
+                            <input type="hidden" name="id" value={{row[8]}}></input>
+                            <input type="date" name="ngaybatdau_ca" value={{row[6]}} onchange='this.form.submit()'> 
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/suadoi_ngayketthuc_ca" method="POST">
+                            <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
+                            <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
+                            <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
+                            <input type="hidden" name="id" value={{row[8]}}></input>
+                            <input type="date" name="ngayketthuc_ca" value={{row[7]}} onchange='this.form.submit()'> 
+                        </form>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>
