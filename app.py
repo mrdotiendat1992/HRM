@@ -2732,7 +2732,7 @@ def danhsach_tangca(chuyen:list,ngay):
         for ch in chuyen:
             query += f" Chuyen_to='{ch}' or"
         query = query[:-2] + f" ) and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        # print(query)
+        print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
@@ -2753,7 +2753,7 @@ def danhsach_tangca(chuyen:list,ngay):
             "Ca": row[13],
             "Giờ vào": row[14][:5] if row[14] else "",
             "Giờ ra": row[15][:5] if row[15] else "",
-            "HR phê duyệt": row[16]           
+            "HR phê duyệt": row[16] if row[16] else ""     
             } for row in rows]
         # print(result)
         conn.close()
@@ -2908,3 +2908,61 @@ def danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong):
         return result
     except Exception as e:
         return []
+    
+def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen, 
+                       phongban, ngay, giotangcasang, giotangcasangthucte, 
+                       giotangca, giotangcathucte, giotangcadem, giotangcademthucte, 
+                       ca, giovao, giora, hrpheduyet):
+    query = f"""INSERT INTO Dang_ky_tang_ca VALUES ('{nhamay}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}',"""
+    if giotangcasang:
+        query += f"'{giotangcasang}',"
+    else:
+        query += 'NULL,'
+    if giotangcasangthucte:
+        query += f"'{giotangcasangthucte}',"
+    else:
+        query += 'NULL,'
+    if giotangca:
+        query += f"'{giotangca}',"
+    else:
+        query += 'NULL,'
+    if giotangcathucte:
+        query += f"'{giotangcathucte}',"
+    else:
+        query += 'NULL,'
+    if giotangcadem:
+        query += f"'{giotangcadem}',"
+    else:
+        query += 'NULL,'
+    if giotangcademthucte:
+        query += f"'{giotangcademthucte}',"
+    else:
+        query += 'NULL,'
+    if ca:
+        query += f"'{ca}',"
+    else:
+        query += 'NULL,'
+    if giovao:
+        query += f"'{giovao}',"
+    else:
+        query += 'NULL,'
+    if giora:
+        query += f"'{giora}',"
+    else:
+        query += 'NULL,'
+    if hrpheduyet:
+        query += f"'{hrpheduyet}')"
+    else:
+        query += 'NULL)'
+    print(query)
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    try:
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dang ky tang ca: {e}")
+        return False
+    

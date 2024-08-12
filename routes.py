@@ -3515,8 +3515,28 @@ def tailen_danhsach_tangca():
                 file.save(filepath)
                 data = pd.read_excel(filepath ).to_dict(orient="records")
                 for row in data:
-                    print(row)
+                    nhamay = row['Nhà máy']
+                    mst = int(row["Mã số thẻ"])
+                    hoten = row["Họ tên"]
+                    chucdanh = row["Chức danh"]
+                    chuyen = row["Chuyền"]
+                    phongban = row["Phòng ban"]
+                    ngay = row["Ngày"] 
+                    giotangcasang = row["Tăng ca sáng"] if not pd.isna(row["Tăng ca sáng"]) else ""
+                    giotangcasangthucte = row["Tăng ca sáng thực tế"] if not pd.isna(row["Tăng ca sáng thực tế"]) else ""
+                    giotangca = row["Giờ tăng ca"] if not pd.isna(row["Giờ tăng ca"]) else ""
+                    giotangcathucte = row["Giờ tăng ca thực tế"] if not pd.isna(row["Giờ tăng ca thực tế"]) else ""
+                    giotangcadem = row["Tăng ca đêm"] if not pd.isna(row["Tăng ca đêm"]) else ""
+                    giotangcademthucte = row["Tăng ca đêm thực tế"] if not pd.isna(row["Tăng ca đêm thực tế"]) else ""
+                    ca = row["Ca"] if not pd.isna(row["Ca"]) else ""
+                    giovao = row["Giờ vào"] if not pd.isna(row["Giờ vào"]) else ""
+                    giora = row["Giờ ra"] if not pd.isna(row["Giờ ra"]) else ""
+                    hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
+                    if them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen, phongban, ngay, giotangcasang, giotangcasangthucte, giotangca, giotangcathucte, giotangcadem, giotangcademthucte, ca, giovao, giora, hrpheduyet):
+                        flash("Thêm đăng ký tăng ca thành công !!!")
+                    else:
+                        flash("Thêm đăng ký tăng ca thất bại !!!")        
             except Exception as e:
                 print(e)
                     
-    return redirect("/dangki_tangca_web")
+        return redirect("/dangki_tangca_web")

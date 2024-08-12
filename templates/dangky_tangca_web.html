@@ -91,7 +91,7 @@
                 <input hidden name="chuyen" value="{{ request.args.getlist('chuyen') }}">
                 <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
             </form>
-            <form method='POST' action="/tailen_danhsach_tangca">
+            <form method='POST' action="/tailen_danhsach_tangca" enctype="multipart/form-data">
                 <input type="file" name="file">
                 <button class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></button>
             </form>
@@ -157,12 +157,12 @@
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
                         <td>{{row["Ngày"]}}</td>
-                        <td class="gio"><input type="time" name="tangcasang" value='{{row["Tăng ca sáng"]}}' oninput="this.form.submit()" onchange="handleChange()"></input></td>
-                        <td class="gio"><input type="time" name="tangcasangthucte" value={{row["Tăng ca sáng thực tế"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
-                        <td class="gio"><input type="time" name="tangca" value={{row["Giờ tăng ca"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
-                        <td class="gio"><input type="time" name="tangcathucte" value={{row["Giờ tăng ca thực tế"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
-                        <td class="gio"><input type="time" name="tangcadem" value={{row["Tăng ca đêm"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
-                        <td class="gio"><input type="time" name="tangcademthucte" value={{row["Tảng ca đầu thực tế"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
+                        <td class="gio"><input type="time" name="tangcasang" value='{{row["Tăng ca sáng"]}}'  onchange="handleChange()"></input></td>
+                        <td class="gio"><input type="time" name="tangcasangthucte" value={{row["Tăng ca sáng thực tế"]}}  onchange="this.form.submit()"></input></td>
+                        <td class="gio"><input type="time" name="tangca" value={{row["Giờ tăng ca"]}}  onchange="this.form.submit()"></input></td>
+                        <td class="gio"><input type="time" name="tangcathucte" value={{row["Giờ tăng ca thực tế"]}}  onchange="this.form.submit()"></input></td>
+                        <td class="gio"><input type="time" name="tangcadem" value={{row["Tăng ca đêm"]}}  onchange="this.form.submit()"></input></td>
+                        <td class="gio"><input type="time" name="tangcademthucte" value={{row["Tảng ca đầu thực tế"]}}  onchange="this.form.submit()"></input></td>
                         <td>{{row["Ca"]}}</td>
                         <td class="gio">{{row["Giờ vào"]}}</td>
                         <td class="gio">{{row["Giờ ra"]}}</td>
