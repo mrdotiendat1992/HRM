@@ -6,7 +6,7 @@ import pyodbc
 import openpyxl
 from openpyxl.styles import Font, PatternFill
 import pandas as pd
-from pandas import DataFrame, ExcelWriter
+from pandas import DataFrame, ExcelWriter,to_numeric,to_datetime, to_timedelta
 from datetime import datetime, timedelta
 import os
 from werkzeug.utils import secure_filename

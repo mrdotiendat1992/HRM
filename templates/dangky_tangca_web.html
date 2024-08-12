@@ -16,6 +16,7 @@
         overflow: hidden; /* Ẩn phần văn bản tràn ra */
         text-overflow: ellipsis; /* Thêm dấu ... vào phần văn bản bị ẩn */
         font-weight: bold;
+        font-size: 11px;
     }
     th {
         text-align: center;
@@ -37,6 +38,11 @@
     }
     .highlightable {
         background-color: yellow;
+    }
+    #header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
     }
 {% endblock style %}
     
@@ -80,6 +86,15 @@
         <div id="header">
             <h3>Danh sách tăng ca</h3>
             <h5><b>Tổng: {{count}}</b></h5>
+            <form method='POST' action="/tai_danhsach_tangca">
+                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                <input hidden name="chuyen" value="{{ request.args.getlist('chuyen') }}">
+                <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
+            </form>
+            <form method='POST' action="/tailen_danhsach_tangca">
+                <input type="file" name="file">
+                <button class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></button>
+            </form>
             <div class="pagination">{{pagination.links}}</div>
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
@@ -88,7 +103,7 @@
                     <th>MST</th>
                     <th>Họ tên</th>
                     <th>Chuyền</th>
-                    <th>Phòng ban</th>
+                    <th>Ngày</th>
                     <th>Tăng ca sáng</th>
                     <th>Tăng ca sáng thực tế</th>
                     <th>Giờ tăng ca</th>
@@ -108,7 +123,7 @@
                     <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
-                        <td>{{row["Phòng ban"]}}</td>
+                        <td>{{row["Ngày"]}}</td>
                         <td class="gio">{{row["Tăng ca sáng"]}}</td>
                         <td class="gio">{{row["Tảng ca sáng thực tế"]}}</td>
                         <td class="gio">{{row["Giờ tăng ca"]}}</td>
@@ -141,7 +156,7 @@
                         <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
-                        <td>{{row["Phòng ban"]}}</td>
+                        <td>{{row["Ngày"]}}</td>
                         <td class="gio"><input type="time" name="tangcasang" value='{{row["Tăng ca sáng"]}}' oninput="this.form.submit()" onchange="handleChange()"></input></td>
                         <td class="gio"><input type="time" name="tangcasangthucte" value={{row["Tăng ca sáng thực tế"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>
                         <td class="gio"><input type="time" name="tangca" value={{row["Giờ tăng ca"]}} oninput="this.form.submit()" onchange="this.form.submit()"></input></td>

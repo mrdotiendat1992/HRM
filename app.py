@@ -2724,14 +2724,14 @@ def lay_chuyen_theo_mst(mst):
         print(e)
         return None 
     
-def danhsach_tangca(chuyen,ngay):
+def danhsach_tangca(chuyen:list,ngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where "
+        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where ("
         for ch in chuyen:
             query += f" Chuyen_to='{ch}' or"
-        query = query[:-2] + f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC"
+        query = query[:-2] + f" ) and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
         # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()

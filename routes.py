@@ -2826,7 +2826,7 @@ def nhansunhangiaytoxinnghikhac():
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
-            if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==4091):
+            if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369 ):
                 if nhangiayto == "Có":    
                     nhansu_nhangiayto_xinnghikhac(id)
                     flash(f"Thư ký {current_user.hoten} đã nhận giấy tờ cho phiếu xin nghỉ khác số {id} !!!")
@@ -3460,4 +3460,63 @@ def nhansu_them_xinnghikhac():
             except Exception as e:
                 print(e)
         return redirect("/muc7_1_6")
-        
+
+@app.route("/tai_danhsach_tangca", methods=["POST"])
+def tai_danhsach_tangca():
+    if request.method=="POST":
+        chuyen = request.form.get("chuyen").replace("[","").replace("]", "").replace("'", "").replace(" ", "").split(",")
+        ngay = request.form.get("ngay")
+        # print(chuyen, ngay)   
+        danhsach = danhsach_tangca(chuyen,ngay)
+        data = [x for x in danhsach if not x["HR phê duyệt"]]
+        # print(data)
+        ngay = datetime.now().date()     
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_tangca_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response   
+    
+@app.route("/tailen_danhsach_tangca", methods=["POST"])
+def tailen_danhsach_tangca():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                for row in data:
+                    print(row)
+            except Exception as e:
+                print(e)
+                    
+    return redirect("/dangki_tangca_web")
