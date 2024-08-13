@@ -29,7 +29,7 @@
 {% block content %}
 <div class="scroll">
     <br>
-    <h1>Bảng công tổng</h1>
+    <h1>Bảng công tăng ca đêm</h1>
     <br>
     <div id="filter">
         <form method="GET">
@@ -94,8 +94,6 @@
                 <th>29</th>
                 <th>30</th>
                 <th>31</th>
-                <th>Thử việc</th>
-                <th>Chính thức</th>
             </tr>
         </thead>
         <tbody>
@@ -142,14 +140,13 @@
                     <td>{{row[37]}}</td>
                     <td>{{row[38]}}</td>
                     <td>{{row[39]}}</td>
-                    <td>{{row[40]}}</td>
-                    <td>{{row[41]}}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>  
 </div>
 <script>
+    
     function changeFormatDate(date){
         try{
             return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
@@ -171,6 +168,7 @@
             }
         });
     });
+
 
 </script>
 {% endblock content %}

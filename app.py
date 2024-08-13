@@ -2985,3 +2985,63 @@ def lay_bangcong_thucte(thang,nam,bophan,chuyen):
     except Exception as e:
         print(f"Loi lay bang cong tong thuc te: {e}")
         return []
+    
+def lay_tangcachedo_web(thang,nam,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[TANG_CA_CHE_DO_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang tang ca che do: {e}")
+        return []
+    
+def lay_tangcangay_web(thang,nam,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang tang ca ngay: {e}")
+        return []
+    
+def lay_tangcadem_web(thang,nam,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[TANG_CA_DEM_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang tang ca dem: {e}")
+        return []
