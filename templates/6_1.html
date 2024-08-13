@@ -42,6 +42,16 @@
         <input type="hidden" name="mst" id="mst">
         <div class="row">
             <div class="col-3">
+                <div style="display: flex; align-items: center;justify-content: space-between;">
+                    <form method="POST" action="/taifilemaudieuchuyen">
+                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-download"></i></button>
+                    </form>
+                    <form method="POST" action="/capnhatdieuchuyentheofile" enctype = "multipart/form-data">
+                        <input type="file" name="file">
+                        <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
+                    </form>
+                </div>
+                <hr/>
                 <h4 id="hoten"></h4>
                 <div class="form-group">
                     <label for="masothe">Mã số thẻ</label>

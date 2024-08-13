@@ -2966,3 +2966,22 @@ def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen,
         print(f"Loi them dang ky tang ca: {e}")
         return False
     
+def lay_bangcong_thucte(thang,nam,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CONG_TONG_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang cong tong thuc te: {e}")
+        return []

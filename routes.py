@@ -3540,3 +3540,50 @@ def tailen_danhsach_tangca():
                 print(e)
                     
         return redirect("/dangki_tangca_web")
+
+@app.route("/taifilemaudieuchuyen", methods=["POST"])
+def taifilemaudieuchuyen():
+    if request.method=="POST":
+        return send_file(FILE_MAU_DIEU_CHUYEN, as_attachment=True, download_name="dieuchuyen.xlsx")
+
+@app.route("/capnhatdieuchuyentheofile", methods=["POST"])
+def capnhatdieuchuyentheofile():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                for row in data:
+                    macongty = row["Nhà máy"]
+                    if macongty == current_user.macongty:
+                        masothe = row["Mã số thẻ"]
+                        chuyencu = row["Chuyền cũ"]
+                        chuyenmoi = row["Chuyền mới"]
+                        chucvucu = row["Chức vụ cũ"]
+                        
+                        
+            except Exception as e:
+                print(e)
+    return redirect("/muc6_2")
+
+@app.route("/bangcong_web", methods=["GET"])
+def bangcong_web():
+    thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+    nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+    bophan = request.args.get("bophan")
+    chuyen = request.args.get("chuyen")
+    danhsach = lay_bangcong_thucte(thang,nam,bophan,chuyen)
+    total = len(danhsach)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 20
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("bangcong_web.html",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=total)

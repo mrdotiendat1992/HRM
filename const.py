@@ -35,3 +35,5 @@ FILE_MAU_DANGKY_KPI = os.path.join(os.path.dirname(__file__), r'static/uploads/m
 FILE_MAU_CAPNHAT_STK = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/capnhatstk/capnhatstk.xlsx')
 
 FILE_MAU_THEM_HOPDONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/nhaphophong/taohopdong.xlsx')
+
+FILE_MAU_DIEU_CHUYEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/dieuchuyen/dieuchuyen.xlsx')
