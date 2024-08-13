@@ -838,7 +838,7 @@ def lay_user(user):
     else:
         return None
 
-def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory,chucvu, ghichu):
+def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory,chucvu, ghichu, chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -871,6 +871,8 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
             query += f" AND Chuc_vu LIKE N'%{chucvu}%'"
         if ghichu:
             query += f" AND Ghi_chu LIKE N'%{ghichu}%'"
+        if chuyen:
+            query += f" AND Line LIKE N'%{chuyen}%'"
         
         query += " ORDER BY CAST(mst AS INT) ASC"
         users = cursor.execute(query).fetchall()

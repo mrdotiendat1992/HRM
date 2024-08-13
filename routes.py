@@ -267,7 +267,8 @@ def home():
         trangthai = request.args.get("Trạng thái")
         hccategory = request.args.get("Headcount Category")
         ghichu = request.args.get("Ghi chú")
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu)   
+        chuyen = request.args.get("Chuyền")
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)   
         count = len(users)
         cacphongban = laycacphongban()
         cacto = laycacto()
@@ -302,9 +303,17 @@ def home():
         trangthai = request.form.get("Trạng thái")
         hccategory = request.form.get("Headcount Category")
         ghichu = request.form.get("Ghi chú")
-            
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu,ghichu)      
+        chuyen = request.form.get("Chuyền")
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
         df = pd.DataFrame(users)
+
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        
+        
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
