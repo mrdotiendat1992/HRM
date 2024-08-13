@@ -41,6 +41,13 @@
         </form>
         <div class="pagination">{{ pagination.links }}</div>
         <h5>Tổng: {{count}}</h5>
+        <form method="POST">
+            <input type="hidden" name="nam" value={{request.args.get('nam','')}}>
+            <input type="hidden" name="thang" value={{request.args.get('thang','')}}>
+            <input type="hidden" name="bophan" value={{request.args.get('bophan','')}}>
+            <input type="hidden" name="chuyen" value={{request.args.get('chuyen','')}}>
+            <button class="btn btn-success btn-sm" type="submit" name="export" value="1"><i class="fas fa-fw fa-download"></i></button>
+        </form>
     </div>
     <br>
     <table class="table table-bordered table-hover table-sm">
