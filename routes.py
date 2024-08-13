@@ -3803,7 +3803,7 @@ def tangcangay_web():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("tangca_chedo.html",
+        return render_template("tangca_ngay.html",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -3912,7 +3912,7 @@ def tangcadem_web():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("tangca_chedo.html",
+        return render_template("tangca_dem.html",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
