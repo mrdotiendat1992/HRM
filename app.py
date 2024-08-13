@@ -2517,21 +2517,21 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
                 """
         elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'
                 """
         elif loaihopdong == "Hợp đồng vô thời hạn":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDKXDTH='{ngaybatdau}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'"""
         else:
             query = None
@@ -2555,7 +2555,7 @@ def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         cursor = conn.cursor()
         ngayketthuc = f"'{ngayketthuc}'" if ngayketthuc else 'NULL'
         query = f"""
-        update QUAN_LY_HD set MST='{masothe}',HO_TEN=N'{hoten}',GIOI_TINH='{gioitinh}',NGAY_SINH='{ngaysinh}',DIA_CHI=N'{thuongtru}',TAM_TRU=N'{tamtru}',
+        update QUAN_LY_HD set MST='{masothe}',HO_TEN=N'{hoten}',GIOI_TINH=N'{gioitinh}',NGAY_SINH='{ngaysinh}',DIA_CHI=N'{thuongtru}',TAM_TRU=N'{tamtru}',
         CCCD='{cccd}',NGAY_CAP='{ngaycapcccd}',LOAI_HD=N'{loaihopdong}',CHUC_DANH=N'{chucdanh}',PHONG_BAN='{phongban}',CHUYEN='{chuyen}',CAP_BAC='{capbac}',
         LCB='{luongcoban}',PHU_CAP='{phucap}',NGAY_KY='{ngaybatdau}',NGAY_HET_HAN={ngayketthuc} where ID='{id}'
         """
