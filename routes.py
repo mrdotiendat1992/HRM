@@ -321,9 +321,9 @@ def home():
         df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         
@@ -3834,8 +3834,6 @@ def tangcachedo_web():
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
-        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
         output = BytesIO()
@@ -3943,8 +3941,6 @@ def tangcangay_web():
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
-        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
         output = BytesIO()
@@ -4052,8 +4048,6 @@ def tangcadem_web():
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
-        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
         output = BytesIO()
