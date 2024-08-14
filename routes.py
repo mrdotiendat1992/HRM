@@ -1343,32 +1343,12 @@ def dieuchuyen():
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
                     dichuyenthaisandilamlai(mst,
-                                loaidieuchuyen,
-                                vitricu,
-                                vitrimoi,
-                                chuyencu,
-                                chuyenmoi,
-                                gradecodecu,
-                                gradecodemoi,
-                                sectioncodecu,
-                                sectioncodemoi,
-                                hccategorycu,
-                                hccategorymoi,
-                                departmentcu,
-                                departmentmoi,
-                                sectiondescriptioncu,
-                                sectiondescriptionmoi,
-                                employeetypecu,
-                                employeetypemoi,
-                                positioncodedescriptioncu,
-                                positioncodedescriptionmoi,
-                                positioncodecu,
-                                positioncodemoi,
-                                vitriencu,
-                                vitrienmoi,
-                                ngaydieuchuyen,
-                                ghichu
-                                )
+                            vitricu,
+                            chuyencu,
+                            gradecodecu,
+                            hccategorycu,
+                            ngaydieuchuyen
+                            )
                     print("Điều chuyển thành công !!!")
                 except Exception as e:
                     print(e)
@@ -3588,9 +3568,32 @@ def capnhatdieuchuyentheofile():
                         phongbancu = row["Phòng ban cũ"]
                         phongbanmoi = row["Phòng ban mới"]
                         employeetypecu = row["Employee type cũ"]
-                        employeetypecmoi = row["Employee type mới"]
+                        employeetypemoi = row["Employee type mới"]
                         positioncodecu = row["Position code cũ"]
                         positioncodemoi = row["Position code mới"]
+                        positioncodedescriptioncu = row["Position code description cũ"]
+                        positioncodedescriptionmoi = row["Position code description mới"]
+                        loaidieuchuyen = row["Loại điều chuyển"]
+                        ngay = row["Ngày"]
+                        ghichu = row["Ghi chú"]
+                        if loaidieuchuyen == "Chuyển vị trí":
+                            dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
+                                             chuyencu, chuyenmoi,capbaccu,capbacmoi,
+                                             sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
+                                             phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,
+                                             employeetypecu,employeetypemoi,positioncodedescriptioncu,positioncodedescriptionmoi,
+                                             positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu)
+                        elif loaidieuchuyen == "Nghỉ việc":
+                            dichuyennghiviec(masothe,chucdanhcu,capbaccu,hccategorycu,ngay,ghichu)
+                        elif loaidieuchuyen == "Nghỉ thai sản":
+                            dichuyennghithaisan(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,chuyencu,chuyenmoi,
+                            capbaccu,capbacmoi,sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
+                            phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,employeetypecu,employeetypemoi,
+                            positioncodedescriptioncu,positioncodedescriptionmoi,positioncodecu,positioncodemoi,
+                            chucdanhtacu,chucdanhtamoi,ngay,ghichu)
+                        elif loaidieuchuyen == "Thai sản đi làm lại":
+                            dichuyenthaisandilamlai(masothe,chucdanhcu,chuyencu,
+                                                    capbaccu,hccategorycu,ngay)
             except Exception as e:
                 print(e)
     return redirect("/muc6_2")

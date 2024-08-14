@@ -260,41 +260,19 @@ def dichuyennghithaisan(mst,
         return
 
 def dichuyenthaisandilamlai(mst,
-                            loaidieuchuyen,
                             vitricu,
-                            vitrimoi,
                             chuyencu,
-                            chuyenmoi,
                             gradecodecu,
-                            gradecodemoi,
-                            sectioncodecu,
-                            sectioncodemoi,
                             hccategorycu,
-                            hccategorymoi,
-                            departmentcu,
-                            departmentmoi,
-                            sectiondescriptioncu,
-                            sectiondescriptionmoi,
-                            employeetypecu,
-                            employeetypemoi,
-                            positioncodedescriptioncu,
-                            positioncodedescriptionmoi,
-                            positioncodecu,
-                            positioncodemoi,
-                            vitriencu,
-                            vitrienmoi,
-                            ngaydieuchuyen,
-                            ghichu
+                            ngaydieuchuyen
                             ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        truocngaydilamlai = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodecu}','{hccategorycu}','{hccategorycu}',GETDATE())
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """    
-        # # 
         cursor.execute(query)
         conn.commit()
         conn.close()
