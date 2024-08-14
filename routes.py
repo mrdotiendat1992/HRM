@@ -2246,7 +2246,8 @@ def export_dsdktt():
     df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
     df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
     df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        
+    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y") 
+      
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False)
@@ -2274,7 +2275,7 @@ def export_dsdktt():
     time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
     # Trả file về cho client
     response = make_response(output.read())
-    response.headers['Content-Disposition'] = f'attachment; filename=bangtangcadem_{time_stamp}.xlsx'
+    response.headers['Content-Disposition'] = f'attachment; filename=danhsach_ungvien_{time_stamp}.xlsx'
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response 
       
