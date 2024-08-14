@@ -487,7 +487,7 @@ input[readonly] {
                 })
 
         })
-
+        document.getElementById("thuongtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
         document.getElementById("vitri").addEventListener("change", function() {
             var vitri = document.getElementById("vitri").value
             axios({

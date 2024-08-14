@@ -42,28 +42,41 @@
                             <span class="navbar-toggler-icon"></span>
                         </button>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="gap:20px;">
                                 <li class="nav-item">
                                     <a class="nav-link" href="/dangki_tangca_web">Đăng kí tăng ca</a>
                                 </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" aria-current="page" href="/chamcong_sang_web">Chấm công sáng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/chamcong_goc_web">Dữ liệu chấm công gốc</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/bangcong_web">Bảng công tổng</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/tangcachedo_web">Tăng ca chế độ</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/tangcangay_web">Tăng ca ngày</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/tangcadem_web">Tăng ca đêm</a>
-                                </li>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Dữ liệu chấm công
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/chamcong_sang_web">Chấm công sáng</a></li>
+                                        <li><a class="dropdown-item" href="/chamcong_goc_web">Dữ liệu chấm công gốc</a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Bảng công
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/bangcong_web">Bảng công tổng</a></li>
+                                        <li><a class="dropdown-item" href="/bangcong5ngay_web">Bảng công 5 ngày</a></li>
+                                        <li><a class="dropdown-item" href="/bangcongchot_web">Bảng công chốt</a></a></li>
+                                    </ul>
+                                </div>
+
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Tăng ca
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/tangcachedo_web">Tăng ca chế độ</a></li>
+                                        <li><a class="dropdown-item" href="/tangcangay_web">Tăng ca ngày</a></a></li>
+                                        <li><a class="dropdown-item" href="/tangcadem_web">Tăng ca đêm</a></li>
+                                    </ul>
+                                </div>
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>{{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
                                     <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button></form>
@@ -78,6 +91,6 @@
         {% block content %}
         
         {% endblock content %}
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
     </body>
 </html>

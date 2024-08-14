@@ -2860,7 +2860,7 @@ def danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"""Select * from Cham_cong_sang where Factory='{current_user.macongty}'"""
+        query = f"""Select * from Cham_cong_sang where Factory='{current_user.macongty}'  order by The_cham_cong asc"""
         if chuyen:
             query += f"and Chuyen_to = '{chuyen}'"
         if bophan:
@@ -2946,6 +2946,7 @@ def lay_bangcong_thucte(thang,nam,mst,bophan,chuyen):
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -2956,7 +2957,7 @@ def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_CHE_DO_THUC_TE] where Nha_may='{current_user.macongty}'"
+        query = f"select * from [HR].[dbo].[TANG_CA_CHE_DO_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -2978,7 +2979,7 @@ def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_THUC_TE] where Nha_may='{current_user.macongty}'"
+        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -3000,7 +3001,7 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_DEM_THUC_TE] where Nha_may='{current_user.macongty}'"
+        query = f"select * from [HR].[dbo].[TANG_CA_DEM_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -3022,7 +3023,29 @@ def lay_dulieu_chamcong_web():
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[NOT_DAP_THE_GOC] where Nha_may='{current_user.macongty}'"
+        query = f"select * from [HR].[dbo].[NOT_DAP_THE_GOC] where Nha_may='{current_user.macongty}' order by MST asc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cham cong goc: {e}")
+        return []
+    
+def lay_bangcong5ngay_web():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_TU_DONG_THUC_TE] where Nha_may='{current_user.macongty}' order by Ngay desc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cham cong goc: {e}")
+        return []
+    
+def lay_bangcongchot_web():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_THUC_TE] where Nha_may='{current_user.macongty}' order by Ngay desc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:

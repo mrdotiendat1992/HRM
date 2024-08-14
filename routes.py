@@ -4101,3 +4101,33 @@ def chamcong_goc_web():
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=total)
+
+@app.route("/bangcong5ngay_web", methods=["GET","POST"])
+def bangcong5ngay_web():
+    danhsach = lay_bangcong5ngay_web()
+    total = len(danhsach)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 20
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("bangcong5ngay_web.html",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=total)
+
+@app.route("/bangcongchot_web", methods=["GET","POST"])
+def bangcongchot_web():
+    danhsach = lay_bangcongchot_web()
+    total = len(danhsach)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 20
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("bangcongchot_web.html",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=total)
