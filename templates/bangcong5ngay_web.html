@@ -30,7 +30,6 @@
     
 {% block content %}
 <div class="scroll">
-    <br>
     <h1>Bảng công 5 ngày</h1>
     <br>
     <div style="display: flex; justify-content: space-between;">
@@ -46,10 +45,10 @@
             <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
         </form>
     </div>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; gap:20px;">
+        <h5>Tổng: {{count}}</h5>
+        <div class="pagination">{{ pagination.links }}</div>
         <form method="POST">
-            <h5>Tổng: {{count}}</h5>
-            <div class="pagination">{{ pagination.links }}</div>
             <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
             <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
             <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
