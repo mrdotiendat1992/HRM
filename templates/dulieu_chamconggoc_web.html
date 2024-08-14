@@ -1,0 +1,127 @@
+{% extends "12.html" %}
+
+{% block style %}
+    .scroll {
+        margin: 10px;
+        overflow-x: scroll;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    table td {  
+        color:blue;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+    #chuyen, #bophan {
+        width: 70px;
+    }
+    #form {
+        display: flex;
+        gap: 50px;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        font-size: 15px;
+        font-weight: bold;
+    }
+{% endblock style %}
+    
+{% block content %}
+<div class="scroll">
+    <br>
+    
+        <h1>Danh sách dập thẻ gốc</h1>
+        
+        <div id="form">
+            <h3>Tổng: {{count}}</h3>
+            <div class="pagination">{{ pagination.links }}</div>
+            <form method="POST">
+                <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
+            </form>
+        </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr class="bg-primary">
+                    <th>STT</th>
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chuyền</th>
+                    <th>Bộ phận</th>
+                    <th>Ngày</th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                    <tr data='{{row | safe }}'>
+                        <td>{{loop.index}}</td>
+                        <td>{{row[0]}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td class="date_en">{{row[5]}}</td>
+                        <td class="gio">{{row[6]}}</td>
+                        <td class="gio">{{row[7]}}</td>
+                        <td class="gio">{{row[8]}}</td>
+                        <td class="gio">{{row[9]}}</td>
+                        <td class="gio">{{row[10]}}</td>
+                        <td class="gio">{{row[11]}}</td>
+                        <td class="gio">{{row[12]}}</td>
+                        <td class="gio">{{row[13]}}</td>
+                        <td class="gio">{{row[14]}}</td>
+                        <td class="gio">{{row[15]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+</div>
+<script>
+    function changeFormatDate(date) {
+        if (date) {
+            const dateArray = date.split('-');
+            const year = dateArray[0];
+            const month = dateArray[1];
+            const day = dateArray[2];
+            return `${day}/${month}/${year}`;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const gio_vao = document.querySelectorAll('.gio');
+
+        gio_vao.forEach(gio => {
+            if (gio.textContent.trim() === 'None') {
+                gio.textContent = '';
+                gio.style.backgroundColor = 'gray';
+            }
+        });
+
+        const date_vao = document.querySelectorAll('.date_en');
+
+        date_vao.forEach(date => {
+            if (date.textContent.trim() === 'None') {
+                date.textContent = '';
+            } else {
+                date.textContent = changeFormatDate(date.textContent);
+            } 
+        });
+
+    });
+
+</script>
+{% endblock content %}

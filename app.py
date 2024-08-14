@@ -2882,31 +2882,15 @@ def danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"""WITH Bao_com_1_max AS (
-                    SELECT *,
-                        ROW_NUMBER() OVER (PARTITION BY MaChamCong ORDER BY Gio_vao DESC) AS rn
-                    FROM Bao_com_1
-                    WHERE NgayCham = '{ngay}'
-                )
-                SELECT Danh_sach_CBCNV.The_cham_cong,
-                    Danh_sach_CBCNV.Ho_ten,
-                    Danh_sach_CBCNV.Line,
-                    Danh_sach_CBCNV.Department,
-                    Bao_com_1_max.*
-                FROM Danh_sach_CBCNV
-                LEFT JOIN Bao_com_1_max
-                ON Bao_com_1_max.MaChamCong = Danh_sach_CBCNV.The_cham_cong
-                AND Bao_com_1_max.rn = 1
-                WHERE Danh_sach_CBCNV.Factory = 'NT1'
-                AND Danh_sach_CBCNV.Trang_thai_lam_viec = N'Đang làm việc' """
+        query = f"""Select * from Cham_cong_sang where Factory='{current_user.macongty}'"""
         if chuyen:
-            query += f"and Danh_sach_CBCNV.Line = '{chuyen}'"
+            query += f"and Chuyen_to = '{chuyen}'"
         if bophan:
-            query += f"and Danh_sach_CBCNV.Department = '{bophan}'"
+            query += f"and Bo_phan = '{bophan}'"
         print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
-        result = [row for row in rows if row[-1]] if cochamcong == "co" else  [row for row in rows if not row[-1]]
+        result = [row for row in rows if row[-2]] if cochamcong == "co" else  [row for row in rows if not row[-2]]
         return result
     except Exception as e:
         return []
@@ -2968,7 +2952,7 @@ def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen,
         print(f"Loi them dang ky tang ca: {e}")
         return False
     
-def lay_bangcong_thucte(thang,nam,bophan,chuyen):
+def lay_bangcong_thucte(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -2978,6 +2962,8 @@ def lay_bangcong_thucte(thang,nam,bophan,chuyen):
         if not nam:
             nam =  datetime.now().year
         query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
         if bophan:
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
@@ -2988,7 +2974,7 @@ def lay_bangcong_thucte(thang,nam,bophan,chuyen):
         print(f"Loi lay bang cong tong thuc te: {e}")
         return []
     
-def lay_tangcachedo_web(thang,nam,bophan,chuyen):
+def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -2998,6 +2984,8 @@ def lay_tangcachedo_web(thang,nam,bophan,chuyen):
         if not nam:
             nam =  datetime.now().year
         query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
         if bophan:
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
@@ -3008,7 +2996,7 @@ def lay_tangcachedo_web(thang,nam,bophan,chuyen):
         print(f"Loi lay bang tang ca che do: {e}")
         return []
     
-def lay_tangcangay_web(thang,nam,bophan,chuyen):
+def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -3018,6 +3006,8 @@ def lay_tangcangay_web(thang,nam,bophan,chuyen):
         if not nam:
             nam =  datetime.now().year
         query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
         if bophan:
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
@@ -3028,7 +3018,7 @@ def lay_tangcangay_web(thang,nam,bophan,chuyen):
         print(f"Loi lay bang tang ca ngay: {e}")
         return []
     
-def lay_tangcadem_web(thang,nam,bophan,chuyen):
+def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -3038,6 +3028,8 @@ def lay_tangcadem_web(thang,nam,bophan,chuyen):
         if not nam:
             nam =  datetime.now().year
         query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
         if bophan:
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
@@ -3046,4 +3038,15 @@ def lay_tangcadem_web(thang,nam,bophan,chuyen):
         return [x for x in data]
     except Exception as e:
         print(f"Loi lay bang tang ca dem: {e}")
+        return []
+    
+def lay_dulieu_chamcong_web():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[NOT_DAP_THE_GOC] where Nha_may='{current_user.macongty}'"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cham cong goc: {e}")
         return []

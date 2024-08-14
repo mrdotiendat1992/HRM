@@ -3571,9 +3571,26 @@ def capnhatdieuchuyentheofile():
                         masothe = row["Mã số thẻ"]
                         chuyencu = row["Chuyền cũ"]
                         chuyenmoi = row["Chuyền mới"]
-                        chucvucu = row["Chức vụ cũ"]
-                        
-                        
+                        chucdanhcu = row["Chức danh cũ"]
+                        chucdanhmoi = row["Chức danh mới"]
+                        chuyencu = row["Chuyền cũ"]
+                        chuyenmoi = row["Chuyền mới"]
+                        chucdanhtacu = row["Chức danh cũ"]
+                        chucdanhtamoi = row["Chức danh mới"]
+                        capbaccu = row["Cấp bậc cũ"]
+                        capbacmoi = row["Cấp bậc mới"]
+                        sectioncodecu = row["Section code cũ"]
+                        sectioncodemoi = row["Section code mới"]
+                        sectiondescriptioncu = row["Section description cũ"]
+                        sectiondescriptionmoi = row["Section description mới"]
+                        hccategorycu = row["HC category cũ"]
+                        hccategorymoi = row["HC category mới"]
+                        phongbancu = row["Phòng ban cũ"]
+                        phongbanmoi = row["Phòng ban mới"]
+                        employeetypecu = row["Employee type cũ"]
+                        employeetypecmoi = row["Employee type mới"]
+                        positioncodecu = row["Position code cũ"]
+                        positioncodemoi = row["Position code mới"]
             except Exception as e:
                 print(e)
     return redirect("/muc6_2")
@@ -3583,9 +3600,10 @@ def bangcong_web():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
-        danhsach = lay_bangcong_thucte(thang,nam,bophan,chuyen)
+        danhsach = lay_bangcong_thucte(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 20
@@ -3601,9 +3619,10 @@ def bangcong_web():
     elif request.method == "POST":
         thang = request.form.get("thang")
         nam = request.form.get("nam")
+        mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_bangcong_thucte(thang,nam,bophan,chuyen)
+        danhsach = lay_bangcong_thucte(thang,nam,mst,bophan,chuyen)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],
@@ -3693,9 +3712,10 @@ def tangcachedo_web():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
-        danhsach = lay_tangcachedo_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcachedo_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 20
@@ -3710,9 +3730,10 @@ def tangcachedo_web():
     elif request.method == "POST":
         thang = request.form.get("thang")
         nam = request.form.get("nam")
+        mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_tangcachedo_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcachedo_web(thang,nam,mst,bophan,chuyen)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],
@@ -3802,9 +3823,10 @@ def tangcangay_web():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
-        danhsach = lay_tangcangay_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcangay_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 20
@@ -3819,9 +3841,10 @@ def tangcangay_web():
     elif request.method == "POST":
         thang = request.form.get("thang")
         nam = request.form.get("nam")
+        mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_tangcangay_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcangay_web(thang,nam,mst,bophan,chuyen)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],
@@ -3911,9 +3934,10 @@ def tangcadem_web():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
-        danhsach = lay_tangcadem_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcadem_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 20
@@ -3928,9 +3952,10 @@ def tangcadem_web():
     elif request.method == "POST":
         thang = request.form.get("thang")
         nam = request.form.get("nam")
+        mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_tangcadem_web(thang,nam,bophan,chuyen)
+        danhsach = lay_tangcadem_web(thang,nam,mst,bophan,chuyen)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],
@@ -4014,3 +4039,18 @@ def tangcadem_web():
         response.headers['Content-Disposition'] = f'attachment; filename=bangtangcadem_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
+    
+@app.route("/chamcong_goc_web", methods=["GET","POST"])
+def chamcong_goc_web():
+    danhsach = lay_dulieu_chamcong_web()
+    total = len(danhsach)
+    page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 20
+    start = (page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("dulieu_chamconggoc_web.html",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=total)
