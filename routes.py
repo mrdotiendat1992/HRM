@@ -3775,11 +3775,9 @@ def tangcachedo_web():
             "29": row[37],
             "30": row[38],
             "31": row[39],
-            "Thử việc": row[40],
-            "Chính thức": row[41],
-            "Tháng": row[42],
-            "Năm": row[43],
-            "Nhà máy": row[44]
+            "Tháng": row[40],
+            "Năm": row[41],
+            "Nhà máy": row[42]
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
@@ -3886,11 +3884,9 @@ def tangcangay_web():
             "29": row[37],
             "30": row[38],
             "31": row[39],
-            "Thử việc": row[40],
-            "Chính thức": row[41],
-            "Tháng": row[42],
-            "Năm": row[43],
-            "Nhà máy": row[44]
+            "Tháng": row[40],
+            "Năm": row[41],
+            "Nhà máy": row[42]
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
@@ -3997,11 +3993,9 @@ def tangcadem_web():
             "29": row[37],
             "30": row[38],
             "31": row[39],
-            "Thử việc": row[40],
-            "Chính thức": row[41],
-            "Tháng": row[42],
-            "Năm": row[43],
-            "Nhà máy": row[44]
+            "Tháng": row[40],
+            "Năm": row[41],
+            "Nhà máy": row[42]
         } for row in danhsach]  
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
