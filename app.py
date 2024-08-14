@@ -2957,7 +2957,7 @@ def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_CHE_DO_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
+        query = f"select * from [HR].[dbo].[TANG_CA_CHE_DO_THUC_TE] where Nha_may='{current_user.macongty}'"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -2969,6 +2969,7 @@ def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -2979,7 +2980,7 @@ def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
+        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_THUC_TE] where Nha_may='{current_user.macongty}'"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -2991,6 +2992,7 @@ def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -3001,7 +3003,7 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[TANG_CA_DEM_THUC_TE] where Nha_may='{current_user.macongty}' order by MST asc"
+        query = f"select * from [HR].[dbo].[TANG_CA_DEM_THUC_TE] where Nha_may='{current_user.macongty}'"
         if not thang:
             thang = datetime.now().month
         if not nam:
@@ -3013,6 +3015,7 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
