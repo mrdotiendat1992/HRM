@@ -312,7 +312,20 @@ def home():
         df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -2224,10 +2237,46 @@ def export_dsdktt():
     ngaygui = request.form.get("ngaygui")
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
-    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(FOLDER_XUAT, f"tuyendung_{thoigian}.xlsx"), index=False)
     
-    return send_file(os.path.join(FOLDER_XUAT, f"tuyendung_{thoigian}.xlsx"), as_attachment=True)  
+    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        
+    output = BytesIO()
+    with ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    # Điều chỉnh độ rộng cột
+    output.seek(0)
+    workbook = openpyxl.load_workbook(output)
+    sheet = workbook.active
+
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 2)
+        sheet.column_dimensions[column_letter].width = adjusted_width
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+    time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+    # Trả file về cho client
+    response = make_response(output.read())
+    response.headers['Content-Disposition'] = f'attachment; filename=bangtangcadem_{time_stamp}.xlsx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    return response 
       
 @app.route("/check_hcname", methods=["POST"])
 def check_hcname():
