@@ -20,35 +20,35 @@ def run_before_every_request():
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
-                        Phan_quyen_thu_ky 
+                        (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
                     INNER JOIN 
-                        Diem_danh_bu
+                        Diem_danh_bu 
                     ON
-                        Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                        Diem_danh_bu.Nha_may= a.Nha_may and Diem_danh_bu.Line=a.Chuyen_to
                     WHERE 
-                        Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{current_user.masothe}'""").fetchone()[0]
+                        Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
                 quanly_soluong_xinnghiphep = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
-                        Phan_quyen_thu_ky 
+                        (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
                     INNER JOIN 
-                        Xin_nghi_phep
+                        Xin_nghi_phep 
                     ON
-                        Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                        Xin_nghi_phep.Nha_may= a.Nha_may and Xin_nghi_phep.Line=a.Chuyen_to
                     WHERE 
-                        Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{current_user.masothe}'""").fetchone()[0]
+                        Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
                 quanly_soluong_xinnghikhongluong = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
-                        Phan_quyen_thu_ky 
+                        (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
                     INNER JOIN 
-                        Xin_nghi_khong_luong
+                        Xin_nghi_khong_luong 
                     ON
-                        Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                        Xin_nghi_khong_luong.Nha_may= a.Nha_may and Xin_nghi_khong_luong.Chuyen=a.Chuyen_to
                     WHERE 
-                        Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{current_user.masothe}'""").fetchone()[0]
+                        Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
                 
                 g.notice["Quản lý"]={"Điểm danh bù":quanly_soluong_diemdanhbu,
                     "Xin nghỉ phép": quanly_soluong_xinnghiphep,
@@ -63,14 +63,21 @@ def run_before_every_request():
             if row[0]>0:
                 cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
                 query_kiemtra_loithe = f"""SELECT  COUNT(*)
+                    SELECT 
+                        COUNT(*) as row_count 
                     FROM 
-                        Danh_sach_loi_the_3
+                        (
+                            SELECT DISTINCT Nha_may, Chuyen_to, MST
+                            FROM Phan_quyen_thu_ky
+                        ) as distinct_pqt 
                     INNER JOIN 
-                        Phan_quyen_thu_ky
+                        Danh_sach_loi_the_3
                     ON
-                        Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
+                        Danh_sach_loi_the_3.Nha_may = distinct_pqt.Nha_may 
+                        AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
                     WHERE 
-                        Phan_quyen_thu_ky.MST='{current_user.masothe}' and Trang_thai is null """
+                        Danh_sach_loi_the_3.Trang_thai IS NULL 
+                        AND distinct_pqt.MST = '{current_user.masothe}'"""
                 # print(query_kiemtra_loithe)
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
                 # print(f"Loi the: {soluong_loithe}")
@@ -78,35 +85,50 @@ def run_before_every_request():
                 SELECT 
                     COUNT(*) as row_count 
                 FROM 
-                    Phan_quyen_thu_ky 
+                    (
+                        SELECT DISTINCT Nha_may, Chuyen_to, MST
+                        FROM Phan_quyen_thu_ky
+                    ) as distinct_pqt 
                 INNER JOIN 
                     Diem_danh_bu
                 ON
-                    Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                    Diem_danh_bu.Nha_may = distinct_pqt.Nha_may 
+                    AND Diem_danh_bu.Line = distinct_pqt.Chuyen_to
                 WHERE 
-                    Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                    Diem_danh_bu.Trang_thai = N'Chờ kiểm tra' 
+                    AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
                 thuky_soluong_xinnghiphep = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
-                        Phan_quyen_thu_ky 
+                        (
+                            SELECT DISTINCT Nha_may, Chuyen_to, MST
+                            FROM Phan_quyen_thu_ky
+                        ) as distinct_pqt 
                     INNER JOIN 
                         Xin_nghi_phep
                     ON
-                        Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                        Xin_nghi_phep.Nha_may = distinct_pqt.Nha_may 
+                        AND Xin_nghi_phep.Line = distinct_pqt.Chuyen_to
                     WHERE 
-                        Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                        Xin_nghi_phep.Trang_thai = N'Chờ kiểm tra' 
+                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
                 thuky_soluong_xinnghikhongluong = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
-                        Phan_quyen_thu_ky 
+                        (
+                            SELECT DISTINCT Nha_may, Chuyen_to, MST
+                            FROM Phan_quyen_thu_ky
+                        ) as distinct_pqt 
                     INNER JOIN 
                         Xin_nghi_khong_luong
                     ON
-                        Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                        Xin_nghi_khong_luong.Nha_may = distinct_pqt.Nha_may 
+                        AND Xin_nghi_khong_luong.Chuyen = distinct_pqt.Chuyen_to
                     WHERE 
-                        Xin_nghi_khong_luong.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{current_user.masothe}'""").fetchone()[0]
+                        Xin_nghi_khong_luong.Trang_thai = N'Chờ kiểm tra' 
+                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
                 g.notice["Thư ký"]={"Danh sách lỗi thẻ":soluong_loithe,
                                     "Điểm danh bù":thuky_soluong_diemdanhbu,
                                     "Xin nghỉ phép": thuky_soluong_xinnghiphep,
