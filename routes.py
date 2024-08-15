@@ -3431,12 +3431,12 @@ def chamcong_sang_web():
         ngay = datetime.now().date()     
         danhsach = danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong)
         data = [{
-        "Mã số thẻ": row[0],
-        "Họ tên": row[1],
-        "Chuyền": row[2],
-        "Phòng ban": row[3],
-        "Ngày": row[6],
-        "Giờ vào": row[7]
+        "Mã số thẻ": row[1],
+        "Họ tên": row[2],
+        "Chuyền": row[3],
+        "Phòng ban": row[4],
+        "Ngày": ngay,
+        "Giờ vào": row[5]
         } for row in danhsach]
         df = DataFrame(data)
         output = BytesIO()
