@@ -72,7 +72,7 @@
             </div>
 
             <form method="GET">
-                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()">
+                <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()">
             </form>            
 
             <form method="POST" action="/export_dsxnk">
