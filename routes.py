@@ -3433,10 +3433,10 @@ def chamcong_sang_web():
         data = [{
         "Mã số thẻ": row[1],
         "Họ tên": row[2],
-        "Chuyền": row[3],
-        "Phòng ban": row[4],
+        "Chuyền": row[4],
+        "Phòng ban": row[5],
         "Ngày": ngay,
-        "Giờ vào": row[5]
+        "Giờ vào": row[7]
         } for row in danhsach]
         df = DataFrame(data)
         output = BytesIO()
