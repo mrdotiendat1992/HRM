@@ -1617,9 +1617,7 @@ def xinnghikhongluong():
 def danhsachxinnghikhac():
     if request.method == "GET":
         mst = request.args.get("mst")
-        ngaynghi = request.args.get("ngaynghi")
-        loainghi = request.args.get("loainghi")
-        danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
+        danhsach = laydanhsachxinnghikhac(mst)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10

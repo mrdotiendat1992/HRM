@@ -71,11 +71,15 @@
                 </div>
             </div>
 
+            <form method="GET">
+                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()">
+            </form>            
+
             <form method="POST" action="/export_dsxnk">
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                 <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
                 <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                <button type="submit" class="btn btn-success btn-sm">Xuất Excel</button>
+                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
         </div>

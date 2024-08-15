@@ -1819,7 +1819,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         print(e)
         return False
     
-def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
+def laydanhsachxinnghikhac(mst):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1835,10 +1835,6 @@ def laydanhsachxinnghikhac(mst=None,ngaynghi=None,loainghi=None):
         
         if mst:
             query += f"AND Xin_nghi_khac.MST='{mst}'" 
-        if ngaynghi:
-            query += f"AND Xin_nghi_khac.Ngay_nghi = '{ngaynghi}'" 
-        if loainghi:
-            query += f"AND Xin_nghi_khac.Loai_nghi = N'{loainghi}'"
             
         query += " ORDER BY Xin_nghi_khac.Ngay_nghi DESC, Xin_nghi_khac.MST ASC"
         
