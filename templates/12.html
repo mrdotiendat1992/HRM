@@ -20,7 +20,16 @@
 
         <style>
             {% block style %}
+            .dropdown-submenu {
+                position: relative;
+            }
             
+            .dropdown-submenu > .dropdown-menu {
+                top: 0;
+                left: -100%;
+                margin-left: 0;
+                border-radius: 0;
+            }
             {% endblock style %}
         </style>
     </head>
@@ -75,6 +84,29 @@
                                         <li><a class="dropdown-item" href="/tangcachedo_web">Tăng ca chế độ</a></li>
                                         <li><a class="dropdown-item" href="/tangcangay_web">Tăng ca ngày</a></a></li>
                                         <li><a class="dropdown-item" href="/tangcadem_web">Tăng ca đêm</a></li>
+                                    </ul>
+                                </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Tra cứu
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                        <li class="dropdown-submenu">
+                                            <a class="dropdown-item" href="#">Ca làm việc</a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <!-- Add the work shifts here -->
+                                                <li><a class="dropdown-item" href="#">A1</a></li>
+                                                <li><a class="dropdown-item" href="#">A2</a></li>
+                                                <li><a class="dropdown-item" href="#">A3</a></li>
+                                            </ul>
+                                            <a class="dropdown-item" href="#">Các mã nghỉ khác</a>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <!-- Add the work shifts here -->
+                                                <li><a class="dropdown-item" href="#">A1</a></li>
+                                                <li><a class="dropdown-item" href="#">A2</a></li>
+                                                <li><a class="dropdown-item" href="#">A3</a></li>
+                                            </ul>
+                                        </li>
                                     </ul>
                                 </div>
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">

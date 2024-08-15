@@ -1403,7 +1403,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  *
+            SELECT  DISTINCT Diem_danh_bu.*
             FROM 
                 Diem_danh_bu 
             INNER JOIN 
@@ -1415,7 +1415,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         else:
             if mstquanly:
                 query = f"""
-                SELECT  *
+                SELECT DISTINCT Diem_danh_bu.*
                 FROM 
                     Diem_danh_bu 
                 INNER JOIN 
