@@ -18,7 +18,7 @@
     #chuyen, #bophan {
         width: 70px;
     }
-    #form {
+    #filter {
         display: flex;
         gap: 50px;
         justify-content: center;
@@ -34,8 +34,11 @@
     <br>
     
         <h1>Danh sách dập thẻ gốc</h1>
-        
-        <div id="form">
+        <div id="filter">
+            <form method="GET">
+                <input type="text" name="mst" onchange="this.form.submit()" placeholder="Mã số thẻ" value={{request.args.get('mst','')}}></input>
+                <input type="date" name="ngay" onchange="this.form.submit()" value={{request.args.get('ngay','')}} ></input>
+            </form>
             <h3>Tổng: {{count}}</h3>
             <div class="pagination">{{ pagination.links }}</div>
             <form method="POST">

@@ -4081,7 +4081,9 @@ def tangcadem_web():
     
 @app.route("/chamcong_goc_web", methods=["GET","POST"])
 def chamcong_goc_web():
-    danhsach = lay_dulieu_chamcong_web()
+    mst = request.args.get("mst")
+    ngay = request.args.get("ngay")
+    danhsach = lay_dulieu_chamcong_web(mst,ngay)
     total = len(danhsach)
     page = request.args.get(get_page_parameter(), type=int, default=1)
     per_page = 20
