@@ -7,23 +7,23 @@ app = Flask(__name__)
 f12 = True    
 
 # Cấu hình kết nối SQL Server
-# params = urllib.parse.quote_plus(
-#                 "DRIVER={ODBC Driver 17 for SQL Server};"
-#                 "SERVER=172.16.60.100;"
-#                 "DATABASE=HR;"
-#                 "UID=huynguyen;"
-#                 "PWD=Namthuan@123;"
-#             )
-# app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+params = urllib.parse.quote_plus(
+                "DRIVER={ODBC Driver 17 for SQL Server};"
+                "SERVER=172.16.60.100;"
+                "DATABASE=HR;"
+                "UID=huynguyen;"
+                "PWD=Namthuan@123;"
+            )
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 
 # Cấu hình kết nối SQL Server
-params = urllib.parse.quote_plus(
-            "DRIVER={ODBC Driver 17 for SQL Server};"
-            "SERVER=DESKTOP-G635SF6;"
-            "DATABASE=HR;"
-            "Trusted_Connection=yes;"
-        )
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+# params = urllib.parse.quote_plus(
+#             "DRIVER={ODBC Driver 17 for SQL Server};"
+#             "SERVER=DESKTOP-G635SF6;"
+#             "DATABASE=HR;"
+#             "Trusted_Connection=yes;"
+#         )
+# app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
