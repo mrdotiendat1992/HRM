@@ -3450,7 +3450,7 @@ def chamcong_sang_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         cochamcong = request.args.get("cochamcong") 
-        ngay = datetime.now().date
+        ngay = datetime.now().day
         danhsach = danhsach_chamcong_sang(chuyen,bophan,cochamcong)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
