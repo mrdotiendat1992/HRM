@@ -37,9 +37,7 @@
 {% block content %}
 <div class="container-fluid">
     
-    <form action="/muc6_1" method="POST">
-        
-        <input type="hidden" name="mst" id="mst">
+    
         <div class="row">
             <div class="col-3">
                 <div style="display: flex; align-items: center;justify-content: space-between;">
@@ -50,6 +48,8 @@
                     </form>
                 </div>
                 <hr/>
+                <form action="/muc6_1" method="POST">
+                <input type="hidden" name="mst" id="mst">
                 <h4 id="hoten"></h4>
                 <div class="form-group">
                     <label for="masothe">Mã số thẻ</label>

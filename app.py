@@ -7,23 +7,23 @@ app = Flask(__name__)
 f12 = True    
 
 # Cấu hình kết nối SQL Server
-params = urllib.parse.quote_plus(
-                "DRIVER={ODBC Driver 17 for SQL Server};"
-                "SERVER=172.16.60.100;"
-                "DATABASE=HR;"
-                "UID=huynguyen;"
-                "PWD=Namthuan@123;"
-            )
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+# params = urllib.parse.quote_plus(
+#                 "DRIVER={ODBC Driver 17 for SQL Server};"
+#                 "SERVER=172.16.60.100;"
+#                 "DATABASE=HR;"
+#                 "UID=huynguyen;"
+#                 "PWD=Namthuan@123;"
+#             )
+# app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 
 # Cấu hình kết nối SQL Server
-# params = urllib.parse.quote_plus(
-#             "DRIVER={ODBC Driver 17 for SQL Server};"
-#             "SERVER=DESKTOP-G635SF6;"
-#             "DATABASE=HR;"
-#             "Trusted_Connection=yes;"
-#         )
-# app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
+params = urllib.parse.quote_plus(
+            "DRIVER={ODBC Driver 17 for SQL Server};"
+            "SERVER=DESKTOP-G635SF6;"
+            "DATABASE=HR;"
+            "Trusted_Connection=yes;"
+        )
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
     
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "hrm_system_NT"
@@ -161,6 +161,7 @@ def dieuchuyennhansu(mst,
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
+        ghichu = "" if str(ghichu)=='nan' else ghichu
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())"
         print(query1)
         cursor.execute(query1)
@@ -169,7 +170,7 @@ def dieuchuyennhansu(mst,
         cursor.execute(query2)
         camoi = laycatheochuyen(chuyenmoi)
         query3 = f"""
-        UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
+        UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(str(ngaydieuchuyen)[:10], '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
         INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
         """
         print(query3)
@@ -904,6 +905,7 @@ def laycachccategory():
     except Exception as e:
         print(e)
         return []
+    
 def laydanhsachtheomst(mst):
     try:
         conn = pyodbc.connect(used_db)
@@ -3055,3 +3057,40 @@ def lay_bangcongchot_web():
     except Exception as e:
         print(f"Loi lay cham cong goc: {e}")
         return []
+
+def kiemtra_masothe(masothe):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Count(*) from Danh_sach_CBCNV where The_cham_cong='{masothe}' and Factory='{current_user.macongty}'"
+        result = cursor.execute(query).fetchone()
+        return True if result[0] > 0 else False
+    except Exception as e:
+        print(f"Loi kiem tra ma so the hop le: {e}")
+        return False
+
+def chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Count(*) from HC_name where Detail_job_title_VN=N'{chucdanhmoi}' and Line='{chuyenmoi}'"
+        result = cursor.execute(query).fetchone()
+        print(result)
+        return True if result[0] > 0 else False
+    except Exception as e:
+        print(f"Loi kiem tra hc name: {e}")
+        return False
+
+def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen):
+    masothe_hople = kiemtra_masothe(masothe)
+    print(masothe_hople)
+    if not masothe_hople:
+        return {"ketqua":False,
+                    "dong":dong,
+                    "lydo": "Mã số thẻ không hợp lệ !!!"}
+    if loaidieuchuyen == "Chuyển vị trí":
+        if not chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
+            return {"ketqua":False,
+                    "dong":dong,
+                    "lydo": "Không tìm thấy thông tin chuyền, chức danh mới trong danh sách HC Name !!!"}
+    return {"ketqua":True}
