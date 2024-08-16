@@ -1458,7 +1458,6 @@ def lichsucongviec():
         return render_template("6_3.html", page="6.3 Lịch sử công việc",
                                danhsach=paginated_rows, 
                                pagination=pagination,
-                               mst=mst, 
                                count=count)
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
