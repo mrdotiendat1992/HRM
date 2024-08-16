@@ -3600,9 +3600,9 @@ def tailen_danhsach_tangca():
                     
         return redirect("/dangki_tangca_web")
 
-@app.route("/taifilemaudieuchuyen", methods=["POST"])
+@app.route("/taifilemaudieuchuyen", methods=["GET"])
 def taifilemaudieuchuyen():
-    if request.method=="POST":
+    if request.method=="GET":
         return send_file(FILE_MAU_DIEU_CHUYEN, as_attachment=True, download_name="dieuchuyen.xlsx")
 
 @app.route("/capnhatdieuchuyentheofile", methods=["POST"])
