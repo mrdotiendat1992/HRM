@@ -2865,11 +2865,11 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
             query += f" and Bo_phan = '{bophan}'"
         if cochamcong:
             if cochamcong=="co":
-                query += f" and Gio vao is not null"
+                query += f" and Gio_vao is not null"
             if cochamcong=="khong":
-                query += f" and Gio vao is null"
+                query += f" and Gio_vao is null"
         query += "  order by The_cham_cong asc"
-        # print(query)
+        print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [row for row in rows]
