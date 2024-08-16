@@ -1406,7 +1406,7 @@ def dieuchuyen():
 @app.route("/muc6_2", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
-def lichsucongtac():
+def lichsudieuchuyen():
     
     if request.method == "GET":
         mst = request.args.get("mst")
@@ -1442,7 +1442,7 @@ def lichsucongtac():
 @app.route("/muc6_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
-def lichsucongtac():
+def lichsucongviec():
     
     if request.method == "GET":
        
