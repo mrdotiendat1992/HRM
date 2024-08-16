@@ -3099,7 +3099,7 @@ def laylichsucongviec():
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[LICH_SU_CONG_VIEC] where Nha_may='{current_user.macongty}' order by Ngay desc"
+        query = f"select * from [HR].[dbo].[LICH_SU_CONG_VIEC] where Nha_may='{current_user.macongty}' order by MST asc, Tu_ngay desc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
