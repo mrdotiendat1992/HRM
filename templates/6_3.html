@@ -1,0 +1,80 @@
+{% extends  "base.html" %}
+{% block style%}
+<style>
+table, th, td {
+    font-size: 10px;
+    font-weight:bold;
+}
+th {
+    color: white;
+}
+td, label, p, input, h5 {
+    color: #4e73df;
+    font-weight: bold;
+}
+.pagination {
+    font-size: 10px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+</style>
+{% endblock style %}
+{% block content %}
+<div class="container-fluid">
+    
+    <div style="display: flex; align-items: center;">
+        <h5 style="margin-left: 20px">Tổng: {{count}}</h5>
+        <div class="pagination">{{pagination.links}}</div>
+        <form method="post">
+            <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
+        </form>
+    </div>
+    <table class="table table-bordered table-hover table-sm">
+        <thead>
+            <tr class="bg-primary">
+                <th>Mã số thẻ</th> 
+                <th>Họ tên</th>
+                <th>Chuyền</th>
+                <th>Bộ phận</th>
+                <th>Chức danh</th>
+                <th>Phân loại HC</th>
+                <th>Cấp bậc</th>
+                <th>Trạng thái</th>
+                <th>Ngày bắt đầu</th>
+                <th>Ngày kết thúc</th>
+            </tr>
+        </thead>
+      
+        <tbody>
+            {% for row in danhsach %}
+            <tr data-info='{{ row  | safe }}'>
+                <td>{{row[1]}}</td> 
+                <td>{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[5]}}</td>
+                <td>{{row[11]}}</td>
+                <td>{{row[6]}}</td>
+                <td>{{row[7]}}</td>
+                <td class="date_en">{{row[8]}}</td>
+                <td class="date_en">{{row[9]}}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <script>
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+        });
+    </script>
+</div>
+{% endblock content %}

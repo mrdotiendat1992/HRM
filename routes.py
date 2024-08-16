@@ -1422,7 +1422,7 @@ def lichsucongtac():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("6_2.html", page="6.2 Lịch sử công tác",
+        return render_template("6_2.html", page="6.2 Lịch sử điều chuyển",
                                danhsach=paginated_rows, 
                                pagination=pagination,
                                mst=mst, 
@@ -1438,7 +1438,28 @@ def lichsucongtac():
         df.to_excel(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), index=False)
         print("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route("/muc6_3", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd')
+def lichsucongtac():
     
+    if request.method == "GET":
+       
+        rows = laylichsucongviec()
+        count = len(rows)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 15
+        total = len(rows)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = rows[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("6_3.html", page="6.3 Lịch sử công việc",
+                               danhsach=paginated_rows, 
+                               pagination=pagination,
+                               mst=mst, 
+                               count=count)
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -3816,7 +3837,7 @@ def tangcachedo_web():
         danhsach = lay_tangcachedo_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
+        per_page = 15
         start = (page - 1) * per_page
         end = start + per_page
         paginated_rows = danhsach[start:end]
@@ -3924,7 +3945,7 @@ def tangcangay_web():
         danhsach = lay_tangcangay_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
+        per_page = 15
         start = (page - 1) * per_page
         end = start + per_page
         paginated_rows = danhsach[start:end]
@@ -4032,7 +4053,7 @@ def tangcadem_web():
         danhsach = lay_tangcadem_web(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
+        per_page = 15
         start = (page - 1) * per_page
         end = start + per_page
         paginated_rows = danhsach[start:end]
