@@ -62,7 +62,7 @@ def run_before_every_request():
             # print(f"Thuky: {row}")
             if row[0]>0:
                 cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
-                query_kiemtra_loithe = f"""SELECT  COUNT(*)
+                query_kiemtra_loithe = f"""
                     SELECT 
                         COUNT(*) as row_count 
                     FROM 
