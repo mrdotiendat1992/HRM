@@ -38,17 +38,18 @@
         
         <div class="form">
             <h3>Tổng {{count}}</h3>
+            <a href="/chamcong_sang"><button class="btn btn-warning btn-sm">Tất cả</button></a>
             <form method="GET">
                 <input type="hidden" id="cochamcong" name="cochamcong" value="co">
                 <input type="hidden" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                 <input type="hidden" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="submit" class="btn btn-primary btn-sm" value="Danh sách có chấm công">
+                <input type="submit" class="btn btn-primary btn-sm" value="Có chấm công">
             </form>
             <form method="GET">
                 <input type="hidden" id="cochamcong" name="cochamcong" value="khong">
                 <input type="hidden" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                 <input type="hidden" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="submit" class="btn btn-danger btn-sm" value="Danh sách không chấm công">
+                <input type="submit" class="btn btn-danger btn-sm" value="Không chấm công">
             </form>
             <form method="GET">
                 <input type="text" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" placeholder="Chuyền"  onchange="this.form.submit()">
@@ -60,7 +61,7 @@
                 <input type="hidden" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}">
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
             </form>
-                <div class="pagination">{{ pagination.links }}</div>
+            <div class="pagination">{{ pagination.links }}</div>
         </div>
     <br>
     <div class="table-responsive">

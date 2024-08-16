@@ -2854,19 +2854,25 @@ def trang_thai_function_12():
     except Exception as e:
         return None
     
-def danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong):
+def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"""Select * from Cham_cong_sang where Factory='{current_user.macongty}'  order by The_cham_cong asc"""
+        query = f"""Select * from Cham_cong_sang where Factory='{current_user.macongty}'"""
         if chuyen:
-            query += f"and Chuyen_to = '{chuyen}'"
+            query += f" and Chuyen_to = '{chuyen}'"
         if bophan:
-            query += f"and Bo_phan = '{bophan}'"
-        print(query)
+            query += f" and Bo_phan = '{bophan}'"
+        if cochamcong:
+            if cochamcong=="co":
+                query += f" and Gio vao is not null"
+            if cochamcong=="khong":
+                query += f" and Gio vao is null"
+        query += "  order by The_cham_cong asc"
+        # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
-        result = [row for row in rows if row[-2]] if cochamcong == "co" else  [row for row in rows if not row[-2]]
+        result = [row for row in rows]
         return result
     except Exception as e:
         return []

@@ -3449,9 +3449,8 @@ def chamcong_sang_web():
     if request.method=="GET":
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
-        cochamcong = request.args.get("cochamcong")
-        ngay = datetime.now().date()     
-        danhsach = danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong)
+        cochamcong = request.args.get("cochamcong") 
+        danhsach = danhsach_chamcong_sang(chuyen,bophan,cochamcong)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 20
@@ -3468,9 +3467,8 @@ def chamcong_sang_web():
     else:
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
-        cochamcong = request.args.get("cochamcong")
-        ngay = datetime.now().date()     
-        danhsach = danhsach_chamcong_sang(chuyen,bophan,ngay,cochamcong)
+        cochamcong = request.args.get("cochamcong")  
+        danhsach = danhsach_chamcong_sang(chuyen,bophan,cochamcong)
         data = [{
         "Mã số thẻ": row[1],
         "Họ tên": row[2],
