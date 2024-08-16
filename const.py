@@ -1,8 +1,8 @@
 from lib import *
 
-# used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
 
-used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
+# used_db = r"Driver={SQL Server};Server=DESKTOP-G635SF6;Database=HR;Trusted_Connection=yes;"
 
 # mcc_db = r"Driver={SQL Server};Server=10.0.0.252\SQLEXPRESS;Database=MITACOSQL;UID=sa;PWD=Namthuan1"
 
