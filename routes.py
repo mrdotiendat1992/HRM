@@ -1660,7 +1660,11 @@ def xinnghikhongluong():
 def danhsachxinnghikhac():
     if request.method == "GET":
         mst = request.args.get("mst")
-        danhsach = laydanhsachxinnghikhac(mst)
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        ngaynghi = request.args.get("ngaynghi")
+        loainghi = request.args.get("loainghi")
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -1674,7 +1678,59 @@ def danhsachxinnghikhac():
                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=count)
+    elif request.method == "POST":
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngaynghi = request.form.get("ngaynghi")
+        loainghi = request.form.get("loainghi")
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi)
+        data = [{
+            "Nhà máy": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[8],
+            "Bộ phận": row[10],
+            "Chuyền": row[9],
+            "Ngày nghỉ": row[2],
+            "Tổng số phút": row[3],
+            "Loại nghỉ": row[4],
+            "Trạng thái": row[5],
+            "Nhận giấy tờ": row[6],            
+        } for row in danhsach] 
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=nop_dapthegoc_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+        
 @app.route("/muc7_1_7", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd','tk')
@@ -4168,9 +4224,11 @@ def chamcong_goc_web():
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
-        mst = request.args.get("mst")
-        ngay = request.args.get("ngay")
-        danhsach = lay_dulieu_chamcong_web(mst,ngay)
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngay")
+        danhsach = lay_dulieu_chamcong_web(mst,chuyen,bophan,ngay)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],
@@ -4219,7 +4277,7 @@ def chamcong_goc_web():
         time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
         # Trả file về cho client
         response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=nop_dapthegoc_{time_stamp}.xlsx'
+        response.headers['Content-Disposition'] = f'attachment; filename=dapthegoc_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
         

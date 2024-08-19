@@ -44,6 +44,10 @@
             <h3>Tổng: {{count}}</h3>
             <div class="pagination">{{ pagination.links }}</div>
             <form method="POST">
+                <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
+                <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                <input type="hidden" name="ngay" value="{{request.args.get('ngay', '')}}">
                 <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
             </form>
         </div>

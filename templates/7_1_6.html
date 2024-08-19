@@ -73,12 +73,18 @@
 
             <form method="GET">
                 <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()">
+                <input type="text" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange="this.form.submit()">
+                <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()">
+                <input type="date" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange="this.form.submit()">
+                <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()">
             </form>            
 
-            <form method="POST" action="/export_dsxnk">
+            <form method="POST">
                 <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
                 <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
             </form>
             <div class="pagination">{{ pagination.links }}</div>
