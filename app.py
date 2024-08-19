@@ -2744,7 +2744,8 @@ def laychuyen_quanly(masothe,macongty):
         if "HRD" in current_user.phongban:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where Chuyen_to LIKE '{macongty[0]}%'"
+            query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where Chuyen_to LIKE '{macongty[2]}%'"
+            print(query)
             cursor = cursor.execute(query)
             rows = cursor.fetchall()
             result = [row[0] for row in rows]
@@ -2869,7 +2870,7 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
             if cochamcong=="khong":
                 query += f" and Gio_vao is null"
         query += "  order by The_cham_cong asc"
-        print(query)
+        # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [row for row in rows]
@@ -3111,3 +3112,18 @@ def laylichsucongviec():
     except Exception as e:
         print(f"Loi lay lich su cong viec: {e}")
         return []
+    
+def hr_pheduyet_tangca(id,hrpheduyet):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        if hrpheduyet=="OK":
+            query = f"UPDATE Dang_ky_tang_ca SET HR=N'{hrpheduyet}' WHERE ID='{id}'"
+        else:
+            query = f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except:
+        return False 

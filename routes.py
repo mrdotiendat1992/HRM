@@ -4194,3 +4194,25 @@ def bangcongchot_web():
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=total)
+
+@app.route("/tailen_nhansu_pheduyet_tangca", methods=["GET","POST"])
+def tailen_nhansu_pheduyet_tangca():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                for row in data:
+                    id = row["ID"]
+                    hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
+                    if hr_pheduyet_tangca(id,hrpheduyet):
+                        flash("Nhân sự phê duyệt tăng ca ID thành công !!!")
+                    else:
+                        flash("Nhân sự phê duyệt tăng ca ID thất bại !!!")        
+            except Exception as e:
+                print(e)
+                    
+        return redirect("/dangki_tangca_web")

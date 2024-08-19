@@ -96,6 +96,25 @@
                 <button class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></button>
             </form>
             <div class="pagination">{{pagination.links}}</div>
+            <button class='btn btn-primary btn-sm' data-bs-toggle="modal" data-bs-target="#HRModal">HR phê duyệt</button>
+            <div class="modal fade" id="HRModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Phê duyệt hàng loạt</h4>
+                        </div>
+                        <div class="modal-body" style="display: flex; align-items: center; gap:20px;">
+                            <form method="POST" action="/tailen_nhansu_pheduyet_tangca" enctype="multipart/form-data">
+                                <input type="file" name="file">
+                                <a type="submit" href="/tailen_nhansu_pheduyet_tangca" class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></a>
+                            </form>
+                            </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
             <thead>
