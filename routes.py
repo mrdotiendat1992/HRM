@@ -4195,7 +4195,7 @@ def bangcongchot_web():
                             pagination=pagination,
                             count=total)
 
-@app.route("/tailen_nhansu_pheduyet_tangca", methods=["GET","POST"])
+@app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
 def tailen_nhansu_pheduyet_tangca():
     if request.method=="POST":
         file = request.files.get("file")
@@ -4214,5 +4214,5 @@ def tailen_nhansu_pheduyet_tangca():
                         flash("Nhân sự phê duyệt tăng ca ID thất bại !!!")        
             except Exception as e:
                 print(e)
-                    
-        return redirect("/dangki_tangca_web")
+            finally:         
+                return redirect("/dangki_tangca_web")
