@@ -72,11 +72,11 @@
             </div>
 
             <form method="GET">
-                <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()">
-                <input type="text" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange="this.form.submit()">
-                <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()">
+                <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()" placeholder="Mã số thẻ">
+                <input type="text" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange="this.form.submit()" placeholder="Bộ phân">
+                <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()" placeholder="Chuyền">
                 <input type="date" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange="this.form.submit()">
-                <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()">
+                <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()" placeholder="Loại nghỉ">
             </form>            
 
             <form method="POST">
