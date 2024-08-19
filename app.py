@@ -910,7 +910,7 @@ def laydanhsachtheomst(mst):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE CAST(MST as INT) = '{mst}' AND Factory = '{current_user.macongty}'"
         
         users = cursor.execute(query).fetchall()
         conn.close()
