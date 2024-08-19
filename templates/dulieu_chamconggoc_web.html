@@ -37,8 +37,8 @@
         <div id="filter">
             <form method="GET">
                 <input type="text" name="mst" onchange="this.form.submit()" placeholder="Mã số thẻ" value={{request.args.get('mst','')}}></input>
-                <input type="text" name="text" onchange="this.form.submit()" value={{request.args.get('chuyen','')}} ></input>
-                <input type="text" name="text" onchange="this.form.submit()" value={{request.args.get('bophan','')}} ></input>
+                <input type="text" name="chuyen" onchange="this.form.submit()" placeholder="Chuyền" value={{request.args.get('chuyen','')}} ></input>
+                <input type="text" name="bophan" onchange="this.form.submit()" placeholder="Bộ phận" value={{request.args.get('bophan','')}} ></input>
                 <input type="date" name="ngay" onchange="this.form.submit()" value={{request.args.get('ngay','')}} ></input>
             </form>
             <h3>Tổng: {{count}}</h3>
