@@ -96,6 +96,7 @@
                 <button class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></button>
             </form>
             <div class="pagination">{{pagination.links}}</div>
+            {% if 'HRD' in current_user.phongban %}
             <button class='btn btn-primary btn-sm' data-bs-toggle="modal" data-bs-target="#HRModal">HR phê duyệt</button>
             <div class="modal fade" id="HRModal" role="dialog">
                 <div class="modal-dialog">
@@ -115,6 +116,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
             <thead>
