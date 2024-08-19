@@ -3027,13 +3027,17 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
         print(f"Loi lay bang tang ca dem: {e}")
         return []
     
-def lay_dulieu_chamcong_web(mst,ngay):
+def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[NOT_DAP_THE_GOC] where Nha_may='{current_user.macongty}' "
         if mst:
             query += f" and MST = '{mst}'"
+        if chuyen:
+            query += f" and Chuyen = '{chuyen}'"
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
         if ngay:
             query += f" and Ngay = '{ngay}'"
         query += " order by MST asc"
