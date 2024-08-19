@@ -88,25 +88,26 @@
                                 </div>
                                 <div class="dropdown">
                                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Tra cứu
+                                        Ca 
                                     </button>
-                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                        <li class="dropdown-submenu">
-                                            <a class="dropdown-item" href="#">Ca làm việc</a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <!-- Add the work shifts here -->
-                                                <li><a class="dropdown-item" href="#">A1</a></li>
-                                                <li><a class="dropdown-item" href="#">A2</a></li>
-                                                <li><a class="dropdown-item" href="#">A3</a></li>
-                                            </ul>
-                                            <a class="dropdown-item" href="#">Các mã nghỉ khác</a>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <!-- Add the work shifts here -->
-                                                <li><a class="dropdown-item" href="#">A1</a></li>
-                                                <li><a class="dropdown-item" href="#">A2</a></li>
-                                                <li><a class="dropdown-item" href="#">A3</a></li>
-                                            </ul>
-                                        </li>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered table-sm mb-0">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Ca</th>
+                                                        <th>Giờ vào hành chính</th>
+                                                        <th>Giờ ra hành chính</th>
+                                                        <th>Giờ bắt đầu ăn trưa</th>
+                                                        <th>Giờ kết thúc ăn trưa</th>
+                                                        <th>Giờ tăng ca 100%</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="calamviec">
+                                                    <!-- Dynamic content will be loaded here -->
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </ul>
                                 </div>
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
@@ -123,6 +124,36 @@
         {% block content %}
         
         {% endblock content %}
-        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                const bangcalamviec = document.getElementById('calamviec');
+                
+                axios({
+                    method: 'post',
+                    url: '/laybangcalamviec'
+                }).then(function(response) {
+                    let data = response.data;
+            
+            
+                    // Now, iterate over the array and populate the table
+                    data.forEach(element => {
+                        bangcalamviec.innerHTML += `
+                            <tr>
+                                <td>${element['Tên ca']}</td>
+                                <td>${element['Giờ vào hành chính']}</td>
+                                <td>${element['Giờ ra hành chính']}</td>
+                                <td>${element['Giờ bắt đầu ăn trưa']}</td>
+                                <td>${element['Giờ kết thúc ăn trưa']}</td>
+                                <td>${element['Giờ tăng ca 100%']}</td>
+                            </tr>`;
+                    });
+                }).catch(function(error) {
+                    console.error('Error fetching data:', error);
+                });
+            });
+            
+        </script>
     </body>
 </html>

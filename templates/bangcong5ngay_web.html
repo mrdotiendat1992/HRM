@@ -32,17 +32,25 @@
 <div class="scroll">
     <h1>Bảng công 5 ngày</h1>
     <br>
-    <div style="display: flex; justify-content: space-between;">
+    <div style="display: flex; gap:20px;">
         <form method="GET">
             <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
             <input type="text" id="chuyen" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
-            <input type="text" id="phongban" name="phongban" placeholder='Phòng ban' value={{request.args.get('phongban', '')}}>
-            <input type="text" id="phanloai" name="phanloai" placeholder='Phân loại' value={{request.args.get('phanloai', '')}}>
+            <input type="text" id="bophan" name="bophan" placeholder='Phòng ban' value={{request.args.get('bophan', '')}}>
+            <select id="phanloai" name="phanloai" value={{request.args.get('phanloai', '')}}>
+                <option value="">Phân loại</option>
+                <option value="OK">OK</option>
+                <option value="Nghỉ tự do">Nghỉ tự do</option>
+            </select>
+    </div>
+    <div style="display: flex; gap:20px;">
+            <label for="ngay">Ngày</label>
+            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
             <label for="tungay">Từ ngày</label>
             <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
             <label for="denngay">Đến ngày</label>
             <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
-            <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
+            <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></select>
         </form>
     </div>
     <div style="display: flex; gap:20px;">
@@ -50,7 +58,9 @@
         <div class="pagination">{{ pagination.links }}</div>
         <form method="POST">
             <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
-            <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
+            <input type="text" id="chuyen" name="chuyen" hidden value={{request.args.get('chuyen', '')}}>
+            <input type="text" id="bophan" name="bophan" hidden value={{request.args.get('bophan', '')}}>
+            <input type="date" id="ngay" name="ngay" hidden value={{request.args.get('ngay', '')}}>
             <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
             <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
             <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>

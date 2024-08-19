@@ -3055,28 +3055,59 @@ def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
         print(f"Loi lay cham cong goc: {e}")
         return []
     
-def lay_bangcong5ngay_web():
+def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_TU_DONG_THUC_TE] where Nha_may='{current_user.macongty}' order by Ngay desc"
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_TU_DONG_THUC_TE] where Nha_may='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"   
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"   
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"       
+        query += " order by Ngay desc"
+        print(query) 
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
         print(f"Loi lay cham cong goc: {e}")
         return []
     
-def lay_bangcongchot_web():
+def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_THUC_TE] where Nha_may='{current_user.macongty}' order by Ngay desc"
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_THUC_TE] where Nha_may='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"   
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"   
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"       
+        query += " order by Ngay desc"
+        print(query) 
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
         print(f"Loi lay cham cong goc: {e}")
         return []
-
 def kiemtra_masothe(masothe):
     try:
         conn = pyodbc.connect(used_db)
@@ -3139,3 +3170,14 @@ def hr_pheduyet_tangca(id,hrpheduyet):
         return True
     except:
         return False 
+    
+def lay_cacca_theobang():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[ca_lam_viec] order by Ten_ca"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cac ca: {e}")
+        return []

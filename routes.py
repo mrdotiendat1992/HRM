@@ -1727,7 +1727,7 @@ def danhsachxinnghikhac():
         time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
         # Trả file về cho client
         response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=nop_dapthegoc_{time_stamp}.xlsx'
+        response.headers['Content-Disposition'] = f'attachment; filename=xinnghikhac_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
         
@@ -4283,34 +4283,176 @@ def chamcong_goc_web():
         
 @app.route("/bangcong5ngay_web", methods=["GET","POST"])
 def bangcong5ngay_web():
-    danhsach = lay_bangcong5ngay_web()
-    total = len(danhsach)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 20
-    start = (page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("bangcong5ngay_web.html",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=total)
+    if request.method == "GET":
+        masothe = request.args.get("mst")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        phanloai = request.args.get("phanloai")
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        ngay = request.args.get("ngay")
+        danhsach = lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        total = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 15
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("bangcong5ngay_web.html",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+    elif request.method == "POST":
+        masothe = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        phanloai = request.form.get("phanloai")
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        ngay = request.form.get("ngay")
+        danhsach = lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        data = [{
+            "Nhà máy": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Bộ phận": row[5],
+            "Chuyền": row[4],
+            "Chức danh": row[3],
+            "Cấp bậc": row[6],
+            "HC category": row[20],
+            "Ngày": row[7],    
+            "Ca": row[8],
+            "Số phút ca": row[9],
+            "Giờ vào": row[10],
+            "Giờ ra": row[11],
+            "Phút hành chính": row[12],
+            "Phút nghỉ phép": row[13],
+            "Phút tăng ca 100%": row[14],
+            "Phút tăng ca 150%": row[15],
+            "Phút tăng đêm": row[16],
+            "Phút nghỉ không lương": row[17],
+            "Phút tăng nghỉ khác": row[18],
+            "Phân loại": row[19]
+        } for row in danhsach] 
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bangcong5ngay_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
 @app.route("/bangcongchot_web", methods=["GET","POST"])
 def bangcongchot_web():
-    danhsach = lay_bangcongchot_web()
-    total = len(danhsach)
-    page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 20
-    start = (page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("bangcongchot_web.html",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=total)
+    if request.method == "GET":
+        masothe = request.args.get("mst")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        phanloai = request.args.get("phanloai")
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        ngay = request.args.get("ngay")
+        danhsach = lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        total = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 15
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("bangcongchot_web.html",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+    elif request.method == "POST":
+        masothe = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        phanloai = request.form.get("phanloai")
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        ngay = request.form.get("ngay")
+        danhsach = lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        data = [{
+            "Nhà máy": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Bộ phận": row[5],
+            "Chuyền": row[4],
+            "Chức danh": row[3],
+            "Cấp bậc": row[6],
+            "HC category": row[20],
+            "Ngày": row[7],    
+            "Ca": row[8],
+            "Số phút ca": row[9],
+            "Giờ vào": row[10],
+            "Giờ ra": row[11],
+            "Phút hành chính": row[12],
+            "Phút nghỉ phép": row[13],
+            "Phút tăng ca 100%": row[14],
+            "Phút tăng ca 150%": row[15],
+            "Phút tăng đêm": row[16],
+            "Phút nghỉ không lương": row[17],
+            "Phút tăng nghỉ khác": row[18],
+            "Phân loại": row[19]
+        } for row in danhsach] 
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bangcongchot_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
 @app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
 def tailen_nhansu_pheduyet_tangca():
     if request.method=="POST":
@@ -4332,3 +4474,17 @@ def tailen_nhansu_pheduyet_tangca():
                 print(e)
             finally:         
                 return redirect("/dangki_tangca_web")
+            
+@app.route("/laybangcalamviec", methods=["POST"])
+def laybangcalamviec():
+    if request.method == "POST":
+        bangcalamviec = lay_cacca_theobang()
+        data = [{
+            "Tên ca": row[0],
+            "Giờ vào hành chính": row[1],
+            "Giờ ra hành chính": row[2],
+            "Giờ bắt đầu ăn trưa": row[3],
+            "Giờ kết thúc ăn trưa": row[4],
+            "Giờ tăng ca 100%": row[5]            
+        } for row in bangcalamviec]
+        return jsonify({"data": data})
