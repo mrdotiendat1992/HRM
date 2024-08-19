@@ -3779,7 +3779,7 @@ def bangcong_web():
         danhsach = lay_bangcong_thucte(thang,nam,mst,bophan,chuyen)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
+        per_page = 15
         start = (page - 1) * per_page
         end = start + per_page
         paginated_rows = danhsach[start:end]
@@ -4214,7 +4214,7 @@ def chamcong_goc_web():
         danhsach = lay_dulieu_chamcong_web(mst,chuyen,bophan,ngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
+        per_page = 15
         start = (page - 1) * per_page
         end = start + per_page
         paginated_rows = danhsach[start:end]
