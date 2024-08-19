@@ -2744,7 +2744,7 @@ def laychuyen_quanly(masothe,macongty):
         if "HRD" in current_user.phongban:
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where NHA_MAY='{macongty}'"
+            query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where Chuyen_to LIKE '{macongty[0]}%'"
             cursor = cursor.execute(query)
             rows = cursor.fetchall()
             result = [row[0] for row in rows]
