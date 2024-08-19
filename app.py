@@ -3181,3 +3181,14 @@ def lay_cacca_theobang():
     except Exception as e:
         print(f"Loi lay cac ca: {e}")
         return []
+    
+def lay_cackieu_nghikhac_theobang():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[ca_lam_viec] order by Ten_ca"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cac ca: {e}")
+        return []

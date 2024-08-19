@@ -30,6 +30,13 @@
                 margin-left: 0;
                 border-radius: 0;
             }
+            #bangcalamviec {
+                position: absolute;
+                left: -200px;
+            }
+            th, td {
+                white-space: nowrap;
+            }
             {% endblock style %}
         </style>
     </head>
@@ -87,17 +94,17 @@
                                     </ul>
                                 </div>
                                 <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         Ca 
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangcalamviec">
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm mb-0">
                                                 <thead>
                                                     <tr>
                                                         <th>Ca</th>
-                                                        <th>Giờ vào hành chính</th>
-                                                        <th>Giờ ra hành chính</th>
+                                                        <th>Giờ vào HC</th>
+                                                        <th>Giờ ra HC</th>
                                                         <th>Giờ bắt đầu ăn trưa</th>
                                                         <th>Giờ kết thúc ăn trưa</th>
                                                         <th>Giờ tăng ca 100%</th>
@@ -110,6 +117,14 @@
                                         </div>
                                     </ul>
                                 </div>
+                                <div class="dropdown">
+                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Các loại nghỉ khác
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangnghikhac">
+                                        <img src="/static/img/manghikhac.png">
+                                    </ul>
+                                </div>   
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>{{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
                                     <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button></form>
@@ -134,19 +149,24 @@
                     method: 'post',
                     url: '/laybangcalamviec'
                 }).then(function(response) {
-                    let data = response.data;
-            
+                    let data = response.data["data"];
+                    console.log(data)
             
                     // Now, iterate over the array and populate the table
                     data.forEach(element => {
+                        let giovaohc = element['Giờ vào hành chính'].substring(0, 5);
+                        let giorahc = element['Giờ ra hành chính'].substring(0, 5);
+                        let giobatdau = element['Giờ bắt đầu ăn trưa'].substring(0, 5);
+                        let gioketthuc = element['Giờ kết thúc ăn trưa'].substring(0, 5);
+                        let giotangca = element['Giờ tăng ca 100%'].substring(0, 5);
                         bangcalamviec.innerHTML += `
                             <tr>
-                                <td>${element['Tên ca']}</td>
-                                <td>${element['Giờ vào hành chính']}</td>
-                                <td>${element['Giờ ra hành chính']}</td>
-                                <td>${element['Giờ bắt đầu ăn trưa']}</td>
-                                <td>${element['Giờ kết thúc ăn trưa']}</td>
-                                <td>${element['Giờ tăng ca 100%']}</td>
+                                <td><b>${element['Tên ca']}</b></td>
+                                <td>${giovaohc}</td>
+                                <td>${giorahc}</td>
+                                <td>${giobatdau}</td>
+                                <td>${gioketthuc}</td>
+                                <td>${giotangca}</td>
                             </tr>`;
                     });
                 }).catch(function(error) {
