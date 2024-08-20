@@ -506,7 +506,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['L21'] = ngaycapcccd
                         sheet['E22'] = sodienthoai
                         sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G30'] = f"{chucdanh}"
+                        sheet['G29'] = f"{chucdanh}"
                         sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
                             sheet['G40'] = f"{phucap} VNĐ/tháng"
