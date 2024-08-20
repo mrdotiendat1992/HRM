@@ -705,7 +705,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query= f"""SELECT * FROM Lich_su_cong_tac_OK WHERE Nha_may = '{current_user.macongty}' """
+        query= f"""SELECT * FROM Lich_su_cong_tac WHERE Nha_may = '{current_user.macongty}' """
         if mst:
             query += f"AND MST = '{mst}' "
         if ngay:
