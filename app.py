@@ -284,6 +284,7 @@ def dichuyenthaisandilamlai(mst,
 def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):   
     
     try:
+        sodienthoai = lay_sodienthoai_theo_mst(masothe)
         ngaylamhopdong = ngaybatdau.split("/")[0]
         thanglamhopdong = ngaybatdau.split("/")[1]
         namlamhopdong = ngaybatdau.split("/")[2]
@@ -305,14 +306,15 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['B21'] = f"Số CCCD: {cccd}"
                         sheet['L21'] = ngaycapcccd
-                        sheet['H24'] = f"Thử việc {songaythuviec} ngày"
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G31'] = chucdanh
-                        sheet['G42'] = f"{int(luongcoban):,} VNĐ/tháng"   
+                        sheet['E22'] = sodienthoai
+                        sheet['H25'] = f"Thử việc {songaythuviec} ngày"
+                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G32'] = chucdanh
+                        sheet['G43'] = f"{int(luongcoban):,} VNĐ/tháng"   
                         if phucap > 0:
-                            sheet['G43'] = f"{phucap} VNĐ/tháng"
+                            sheet['G44'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G43'] = "Không"
+                            sheet['G44'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_TO2_{masothe}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -333,14 +335,15 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['D21'] = cccd
                         sheet['L21'] = ngaycapcccd
-                        sheet['H24'] = f"Thử việc {songaythuviec} ngày"
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G31'] = chucdanh
-                        sheet['G42'] = f"{int(luongcoban):,} VNĐ/tháng"  
+                        sheet['E21'] = sodienthoai
+                        sheet['H25'] = f"Thử việc {songaythuviec} ngày"
+                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G32'] = chucdanh
+                        sheet['G43'] = f"{int(luongcoban):,} VNĐ/tháng"  
                         if phucap > 0:
-                            sheet['G43'] = f"{phucap} VNĐ/tháng"
+                            sheet['G44'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G43'] = "Không" 
+                            sheet['G44'] = "Không" 
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_DO2_{masothe}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -474,12 +477,14 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['B21'] = f"Số CCCD:{cccd}"
                         sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G38'] = f"{luongcoban} VNĐ/tháng"
+                        sheet['E22'] = sodienthoai
+                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G29'] = f"{chucdanh}"
+                        sheet['G39'] = f"{luongcoban} VNĐ/tháng"
                         if phucap > 0 :
-                            sheet['G39'] = f"{phucap} VNĐ/tháng"
+                            sheet['G40'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G39'] = "Không"
+                            sheet['G40'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_TO3_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -499,13 +504,14 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['B21'] = f"Số CCCD: {cccd}"
                         sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G28'] = f"{chucdanh}"
-                        sheet['G38'] = f"{int(luongcoban):,} VNĐ/tháng"
+                        sheet['E22'] = sodienthoai
+                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
+                        sheet['G30'] = f"{chucdanh}"
+                        sheet['G40'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
-                            sheet['G39'] = f"{phucap} VNĐ/tháng"
+                            sheet['G41'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G39'] = "Không"
+                            sheet['G41'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_DO3_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -554,8 +560,9 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['B21'] = f"Số CCCD: {cccd}"
                         sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
-                        sheet['G38'] = f"{luongcoban} VNĐ/tháng"        
+                        sheet['E22'] = sodienthoai
+                        sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
+                        sheet['G39'] = f"{luongcoban} VNĐ/tháng"        
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT2_HDVTH_T03_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -575,13 +582,14 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['B21'] = f"Số CCCD: {cccd}"
                         sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"   
-                        sheet['G28'] = f"{chucdanh}"
-                        sheet['G38'] = f"{int(luongcoban):,} VNĐ/tháng"
+                        sheet['E22'] = sodienthoai
+                        sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"   
+                        sheet['G29'] = f"{chucdanh}"
+                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
-                            sheet['G39'] = f"{phucap} VNĐ/tháng"
+                            sheet['G40'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G39'] = "Không"    
+                            sheet['G40'] = "Không"    
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT2_HDVTH_D03_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
@@ -3205,21 +3213,10 @@ def lay_cacca_theobang():
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[ca_lam_viec] order by Ten_ca"
-        data = cursor.execute(query)
+        data = cursor.execute(query).fetchall()
         return [x for x in data]
     except Exception as e:
         print(f"Loi lay cac ca: {e}")
-        return []
-    
-def lay_cackieu_nghikhac_theobang():
-    try:
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[ca_lam_viec] order by Ten_ca"
-        data = cursor.execute(query)
-        return [x for x in data]
-    except Exception as e:
-        print(f"Loi lay cac kieu nghi khac: {e}")
         return []
 
 def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
@@ -3259,3 +3256,14 @@ def themtaikhoanmoi(masothe,hoten,department,gradecode):
         return True
     except Exception as e:
         print(f"Loi them tai khoan moi: {e}")
+        
+def lay_sodienthoai_theo_mst(mst):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select Sdt from Danh_sach_CBCNV where The_cham_cong='{mst}' and Factory='{current_user.macongty}'"
+        data = cursor.execute(query).fetchall()
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay cac kieu nghi khac: {e}")
+        return []
