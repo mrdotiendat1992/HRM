@@ -3220,3 +3220,30 @@ def lay_cackieu_nghikhac_theobang():
     except Exception as e:
         print(f"Loi lay cac ca: {e}")
         return []
+
+def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Tu_ngay='{ngaybatdau}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi lay cac ca: {e}")
+        return False
+    
+
+def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Den_ngay='{ngayketthuc}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi lay cac ca: {e}")
+        return False

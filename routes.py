@@ -4605,3 +4605,31 @@ def laybangcalamviec():
             "Giờ tăng ca 100%": row[5]            
         } for row in bangcalamviec]
         return jsonify({"data": data})
+    
+@app.route("/thaydoi_ngaybatdau_lichsu_congviec", methods=["POST"])
+def thaydoi_ngaybatdau_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        ngaybatdau = request.form.get("ngaybatdau")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
+            flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngaybatdau} thành công")
+        else:
+            flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngaybatdau} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+    
+@app.route("/thaydoi_ngayketthuc_lichsu_congviec", methods=["POST"])
+def thaydoi_ngayketthuc_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        ngayketthuc = request.form.get("ngayketthuc")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
+            flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngayketthuc} thành công")
+        else:
+            flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngayketthuc} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")

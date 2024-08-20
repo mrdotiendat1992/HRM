@@ -66,8 +66,24 @@ td, label, p, input, h5 {
                 <td>{{row[11]}}</td>
                 <td>{{row[6]}}</td>
                 <td>{{row[7]}}</td>
-                <td class="date_en">{{row[8]}}</td>
-                <td class="date_en">{{row[9]}}</td>
+                <td>
+                    <form action='/thaydoi_ngaybatdau_lichsu_congviec' method='POST'> 
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="ngaybatdau" value={{row[8]}} onchange="this.form.submit()">
+                    </form>
+                </td>
+                <td>
+                    <form action='/thaydoi_ngayketthuc_lichsu_congviec' method='POST'>   
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="ngaybatdau" value={{row[9]}} onchange="this.form.submit()">
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
