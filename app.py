@@ -124,12 +124,21 @@ def laycatheochuyen(chuyen):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        row = cursor.execute(f"SELECT CA FROM GOI_Y_CA WHERE LINE = '{chuyen}'").fetchone()
+        query = f"SELECT CA FROM GOI_Y_CA WHERE LINE = '{chuyen}'"
+        print(query)
+        row = cursor.execute(query).fetchone()
         conn.close()
-        return row[0]
+        if not row:
+            if current_user.macongty=="NT2":
+                return "A4-01"
+            else:
+                return "A1-02"
     except Exception as e:
         print(f"Loi kiem tra ca theo chuyen {e} !!!")
-        return None
+        if current_user.macongty=="NT2":
+            return "A4-01"
+        else:
+            return "A1-02"
   
 def dieuchuyennhansu(mst,
                     loaidieuchuyen,
@@ -165,9 +174,11 @@ def dieuchuyennhansu(mst,
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())"
         print(query1)
         cursor.execute(query1)
+        conn.commit()
         query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
         print(query2)
         cursor.execute(query2)
+        conn.commit()
         camoi = laycatheochuyen(chuyenmoi)
         query3 = f"""
         UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(str(ngaydieuchuyen)[:10], '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
