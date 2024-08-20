@@ -707,7 +707,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         cursor = conn.cursor()
         query= f"""SELECT * FROM Lich_su_cong_tac_OK WHERE Nha_may = '{current_user.macongty}' """
         if mst:
-            query += f"AND MST LIKE '%{mst}%' "
+            query += f"AND MST = '{mst}' "
         if ngay:
             query += f"AND Ngay_thuc_hien = '{ngay}' "
         if kieudieuchuyen:
