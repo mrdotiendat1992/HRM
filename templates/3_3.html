@@ -228,8 +228,8 @@
         document.getElementById('phongban').textContent = info['Phòng ban'];
         document.getElementById('luongcoban').textContent = formatNumberWithCommas(info['Lương cơ bản']) + ' VND';
         document.getElementById('phucap').textContent = formatNumberWithCommas(info['Phụ cấp']) + ' VND';
-        document.getElementById('ngayky').textContent = info['Ngày ký hợp đồng'];
-        document.getElementById('ngayhethan').textContent = info['Ngày hết hạn hợp đồng'];
+        document.getElementById('ngayky').textContent = changeFormatDate(info['Ngày ký hợp đồng']);
+        document.getElementById('ngayhethan').textContent = changeFormatDate(info['Ngày hết hạn hợp đồng']);
         document.getElementById('idhopdongin').value = info['Số thứ tự'];
         document.getElementById('idhopdongsua').value = info['Số thứ tự'];
         document.getElementById('idhopdongxoa').value = info['Số thứ tự'];
