@@ -3262,8 +3262,8 @@ def lay_sodienthoai_theo_mst(mst):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select Sdt from Danh_sach_CBCNV where The_cham_cong='{mst}' and Factory='{current_user.macongty}'"
-        data = cursor.execute(query).fetchall()
-        return [x for x in data]
+        data = cursor.execute(query).fetchone()
+        return data[0]
     except Exception as e:
-        print(f"Loi lay cac kieu nghi khac: {e}")
-        return []
+        print(f"Loi lay so dien thoai: {e}")
+        return 0
