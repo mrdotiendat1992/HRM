@@ -591,7 +591,6 @@ def nhapthongtinlaodongmoi():
             ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
             jobdetailvn = f"N'{request.form.get("vitri")}'"
             line = f"'{request.form.get("line")}'"
-            calamviec = f"'{request.form.get("calamviec")}'"
             factory = f"'{current_user.macongty}'"
             hccategory = f"N'{request.form.get("hccategory")}'"
             gradecode = f"N'{request.form.get("gradecode")}'"
@@ -667,14 +666,14 @@ def nhapthongtinlaodongmoi():
             if themnhanvienmoi(nhanvienmoi):
                 print("Thêm lao động mới thành công !!!")
                 themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31))
-                    # print("Tạo ca mặc định cho người mới thành công !!!")                
-                    # if themlichsutrangthai(request.form.get("masothe"),request.form.get("ngayBatDau"),datetime(2054,12,31),'Đang làm việc'):
-                    #     print("Thêm lịch sử trạng thái cho người mới thành công !!!")
-                    # else:
-                    #     print("Thêm lịch sử trạng thái cho người mới thất bại !!!")
-            #     else:
-            #         print("Tạo ca mặc định cho người mới thất bại !!!") 
-            # else:
+                flash("Tạo ca mặc định cho người mới thành công !!!")  
+                themtaikhoanmoi(
+                    int(request.form.get("masothe")),
+                    request.form.get("hoten"),
+                    request.form.get("department"),
+                    request.form.get("gradecode")
+                )              
+            else:
                 masothe = int(laymasothemoi())+1
                 cacvitri= laycacvitri()
                 cacto = laycacto()
@@ -4633,3 +4632,4 @@ def thaydoi_ngayketthuc_lichsu_congviec():
         else:
             flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngayketthuc} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+    

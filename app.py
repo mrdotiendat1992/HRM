@@ -3196,7 +3196,8 @@ def hr_pheduyet_tangca(id,hrpheduyet):
         conn.commit()
         conn.close()
         return True
-    except:
+    except Exception as e:
+        print(f"Loi hr phe duyet tang ca ({e})")
         return False 
     
 def lay_cacca_theobang():
@@ -3218,7 +3219,7 @@ def lay_cackieu_nghikhac_theobang():
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cac ca: {e}")
+        print(f"Loi lay cac kieu nghi khac: {e}")
         return []
 
 def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
@@ -3231,10 +3232,9 @@ def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi lay cac ca: {e}")
+        print(f"Loi cap nhat ngay bat dau lich su cong viec: {e}")
         return False
     
-
 def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
     try:
         conn = pyodbc.connect(used_db)
@@ -3245,5 +3245,17 @@ def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi lay cac ca: {e}")
+        print(f"Loi cap nhat ngay ket thuc lich su cong viec: {e}")
         return False
+    
+def themtaikhoanmoi(masothe,hoten,department,gradecode):
+    try: 
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into Nhanvien values ('{current_user.macongty}','{masothe}','{hoten}','{department}','{gradecode}','user','1')"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them tai khoan moi: {e}")
