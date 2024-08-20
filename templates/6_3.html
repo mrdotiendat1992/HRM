@@ -21,11 +21,21 @@ td, label, p, input, h5 {
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
-    
+    <div style="display: flex; align-items: center;">
+        <form method="get">
+            <input type="text" name="mst" placeholder="Mã số thẻ" onchange="this.form.submit()" value="{{ request.args.get('mst', '') }}">
+            <input type="text" name="bophan" placeholder="Bộ phận" onchange="this.form.submit()" value="{{ request.args.get('bophan', '') }}">
+            <input type="text" name="chuyen" placeholder="Chuyền" onchange="this.form.submit()" value="{{ request.args.get('chuyen', '') }}">
+        </form>
+    </div>
+
     <div style="display: flex; align-items: center;">
         <h5 style="margin-left: 20px">Tổng: {{count}}</h5>
         <div class="pagination">{{pagination.links}}</div>
         <form method="post">
+            <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+            <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+            <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
             <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
         </form>
     </div>

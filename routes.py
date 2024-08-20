@@ -1479,10 +1479,11 @@ def lichsudieuchuyen():
 @login_required
 @roles_required('hr','sa','gd')
 def lichsucongviec():
-    
     if request.method == "GET":
-       
-        rows = laylichsucongviec()
+        mst = request.args.get("mst")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        rows = laylichsucongviec(mst,chuyen,bophan)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -1495,6 +1496,67 @@ def lichsucongviec():
                                danhsach=paginated_rows, 
                                pagination=pagination,
                                count=count)
+        
+    elif request.method == "POST":
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        rows = laylichsucongviec(mst,chuyen,bophan)
+        data = [{
+            "Mã công ty": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Chuyền": row[3],
+            "Bộ phận": row[4],
+            "Chức danh": row[5],
+            "Cấp bậc": row[6],
+            "HC category": row[11],
+            "Trạng thái": row[7],
+            "Ngày bắt đầu": row[8],
+            "Ngày kết thúc": row[9]
+        } for row in rows]
+        df = DataFrame(data)
+        df["Ngày bắt đầu"] = to_datetime(df['Ngày bắt đầu'], errors='coerce', dayfirst=True)
+        df["Ngày kết thúc"] = to_datetime(df['Ngày kết thúc'], errors='coerce', dayfirst=True)
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter == 'J' and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if cell.column_letter == 'K' and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+        
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=lichsu_congviec_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+    
 @app.route("/muc7_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -1507,14 +1569,13 @@ def khaibaochamcong():
             rows = laydanhsachcahientai(mst,chuyen,phongban)
             count = len(rows)
             current_page = request.args.get(get_page_parameter(), type=int, default=1)
-            per_page = 10
+            per_page = 15
             total = len(rows)
             start = (current_page - 1) * per_page
             end = start + per_page
             paginated_rows = rows[start:end]
             pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
             cacca = laycacca()
-            # print(paginated_rows)
             return render_template("7_1_1.html",
                                     page="7.1.1 Đổi ca làm việc",
                                     danhsach=paginated_rows,

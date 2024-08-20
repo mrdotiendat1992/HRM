@@ -3143,11 +3143,18 @@ def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuye
                     "lydo": "Không tìm thấy thông tin chuyền, chức danh mới trong danh sách HC Name !!!"}
     return {"ketqua":True}
 
-def laylichsucongviec():
+def laylichsucongviec(mst,chuyen,bophan):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[LICH_SU_CONG_VIEC] where Nha_may='{current_user.macongty}' order by MST asc, Tu_ngay desc"
+        query = f"select * from [HR].[dbo].[LICH_SU_CONG_VIEC] where Nha_may='{current_user.macongty}' "
+        if mst:
+            query += f" and MST = '{mst}'"
+        if chuyen:
+            query += f" and Chuyen = '{chuyen}'"
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        query += " order by Tu_ngay desc, MST asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
