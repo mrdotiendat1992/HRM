@@ -107,19 +107,27 @@
                 <input type="hidden" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}">
                 <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                 <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                 <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
-                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel" style="width:auto;"></input>
+                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
             </form>
             <div class="pagination">{{pagination.links}}</div>
-            {% if notice %}
-            {% if not request.args.get('mstquanly') %}
-            <form method = "GET" style="margin-left: 50px;">
-                <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
-                <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
-            </form>
-            {% else %}
-            <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_3'" style="margin-left: 50px;">Quay lại</button>
-            {% endif %}
+            {% if notice["Quản lý"] %}
+                {% if not request.args.get('mstquanly') %}
+                <form method = "GET" style="margin-left: 50px;">
+                    <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
+                </form>
+                {% else %}
+                    {% if notice["Thư ký"] %}
+                    <form method = "GET" style="margin-left: 50px;">
+                        <input type="hidden" name="mstthuky" value="{{ current_user.masothe }}">
+                        <input type="submit" class="btn btn-primary btn-sm" value="Kiểm tra"></input>
+                    </form>
+                    {% else %}
+                    <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_3'" style="margin-left: 50px;">Quay lại</button>
+                    {% endif %}
+                {% endif %}
             {% endif %}
             
         </div>
@@ -157,8 +165,8 @@
                                 <option value="Chờ kiểm tra">Chờ kiểm tra</option>
                                 <option value="Đã kiểm tra">Đã kiểm tra</option>
                                 <option value="Đã phê duyệt">Đã phê duyệt</option>
-                                <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
-                                <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
+                                <option value="Bị từ chối bởi người kiểm tra">Bị từ chối bởi người kiểm tra</option>
+                                <option value="Bị từ chối bởi người phê duyệt">Bị từ chối bởi người phê duyệt</option>
                             </select>
                         </th>
                         <th></th>
@@ -208,8 +216,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                        <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                                         <input type="hidden" name="chuyen" value="{{row[4]}}">
                                         <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                     </form>
@@ -226,8 +234,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                        <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                                         <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
                                     </form>
                                 </div>
@@ -248,8 +256,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                        <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                                         <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                                     </form>
                                     <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
@@ -265,8 +273,8 @@
                                         <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngay', '') }}">
                                         <input type="hidden" name="lydo_filter" value="{{ request.args.get('lydo', '') }}">
                                         <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                        <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                                        <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                                         <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                                     </form>
                                 </div>

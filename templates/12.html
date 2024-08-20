@@ -20,21 +20,11 @@
 
         <style>
             {% block style %}
-            .dropdown-submenu {
-                position: relative;
-            }
-            
-            .dropdown-submenu > .dropdown-menu {
-                top: 0;
-                left: -100%;
-                margin-left: 0;
-                border-radius: 0;
-            }
             #bangcalamviec {
                 position: absolute;
                 left: -200px;
             }
-            th, td {
+            #bangcalamviec th, td {
                 white-space: nowrap;
             }
             {% endblock style %}
@@ -101,7 +91,7 @@
                                         <div class="table-responsive">
                                             <table class="table table-bordered table-sm mb-0">
                                                 <thead>
-                                                    <tr>
+                                                    <tr class="bg-primary">
                                                         <th>Ca</th>
                                                         <th>Giờ vào HC</th>
                                                         <th>Giờ ra HC</th>

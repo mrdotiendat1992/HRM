@@ -4,7 +4,7 @@ from flask_login import LoginManager, UserMixin, login_user, logout_user, curren
 from flask_paginate import Pagination, get_page_parameter
 import pyodbc
 import openpyxl
-from openpyxl.styles import Font, PatternFill
+from openpyxl.styles import Font, PatternFill, NamedStyle
 import pandas as pd
 from pandas import DataFrame, ExcelWriter,to_numeric,to_datetime, to_timedelta
 from datetime import datetime, timedelta

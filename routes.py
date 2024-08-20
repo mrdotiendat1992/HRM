@@ -1433,11 +1433,47 @@ def lichsudieuchuyen():
         ngay = request.args.get("ngay")
         kieudieuchuyen = request.args.get("kieudieuchuyen")
         data = laylichsucongtac(mst,hoten,ngay,kieudieuchuyen)
-        df = pd.DataFrame(data)
-        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
-        return send_file(os.path.join(FOLDER_XUAT, f"lichsulamviec_{thoigian}.xlsx"), as_attachment=True)
+        df = DataFrame(data)
+        df["Ngày thực hiện"] = to_datetime(df['Ngày thực hiện'], errors='coerce', dayfirst=True)
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce', dayfirst=True)
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter == 'C' and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if cell.column_letter == 'K' and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+        
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=dieuchuyen_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
 
 @app.route("/muc6_3", methods=["GET","POST"])
 @login_required
@@ -2673,8 +2709,8 @@ def thukykiemtradiemdanhbu():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -2689,11 +2725,11 @@ def thukykiemtradiemdanhbu():
                 flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
         except Exception as e:
             flash(f"Lỗi thư ký điểm danh bù: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_3?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_3?mstthuky={mstthuky}")
             else:
                 return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         
@@ -2715,8 +2751,8 @@ def quanlypheduyetdiemdanhbu():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstdiemdanh = request.form["mst_diemdanh"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             if mstdiemdanh==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
@@ -2730,11 +2766,11 @@ def quanlypheduyetdiemdanhbu():
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt điểm danh bù: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_3?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_3?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_3?mstthuky={mstthuky}")
             else:  
                 return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
 
@@ -2754,8 +2790,8 @@ def thukykiemtraxinnghiphep():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             # if mstxinnghiphep==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
@@ -2771,11 +2807,11 @@ def thukykiemtraxinnghiphep():
         except Exception as e:
             print(f"Lỗi thư ký kiểm tra xin nghỉ phép: {e}")
             return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_4?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_4?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_4?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_4?mstthuky={mstthuky}")
             else:  
                 return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
 
@@ -2796,8 +2832,8 @@ def quanlypheduyetxinnghiphep():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstxinnghiphep = request.form["mst_xinnghiphep"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             if mstxinnghiphep==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
@@ -2811,11 +2847,11 @@ def quanlypheduyetxinnghiphep():
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ phép: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_3?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_3?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_4?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_4?mstthuky={mstthuky}")
             else:  
                 return redirect(f"/muc7_1_4?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&trangthai={trangthai_filter}")
         
@@ -2836,8 +2872,8 @@ def thukykiemtraxinnghikhongluong():
             kiemtra = request.form["kiemtra"]
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             # if mstxinnghikhongluong==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
@@ -2852,11 +2888,11 @@ def thukykiemtraxinnghikhongluong():
                 print(f"{current_user.hoten} không có quyền kiểm tra !!!")
         except Exception as e:
             print(f"Lỗi thư ký kiểm tra xin nghỉ không lương: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_5?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_5?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_5?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_5?mstthuky={mstthuky}")
             else:
                 return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
         
@@ -2877,8 +2913,8 @@ def quanlypheduyetnghikhongluong():
             pheduyet = request.form["pheduyet"]
             id = request.form["id"]
             mstxinnghikhongluong = request.form["mst_xinnghikhongluong"]
-            mst_quanly = request.form.get("mst_quanly")
-            mst_thuky = request.form.get("mst_thuky")
+            mstquanly = request.form.get("mstquanly")
+            mstthuky = request.form.get("mstthuky")
             if mstxinnghikhongluong==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
             if quanly_duoc_phanquyen(mstduyet,chuyen):
@@ -2892,11 +2928,11 @@ def quanlypheduyetnghikhongluong():
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ không lương: {e}")
-        if mst_quanly:
-            return redirect(f"/muc7_1_5?mst_quanly={mst_quanly}")
+        if mstquanly:
+            return redirect(f"/muc7_1_5?mstquanly={mstquanly}")
         else:
-            if mst_thuky:
-                return redirect(f"/muc7_1_5?mst_thuky={mst_thuky}")
+            if mstthuky:
+                return redirect(f"/muc7_1_5?mstthuky={mstthuky}")
             else:   
                 return redirect(f"/muc7_1_5?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&ngaynghi={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
 
@@ -2935,7 +2971,6 @@ def quanlypheduyetxinnghikhac():
             chuyen = lay_chuyen_theo_mst(mst)
             mstduyet = current_user.masothe
             pheduyet = request.form.get("pheduyet")
-            print(pheduyet)
             id = request.form["id"]
             if mst==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
@@ -4453,6 +4488,7 @@ def bangcongchot_web():
         response.headers['Content-Disposition'] = f'attachment; filename=bangcongchot_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
+    
 @app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
 def tailen_nhansu_pheduyet_tangca():
     if request.method=="POST":
