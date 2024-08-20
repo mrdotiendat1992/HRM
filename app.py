@@ -335,7 +335,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['F20'] = thuongtru
                         sheet['D21'] = cccd
                         sheet['L21'] = ngaycapcccd
-                        sheet['E21'] = sodienthoai
+                        sheet['E22'] = sodienthoai
                         sheet['H25'] = f"Thử việc {songaythuviec} ngày"
                         sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                         sheet['G32'] = chucdanh
