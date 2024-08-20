@@ -1819,7 +1819,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mu
         print(e)
         return False
     
-def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi):
+def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
@@ -1842,10 +1842,19 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi):
         if ngaynghi:
             query += f" AND Xin_nghi_khac.Ngay_nghi='{ngaynghi}'" 
         if chuyen:
-            loainghi += f" AND Xin_nghi_khac.Loai_nghi='{loainghi}'" 
-            
+            query += f" AND Xin_nghi_khac.Loai_nghi='{loainghi}'" 
+        if trangthai:
+            if trangthai=="Chưa kiểm tra":
+                query += f" AND (Xin_nghi_khac.Trang_thai=N'{trangthai}' or Xin_nghi_khac.Trang_thai is NULL)"
+            else:
+                query += f" AND Xin_nghi_khac.Trang_thai=N'{trangthai}'"
+        if nhangiayto:
+            if nhangiayto=="Chưa nhận":
+                query += f" AND (Xin_nghi_khac.Giay_to=N'{nhangiayto}' or Xin_nghi_khac.Giay_to is NULL)"
+            else:
+                query += f" AND Xin_nghi_khac.Giay_to=N'{nhangiayto}'" 
         query += " ORDER BY Xin_nghi_khac.Ngay_nghi DESC, Xin_nghi_khac.MST ASC"
-        
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows 

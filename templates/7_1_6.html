@@ -30,7 +30,7 @@
         font-size: 10px;
         margin-left:20px;
     }
-    input {
+    input, select {
         margin-left: 10px;
         font-size: 10px;
     }
@@ -77,6 +77,22 @@
                 <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()" placeholder="Chuyền">
                 <input type="date" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange="this.form.submit()">
                 <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()" placeholder="Loại nghỉ">
+                <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
+                    <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
+                    <option value=""></option>
+                    <option value="Chờ kiểm tra">Chờ kiểm tra</option>
+                    <option value="Đã kiểm tra">Đã kiểm tra</option>
+                    <option value="Đã phê duyệt">Đã phê duyệt</option>
+                    <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
+                    <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
+                </select>
+                <select class="nhaplieu" id="nhangiayto" name="nhangiayto" onchange='this.form.submit()'>
+                    <option value="{{ request.args.get('nhangiayto', '') }}">{{ request.args.get('nhangiayto', '') }}</option>
+                    <option value=""></option>
+                    <option value="Chưa nhận">Chưa nhận</option>
+                    <option value="Đã nhận">Đã nhận</option>
+                    <option value="Không có">Không có</option>
+                </select>
             </form>            
 
             <form method="POST">

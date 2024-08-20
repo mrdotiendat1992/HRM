@@ -1761,7 +1761,9 @@ def danhsachxinnghikhac():
         bophan = request.args.get("bophan")
         ngaynghi = request.args.get("ngaynghi")
         loainghi = request.args.get("loainghi")
-        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi)
+        trangthai = request.args.get("trangthai")
+        nhangiayto = request.args.get("nhangiayto")
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
