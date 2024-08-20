@@ -507,11 +507,11 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['E22'] = sodienthoai
                         sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                         sheet['G30'] = f"{chucdanh}"
-                        sheet['G40'] = f"{int(luongcoban):,} VNĐ/tháng"
+                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
-                            sheet['G41'] = f"{phucap} VNĐ/tháng"
+                            sheet['G40'] = f"{phucap} VNĐ/tháng"
                         else:
-                            sheet['G41'] = "Không"
+                            sheet['G40'] = "Không"
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_DO3_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
