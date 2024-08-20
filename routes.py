@@ -3231,7 +3231,21 @@ def suahopdong():
         return redirect("/muc3_3")
     except Exception as e:
         print(e)
-        return redirect("/muc3_3")   
+        return redirect("/muc3_3")  
+    
+@app.route("/xoahopdong", methods=["POST"])
+def xoahopdong():
+    try:
+        id = request.form.get('idhopdongxoa')
+        print(id)
+        if xoa_hopdong(id):
+            flash(f"Xoá thành công hợp đồng có ID {id}")
+        else:
+            flash(f"Xoá hợp đồng có ID {id} không thành công !!!")
+        return redirect("/muc3_3")
+    except Exception as e:
+        print(e)
+        return redirect("/muc3_3")    
     
 @app.route("/suahopdonglaodong", methods=["POST"])
 def suahopdonglaodong():
@@ -4416,7 +4430,7 @@ def bangcong5ngay_web():
             "Chuyền": row[4],
             "Chức danh": row[3],
             "Cấp bậc": row[6],
-            "HC category": row[20],
+            "HC category": row[21],
             "Ngày": row[7],    
             "Ca": row[8],
             "Số phút ca": row[9],
@@ -4428,11 +4442,13 @@ def bangcong5ngay_web():
             "Phút tăng ca 150%": row[15],
             "Phút tăng đêm": row[16],
             "Phút nghỉ không lương": row[17],
-            "Phút tăng nghỉ khác": row[18],
-            "Phân loại": row[19]
+            "Phút nghỉ khác": row[18],
+            "Loại nghỉ khác": row[19],
+            "Phân loại": row[20]
         } for row in danhsach] 
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Ngày"] = to_datetime(df['Ngày'], errors='coerce', dayfirst=True)
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4447,6 +4463,8 @@ def bangcong5ngay_web():
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    if cell.column_letter == 'I' and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:

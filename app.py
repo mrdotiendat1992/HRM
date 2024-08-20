@@ -2552,6 +2552,20 @@ def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         flash(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
         return False
     
+def xoa_hopdong(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"delete QUAN_LY_HD where ID='{id}'"
+        print(query)
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        flash(f"Loi xoa hop dong: {e} !!!")
+        return False
+    
 def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,giovao,lydo,trangthai):
     try:
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]

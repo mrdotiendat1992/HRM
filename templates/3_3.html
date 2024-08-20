@@ -68,17 +68,20 @@
                 <h1 id="loaihopdong"></h1>
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <form action="/inhopdong" method="POST">
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
                         <input type="hidden" id="idhopdongin" name="idhopdongin">
-                        <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-print"></i></button>
+                        <button class="btn btn-success btn-sm" type="submit" title="In hợp đồng"><i class="fas fa-print"></i></button>
                     </form>
                     <form action="/suahopdong" method="POST">
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
                         <input type="hidden" id="idhopdongsua" name="idhopdongsua">
-                        <button class="btn btn-success btn-sm" type="submit" ><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-success btn-sm" type="submit" title="Sửa hợp đồng"><i class="fas fa-edit"></i></button>
                     </form>
-                    <!-- <form action="/xoahopdong" method="POST">
-                       <input type="hidden" id="idhopdongxoa" name="idhopdongxoa">
-                       <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-trash"></i></button>
-                    </form> -->
+                    <form action="/xoahopdong" method="POST">
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" id="idhopdongxoa" name="idhopdongxoa">
+                        <button class="btn btn-success btn-sm" type="submit" title="Xoá hợp đồng"><i class="fas fa-trash"></i></button>
+                    </form>
                 </div>
                 <hr>
                 <h3>Họ tên: <b id="hoten"></b></h3>
@@ -229,6 +232,7 @@
         document.getElementById('ngayhethan').textContent = info['Ngày hết hạn hợp đồng'];
         document.getElementById('idhopdongin').value = info['Số thứ tự'];
         document.getElementById('idhopdongsua').value = info['Số thứ tự'];
+        document.getElementById('idhopdongxoa').value = info['Số thứ tự'];
     }
     function kiemtrathongtinnld() {
         axios({
