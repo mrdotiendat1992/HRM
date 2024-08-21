@@ -817,7 +817,7 @@ def lay_user(user):
             "Lương cơ bản": user[55],
             "Phụ cấp": user[56],
             "Tiền phụ cấp": user[57],
-            "Ngày vào": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y"),
+            "Ngày vào": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y") if user[58] else None,
             "Ngày nghỉ": datetime.strptime(user[59], '%Y-%m-%d').strftime("%d/%m/%Y") if user[59] else None,
             "Trạng thái": user[60],
             "Ngày vào nối thâm niên": datetime.strptime(user[61], '%Y-%m-%d').strftime("%d/%m/%Y") if user[61] else None,

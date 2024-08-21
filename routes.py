@@ -251,7 +251,6 @@ def logout():
         logout_user()
     except Exception as e:
         print(f'Không thế đăng xuất {e} !!!')
-        print(f'Không thế đăng xuất {e} !!!')
     return redirect("/")
 
 @app.route("/doimatkhau", methods=['POST'])
@@ -609,7 +608,7 @@ def nhapthongtinlaodongmoi():
             kieuhopdong = 'NULL'
 
             ngaybatdauthuviec = 'NULL'
-            ngayvao = 'NULL'
+            ngayvao = 'GETDATE()'
             ngayketthuc = 'NULL'
             ngayketthucthuviec = 'NULL'
             ngaybatdauhdcthl1 = "NULL"
