@@ -604,68 +604,24 @@ def nhapthongtinlaodongmoi():
             positioncodedescription = f"N'{request.form.get("tenvitri")}'"
             nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
             sdtnguoithan = f"N'{request.form.get("sdtnguoithan")}'" if request.form.get("sdtnguoithan") else 'NULL'
-            luongcoban = f"'{request.form.get("luongcoban").replace(',','')}'" if request.form.get("luongcoban") else 'NULL'
-            tongphucap = f"'{request.form.get("tongphucap").replace(',','')}'" if request.form.get("tongphucap") else 'NULL'
-            kieuhopdong = request.form.get("kieuhopdong")
-            if kieuhopdong == "HĐ thử việc":
-                kieuhopdong = "N'HĐ thử việc'"
-                ngaybatdauthuviec = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngayketthucthuviec = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngaybatdauhdcthl1 = "NULL"
-                ngayketthuchdcthl1 = "NULL"
-                ngaybatdauhdcthl2 = "NULL"
-                ngayketthuchdcthl2 = "NULL"
-                ngaybatdauhdvth = "NULL"
-            elif kieuhopdong == "HĐ có thời hạn 28 ngày":
-                kieuhopdong = "N'HĐ có thời hạn 28 ngày'"
-                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngaybatdauhdcthl1 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuchdcthl1 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngaybatdauthuviec = "NULL"
-                ngayketthucthuviec = "NULL"
-                ngaybatdauhdcthl2 = "NULL"
-                ngayketthuchdcthl2 = "NULL"
-                ngaybatdauhdvth = "NULL"
-            elif kieuhopdong == "HĐ có thời hạn 1 năm":
-                kieuhopdong = "N'HĐ có thời hạn 1 năm'"
-                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuc = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngaybatdauhdcthl2 = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuchdcthl2 = f"'{request.form.get("ngayKetThuc")}'" if request.form.get("ngayKetThuc") else 'NULL'
-                ngaybatdauthuviec = "NULL"
-                ngayketthucthuviec = "NULL"
-                ngaybatdauhdcthl1 = "NULL"
-                ngayketthuchdcthl1 = "NULL"
-                ngaybatdauhdvth = "NULL"
-            elif kieuhopdong == "HĐ vô thời hạn":
-                kieuhopdong = "N'HĐ vô thời hạn'"
-                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngayketthuc = 'NULL'
-                ngaybatdauhdvth = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                ngaybatdauthuviec = "NULL"
-                ngayketthucthuviec = "NULL"
-                ngaybatdauhdcthl1 = "NULL"
-                ngayketthuchdcthl1 = "NULL"
-                ngaybatdauhdcthl2 = "NULL"
-                ngayketthuchdcthl2 = "NULL"
-            else:
-                ngayvao = f"'{request.form.get("ngayBatDau")}'" if request.form.get("ngayBatDau") else 'NULL'
-                kieuhopdong = "NULL"
-                ngayketthuc = 'NULL'
-                ngaybatdauthuviec = "NULL"
-                ngayketthucthuviec = "NULL"
-                ngaybatdauhdcthl1 = "NULL"
-                ngayketthuchdcthl1 = "NULL"
-                ngaybatdauhdcthl2 = "NULL"
-                ngayketthuchdcthl2 = "NULL"
-                ngaybatdauhdvth = "NULL"
+            luongcoban = 'NULL'
+            tongphucap = 'NULL'
+            kieuhopdong = 'NULL'
+
+            ngaybatdauthuviec = 'NULL'
+            ngayvao = 'NULL'
+            ngayketthuc = 'NULL'
+            ngayketthucthuviec = 'NULL'
+            ngaybatdauhdcthl1 = "NULL"
+            ngayketthuchdcthl1 = "NULL"
+            ngaybatdauhdcthl2 = "NULL"
+            ngayketthuchdcthl2 = "NULL"
+            ngaybatdauhdvth = "NULL"
+
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
             if themnhanvienmoi(nhanvienmoi):
                 print("Thêm lao động mới thành công !!!")
-                themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),ngayvao.replace("'",""),datetime(2054,12,31))
+                themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),datetime.now().date(),datetime(2054,12,31))
                 flash("Tạo ca mặc định cho người mới thành công !!!")  
                 themtaikhoanmoi(
                     int(request.form.get("masothe")),

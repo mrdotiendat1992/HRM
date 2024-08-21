@@ -85,7 +85,14 @@
             <input type="text" id="tinhthanhpho" name="tinhthanhpho">
             <label for="sobhxh">Số BHXH</label>
             <input type="text" id="sobhxh" name="sobhxh">
-
+        </div>
+        <div class="form-group">
+            <label for="thuongtru">Thường trú</label>
+            <input type="text" id="thuongtru" name="thuongtru">
+            <label for="tamtru">Tạm trú</label>
+            <input type="text" id="tamtru" name="tamtru">
+            <label for="noisinh">Nơi sinh</label>
+            <input type="text" id="noisinh" name="noisinh">
         </div>
         <div class="form-group">
             <label for="dantoc">Dân tộc</label>
@@ -111,8 +118,6 @@
         </div>
 
         <div class="form-group">
-            <label for="dienthoai">Điện thoại</label>
-            <input type="text" id="dienthoai" name="dienthoai">
             <label for="connho">Có con nhỏ</label>
             <input type="text" id="connho" name="connho">
         </div>
@@ -296,6 +301,9 @@
                         document.getElementById("mucluong").value = data["Lương cơ bản"];
                         document.getElementById("phucap").value = data["Phụ cấp"];
                         document.getElementById("tongphucap").value = data["Tiền phụ cấp"];
+                        document.getElementById("thuongtru").value = data["Thường trú"];
+                        document.getElementById("tamtru").value = data["Tạm trú"];
+                        document.getElementById("noisinh").value = data["Nơi sinh"];
                         xoahanchechinhsua()
                     }
                 })
