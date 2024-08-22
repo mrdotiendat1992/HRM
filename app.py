@@ -1483,7 +1483,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
             INNER JOIN 
                 Phan_quyen_thu_ky
             ON
-                DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
                 DS_Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
         else:
@@ -1496,7 +1496,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 INNER JOIN 
                     Phan_quyen_thu_ky
                 ON
-                    DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                    DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
                     DS_Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}'"""
             else:            
