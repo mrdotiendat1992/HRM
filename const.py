@@ -6,8 +6,10 @@ used_db = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;P
 
 # mcc_db = r"Driver={SQL Server};Server=10.0.0.252\SQLEXPRESS;Database=MITACOSQL;UID=sa;PWD=Namthuan1"
 
-FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat\nhap')
-FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat\xuat')
+FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat/nhap')
+FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat/xuat')
+
+FOLDER_JD = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/jd')
 
 FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')
 FILE_MAU_HDTV_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdtv.xlsx')

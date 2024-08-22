@@ -133,6 +133,8 @@ def laycatheochuyen(chuyen):
                 return "A4-01"
             else:
                 return "A1-02"
+        else:
+            return row[0]
     except Exception as e:
         print(f"Loi kiem tra ca theo chuyen {e} !!!")
         if current_user.macongty=="NT2":
@@ -188,9 +190,10 @@ def dieuchuyennhansu(mst,
         cursor.execute(query3)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
         print(e)
-        return
+        return False
     
 def laydanhsachca(mst):
     try:
@@ -216,12 +219,11 @@ def dichuyennghiviec(mst,
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        truocngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
-INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
-UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
+        INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
+        UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """
-        # 
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -230,36 +232,15 @@ UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_n
         return
 
 def dichuyennghithaisan(mst,
-                            loaidieuchuyen,
-                            vitricu,
-                            vitrimoi,
-                            chuyencu,
-                            chuyenmoi,
-                            gradecodecu,
-                            gradecodemoi,
-                            sectioncodecu,
-                            sectioncodemoi,
-                            hccategorycu,
-                            hccategorymoi,
-                            departmentcu,
-                            departmentmoi,
-                            sectiondescriptioncu,
-                            sectiondescriptionmoi,
-                            employeetypecu,
-                            employeetypemoi,
-                            positioncodedescriptioncu,
-                            positioncodedescriptionmoi,
-                            positioncodecu,
-                            positioncodemoi,
-                            vitriencu,
-                            vitrienmoi,
-                            ngaydieuchuyen,
-                            ghichu
+                        vitricu,
+                        chuyencu,
+                        gradecodecu,
+                        hccategorycu,
+                        ngaydieuchuyen
                             ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        truocngaynghiviec = datetime.strptime(ngaydieuchuyen, '%Y-%m-%d') - timedelta(days=1)
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
             UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ thai sản' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
@@ -3279,3 +3260,27 @@ def lay_sodienthoai_theo_mst(mst):
     except Exception as e:
         print(f"Loi lay so dien thoai: {e}")
         return 0
+    
+def get_thongtin_vitri(vitri):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri}' "
+        print(query)
+        data = cursor.execute(query).fetchone()
+        return {'Detail_job_title_EN':data[0],'Grade_code':data[1],'Salary_range':"8-10"}
+    except Exception as e:
+        print(f"Loi lay thong tin vi tri: {e}")
+        return {'Detail_job_title_EN':"",'Grade_code':"",'Salary_range':""}
+    
+def lay_cac_vitri_trong_phong(phongban):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT DISTINCT Detail_job_title_VN FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Department='{phongban}' "
+        print(query)
+        data = cursor.execute(query).fetchall()
+        return [x[0] for x in data ]
+    except Exception as e:
+        print(f"Loi lay cac vi tri: {e}")
+        return []

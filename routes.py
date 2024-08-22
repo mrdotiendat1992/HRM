@@ -477,55 +477,38 @@ def danhsachdangkytuyendung():
             print("Cập nhật thông tin ứng viên thất bại !!!")
         return redirect(f"muc2_1?sdt={sdt}")
 
-@app.route("/muc2_2_1", methods=["GET","POST"])
+@app.route("/muc2_2", methods=["GET","POST"])
 @login_required
 @roles_required('tbp','gd','sa')
 def dangkytuyendung():
     if request.method == "GET":
         maso = current_user.macongty[-1]
         danhsach = laydanhsachyeucautuyendung(maso)
-        return render_template("2_2_1.html", page="2.2.1 Thêm yêu cầu tuyển dụng",danhsach=danhsach)
+        cacvitri = lay_cac_vitri_trong_phong(current_user.phongban)
+        return render_template("2_2.html", 
+                               page="2.2 Yêu cầu tuyển dụng",
+                               danhsach=danhsach,
+                               cacvitri = cacvitri
+                               )
     
     elif request.method == "POST":
-        bophan = request.form.get("bophan")
-        vitri = request.form.get("vitri")
-        soluong = request.form.get("soluong")
-        mota = request.form.get("mota")
-        thoigiandukien = request.form.get("thoigiandukien")
-        phanloai = request.form.get("phanloai")
-        mucluongtu = request.form.get("mucluongtu")
-        mucluongden = request.form.get("mucluongden")
-        mucluong = f"{mucluongtu} - {mucluongden} triệu VNĐ"
-        if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong):
-            print("Thêm yêu cầu tuyển dụng mới thành công !!!")
-        else:
-            print("Thêm yêu cầu tuyển dụng mới thất bại !!!")
-        return redirect("muc2_2_1")
-    
-@app.route("/muc2_2_2", methods=["GET","POST"])
-@login_required
-@roles_required('tbp','gd','sa','hr')
-def pheduyettuyendung():   
-    if request.method == "GET":
-        maso = current_user.macongty[-1]
-        danhsach = laydanhsachyeucautuyendung(maso)
-        return render_template("2_2_2.html", page="2.2.2 Trạng thái yêu cầu tuyển dụng",danhsach=danhsach)
-    
-    elif request.method == "POST":
-        bophan = request.form.get("bophan")
-        vitri = request.form.get("vitri")
-        soluong = request.form.get("soluong")
-        mota = request.form.get("mota")
-        thoigian = request.form.get("thoigian")
-        phanloai = request.form.get("phanloai")
-        trangthaiyeucau = request.form.get("trangthaiyeucau") if request.form.get("trangthaiyeucau") else None
-        trangthaithuchien = request.form.get("trangthaithuchien") if request.form.get("trangthaithuchien") else None
-        ghichu = request.form.get("ghichu") if request.form.get("ghichu") else None
-        if capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
-            print("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
-        else:
-            print("Cập nhật trạng thái yêu cầu tuyển dụng thất bại !!!")
-        return redirect("/muc2_2_2")
+        try:
+            bophan = current_user.phongban
+            vitri = request.form.get("vitri")
+            vitrien = request.form.get("vitrien")
+            soluong = request.form.get("soluong")
+            mota = os.path.join(FOLDER_JD, f"{vitrien}.pdf")
+            thoigiandukien = request.form.get("thoigiandukien")
+            phanloai = request.form.get("phanloai")
+            mucluong = f"{mucluong} triệu VNĐ"
+            print(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong)
+            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong):
+                print("Thêm yêu cầu tuyển dụng mới thành công !!!")
+            else:
+                print("Thêm yêu cầu tuyển dụng mới thất bại !!!")
+        except Exception as e:
+            print(f"Thêm yêu cầu tuyển dụng mới thất bại ({e})!!!")
+        return redirect("muc2_2")
     
 @app.route("/muc3_1", methods=["GET","POST"])
 @login_required
@@ -662,6 +645,9 @@ def thaydoithongtinlaodong():
             phuongxa = request.form.get("phuongxa")
             quanhuyen = request.form.get("quanhuyen")
             tinhthanhpho = request.form.get("tinhthanhpho")
+            thuongtru = request.form.get("thuongtru")
+            tamtru = request.form.get("tamtru")
+            noisinh = request.form.get("noisinh")
             dantoc = request.form.get("dantoc")
             tongiao = request.form.get("tongiao")
             hocvan = request.form.get("hocvan")
@@ -765,7 +751,22 @@ def thaydoithongtinlaodong():
                 query += f"Tinh_TP = N'{tinhthanhpho}',"
             else:
                 query += f"Tinh_TP = NULL,"
+            
+            if thuongtru:
+                query += f"Dia_chi_thuong_tru = N'{thuongtru}',"
+            else:
+                query += f"Dia_chi_thuong_tru = NULL,"
                 
+            if tamtru:
+                query += f"Dia_chi_tam_tru = N'{tamtru}',"
+            else:
+                query += f"Dia_chi_tam_tru = NULL,"
+                
+            if noisinh:
+                query += f"Noi_sinh = N'{noisinh}',"
+            else:
+                query += f"Noi_sinh = NULL,"
+            
             if dantoc: 
                 query += f"Dan_toc = N'{dantoc}',"
             else:
@@ -1299,31 +1300,11 @@ def dieuchuyen():
             elif loaidieuchuyen=="Nghỉ thai sản":
                 try:
                     dichuyennghithaisan(mst,
-                                loaidieuchuyen,
                                 vitricu,
-                                vitrimoi,
                                 chuyencu,
-                                chuyenmoi,
                                 gradecodecu,
-                                gradecodemoi,
-                                sectioncodecu,
-                                sectioncodemoi,
                                 hccategorycu,
-                                hccategorymoi,
-                                departmentcu,
-                                departmentmoi,
-                                sectiondescriptioncu,
-                                sectiondescriptionmoi,
-                                employeetypecu,
-                                employeetypemoi,
-                                positioncodedescriptioncu,
-                                positioncodedescriptionmoi,
-                                positioncodecu,
-                                positioncodemoi,
-                                vitriencu,
-                                vitrienmoi,
-                                ngaydieuchuyen,
-                                ghichu
+                                ngaydieuchuyen
                                 )
                     print("Điều chuyển thành công !!!")
                 except Exception as e:
@@ -3780,32 +3761,33 @@ def capnhatdieuchuyentheofile():
                     loaidieuchuyen = row["Loại điều chuyển"]
                     ngay = row["Ngày"]
                     ghichu = row["Ghi chú"] 
-                    
-                    thongtin_laodong = laydanhsachtheomst(masothe)[0]
-                    chucdanhcu = thongtin_laodong["Job title VN"]
-                    chuyencu = thongtin_laodong["Line"]
-                    capbaccu = thongtin_laodong["Gradecode"]
-                    sectioncodecu = thongtin_laodong["Section code"]
-                    hccategorycu = thongtin_laodong["HC category"]
-                    phongbancu = thongtin_laodong["Department"]
-                    sectiondescriptioncu = thongtin_laodong["Section description"]
-                    employeetypecu = thongtin_laodong["Employee type"]
-                    positioncodedescriptioncu = thongtin_laodong["Position description"]
-                    positioncodecu = thongtin_laodong["Position code"]
-                    chucdanhtacu = thongtin_laodong["Job title EN"]
-                    
-                    hc_name_moi = layhcname(chucdanhmoi,chuyenmoi)
-                    capbacmoi = hc_name_moi[6]
-                    sectioncodemoi = hc_name_moi[10]
-                    hccategorymoi = hc_name_moi[7]
-                    phongbanmoi = hc_name_moi[9]
-                    sectiondescriptionmoi = hc_name_moi[11]
-                    employeetypemoi = hc_name_moi[3]
-                    positioncodemoi = hc_name_moi[4]
-                    positioncodedescriptionmoi = hc_name_moi[5]
-                    chucdanhtamoi = hc_name_moi[2]
-                    
                     if loaidieuchuyen == "Chuyển vị trí":
+                        
+                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        sectioncodecu = thongtin_laodong["Section code"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        phongbancu = thongtin_laodong["Department"]
+                        sectiondescriptioncu = thongtin_laodong["Section description"]
+                        employeetypecu = thongtin_laodong["Employee type"]
+                        positioncodedescriptioncu = thongtin_laodong["Position description"]
+                        positioncodecu = thongtin_laodong["Position code"]
+                        chucdanhtacu = thongtin_laodong["Job title EN"]
+                        
+                        hc_name_moi = layhcname(chucdanhmoi,chuyenmoi)
+                        capbacmoi = hc_name_moi[6]
+                        sectioncodemoi = hc_name_moi[10]
+                        hccategorymoi = hc_name_moi[7]
+                        phongbanmoi = hc_name_moi[9]
+                        sectiondescriptionmoi = hc_name_moi[11]
+                        employeetypemoi = hc_name_moi[3]
+                        positioncodemoi = hc_name_moi[4]
+                        positioncodedescriptionmoi = hc_name_moi[5]
+                        chucdanhtamoi = hc_name_moi[2]
+                    
+                    
                         
                         dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
                                          chuyencu, chuyenmoi,capbaccu,capbacmoi,
@@ -3815,16 +3797,33 @@ def capnhatdieuchuyentheofile():
                                          positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu)
                         
                     elif loaidieuchuyen == "Nghỉ việc":
-                        dichuyennghiviec(masothe,chucdanhcu,capbaccu,hccategorycu,ngay,ghichu)
+                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyennghiviec(masothe,chucdanhcu,chuyencu,capbaccu,hccategorycu,ngay,ghichu)
                         
                     elif loaidieuchuyen == "Nghỉ thai sản":
-                        dichuyennghithaisan(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,chuyencu,chuyenmoi,
-                        capbaccu,capbacmoi,sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
-                        phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,employeetypecu,employeetypemoi,
-                        positioncodedescriptioncu,positioncodedescriptionmoi,positioncodecu,positioncodemoi,
-                        chucdanhtacu,chucdanhtamoi,ngay,ghichu)
+                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyennghithaisan(masothe,
+                                            chucdanhcu,
+                                            chuyencu,
+                                            capbaccu,
+                                            hccategorycu,
+                                            ngay,
+                                            ghichu)
                         
                     elif loaidieuchuyen == "Thai sản đi làm lại":
+                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
                         dichuyenthaisandilamlai(masothe,chucdanhcu,chuyencu,
                                                 capbaccu,hccategorycu,ngay)
                         
@@ -4588,3 +4587,31 @@ def thaydoi_ngayketthuc_lichsu_congviec():
             flash(f"Sửa ngày bắt đầu cho dòng lịch sử công việc số {id} sang {ngayketthuc} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
+@app.route("/lay_thongtin_vitri", methods=["POST"])
+def lay_thongtin_vitri():
+    try:
+        vitri = request.args.get("vitri")
+        return jsonify({"data": get_thongtin_vitri(vitri)})
+    except Exception as e:
+        print(e)
+        flash(f"Lấy thông tin vị trí thất bại ({e})!!!")
+        return jsonify({"data": []})
+
+
+@app.route("/tailenjd", methods=["POST"])
+def tailenjd():
+    if request.method == "POST":
+        try:
+            file = request.files.get("file")
+            if file:
+                # print(file)
+                vitri_en = request.form.get("jd_vitrien")
+                # print(vitri_en)
+                path = os.path.join(FOLDER_JD, f"{vitri_en}.pdf")
+                # print(path)
+                file.save(path)
+            return redirect("/muc2_2")
+        except Exception as e:
+            print(e)
+            return redirect("/muc2_2")
+
