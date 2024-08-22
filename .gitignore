@@ -10,3 +10,5 @@ nhapxuat/xuat/*.xlsx
 instance/db.sqlite
 
 *.ini
+
+*.pdf

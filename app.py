@@ -1479,26 +1479,26 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
             query = f"""
             SELECT  *
             FROM 
-                Xin_nghi_phep 
+                DS_Xin_nghi_phep 
             INNER JOIN 
                 Phan_quyen_thu_ky
             ON
-                Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
+                DS_Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
         else:
             if mstquanly:
                 query = f"""
                 SELECT 
                     *
                 FROM 
-                    Xin_nghi_phep 
+                    DS_Xin_nghi_phep 
                 INNER JOIN 
                     Phan_quyen_thu_ky
                 ON
-                    Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
+                    DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Line=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}'"""
+                    DS_Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}'"""
             else:            
                 query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
                 if mst:
@@ -1516,6 +1516,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
