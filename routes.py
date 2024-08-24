@@ -3578,7 +3578,7 @@ def chamcong_sang_web():
         "Họ tên": row[2],
         "Chuyền": row[4],
         "Phòng ban": row[5],
-        "Ngày": ngay,
+        "Ngày": row[6],
         "Giờ vào": row[7]
         } for row in danhsach]
         df = DataFrame(data)
