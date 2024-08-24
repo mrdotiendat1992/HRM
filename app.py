@@ -3348,7 +3348,7 @@ def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
-        print(len(rows))
+        # print(len(rows))
         return [x for x in rows]
     except Exception as e:
         print(f"Loi lay bang cong thang: {e}")
