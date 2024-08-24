@@ -3054,9 +3054,54 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca dem: {e}")
+        print(f"Loi lay bang tang ca chu nhat: {e}")
+        return []
+
+def lay_tangcangayle_web(thang,nam,mst,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[TANG_CA_NGAY_LE_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang tang ca ngay le: {e}")
         return []
     
+def lay_tangcachunhat_web(thang,nam,mst,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[TANG_CA_CHU_NHAT_THUC_TE] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang tang ca dem: {e}")
+        return []
 def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
     try:
         conn = pyodbc.connect(used_db)
