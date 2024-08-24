@@ -3329,3 +3329,27 @@ def lay_cac_vitri_trong_phong(phongban):
     except Exception as e:
         print(f"Loi lay cac vi tri: {e}")
         return []
+    
+def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_TONG_CONG_CA_THANG_THUC_TE] where Nha_may='{current_user.macongty}' "
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        rows =  cursor.execute(query).fetchall()
+        print(len(rows))
+        return [x for x in rows]
+    except Exception as e:
+        print(f"Loi lay bang cong thang: {e}")
+        return []

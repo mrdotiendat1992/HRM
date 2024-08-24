@@ -4831,3 +4831,110 @@ def tailenjd():
             print(e)
             return redirect("/muc2_2")
 
+@app.route("/bangcong_tong_web", methods=["GET","POST"])
+def bangcong_tong_web():
+    if request.method == "GET":
+        try:
+            thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+            nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+            mst = request.args.get("mst")
+            bophan = request.args.get("bophan")
+            chuyen = request.args.get("chuyen")
+            danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("bangcong_thang_web.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            print(e)
+            return render_template("bangcong_thang_web.html",
+                                    danhsach=[])
+    else:
+        thang = int(request.form.get("thang")) if request.args.get("thang") else 0
+        nam = int(request.form.get("nam")) if request.args.get("nam") else 0
+        mst = request.form.get("mst")
+        bophan = request.form.get("bophan")
+        chuyen = request.form.get("chuyen")
+        danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+        data = [{
+            "Mã số thẻ": row[0],
+            "Họ tên": row[1],
+            "Bộ phận": row[2],
+            "Chuyền": row[3],
+            "Vị trí": row[4],
+            "Chức danh": row[5],
+            "Ngày vào": datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",
+            "Ngày chính thức": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
+            "Ca": row[7],    
+            "Công thử việc": row[8],
+            "Công chính thức": row[9],
+            "Tăng ca chế độ thử việc": row[10],
+            "Tăng ca chế độ chính thức": row[11],
+            "Tăng ca ngày thử việc": row[12],
+            "Tăng ca ngày chính thức": row[13],
+            "Tăng ca đêm thử việc": row[14],
+            "Tăng ca đêm chính thức": row[15],
+            "Tăng ca chủ nhật thử việc": row[16],
+            "Tăng ca chủ nhật chính thức": row[17],
+            "Tăng ca ngày lễ thử việc": row[18],
+            "Tăng ca ngày lễ chính thức": row[19],
+            "Tuân thủ nội quy": row[20],
+            "Số lần UP": row[21],
+            "UA": row[22],
+            "Số giờ UP": row[23],
+            "UP": row[24],
+            "UP_01_CL": row[25],
+            "AL": row[26],
+            "AL01": row[27],
+            "PH_PL01_PL02_PL03 Thử việc": row[28],
+            "PH_PL01_PL02_PL03 Chính thức": row[29],
+            "OCL": row[30],
+            "SL": row[31],
+            "BL": row[32],
+            "ML03": row[33],
+            "ML02": row[34],
+            "LML": row[35],
+            "OSL": row[36],
+            "Tổng công": row[37],
+            "Số biên bản kỷ luật": row[38]           
+        } for row in danhsach] 
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bangcongthang_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+    
