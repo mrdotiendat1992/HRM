@@ -4874,7 +4874,7 @@ def bangcong_tong_web():
             "Ngày chính thức": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
             "Ca": row[8],    
             "Công thử việc": row[9],
-            "Công chính thức": row[10]],
+            "Công chính thức": row[10],
             "Tăng ca chế độ thử việc": row[11],
             "Tăng ca chế độ chính thức": row[12],
             "Tăng ca ngày thử việc": row[13],
