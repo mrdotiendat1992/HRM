@@ -609,8 +609,15 @@ def nhapthongtinlaodongmoi():
 
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
             if themnhanvienmoi(nhanvienmoi):
-                print("Thêm lao động mới thành công !!!")
-                themdoicamoi(request.form.get("masothe"),laycatheochuyen(request.form.get("line")),laycatheochuyen(request.form.get("line")),datetime.now().date(),datetime(2054,12,31))
+                flash("Thêm lao động mới thành công !!!")
+                ca = laycatheochuyen(request.form.get("line"))
+                themdoicamoi(
+                    request.form.get("masothe"),
+                    ca,
+                    ca,
+                    datetime.now().date(),  # This returns a datetime.date object
+                    datetime(2054, 12, 31).date()  # Convert to datetime.date
+                )
                 flash("Tạo ca mặc định cho người mới thành công !!!")  
                 themtaikhoanmoi(
                     int(request.form.get("masothe")),
@@ -620,10 +627,7 @@ def nhapthongtinlaodongmoi():
                 )              
             else:
                 masothe = int(laymasothemoi())+1
-                cacvitri= laycacvitri()
-                cacto = laycacto()
-                cacca = laycacca()
-                print("Thêm lao động mới thất bại !!!")
+                flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
             print(f"Them lao dong moi that bai: {e} !!!")
         finally:
