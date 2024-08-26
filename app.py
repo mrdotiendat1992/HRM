@@ -98,27 +98,6 @@ def laydanhsachsaphethanhopdong():
     except Exception as e:
         print(f"Lay danh sach sap het han hop dong that bai: {e}")
         return []
-    
-def capnhattrangthaiyeucautuyendung(bophan,vitri,soluong,mota,thoigian,phanloai,trangthaiyeucau,trangthaithuchien,ghichu):
-    try:
-        trangthaiyeucau = "NULL" if not trangthaiyeucau else f"N'{trangthaiyeucau}'"            
-        trangthaithuchien = "NULL" if not trangthaithuchien else f"N'{trangthaithuchien}'"
-        ghichu = "NULL" if not ghichu else f"N'{ghichu}'"
-        conn = pyodbc.connect(used_db)
-        cursor = conn.cursor()
-        query = f"""
-            UPDATE HR.dbo.Yeu_cau_tuyen_dung
-            SET Trang_thai_yeu_cau = {trangthaiyeucau}, Trang_thai_thuc_hien = {trangthaithuchien}, Ghi_chu = {ghichu}
-            WHERE Bo_phan = '{bophan}' AND Vi_tri = N'{vitri}' AND So_luong = '{soluong}' AND JD = N'{mota}' AND Thoi_gian_du_kien = '{thoigian}' AND Phan_loai = N'{phanloai}'
-        """ 
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
-        print("Cập nhật trạng thái ứng viên thành công !!!")
-        return True
-    except Exception as e:
-        print(f"Cap nhat trang thai ung vien that bai {e} !!!")
-        return False
 
 def laycatheochuyen(chuyen):
     try:
@@ -1816,7 +1795,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, kh
         query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
         (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}','{bacluong}','{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL)"""
+        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL)"""
         cursor.execute(query)
         conn.commit()
         return True
