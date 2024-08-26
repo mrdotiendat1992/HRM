@@ -699,6 +699,7 @@ def thaydoithongtinlaodong():
             sdtnguoithan = request.form.get("sdtnguoithan")
             ngayvao = request.form.get("ngayvao")
             ngaynghi = request.form.get("ngaynghi")
+            ngaychinhthuc = request.form.get("ngaychinhthuc")
             
             query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
             if thechamcong:
@@ -980,7 +981,10 @@ def thaydoithongtinlaodong():
                 query += f"Ngay_nghi = '{ngaynghi}',"
             else:
                 query += f"Ngay_nghi = NULL,"
-                
+            if ngaychinhthuc:
+                query += f"Ngay_ky_HDXDTH_Lan1 = '{ngaynghi}',"
+            else:
+                query += f"Ngay_ky_HDXDTH_Lan1 = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()

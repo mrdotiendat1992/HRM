@@ -203,7 +203,7 @@
                     <td>{{row[10]}}</td>
                     {% endif %}
                     {% if current_user.phanquyen == "td" %}
-                        {% if row[10] == "Phê duyệt" %}
+                        {% if row[10] == "Phê duyệt" %}
                         <td>
                             <form action="/td_capnhat_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
