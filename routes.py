@@ -49,7 +49,7 @@ def run_before_every_request():
                         Xin_nghi_khong_luong.Nha_may= a.Nha_may and Xin_nghi_khong_luong.Chuyen=a.Chuyen_to
                     WHERE 
                         Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
-                
+
                 g.notice["Quản lý"]={"Điểm danh bù":quanly_soluong_diemdanhbu,
                     "Xin nghỉ phép": quanly_soluong_xinnghiphep,
                     "Xin nghỉ không lương": quanly_soluong_xinnghikhongluong,
@@ -4975,3 +4975,18 @@ def gd_tuchoi_tuyendung():
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
             
+@app.route("/td_capnhat_ghichu_tuyendung", methods=["POST"])
+def td_capnhat_ghichu_tuyendung():
+    if request.method == "POST":
+        try:   
+            id = request.form.get("id")
+            trangthaimoi = request.form.get("trangthai")  
+            ketqua = capnhat_trangthai_tuyendung(id,trangthaimoi)
+            if ketqua["ketqua"]:
+                flash("Cập nhật trạng thái thực hiện tuyển dụng thành công !!!")
+            else:
+                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            return redirect("/muc2_2")
+        except Exception as e:
+            flash(f"Lỗi cập nhật trạng thái: {e}")
+            return redirect("/muc2_2")

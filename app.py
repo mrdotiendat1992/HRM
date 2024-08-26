@@ -3375,3 +3375,15 @@ def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
         print(f"Loi cap nhat trang thai tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
     
+def capnhat_trangthai_tuyendung(id,trangthaimoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung set Trang_thai_thuc_hien=N'{trangthaimoi}' where ID={id}"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
+        return {"ketqua":True,"lido":e}
