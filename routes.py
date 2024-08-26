@@ -4992,8 +4992,8 @@ def gd_tuchoi_tuyendung():
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
             
-@app.route("/td_capnhat_ghichu_tuyendung", methods=["POST"])
-def td_capnhat_ghichu_tuyendung():
+@app.route("/td_capnhat_tuyendung", methods=["POST"])
+def td_capnhat_tuyendung():
     if request.method == "POST":
         try:   
             id = request.form.get("id")
@@ -5007,3 +5007,20 @@ def td_capnhat_ghichu_tuyendung():
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
+
+@app.route("/td_capnhat_ghichu_tuyendung", methods=["POST"])
+def td_capnhat_ghichu_tuyendung():
+    if request.method == "POST":
+        try:   
+            id = request.form.get("id")
+            ghichu = request.form.get("ghichu")  
+            ketqua = capnhat_ghichu_tuyendung(id,ghichu)
+            if ketqua["ketqua"]:
+                flash("Cập nhật trạng thái thực hiện tuyển dụng thành công !!!")
+            else:
+                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            return redirect("/muc2_2")
+        except Exception as e:
+            flash(f"Lỗi cập nhật trạng thái: {e}")
+            return redirect("/muc2_2")
+

@@ -3366,3 +3366,16 @@ def capnhat_trangthai_tuyendung(id,trangthaimoi):
     except Exception as e:
         print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
+    
+def capnhat_ghichu_tuyendung(id,ghichu):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung set Ghi_chu=N'{ghichu}' where ID={id}"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
+        return {"ketqua":True,"lido":e}
