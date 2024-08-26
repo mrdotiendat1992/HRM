@@ -1155,7 +1155,8 @@ def capnhatthongtinungvien(id,
                         nguoithan,
                         sdtnguoithan,
                         luuhoso,
-                        ghichu
+                        ghichu,
+                        cccd
                         ):
     try:
         conn = pyodbc.connect(used_db)
@@ -1187,7 +1188,8 @@ def capnhatthongtinungvien(id,
         Nguoi_than = N'{nguoithan}',
         SDT_nguoi_than = '{sdtnguoithan}',
         Luu_ho_so = N'{luuhoso}',
-        Ghi_chu = N'{ghichu}'
+        Ghi_chu = N'{ghichu}',
+        CCCD = '{cccd}'
         WHERE 
         ID = '{id}' AND Nha_may = N'{current_user.macongty}'"""
         
@@ -1807,12 +1809,14 @@ def laydanhsachyeucautuyendung(maso):
         print(e)
         return []
     
-def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, mucluong):
+def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, khoangluong,capbac,bacluong):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"INSERT INTO HR.dbo.Yeu_cau_tuyen_dung VALUES('{bophan}',N'{vitri}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'{mucluong}',NULL,NULL,NULL)"
-        
+        query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
+        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu)
+        VALUES
+        ('{bophan}',N'{vitri}','{capbac}','{bacluong}','{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL)"""
         cursor.execute(query)
         conn.commit()
         return True
@@ -3311,12 +3315,16 @@ def get_thongtin_vitri(vitri):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri}' "
-        print(query)
         data = cursor.execute(query).fetchone()
-        return {'Detail_job_title_EN':data[0],'Grade_code':data[1],'Salary_range':"8-10"}
+        query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}'"
+        data1 = cursor.execute(query1).fetchall()
+        cacbacluong = []
+        for x in data1:
+            cacbacluong.append([x[0],x[1]])
+        return {'Detail_job_title_EN':data[0],'Grade_code':data[1],'Bac_luong': cacbacluong}
     except Exception as e:
         print(f"Loi lay thong tin vi tri: {e}")
-        return {'Detail_job_title_EN':"",'Grade_code':"",'Salary_range':""}
+        return {'Detail_job_title_EN':"",'Grade_code':"",'Bac_luong': []}
     
 def lay_cac_vitri_trong_phong(phongban):
     try:
@@ -3353,3 +3361,17 @@ def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
     except Exception as e:
         print(f"Loi lay bang cong thang: {e}")
         return []
+    
+def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung set Trang_thai_yeu_cau=N'{trangthaimoi}' where ID={id}"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        print(f"Loi cap nhat trang thai tuyen dung: {e}")
+        return {"ketqua":True,"lido":e}
+    

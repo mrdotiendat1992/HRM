@@ -1,10 +1,19 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
+    .scroll-container {
+        width: 100%;
+        overflow-x: scroll;
+    }
+
+    .content {
+        width: auto;
+    }
     table, th, td {
         font-size: 12px;
         font-weight:bold;
         border-collapse: collapse;
+        text-align: center;
     }
     th {
         text-align: center;
@@ -23,136 +32,142 @@
     iframe {
         padding:5px;
     }
-    .row {
-
-        justify-content: space-around;
+    #nutbam {
+        display: flex;
+        justify-content: start;
+        gap: 10px;
     }
 
 </style>
 {% endblock style %}
 {% block content %}
-<div class="container">
-    <div class="row">
-        <button type="button" class="btn btn-primary btn-sm" title="Thêm yêu cầu tuyến dụng" data-toggle="modal" data-target="#requestModal">
-            Thêm yêu cầu tuyển dụng
-        </button>
-        <button type="button" class="btn btn-primary btn-sm" title="Tải lên JD" data-toggle="modal" data-target="#JDModal">
-            Tải lên mô tả công việc
-        </button>
-    </div>
-    <div class="modal fade" id="JDModal" tabindex="-1" role="dialog" aria-labelledby="JDModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="JDModalLabel">Mô tả công việc</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" action="/tailenjd" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <p>Bộ phận: {{current_user.phongban}}</p>
-                                    <label for="jd_vitri">Vị trí</label>
-                                    <select id="jd_vitri" name="jd_vitri" onchange="changeJdVitri()" class="form-control">
-                                        <option value="" readonly>Chọn vị trí</option>
-                                        {% for vt in cacvitri %}
-                                        <option value='{{ vt }}'>{{ vt }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <input type="text" id="jd_vitrien" name="jd_vitrien">
-                                    <input class="form-control" type="file" id="file" name="file" accept="application/pdf">                                    
+<div class="scroll-container">
+    <div class="content">
+        {% if current_user.phanquyen == "tbp" %}
+        <div id="nutbam">
+            <button type="button" class="btn btn-primary btn-sm" title="Thêm yêu cầu tuyến dụng" data-toggle="modal" data-target="#requestModal">
+                Thêm yêu cầu tuyển dụng
+            </button>
+            <button type="button" class="btn btn-primary btn-sm" title="Tải lên JD" data-toggle="modal" data-target="#JDModal">
+                Tải lên mô tả công việc
+            </button>
+        </div>
+        {% endif %}
+        <div class="modal fade" id="JDModal" tabindex="-1" role="dialog" aria-labelledby="JDModal" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="JDModalLabel">Mô tả công việc</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="POST" action="/tailenjd" enctype="multipart/form-data">
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <p>Bộ phận: {{current_user.phongban}}</p>
+                                        <label for="jd_vitri">Vị trí</label>
+                                        <select id="jd_vitri" name="jd_vitri" onchange="changeJdVitri()" class="form-control">
+                                            <option value="" readonly>Chọn vị trí</option>
+                                            {% for vt in cacvitri %}
+                                            <option value='{{ vt }}'>{{ vt }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="text" id="jd_vitrien" name="jd_vitrien" hidden>
+                                        <input class="form-control" type="file" id="file" name="file" accept="application/pdf">                                    
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Tải lên"></input>
+                    </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                        
+                    </div>
+                
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                </form>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                    
-                </div>
-            
             </div>
         </div>
-    </div>
-    <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="requestModalLabel">Yêu cầu tuyển dụng</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST">
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <p>Bộ phận: {{current_user.phongban}}</p>
-                                    <label for="vitri">Vị trí</label>
-                                    <select id="vitri" name="vitri" onchange="changeVitri()" class="form-control">
-                                        <option value="" readonly>Chọn vị trí</option>
-                                        {% for vt in cacvitri %}
-                                        <option value='{{ vt }}'>{{ vt }}</option>
-                                        {% endfor %}
-                                    </select>
-                                    <input type="text" id="vitrien" name="vitrien" hidden>
-                                    <input type="text" id="capbac" name="capbac" readonly placeholder="Cấp bậc">
-                                    <input type="text" id="mucluong" name="mucluong" readonly placeholder="Mức lương" >
-                                    <input type="text" id="soluong" name="soluong" placeholder="Số lượng">                                   
-                                    <label for="thoigiandukien">Thời gian dự kiến</label>
-                                    <input type="date" id="thoigiandukien" name="thoigiandukien" >
-                                    <label for="phanloai">Phân loại</label>
-                                    <select id="phanloai" name="phanloai">   
-                                        <option value="Tuyển mới">Tuyển mới</option>
-                                        <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
-                                        <option value="Thay thế thai sản">Thay thế thai sản</option>
-                                        <option value="Ngắn hạn">Ngắn hạn</option>
-                                    </select>
-                                    
+        <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestModalLabel">Yêu cầu tuyển dụng</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form method="POST">
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <p>Bộ phận: {{current_user.phongban}}</p>
+                                        <label for="vitri">Vị trí</label>
+                                        <select id="vitri" name="vitri" onchange="changeVitri()" class="form-control">
+                                            <option value="" readonly>Chọn vị trí</option>
+                                            {% for vt in cacvitri %}
+                                            <option value='{{ vt }}'>{{ vt }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <input type="text" id="vitrien" name="vitrien" hidden>
+                                        <input type="text" id="capbac" name="capbac" readonly placeholder="Cấp bậc">
+                                        <select type="text" id="bacluongtu" name="bacluongtu" ></select>
+                                        <select type="text" id="bacluongden" name="bacluongden"></select>
+                                        <input type="text" id="soluong" name="soluong" placeholder="Số lượng">                                   
+                                        <label for="thoigiandukien">Thời gian dự kiến</label>
+                                        <input type="date" id="thoigiandukien" name="thoigiandukien" >
+                                        <label for="phanloai">Phân loại</label>
+                                        <select id="phanloai" name="phanloai">   
+                                            <option value="Tuyển mới">Tuyển mới</option>
+                                            <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
+                                            <option value="Thay thế thai sản">Thay thế thai sản</option>
+                                            <option value="Ngắn hạn">Ngắn hạn</option>
+                                        </select>
+                                        
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <label for="mota">Mô tả công việc</label>
-                                <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer;"></i>                                
-                                <div id="pdf-preview">
-                                    <iframe id="pdf-frame" style="width: 200px; height: 260px; background-color: transparent;" frameborder="0"></iframe>
+                                <div class="col-sm-6">
+                                    <label for="mota">Mô tả công việc</label>
+                                    <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer;"></i>                                
+                                    <div id="pdf-preview">
+                                        <iframe id="pdf-frame" style="width: 200px; height: 260px; background-color: transparent;" frameborder="0"></iframe>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-primary" value="Gửi yêu cầu"></input>
+                    </form>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                        
+                    </div>
+                
                 </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Gửi yêu cầu"></input>
-                </form>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                    
-                </div>
-            
             </div>
         </div>
-    </div>
-    <br>
-    <br>
-    <div class="row">
+        <br>
+        <br>
+
         <table class="table table-bordered table-hover table-sm">
             <thead>
                 <tr class="bg-primary">
-                    <th>STT</th>
                     <th>Bộ phận</th>
                     <th>Vị trí</th>
+                    <th>Cấp bậc</th>
+                    <th>Bậc lương</th>
+                    <th>Khoảng lương</th>
                     <th>Số lượng</th>
                     <th>JD</th>
                     <th>Thời gian dự kiến</th>
                     <th>Phân loại</th>
-                    <th>Khoảng lương</th>
                     <th>Trạng thái yêu cầu</th>
                     <th>Trạng thái thực hiện</th>
                     <th>Ghi chú</th>
@@ -161,17 +176,65 @@
             <tbody>
                 {% for row in danhsach %}
                 <tr>
-                    <td>{{loop.index}}</td>
-                    <td>{{row[0]}}</td>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
-                    <td><a href='{{row[3]}}'>Tải xuống</a></td>
-                    <td class="ngay">{{row[4]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
-                    <td>{{row[8]}}</td>
+                    <td><a href='{{row[7]}}'>Tải xuống</a></td>
+                    <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
+                    {% if row[10] == "Chưa phê duyệt" and current_user.phanquyen == "gd" %}
+                    <td>
+                        <div style="display:flex;gap:5px;justify-content: space-around;">
+                            <div>{{row[10]}}</div>
+                            <form action="/gd_pheduyet_tuyendung" method="POST">
+                                <input type="hidden" name="id" value="{{row[0]}}">
+                                <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
+                            </form>
+                            <form action="/gd_tuchoi_tuyendung" method="POST">
+                                <input type="hidden" name="id" value="{{row[0]}}">
+                                <button type="button" class="btn btn-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
+                    </td>
+                    {% else %}
+                    <td>{{row[10]}}</td>
+                    {% endif %}
+                    {% if current_user.phanquyen == "td" %}
+                        {% if row[10] == "Phê duyệt" %}
+                        <td>
+                            <form action="/td_capnhat_tuyendung" method="POST">
+                                <input type="hidden" name="id" value="{{row[0]}}">
+                                <select name="trangthai" class="form-control" onchange="form.submit()" >
+                                    {% for trangthai in cactrangthaithuchien %}
+                                        {% if trangthai == row[11] %}
+                                            <option selected>{{trangthai}}</option>
+                                        {% else %}
+                                            <option>{{trangthai}}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                        {% else %}
+                        <td>{{row[11]}}</td>
+                        {% endif %}
+                    {% else %}
+                    <td>{{row[11]}}</td>
+                    {% endif %}
+                    {% if current_user.phanquyen == "td" %}
+                        <td>
+                            <form action="/td_capnhat_ghichu_tuyendung" method="POST">
+                                <input type="hidden" name="id" value="{{row[0]}}">
+                                <input type="text" name="ghichu" class="form-control" onchange="form.submit()" value="{{row[12]}}">
+                            </form>
+                        </td>
+                    {% else %}
+                        <td>{{row[12]}}</td>
+                    {% endif %}
+                    
                 </tr>
                 {% endfor %}
             </tbody>
@@ -194,23 +257,56 @@
             .then(function (response) {
                 var data = response.data["data"]
                 console.log(data)
-                document.getElementById("mucluong").value = data["Salary_range"]+" triệu VND";
                 document.getElementById("capbac").value = data["Grade_code"];
                 document.getElementById("vitrien").value = data["Detail_job_title_EN"];
                 var pdfFrame = document.getElementById("pdf-frame");
                 var pdfPath = "static/uploads/mau/jd/" + data["Detail_job_title_EN"] + ".pdf";
-                pdfFrame.src = pdfPath;
-                // Handle the case where the PDF does not exist
-                pdfFrame.onerror = function() {
+
+                // Check if the PDF file exists before setting the src
+                var xhr = new XMLHttpRequest();
+                xhr.open('HEAD', pdfPath, true);
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        pdfFrame.src = pdfPath;
+                    } else {
+                        alert("Không tìm thấy mô tả công việc");
+                        pdfFrame.src = ""; // Optionally clear the iframe
+                    }
+                };
+                xhr.onerror = function() {
                     alert("Không tìm thấy mô tả công việc");
                     pdfFrame.src = ""; // Optionally clear the iframe
                 };
+                xhr.send();
 
-            })
+                var bacluongtu = document.getElementById("bacluongtu")
+                var bacluongden = document.getElementById("bacluongden")
+                bacluongden.innerHTML = ""
+                bacluongtu.innerHTML = ""
+                var list_bacluong = data["Bac_luong"]
+                list_bacluong.forEach(element => {
+                    
+                    var option_bacluong = document.createElement("option")
+                    option_bacluong.value = element[0] + "," + element[1]
+                    option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                    bacluongtu.appendChild(option_bacluong);
+                });
+                list_bacluong.forEach(element => {
+                    
+                    var option_bacluong = document.createElement("option")
+                    option_bacluong.value = element[0] + "," + element[1]
+                    option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                    bacluongden.appendChild(option_bacluong);
+                });
+
+
+                })
             .catch(function (error) {
                 console.log(error);
             });
-    }   
+    }
+            
+    
     function changeJdVitri() {
         var vitri = document.getElementById("jd_vitri").value;
         console.log(vitri)

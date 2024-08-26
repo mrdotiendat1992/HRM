@@ -395,7 +395,7 @@ def home():
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
-@roles_required('hr','tnc','sa','gd','td')
+@roles_required('hr','tnc','sa','gd','td','tbp')
 def danhsachdangkytuyendung():
     if request.method == "GET":
         sdt = request.args.get("sdt")
@@ -447,6 +447,7 @@ def danhsachdangkytuyendung():
         ngayhendilam = request.form.get("ngayhendilam")
         luuhoso = request.form.get("luuhoso")
         ghichu = request.form.get("ghichu")
+        cccd = request.form.get("cccd")
         if capnhatthongtinungvien(id,
                                sdt,
                                ngayhendilam,
@@ -470,7 +471,8 @@ def danhsachdangkytuyendung():
                                nguoithan,
                                sdtnguoithan,
                                luuhoso,
-                               ghichu
+                               ghichu,
+                               cccd
                                ):
             print("Cập nhật thông tin ứng viên thành công !!!")
         else:
@@ -479,16 +481,18 @@ def danhsachdangkytuyendung():
 
 @app.route("/muc2_2", methods=["GET","POST"])
 @login_required
-@roles_required('tbp','gd','sa')
+@roles_required('tbp','gd','sa','td')
 def dangkytuyendung():
     if request.method == "GET":
         maso = current_user.macongty[-1]
         danhsach = laydanhsachyeucautuyendung(maso)
+        cactrangthaithuchien = ["Chưa tuyển","Đã đăng tuyển","Chờ phỏng vấn","Đã tuyển"]
         cacvitri = lay_cac_vitri_trong_phong(current_user.phongban)
         return render_template("2_2.html", 
                                page="2.2 Yêu cầu tuyển dụng",
                                danhsach=danhsach,
-                               cacvitri = cacvitri
+                               cacvitri = cacvitri,
+                               cactrangthaithuchien=cactrangthaithuchien
                                )
     
     elif request.method == "POST":
@@ -496,13 +500,16 @@ def dangkytuyendung():
             bophan = current_user.phongban
             vitri = request.form.get("vitri")
             vitrien = request.form.get("vitrien")
+            capbac = request.form.get("capbac")
+            bacluongtu = request.form.get("bacluongtu")
+            bacluongden = request.form.get("bacluongden")
+            bacluong = f"{bacluongtu.split(",")[0]}-{bacluongden.split(",")[0]}"
             soluong = request.form.get("soluong")
             mota = os.path.join(FOLDER_JD, f"{vitrien}.pdf")
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
-            mucluong = f"{mucluong} triệu VNĐ"
-            print(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong)
-            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,mucluong):
+            khoangluong = f"{bacluongtu.split(",")[1]}-{bacluongden.split(",")[1]}"
+            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
                 print("Thêm yêu cầu tuyển dụng mới thành công !!!")
             else:
                 print("Thêm yêu cầu tuyển dụng mới thất bại !!!")
@@ -4938,3 +4945,33 @@ def bangcong_tong_web():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
     
+@app.route("/gd_pheduyet_tuyendung", methods=["POST"])
+def gd_pheduyet_tuyendung():
+    if request.method == "POST":
+        try:
+            id = request.form.get("id")
+            ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Phê duyệt")
+            if ketqua["ketqua"]:
+                flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
+            else:
+                flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            return redirect("/muc2_2")
+        except Exception as e:
+            flash(f"Lỗi cập nhật trạng thái: {e}")
+            return redirect("/muc2_2")
+        
+@app.route("/gd_tuchoi_tuyendung", methods=["POST"])
+def gd_tuchoi_tuyendung():
+    if request.method == "POST":
+        try:
+            id = request.form.get("id")
+            ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Từ chối")
+            if ketqua["ketqua"]:
+                flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
+            else:
+                flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            return redirect("/muc2_2")
+        except Exception as e:
+            flash(f"Lỗi cập nhật trạng thái: {e}")
+            return redirect("/muc2_2")
+            
