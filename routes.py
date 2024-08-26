@@ -503,12 +503,12 @@ def dangkytuyendung():
             capbac = request.form.get("capbac")
             bacluongtu = request.form.get("bacluongtu")
             bacluongden = request.form.get("bacluongden")
-            bacluong = f"{bacluongtu.split(",")[0]} đến {bacluongden.split(",")[0]}"
+            bacluong = f"{bacluongtu.split(",")[0]} => {bacluongden.split(",")[0]}"
             soluong = request.form.get("soluong")
             mota = os.path.join(FOLDER_JD, f"{vitrien}.pdf")
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
-            khoangluong = f"{bacluongtu.split(",")[1]} đến {bacluongden.split(",")[1]}"
+            khoangluong = f"{bacluongtu.split(",")[1]} => {bacluongden.split(",")[1]}"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
             else:
