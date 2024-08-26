@@ -474,9 +474,9 @@ def danhsachdangkytuyendung():
                                ghichu,
                                cccd
                                ):
-            print("Cập nhật thông tin ứng viên thành công !!!")
+            flash("Cập nhật thông tin ứng viên thành công !!!")
         else:
-            print("Cập nhật thông tin ứng viên thất bại !!!")
+            flash("Cập nhật thông tin ứng viên thất bại !!!")
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2", methods=["GET","POST"])
@@ -510,11 +510,11 @@ def dangkytuyendung():
             phanloai = request.form.get("phanloai")
             khoangluong = f"{bacluongtu.split(",")[1]} đến {bacluongden.split(",")[1]}"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
-                print("Thêm yêu cầu tuyển dụng mới thành công !!!")
+                flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
             else:
-                print("Thêm yêu cầu tuyển dụng mới thất bại !!!")
+                flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         except Exception as e:
-            print(f"Thêm yêu cầu tuyển dụng mới thất bại ({e})!!!")
+            flash(f"Thêm yêu cầu tuyển dụng mới thất bại ({e})!!!")
         return redirect("muc2_2")
     
 @app.route("/muc3_1", methods=["GET","POST"])
@@ -697,6 +697,8 @@ def thaydoithongtinlaodong():
             tienphucap = request.form.get("tienphucap")
             nguoithan = request.form.get("nguoithan")
             sdtnguoithan = request.form.get("sdtnguoithan")
+            ngayvao = request.form.get("ngayvao")
+            ngaynghi = request.form.get("ngaynghi")
             
             query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
             if thechamcong:
@@ -970,19 +972,27 @@ def thaydoithongtinlaodong():
                 query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
             else:
                 query += f"Trang_thai_lam_viec = NULL,"
+            if ngayvao:
+                query += f"Ngay_vao = '{ngayvao}',"
+            else:
+                query += f"Ngay_vao = NULL,"
+            if ngaynghi:
+                query += f"Ngay_nghi = '{ngaynghi}',"
+            else:
+                query += f"Ngay_nghi = NULL,"
+                
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            if current_user.macongty == "NT2":
-                if not current_user.masothe == "4091":
-                    print("Bạn không có quyền thay đổi thông tin người lao động !!!")
+            if "HR" in current_user.phongban:
+                flash("Bạn không có quyền thay đổi thông tin người lao động !!!")
+                return redirect("/muc3_2")
             cursor.execute(query)
             conn.commit()
             conn.close()
-            print("Cập nhật thông tin người lao động thành công !!!")
+            flash("Cập nhật thông tin người lao động thành công !!!")
         except Exception as e:
-            print(e)
-            print(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
+            flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
 @app.route("/muc3_3", methods=["GET","POST"])
