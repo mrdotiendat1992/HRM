@@ -168,7 +168,7 @@
                     <th>Phân loại</th>
                     <th>Trạng thái yêu cầu</th>
                     <th>Trạng thái thực hiện</th>
-                    <th>Ghi chú</th>
+                    <th style="width: 200px;">Ghi chú</th>
                 </tr>
             </thead>
             <tbody>
@@ -223,14 +223,14 @@
                     <td>{{row[11]}}</td>
                     {% endif %}
                     {% if current_user.phanquyen == "td" %}
-                        <td style="width: 200px;">
+                        <td>
                             <form action="/td_capnhat_ghichu_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 <input type="text" name="ghichu" class="form-control" onchange="form.submit()" value="{{row[12]}}">
                             </form>
                         </td>
                     {% else %}
-                        <td style="width: 200px;">{{row[12]}}</td>
+                        <td>{{row[12]}}</td>
                     {% endif %}
                     
                 </tr>

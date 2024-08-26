@@ -55,7 +55,7 @@ input, select {
                 <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '')  }}"></input>
                 <input id="chuyen" name="chuyen" placeholder="Chuyền" value="{{ request.args.get('chuyen', '')  }}"></input>
                 <input id="bophan" name="bophan" placeholder="Bộ phận" value="{{ request.args.get('bophan', '') }}"></input>
-                <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay')}}></input>
+                <input id="ngay" name="ngay" type="date" value={{request.args.get('ngay', '')}}></input>
                 <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
             </div>
         </form>
@@ -302,13 +302,15 @@ input, select {
             return "";    
     }}
 
-    function compareTimeUp(time1, time2) {
+    function sosanhgiovao(time1, time2) {
+        console.log(time1, time2)
         const [hours1, minutes1] = time1.split(':').map(Number);
         const [hours2, minutes2] = time2.split(':').map(Number);
         return (hours1 > hours2) || (hours1 === hours2 && minutes1 > minutes2);
     }
 
-    function compareTimeDown(time1, time2) {
+    function sosanhgiora(time1, time2) {
+        console.log(time1, time2)
         const [hours1, minutes1] = time1.split(':').map(Number);
         const [hours2, minutes2] = time2.split(':').map(Number);
         return (hours1 < hours2) || (hours1 === hours2 && minutes1 < minutes2);
@@ -414,7 +416,7 @@ input, select {
 
                 if(data["Giờ vào"]) {
                     diemdanhbuModalGioVao.value = data["Giờ vào"] || '';
-                    if (compareTimeUp(data["Giờ vào"], '07:30')) {
+                    if (sosanhgiovao(data["Giờ vào"], '07:30')) {
                         diemdanhbuModalGioVao.disabled = false;
                     }
                 } else {
@@ -422,7 +424,7 @@ input, select {
                 }
                 if (data["Giờ ra"]) {
                     diemdanhbuModalGioRa.value = data["Giờ ra"] || '';
-                    if (compareTimeDown(data["Giờ ra"], '16:30')) {
+                    if (sosanhgiora(data["Giờ ra"], '16:30')) {
                         diemdanhbuModalGioRa.disabled = false;
                     }
                 } else {
