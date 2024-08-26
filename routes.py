@@ -626,7 +626,6 @@ def nhapthongtinlaodongmoi():
                     request.form.get("gradecode")
                 )              
             else:
-                masothe = int(laymasothemoi())+1
                 flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
             print(f"Them lao dong moi that bai: {e} !!!")
