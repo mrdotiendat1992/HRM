@@ -146,7 +146,6 @@
                         <input type="submit" class="btn btn-primary" value="Gửi yêu cầu"></input>
                     </form>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                        
                     </div>
                 
                 </div>
@@ -224,14 +223,14 @@
                     <td>{{row[11]}}</td>
                     {% endif %}
                     {% if current_user.phanquyen == "td" %}
-                        <td>
+                        <td style="width: 200px;">
                             <form action="/td_capnhat_ghichu_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 <input type="text" name="ghichu" class="form-control" onchange="form.submit()" value="{{row[12]}}">
                             </form>
                         </td>
                     {% else %}
-                        <td>{{row[12]}}</td>
+                        <td style="width: 200px;">{{row[12]}}</td>
                     {% endif %}
                     
                 </tr>
