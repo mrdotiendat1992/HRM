@@ -260,7 +260,7 @@
                             <input type="hidden" name="chuyen_filter" value={{request.args.get('chuyen', '')}}></input>
                             <input type="hidden" name="bophan_filter" value={{request.args.get('bophan', '')}}></input>
                             <input type="hidden" name="id" value={{row[8]}}></input>
-                            <input class="input_ca" name="ca" value={{row[5]}} onchange='this.form.submit()'> 
+                            <input class="input_ca" name="ca"  onchange='this.form.submit()' value={{row[5]}}> 
                         </form>
                     </td>
                     <td>
