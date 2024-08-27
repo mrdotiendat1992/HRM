@@ -3690,8 +3690,8 @@ def tai_danhsach_tangca():
     if request.method=="POST":
         chuyen = request.form.get("chuyen").replace("[","").replace("]", "").replace("'", "").replace(" ", "").split(",")
         ngay = request.form.get("ngay")
-        # print(chuyen, ngay)   
-        danhsach = danhsach_tangca(chuyen,ngay)
+        pheduyet =  request.form.get("pheduyet")
+        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
         data = [x for x in danhsach if not x["HR phê duyệt"]]
         # print(data)
         ngay = datetime.now().date()     
