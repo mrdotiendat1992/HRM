@@ -988,7 +988,7 @@ def thaydoithongtinlaodong():
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
-            if "HR" in current_user.phongban:
+            if "HRD" in current_user.phongban:
                 flash("Bạn không có quyền thay đổi thông tin người lao động !!!")
                 return redirect("/muc3_2")
             cursor.execute(query)
