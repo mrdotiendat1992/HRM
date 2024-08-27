@@ -2715,15 +2715,18 @@ def lay_chuyen_theo_mst(mst):
         print(e)
         return None 
     
-def danhsach_tangca(chuyen:list,ngay):
+def danhsach_tangca(chuyen:list,ngay,pheduyet):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where ("
         for ch in chuyen:
             query += f" Chuyen_to='{ch}' or"
-        query = query[:-2] + f" ) and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        #print(query)
+        query = query[:-2] + " ) "
+        if pheduyet:
+            query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
+        query += f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
+        print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
@@ -2749,7 +2752,8 @@ def danhsach_tangca(chuyen:list,ngay):
         # print(result)
         conn.close()
         return result
-    except:
+    except Exception as e:
+        flash(f"Lỗi lấy bảng đăng ký tang ca: ({e})")
         return []
 
 def laychuyen_quanly(masothe,macongty):
@@ -3379,3 +3383,15 @@ def capnhat_ghichu_tuyendung(id,ghichu):
     except Exception as e:
         print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
+    
+def lay_danhsach_dangky_ngayle():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[DANG_KY_LAM_VIEC_NGAY_LE] where NHA_MAY='{current_user.macongty}' "
+        query += " order by MST asc"
+        rows =  cursor.execute(query).fetchall()
+        return [x for x in rows]
+    except Exception as e:
+        print(f"Loi lay bang dang ky ngay le: {e}")
+        return []

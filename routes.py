@@ -3501,9 +3501,10 @@ def off_f12():
 def dangky_tangca_bangweb():
     if request.method=="GET":
         chuyen = request.args.getlist("chuyen")
-        ngay = request.args.get("ngay")    
+        ngay = request.args.get("ngay") 
+        pheduyet = request.args.get("pheduyet")  
         cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
-        danhsach = danhsach_tangca(chuyen,ngay)
+        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 100
@@ -3517,6 +3518,15 @@ def dangky_tangca_bangweb():
                                danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=count)
+    if request.method=="POST":
+        cacchuyen = request.form.getlist("chuyen")
+        ngay = request.form.get("ngay")
+        pheduyet = request.form.get("pheduyet")
+        link = f"/dangki_tangca_web?ngay={ngay}&pheduyet={pheduyet}"
+        for chuyen in cacchuyen:
+            link += f"&chuyen={chuyen}"
+        return redirect(link)
+        
         
 @app.route("/capnhat_tangca", methods=["POST"])
 def capnhat_tangca():
@@ -3544,8 +3554,9 @@ def capnhat_tangca():
 @app.route("/bopheduyet_tangca", methods=["POST"])   
 def bopheduyet_tangca():
     if request.method=="POST":
-        chuyen_filter = request.form.get("chuyen_filter")
+        chuyen_filter = request.form.getlist("chuyen")
         ngay_filter = request.form.get("ngay_filter")
+        pheduyet = request.form.get("pheduyet")
         id = request.form.get("id")
         try:
             if nhansu_bopheduyet_tangca(id):
@@ -3554,13 +3565,17 @@ def bopheduyet_tangca():
                 flash(f"Bỏ phê duyệt tăng ca ID = {id} không được")
         except Exception as e:   
             flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
-        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+        link = f"/dangki_tangca_web?ngay={ngay_filter}&pheduyet={pheduyet}"
+        for chuyen in chuyen_filter:
+            link += f"&chuyen={chuyen}"
+        return redirect(link)
 
 @app.route("/pheduyet_tangca", methods=["POST"])   
 def pheduyet_tangca():
     if request.method=="POST":
-        chuyen_filter = request.form.get("chuyen_filter")
+        chuyen_filter = request.form.getlist("chuyen")
         ngay_filter = request.form.get("ngay_filter")
+        pheduyet = request.form.get("pheduyet")
         id = request.form.get("id")
         try:
             if nhansu_pheduyet_tangca(id):
@@ -3569,7 +3584,10 @@ def pheduyet_tangca():
                 flash(f"Phê duyệt tăng ca ID = {id} không được")
         except Exception as e:   
             flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
-        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+        link = f"/dangki_tangca_web?ngay={ngay_filter}&pheduyet={pheduyet}"
+        for chuyen in chuyen_filter:
+            link += f"&chuyen={chuyen}"
+        return redirect(link)
     
 @app.route("/chamcong_sang_web", methods=["GET","POST"])
 def chamcong_sang_web():
@@ -5024,3 +5042,23 @@ def td_capnhat_ghichu_tuyendung():
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
 
+@app.route("/dangky_ngayle_web", methods=["GET"])
+def dangky_ngayle_web():
+    if request.method == "GET":
+        try:
+            danhsach = lay_danhsach_dangky_ngayle()
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("dangky_ngayle_web.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            flash(f"Lỗi lấy bảng đăng ký làm ngày leex: ({e})")   
+            return render_template("dangky_ngayle_web.html",
+                                     danhsach=[])  

@@ -116,6 +116,43 @@
                     </div>
                 </div>
             </div>
+            <div class="dropdown">
+                <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    Lọc phê duyệt
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li>
+                        <form method="POST">
+                            <input hidden name="pheduyet" value="">
+                            <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                            {% for chuyen in request.args.getlist('chuyen') %}
+                                <input hidden name="chuyen" value="{{ chuyen }}">
+                            {% endfor %}
+                            <button class="dropdown-item" type="submit">Tất cả</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form method="POST">
+                            <input hidden name="pheduyet" value="ok">
+                            <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                            {% for chuyen in request.args.getlist('chuyen') %}
+                                <input hidden name="chuyen" value="{{ chuyen }}">
+                            {% endfor %}
+                            <button class="dropdown-item" type="submit">Đã phê duyệt</button>
+                        </form>
+                    </li>
+                    <li>
+                        <form method="POST">
+                            <input hidden name="pheduyet" value="notok">
+                            <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                            {% for chuyen in request.args.getlist('chuyen') %}
+                                <input hidden name="chuyen" value="{{ chuyen }}">
+                            {% endfor %}
+                            <button class="dropdown-item" type="submit">Chưa phê duyệt</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
             {% endif %}
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
@@ -159,7 +196,10 @@
                         <td>
                             <form action='/bopheduyet_tangca' method='POST'>
                                 <input type="hidden" name="id" value="{{row['ID']}}">
-                                <input type="hidden" name= "chuyen_filter" value = {{request.args.get('chuyen', '')}}>
+                                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                                {% for chuyen in request.args.getlist('chuyen') %}
+                                    <input hidden name="chuyen" value="{{ chuyen }}">
+                                {% endfor %}
                                 <input type="hidden" name= "ngay_filter" value = {{request.args.get('ngay', '')}}>
                                 <input class="btn-danger btn-sm" type="submit" value="Bỏ phê duyệt"></input>
                             </form>
@@ -193,7 +233,10 @@
                             <form action='/pheduyet_tangca' method='POST'>
                                 <input class="btn-primary btn-sm" type="submit" value="Phê duyệt"></input>
                                 <input type="hidden" name="id" value="{{row['ID']}}">
-                                <input type="hidden" name= "chuyen_filter" value = {{request.args.get('chuyen', '')}}>
+                                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                                {% for chuyen in request.args.getlist('chuyen') %}
+                                    <input hidden name="chuyen" value="{{ chuyen }}">
+                                {% endfor %}
                                 <input type="hidden" name= "ngay_filter" value = {{request.args.get('ngay', '')}}>
                             </form>
                         </td>
