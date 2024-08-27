@@ -5146,7 +5146,7 @@ def dangky_ngayle_web():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response   
             
-@app.route("/dangky_chunhat_web", methods=["GET"])
+@app.route("/dangky_chunhat_web", methods=["GET","POST"])
 def dangky_chunhat_web():
     if request.method == "GET":
         try:
