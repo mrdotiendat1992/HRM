@@ -2511,7 +2511,9 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}'
                 WHERE Factory='{nhamay}' AND MST='{mst}'"""
         else:
-            query = None
+            query = f"""UPDATE Danh_sach_CBCNV SET Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}'
+                WHERE Factory='{nhamay}' AND MST='{mst}'
+                """
         if query:
             
             cursor.execute(query)

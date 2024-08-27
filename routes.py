@@ -3171,10 +3171,10 @@ def capnhathopdongtheofilemau():
                     print("Them HD ok")
                 if capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
                     print("Cap nhap HD ok")
-            print("Cập nhật hợp đồng thành công !!!")
+            flash("Cập nhật hợp đồng thành công !!!")
         except Exception as e:
             print(f"Cap nhat hop dong loi: {e}")
-            print(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
+            flash(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
     else:
         print("Không tìm thấy dữ liệu hợp đồng !!!")
     return redirect("/muc3_3")
