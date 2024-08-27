@@ -140,6 +140,17 @@
         {% block content %}
         
         {% endblock content %}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left: 500px;display: fixed; border: 1px solid #f5c6cb;
+                                border-radius: 5px;
+                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                                transition: opacity 0.5s ease, transform 0.5s ease;
+                                transform: translateY(-20px);">
+                    {{ messages[0] }}
+                </div>
+            {% endif %}
+        {% endwith %}
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <script>

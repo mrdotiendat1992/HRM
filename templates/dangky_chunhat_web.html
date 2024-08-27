@@ -16,7 +16,7 @@
     .pagination {
         font-size: 10px;
     }
-    #filter {
+    #header {
         display: flex;
         gap: 10px;
     }
@@ -25,8 +25,13 @@
 {% block content %}
 <div class="container-fluid">
     <div id="header">
-        <button class="btn btn-success btn-sm"><i class="fas fa-download"></i></button>
-        <button class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
+        <form method="POST">
+            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-download"></i></button>
+        </form>
+        <form method="POST" action="/dangky_dilam_chunhat"  enctype="multipart/form-data">
+            <input type="file" name="file"> 
+            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
+        </form>
     </div>
     <table class="table table-hover table-sm table-bordered">
         <thead>

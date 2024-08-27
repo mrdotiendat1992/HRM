@@ -4795,9 +4795,9 @@ def tailen_nhansu_pheduyet_tangca():
                     id = row["ID"]
                     hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
                     if hr_pheduyet_tangca(id,hrpheduyet):
-                        flash("Nhân sự phê duyệt tăng ca ID thành công !!!")
+                        flash(f"Nhân sự phê duyệt tăng ca ID {id} thành công !!!")
                     else:
-                        flash("Nhân sự phê duyệt tăng ca ID thất bại !!!")        
+                        flash(f"Nhân sự phê duyệt tăng ca ID {id} thất bại !!!")        
             except Exception as e:
                 print(e)
             finally:         
@@ -5042,7 +5042,7 @@ def td_capnhat_ghichu_tuyendung():
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
 
-@app.route("/dangky_ngayle_web", methods=["GET"])
+@app.route("/dangky_ngayle_web", methods=["GET","POST"])
 def dangky_ngayle_web():
     if request.method == "GET":
         try:
@@ -5062,3 +5062,263 @@ def dangky_ngayle_web():
             flash(f"Lỗi lấy bảng đăng ký làm ngày leex: ({e})")   
             return render_template("dangky_ngayle_web.html",
                                      danhsach=[])  
+    elif request.method == "POST":
+        danhsach = lay_danhsach_dangky_ngayle()
+        if "HR" not in current_user.phongban:
+            if danhsach:
+                data = [{
+                    "Nhà máy": row[0],
+                    "Mã số thẻ": row[1],
+                    "Họ tên": row[2],
+                    "Bộ phận": row[4],
+                    "Chuyền": row[3],
+                    "Vị trí": row[5],
+                    "Ngày đăng ký": datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else ""      
+                } for row in danhsach] 
+            else:
+                data = [{
+                    "Nhà máy": "",
+                    "Mã số thẻ": "",
+                    "Họ tên": "",
+                    "Bộ phận": "",
+                    "Chuyền": "",
+                    "Vị trí": "",
+                    "Ngày đăng ký": ""      
+                }]
+        else:
+            if danhsach:
+                data = [{
+                    "Nhà máy": row[0],
+                    "Mã số thẻ": row[1],
+                    "Họ tên": row[2],
+                    "Bộ phận": row[4],
+                    "Chuyền": row[3],
+                    "Vị trí": row[5],
+                    "Ngày đăng ký": datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",    
+                    "HR phê duyệt": row[7],
+                    "Công khai": row[8],
+                    "ID":row[9]
+                } for row in danhsach] 
+            else:
+                data = [{
+                    "Nhà máy": "",
+                    "Mã số thẻ": "",
+                    "Họ tên": "",
+                    "Bộ phận": "",
+                    "Chuyền": "",
+                    "Vị trí": "",
+                    "Ngày đăng ký": "",
+                    "HR phê duyệt": "",
+                    "Công khai": "",
+                    "ID":""
+                }]
+                
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=dangkylamngayle_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response   
+            
+@app.route("/dangky_chunhat_web", methods=["GET"])
+def dangky_chunhat_web():
+    if request.method == "GET":
+        try:
+            danhsach = lay_danhsach_dangky_chunhat()
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("dangky_chunhat_web.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            flash(f"Lỗi lấy bảng đăng ký làm ngày leex: ({e})")   
+            return render_template("dangky_chunhat_web.html",
+                                     danhsach=[]) 
+    elif request.method == "POST":
+        danhsach = lay_danhsach_dangky_chunhat()
+        if "HR" not in current_user.phongban:
+            if danhsach:
+                data = [{
+                    "Nhà máy": row[0],
+                    "Mã số thẻ": row[1],
+                    "Họ tên": row[2],
+                    "Bộ phận": row[4],
+                    "Chuyền": row[3],
+                    "Vị trí": row[5],
+                    "Ngày đăng ký": datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else ""      
+                } for row in danhsach] 
+            else:
+                data = [{
+                    "Nhà máy": "",
+                    "Mã số thẻ": "",
+                    "Họ tên": "",
+                    "Bộ phận": "",
+                    "Chuyền": "",
+                    "Vị trí": "",
+                    "Ngày đăng ký": ""      
+                }]
+        else:
+            if danhsach:
+                data = [{
+                    "Nhà máy": row[0],
+                    "Mã số thẻ": row[1],
+                    "Họ tên": row[2],
+                    "Bộ phận": row[4],
+                    "Chuyền": row[3],
+                    "Vị trí": row[5],
+                    "Ngày đăng ký": datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",    
+                    "HR phê duyệt": row[7],
+                    "Công khai": row[8],
+                    "ID":row[9]
+                } for row in danhsach] 
+            else:
+                data = [{
+                    "Nhà máy": "",
+                    "Mã số thẻ": "",
+                    "Họ tên": "",
+                    "Bộ phận": "",
+                    "Chuyền": "",
+                    "Vị trí": "",
+                    "Ngày đăng ký": "",
+                    "HR phê duyệt": "",
+                    "Công khai": "",
+                    "ID":""
+                }]
+                
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=dangkylamchunhat_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response  
+
+@app.route("/dangky_dilam_ngayle", methods=["POST"])
+def dangky_dilam_ngayle():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"dangki_dilam_ngayle_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                if "HR" in current_user.phongban:
+                    for row in data:
+                        id = row["ID"]
+                        hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
+                        congkhai = row["Công khai"] if not pd.isna(row["Công khai"]) else ""
+                        if hr_pheduyet_dilam_ngayle(id,hrpheduyet,congkhai):
+                            flash(f"Nhân sự phê duyệt làm ngày lễ ID {id} thành công !!!")
+                        else:
+                            flash(f"Nhân sự phê duyệt làm ngày lễ ID {id} thất bại !!!")       
+                else:
+                    for row in data:
+                        nhamay = current_user.macongty
+                        mst = row["Mã số thẻ"]
+                        hoten = row["Họ tên"]
+                        chuyen = row["Chuyền"]
+                        bophan = row["Bộ phận"]
+                        vitri = row["Vị trí"]
+                        ngay = row["Ngày đăng ký"]
+                        if them_dangky_dilam_ngayle(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
+                            flash(f"Thêm làm ngày lễ thành công !!!")
+                        else:
+                            flash(f"Thêm làm ngày lễ  thất bại !!!")
+            except Exception as e:
+                flash(e)
+        return redirect("/dangky_ngayle_web")
+            
+@app.route("/dangky_dilam_chunhat", methods=["POST"])
+def dangky_dilam_chunhat():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"dangki_dilam_chunhat_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                if "HR" in current_user.phongban:
+                    for row in data:
+                        id = row["ID"]
+                        hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
+                        congkhai = row["Công khai"] if not pd.isna(row["Công khai"]) else ""
+                        if hr_pheduyet_dilam_chunhat(id,hrpheduyet,congkhai):
+                            flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thành công !!!")
+                        else:
+                            flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thất bại !!!")       
+                else:
+                    for row in data:
+                        nhamay = current_user.macongty
+                        mst = row["Mã số thẻ"]
+                        hoten = row["Họ tên"]
+                        chuyen = row["Chuyền"]
+                        bophan = row["Bộ phận"]
+                        vitri = row["Vị trí"]
+                        ngay = row["Ngày đăng ký"]
+                        if them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
+                            flash(f"Thêm làm Chủ nhật thành công !!!")
+                        else:
+                            flash(f"Thêm làm Chủ nhật  thất bại !!!")       
+            except Exception as e:
+                print(e)
+            finally:         
+                return redirect("/dangky_chunhat_web")

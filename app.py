@@ -3221,7 +3221,7 @@ def hr_pheduyet_tangca(id,hrpheduyet):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        if hrpheduyet=="OK":
+        if hrpheduyet and hrpheduyet.upper() =="OK":
             query = f"UPDATE Dang_ky_tang_ca SET HR=N'{hrpheduyet}' WHERE ID='{id}'"
         else:
             query = f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
@@ -3395,3 +3395,89 @@ def lay_danhsach_dangky_ngayle():
     except Exception as e:
         print(f"Loi lay bang dang ky ngay le: {e}")
         return []
+    
+def lay_danhsach_dangky_chunhat():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[DANG_KY_LAM_VIEC_CHU_NHAT] where NHA_MAY='{current_user.macongty}' "
+        query += " order by MST asc"
+        rows =  cursor.execute(query).fetchall()
+        return [x for x in rows]
+    except Exception as e:
+        print(f"Loi lay bang dang ky Chu nhat: {e}")
+        return []
+    
+def hr_pheduyet_dilam_ngayle(id,hrpheduyet:str,congkhai):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE DANG_KY_LAM_VIEC_NGAY_LE SET"
+        if hrpheduyet and hrpheduyet.upper() =="OK":
+            query += f" HR='OK',"
+        else:
+            query += f" HR=NULL,"
+        if congkhai and congkhai.upper() =="OK":
+            query += f" CONG_KHAI='OK' "
+        else:
+            query += f" CONG_KHAI=NULL "
+        query += f"WHERE ID='{id}'"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi hr phe duyet di lam ngay le: ({e})")
+        return False
+    
+def hr_pheduyet_dilam_chunhat(id,hrpheduyet:str,congkhai):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"UPDATE DANG_KY_LAM_VIEC_CHU_NHAT SET"
+        if hrpheduyet and hrpheduyet.upper() =="OK":
+            query += f" HR='OK',"
+        else:
+            query += f" HR=NULL,"
+        if congkhai and congkhai.upper() =="OK":
+            query += f" CONG_KHAI='OK' "
+        else:
+            query += f" CONG_KHAI=NULL "
+        query += f"WHERE ID='{id}'"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi hr phe duyet di lam chu nhat: ({e})")
+        return False
+    
+def them_dangky_dilam_ngayle(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into DANG_KY_LAM_VIEC_NGAY_LE values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dong di lam ngay le: ({e})")
+        return False
+
+def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into DANG_KY_LAM_VIEC_CHU_NHAT values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dong di lam chu nhat: ({e})")
+        return False
