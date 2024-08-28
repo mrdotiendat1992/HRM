@@ -1,5 +1,6 @@
 # -*- encoding: utf-8 -*-
 
+import openpyxl.styles
 from app import *
 
 ##################################
@@ -329,25 +330,25 @@ def home():
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
         df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce')
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce')
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce')
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce')
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce')
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce')
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce')
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce')
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce')
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce')
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce')
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -2388,23 +2389,25 @@ def export_dsxnp():
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
-    
+    # Function to convert column letter to index
+    def column_letter_to_index(letter):
+        return openpyxl.utils.column_index_from_string(letter)
     sdt = request.form.get("sdt")
     cccd = request.form.get("cccd")
     ngaygui = request.form.get("ngaygui")
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     
-    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce', dayfirst=True, format="%d/%m/%Y")
-    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce', dayfirst=True, format="%d/%m/%Y") 
-      
+    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce').dt.date
+    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce').dt.date
+    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce').dt.date
+    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce').dt.date
+    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce').dt.date
+    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce')
+    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce')
+    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce')
+    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce') 
+    
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False)
@@ -2413,7 +2416,16 @@ def export_dsdktt():
     output.seek(0)
     workbook = openpyxl.load_workbook(output)
     sheet = workbook.active
+    date_style = NamedStyle(name='date_style', number_format='DD-MM-YYYY')
+    columns_to_format = ['V', 'Y', 'AA', 'AC','AE','AG','AH']
 
+    # Apply the date style to each column
+    for col_letter in columns_to_format:
+        col_index = column_letter_to_index(col_letter)
+        for row in sheet.iter_rows(min_col=col_index, max_col=col_index, min_row=2):  # Skip header row
+            for cell in row:
+                if isinstance(cell.value, pd.Timestamp):  # Check if cell value is a datetime
+                    cell.style = date_style
     for column in sheet.columns:
         max_length = 0
         column_letter = column[0].column_letter
@@ -3694,7 +3706,7 @@ def tai_danhsach_tangca():
         ngay = request.form.get("ngay")
         pheduyet =  request.form.get("pheduyet")
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
-        data = [x for x in danhsach if not x["HR phê duyệt"]]
+        data = [x for x in danhsach]
         # print(data)
         ngay = datetime.now().date()     
         df = DataFrame(data)
