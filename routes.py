@@ -5010,6 +5010,10 @@ def gd_tuchoi_tuyendung():
             ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Từ chối")
             if ketqua["ketqua"]:
                 flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
+                if them_yeucau_tuyendung_bi_tuchoi(id):
+                    flash("Gửi email tuyển dụng bị từ chối thành công !!!")
+                else:
+                    flash("Gửi email tuyển dụng bị từ chối thất bại !!!")
             else:
                 flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
             return redirect("/muc2_2")
