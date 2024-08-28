@@ -191,7 +191,11 @@
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
                     <td>{{row[6]}}</td>
-                    <td><a href='{{row[7]}}'>Tải xuống</a></td>
+                    <td>
+                        <form action="/download_JD" method="POST">
+                            <input type="hidden" name="filename" value="{{row[7]}}">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                        </form>
                     <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
                     {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}

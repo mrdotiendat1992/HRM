@@ -5333,3 +5333,13 @@ def dangky_dilam_chunhat():
                 print(e)
             finally:         
                 return redirect("/dangky_chunhat_web")
+
+@app.route('/download_JD',methods=["POST"])
+def download_file():
+    try:
+        filename = request.form.get("filename")
+        print(os.path.exists(filename))
+        return send_file(filename, as_attachment=True)
+    except Exception as e:
+        print(e)
+        return redirect("/muc2_2")
