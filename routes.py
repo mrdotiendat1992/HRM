@@ -511,6 +511,11 @@ def dangkytuyendung():
             khoangluong = f"{bacluongtu.split(",")[1]} => {bacluongden.split(",")[1]}"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
+                if them_thongbao_co_yeucautuyendung(current_user.masothe,current_user.hoten):
+                    flash("Thêm thoong báo có yêu cầu tuyển dụng mới thành công !!!")
+                else:
+                    flash("Thêm thoong báo có yêu cầu tuyển dụng mới thất bại !!!")
+                
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         except Exception as e:
@@ -615,8 +620,8 @@ def nhapthongtinlaodongmoi():
                     request.form.get("masothe"),
                     ca,
                     ca,
-                    datetime.now().date(),  # This returns a datetime.date object
-                    datetime(2054, 12, 31).date()  # Convert to datetime.date
+                    datetime.now().date().strftime("%Y-%m-%d"),  # This returns a datetime.date object
+                    datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  # Convert to datetime.date
                 )
                 flash("Tạo ca mặc định cho người mới thành công !!!")  
                 themtaikhoanmoi(
@@ -4982,9 +4987,14 @@ def gd_pheduyet_tuyendung():
     if request.method == "POST":
         try:
             id = request.form.get("id")
+            mst_tbp = request.form.get("mst_tbp")
             ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Phê duyệt")
             if ketqua["ketqua"]:
                 flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
+                if them_yeucau_tuyendung_duoc_pheduyet(id):
+                    flash("Gửi email tuyển dụng được phê duyệt thành công !!!")
+                else:
+                    flash("Gửi email tuyển dụng được phê duyệt thất bại !!!")
             else:
                 flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
             return redirect("/muc2_2")

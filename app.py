@@ -1793,9 +1793,9 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, kh
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
-        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu)
+        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL)"""
+        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}',N'{current_user.macongty}')"""
         cursor.execute(query)
         conn.commit()
         return True
@@ -2119,7 +2119,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        # ##print(query)
+        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -2773,7 +2773,7 @@ def laychuyen_quanly(masothe,macongty):
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             query = f"select Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where MST='{masothe}' and NHA_MAY='{macongty}'"
-            # ##print(query)
+            
             cursor = cursor.execute(query)
             rows = cursor.fetchall()
             result = [row[0] for row in rows]
@@ -2813,7 +2813,7 @@ def capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,
         else:
             query += "Tang_ca_dem_thuc_te = NULL"
         query += f" WHERE ID='{id}'"
-        # ##print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2889,7 +2889,7 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
             if cochamcong=="khong":
                 query += f" and Gio_vao is null"
         query += "  order by The_cham_cong asc"
-        # ##print(query)
+        
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [row for row in rows]
@@ -3482,4 +3482,56 @@ def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         return True
     except Exception as e:
         print(f"Loi them dong di lam chu nhat: ({e})")
+        return False
+    
+def them_thongbao_co_yeucautuyendung(masothe,hoten):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values ('{current_user.macongty}','{masothe}',N'{hoten}',GETDATE())"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dong di lam chu nhat: ({e})")
+        return False
+    
+def them_yeucau_tuyendung_duoc_pheduyet(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        mst = data[0]
+        hoten = data[1]
+        nhamay = data[2]
+        email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
+        query = f"insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dong phe duyet yeu cau tuyen dung: ({e})")
+        return False
+    
+def them_yeucau_tuyendung_bi_tuchoi(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        mst = data[0]
+        hoten = data[1]
+        nhamay = data[2]
+        email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
+        query = f"insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
         return False
