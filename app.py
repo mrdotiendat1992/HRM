@@ -3386,24 +3386,41 @@ def capnhat_ghichu_tuyendung(id,ghichu):
         print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
     
-def lay_danhsach_dangky_ngayle():
+def lay_danhsach_dangky_ngayle(mst, chuyen, bophan, ngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[DANG_KY_LAM_VIEC_NGAY_LE] where NHA_MAY='{current_user.macongty}' "
-        query += " order by MST asc"
+        if mst:
+            query += f" AND MST='{mst}'"
+        if chuyen:
+            query += f" AND CHUYEN='{chuyen}'"
+        if bophan:
+            query += f" AND BO_PHAN='{bophan}'"
+        if ngay:
+            query += f" AND NGAY_DANG_KY='{ngay}'"
+        query += " order by NGAY_DANG_KY desc, MST asc"
         rows =  cursor.execute(query).fetchall()
         return [x for x in rows]
     except Exception as e:
         print(f"Loi lay bang dang ky ngay le: {e}")
         return []
     
-def lay_danhsach_dangky_chunhat():
+def lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[DANG_KY_LAM_VIEC_CHU_NHAT] where NHA_MAY='{current_user.macongty}' "
-        query += " order by MST asc"
+        if mst:
+            query += f" AND MST='{mst}'"
+        if chuyen:
+            query += f" AND CHUYEN='{chuyen}'"
+        if bophan:
+            query += f" AND BO_PHAN='{bophan}'"
+        if ngay:
+            query += f" AND NGAY_DANG_KY='{ngay}'"
+        query += " order by NGAY_DANG_KY desc, MST asc"
+        print(query)
         rows =  cursor.execute(query).fetchall()
         return [x for x in rows]
     except Exception as e:
@@ -3424,7 +3441,7 @@ def hr_pheduyet_dilam_ngayle(id,hrpheduyet:str,congkhai):
         else:
             query += f" CONG_KHAI=NULL "
         query += f"WHERE ID='{id}'"
-        #print(query)
+
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3447,7 +3464,7 @@ def hr_pheduyet_dilam_chunhat(id,hrpheduyet:str,congkhai):
         else:
             query += f" CONG_KHAI=NULL "
         query += f"WHERE ID='{id}'"
-        #print(query)
+
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()

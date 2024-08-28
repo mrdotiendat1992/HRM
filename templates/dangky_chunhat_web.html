@@ -25,13 +25,25 @@
 {% block content %}
 <div class="container-fluid">
     <div id="header">
+        <form method="GET">
+            <input type="text" name="mst" placeholder="Mã số thẻ" onchange="this.form.submit()" value="{{ request.args.get('mst', '') }}">
+            <input type="text" name="chuyen" placeholder="Chuyền" onchange="this.form.submit()" value="{{ request.args.get('chuyen', '') }}">
+            <input type="text" name="bophan" placeholder="Bộ phần" onchange="this.form.submit()" value="{{ request.args.get('bophan', '') }}">
+            <input type="date" name="ngay" onchange="this.form.submit()" value="{{ request.args.get('ngay', '') }}">
+        </form>
         <form method="POST">
+            <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+            <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+            <input type="hidden" name="bophan"  value="{{ request.args.get('bophan', '') }}">
+            <input type="date" hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-download"></i></button>
         </form>
         <form method="POST" action="/dangky_dilam_chunhat"  enctype="multipart/form-data">
             <input type="file" name="file"> 
             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
         </form>
+        <b>{{count}}</b>
+        <div class="pagination">{{pagination.links}}</div>
     </div>
     <table class="table table-hover table-sm table-bordered">
         <thead>

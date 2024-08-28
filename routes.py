@@ -5057,7 +5057,11 @@ def td_capnhat_ghichu_tuyendung():
 def dangky_ngayle_web():
     if request.method == "GET":
         try:
-            danhsach = lay_danhsach_dangky_ngayle()
+            mst = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            bophan = request.args.get("bophan")
+            ngay = request.args.get("ngay")
+            danhsach = lay_danhsach_dangky_ngayle(mst,chuyen,bophan,ngay)
             total = len(danhsach)
             page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 15
@@ -5074,7 +5078,11 @@ def dangky_ngayle_web():
             return render_template("dangky_ngayle_web.html",
                                      danhsach=[])  
     elif request.method == "POST":
-        danhsach = lay_danhsach_dangky_ngayle()
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngay")
+        danhsach = lay_danhsach_dangky_ngayle(mst,chuyen,bophan,ngay)
         if "HR" not in current_user.phongban:
             if danhsach:
                 data = [{
@@ -5161,7 +5169,11 @@ def dangky_ngayle_web():
 def dangky_chunhat_web():
     if request.method == "GET":
         try:
-            danhsach = lay_danhsach_dangky_chunhat()
+            mst = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            bophan = request.args.get("bophan")
+            ngay = request.args.get("ngay")
+            danhsach = lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay)
             total = len(danhsach)
             page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 15
@@ -5178,7 +5190,11 @@ def dangky_chunhat_web():
             return render_template("dangky_chunhat_web.html",
                                      danhsach=[]) 
     elif request.method == "POST":
-        danhsach = lay_danhsach_dangky_chunhat()
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngay")
+        danhsach = lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay)
         if "HR" not in current_user.phongban:
             if danhsach:
                 data = [{
