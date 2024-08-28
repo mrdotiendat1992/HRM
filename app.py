@@ -2110,7 +2110,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         ON 
             Dang_ky_ca_lam_viec.MST = Danh_sach_CBCNV.The_cham_cong AND Dang_ky_ca_lam_viec.Factory = Danh_sach_CBCNV.Factory
         WHERE 
-            Dang_ky_ca_lam_viec.Factory = '{current_user.macongty}' AND Danh_sach_CBCNV.Trang_thai_lam_viec=N'Đang làm việc'
+            Dang_ky_ca_lam_viec.Factory = '{current_user.macongty}'
         """
         if mst:
             query += f" AND Dang_ky_ca_lam_viec.MST = '{mst}'"

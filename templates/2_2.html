@@ -36,13 +36,24 @@
         justify-content: start;
         gap: 10px;
     }
-
+    button:hover {
+        transform: scale(1.1);
+        transition: 0.5s;
+    }
+    .card {
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 10px;
+        width: 330px;
+        position: relative;
+        overflow: hidden;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div class="content">
-        {% if current_user.phanquyen == "tbp" %}
+        {% if current_user.phanquyen == "tbp" or current_user.phanquyen == "sa" %}
         <div id="nutbam">
             <button type="button" class="btn btn-primary btn-sm" title="Thêm yêu cầu tuyến dụng" data-toggle="modal" data-target="#requestModal">
                 Thêm yêu cầu tuyển dụng
@@ -183,7 +194,7 @@
                     <td><a href='{{row[7]}}'>Tải xuống</a></td>
                     <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
-                    {% if row[10] == "Chưa phê duyệt" and current_user.phanquyen == "gd" %}
+                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
                             <div>{{row[10]}}</div>
@@ -200,7 +211,7 @@
                     {% else %}
                     <td>{{row[10]}}</td>
                     {% endif %}
-                    {% if current_user.phanquyen == "td" %}
+                    {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa"%}
                         {% if row[10] == "Phê duyệt" %}
                         <td>
                             <form action="/td_capnhat_tuyendung" method="POST">
@@ -222,7 +233,7 @@
                     {% else %}
                     <td>{{row[11]}}</td>
                     {% endif %}
-                    {% if current_user.phanquyen == "td" %}
+                    {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <td>
                             <form action="/td_capnhat_ghichu_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
