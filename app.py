@@ -800,13 +800,13 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE Factory = '{current_user.macongty}'"
         if mst:
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
         if hoten:
             query += f" AND Ho_ten LIKE N'%{hoten}%'"
         if sdt:
-            query += f" AND SDT LIKE '%{sdt}%'"
+            query += f" AND SDT = '{sdt}'"
         if cccd:
-            query += f" AND CCCD LIKE '%{cccd}%'"
+            query += f" AND CCCD = '{cccd}'"
         if gioitinh:
             query += f" AND Gioi_tinh LIKE N'%{gioitinh}%'"
         if vaotungay:
@@ -818,7 +818,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
         if nghidenngay:
             query += f" AND Ngay_nghi <= '{nghidenngay}'"
         if phongban:
-            query += f" AND Department LIKE N'%{phongban}%'"
+            query += f" AND Department = N'{phongban}'"
         if trangthai:
             query += f" AND Trang_thai_lam_viec LIKE N'%{trangthai}%'"
         if hccategory:
@@ -828,7 +828,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
         if ghichu:
             query += f" AND Ghi_chu LIKE N'%{ghichu}%'"
         if chuyen:
-            query += f" AND Line LIKE N'%{chuyen}%'"
+            query += f" AND Line = N'{chuyen}'"
         
         query += " ORDER BY CAST(mst AS INT) ASC"
         users = cursor.execute(query).fetchall()
