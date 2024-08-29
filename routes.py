@@ -3665,11 +3665,10 @@ def nhansu_them_xinnghikhac():
                         loainghi = row['Loại nghỉ']
                         trangthai = "Đã phê duyệt"
                         nhangiayto = "Đã nhận"
-                        print(masothe,ngaynghi,sophut,loainghi)
                         if them_xinnghikhac(masothe,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
-                            print("OK")
+                            flash(f"Thêm xin nghỉ khác thành công")
                         else:
-                            print(data.index(row),"Failed")
+                            flash(f"Thêm xin nghỉ khác thất bại")
                     except Exception as e:
                         print(f"Loi them dong xin nghi khac: {e}")
                         break
