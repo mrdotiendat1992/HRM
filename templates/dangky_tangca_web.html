@@ -44,6 +44,10 @@
         justify-content: space-between;
         align-items: center;
     }
+    .dropdown {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 {% endblock style %}
     
 {% block content %}
@@ -159,7 +163,7 @@
                 {% for chuyen in request.args.getlist('chuyen') %}
                     <input hidden name="chuyen" value="{{ chuyen }}">
                 {% endfor %}
-                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+                <button type="submit" class="btn btn-success btn-sm" style=""><i class="fa fa-check"></i></button>
             </form>
             {% endif %}
         </div>

@@ -5377,8 +5377,9 @@ def duyet_hangloat_tangca():
         ngay = request.args.get("ngay") 
         pheduyet = ""  
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        print(len(danhsach))
         for x in danhsach:
-            hr_pheduyet_tangca(x['ID'],"OK")    
+            print(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
     except Exception as e:
         flash(f"Lỗi phê duyệt hàng loạt")
     return redirect("/dangki_tangca_web")   
