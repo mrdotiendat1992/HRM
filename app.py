@@ -2757,7 +2757,7 @@ def danhsach_tangca(chuyen:list,ngay,pheduyet):
         if pheduyet:
             query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
         query += f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        #print(query)
+        print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{

@@ -5373,8 +5373,8 @@ def download_file():
 @app.route('/duyet_hangloat_tangca',methods=["POST"])
 def duyet_hangloat_tangca():  
     try:
-        chuyen = request.args.getlist("chuyen")
-        ngay = request.args.get("ngay") 
+        chuyen = request.form.getlist("chuyen")
+        ngay = request.form.get("ngay") 
         pheduyet = ""  
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
         print(len(danhsach))
