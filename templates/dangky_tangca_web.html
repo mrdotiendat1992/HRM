@@ -154,6 +154,13 @@
                     </li>
                 </ul>
             </div>
+            <form method="POST" action="/duyet_hangloat_tangca">
+                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                {% for chuyen in request.args.getlist('chuyen') %}
+                    <input hidden name="chuyen" value="{{ chuyen }}">
+                {% endfor %}
+                <button type="submit" class="btn btn-success"><i class="fa fa-check"></i></button>
+            </form>
             {% endif %}
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
