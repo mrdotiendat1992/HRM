@@ -2514,7 +2514,8 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        
+        if ngayketthuc != "NULL":
+            ngayketthuc = f"'{ngayketthuc}'"
         if loaihopdong == "Phụ lục hợp đồng":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}',
@@ -2527,7 +2528,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}',
-                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='{ngayketthuc}'
+                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ={ngayketthuc}
                 WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
         elif loaihopdong == "Hợp đồng vô thời hạn":
@@ -2538,8 +2539,8 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='NULL'
                 WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'"""
         elif loaihopdong == "Hợp đồng thử việc":
-            query = f"""UPDATE Danh_sach_CBCNV SET Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}', Loai_hop_dong=N'{loaihopdong}',
-                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='{ngayketthuc}'
+            query = f"""UPDATE Danh_sach_CBCNV SET Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV={ngayketthuc}, Loai_hop_dong=N'{loaihopdong}',
+                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ={ngayketthuc}
                 WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
         else:
