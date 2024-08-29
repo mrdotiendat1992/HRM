@@ -1274,6 +1274,8 @@ def dieuchuyen():
             positioncodedescriptioncu = request.form.get("positioncodedescriptioncu") 
             positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi") 
             
+            khongdoica = request.form.get("khongdoica") 
+            
             if loaidieuchuyen == "Chuyển vị trí":
                 try:
                     dieuchuyennhansu(mst,
@@ -1301,7 +1303,8 @@ def dieuchuyen():
                                     vitriencu,
                                     vitrienmoi,
                                     ngaydieuchuyen,
-                                    ghichu
+                                    ghichu,
+                                    khongdoica
                                     )
                     print("Điều chuyển thành công !!!")
                 except Exception as e:
@@ -1338,6 +1341,7 @@ def dieuchuyen():
                     print(e)
                     print("Điều chuyển thất bại !!!")
                     return redirect(f"/muc6_1")
+                
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
                     dichuyenthaisandilamlai(mst,

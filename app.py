@@ -146,7 +146,8 @@ def dieuchuyennhansu(mst,
                     vitriencu,
                     vitrienmoi,
                     ngaydieuchuyen,
-                    ghichu
+                    ghichu,
+                    khongdoica
                    ):
     try:
         conn = pyodbc.connect(used_db)
@@ -161,12 +162,13 @@ def dieuchuyennhansu(mst,
         cursor.execute(query2)
         conn.commit()
         camoi = laycatheochuyen(chuyenmoi)
-        query3 = f"""
-        UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(str(ngaydieuchuyen)[:10], '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
-        INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
-        """
-        print(query3)
-        cursor.execute(query3)
+        if not khongdoica:
+            query3 = f"""
+            UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(str(ngaydieuchuyen)[:10], '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
+            INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
+            """
+            print(query3)
+            cursor.execute(query3)
         conn.commit()
         conn.close()
         return True
@@ -233,17 +235,39 @@ def dichuyennghithaisan(mst,
 
 def dichuyenthaisandilamlai(mst,
                             vitricu,
+                            vitrimoi,
                             chuyencu,
+                            chuyenmoi,
                             gradecodecu,
+                            gradecodemoi,
+                            sectioncodecu,
+                            sectioncodemoi,
                             hccategorycu,
+                            hccategorymoi,
+                            departmentcu,
+                            departmentmoi,
+                            sectiondescriptioncu,
+                            sectiondescriptionmoi,
+                            employeetypecu,
+                            employeetypemoi,
+                            positioncodedescriptioncu,
+                            positioncodedescriptionmoi,
+                            positioncodecu,
+                            positioncodemoi,
+                            vitriencu,
+                            vitrienmoi,
                             ngaydieuchuyen
                             ):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"""
-            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyencu}',N'{vitricu}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodecu}','{hccategorycu}','{hccategorycu}',GETDATE())
-            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())
+            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL,
+            Line='{chuyenmoi}', Job_title_VN=N'{vitrimoi}', Grade_code='{gradecodemoi}', Department='{departmentmoi}'
+            Section_description='{sectiondescriptionmoi}', Emp_type='{employeetypemoi}', Position_code_description='{positioncodedescriptionmoi}',
+            Position_code='{positioncodemoi}', Job_title_EN=N'{vitrienmoi}'
+            WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """    
         cursor.execute(query)
         conn.commit()
