@@ -2118,6 +2118,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             query += f" AND Danh_sach_CBCNV.Line LIKE '%{chuyen}%'"
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
+        query += " WHERE Danh_sach_CBCNV.Ghi_chu != N'Rút hồ sơ'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
         
         rows = cursor.execute(query).fetchall()
@@ -2448,6 +2449,14 @@ def timkiemchucdanh(tutimkiem):
 def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
     
     try:
+        try:
+            ngaybatdau=datetime.strptime(ngaybatdau,"%d/%m/%Y").strftime("%Y-%m-%d")
+        except:
+            ngaybatdau=ngaybatdau
+        try:
+            ngayketthuc=datetime.strptime(ngayketthuc,"%d/%m/%Y").strftime("%Y-%m-%d")
+        except:
+            ngayketthuc=ngayketthuc
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"""
@@ -2455,7 +2464,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', '{ngayketthuc}')
         """
-        ##print(query)
+        print(query)
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2467,7 +2476,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', NULL )
         """
-        ##print(query)
+        print(query)
         cursor.execute(query)
         try:
             conn.commit()
@@ -2482,40 +2491,37 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         
-        # if loaihopdong == "Hợp đồng thử việc":
-        #     query = f"""
-        #         UPDATE Danh_sach_CBCNV SET Loai_hop_dong=N'{loaihopdong}', Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}',
-        #         Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-        #         Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
-        #         WHERE Factory='{nhamay}' AND MST='{mst}'
-        #         """
-        # el
         if loaihopdong == "Phụ lục hợp đồng":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
-                WHERE Factory='{nhamay}' AND MST='{mst}'
+                WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
         elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}'
-                WHERE Factory='{nhamay}' AND MST='{mst}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}',
+                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='{ngayketthuc}'
+                WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
         elif loaihopdong == "Hợp đồng vô thời hạn":
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDKXDTH='{ngaybatdau}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',
-                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}'
-                WHERE Factory='{nhamay}' AND MST='{mst}'"""
-        else:
-            query = f"""UPDATE Danh_sach_CBCNV SET Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}'
-                WHERE Factory='{nhamay}' AND MST='{mst}'
+                Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Loai_hop_dong=N'{loaihopdong}', Line=N'{chuyen}',
+                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='NULL'
+                WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'"""
+        elif loaihopdong == "Hợp đồng thử việc":
+            query = f"""UPDATE Danh_sach_CBCNV SET Ngay_ky_HDTV='{ngaybatdau}', Ngay_het_han_HDTV='{ngayketthuc}', Loai_hop_dong=N'{loaihopdong}',
+                Ngay_ky_HD='{ngaybatdau}', Ngay_het_han_HD ='{ngayketthuc}'
+                WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
+        else:
+            query = ""
         if query:
-            
+            print(query)
             cursor.execute(query)
             conn.commit()
             conn.close()  
