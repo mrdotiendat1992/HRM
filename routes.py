@@ -1745,7 +1745,9 @@ def danhsachxinnghikhac():
         bophan = request.form.get("bophan")
         ngaynghi = request.form.get("ngaynghi")
         loainghi = request.form.get("loainghi")
-        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi)
+        trangthai = request.form.get("trangthai")
+        nhangiayto = request.form.get("nhangiayto")
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
         data = [{
             "Nhà máy": row[0],
             "Mã số thẻ": row[1],
