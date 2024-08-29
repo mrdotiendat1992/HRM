@@ -1341,15 +1341,32 @@ def dieuchuyen():
                     print(e)
                     print("Điều chuyển thất bại !!!")
                     return redirect(f"/muc6_1")
-                
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
                     dichuyenthaisandilamlai(mst,
-                            vitricu,
-                            chuyencu,
-                            gradecodecu,
-                            hccategorycu,
-                            ngaydieuchuyen
+                                    vitricu,
+                                    vitrimoi,
+                                    chuyencu,
+                                    chuyenmoi,
+                                    gradecodecu,
+                                    gradecodemoi,
+                                    sectioncodecu,
+                                    sectioncodemoi,
+                                    hccategorycu,
+                                    hccategorymoi,
+                                    departmentcu,
+                                    departmentmoi,
+                                    sectiondescriptioncu,
+                                    sectiondescriptionmoi,
+                                    employeetypecu,
+                                    employeetypemoi,
+                                    positioncodedescriptioncu,
+                                    positioncodedescriptionmoi,
+                                    positioncodecu,
+                                    positioncodemoi,
+                                    vitriencu,
+                                    vitrienmoi,
+                                    ngaydieuchuyen
                             )
                     print("Điều chuyển thành công !!!")
                 except Exception as e:
