@@ -1759,8 +1759,8 @@ def danhsachxinnghikhac():
             "Nhận giấy tờ": row[6],            
         } for row in danhsach] 
         df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce',dayfirst=True)
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce',dayfirst=True)
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -2374,15 +2374,15 @@ def export_dsdktt():
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     
-    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce').dt.date
-    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce').dt.date
-    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce').dt.date
-    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce').dt.date
-    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce').dt.date
-    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce')
-    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce')
-    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce')
-    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce') 
+    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce',dayfirst=True).dt.date
+    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce',dayfirst=True).dt.date
+    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce',dayfirst=True).dt.date
+    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce',dayfirst=True).dt.date
+    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce',dayfirst=True).dt.date
+    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce',dayfirst=True)
+    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce',dayfirst=True)
+    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce',dayfirst=True)
+    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce',dayfirst=True) 
     
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
