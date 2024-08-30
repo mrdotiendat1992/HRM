@@ -3300,6 +3300,71 @@ def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
     except Exception as e:
         print(f"Loi cap nhat ngay ket thuc lich su cong viec: {e}")
         return False
+
+def sua_chuyen_lichsu_congviec(id,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Chuyen='{chuyen}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat chuyen lich su cong viec: {e}")
+        return False
+    
+def sua_bophan_lichsu_congviec(id,bophan):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Bo_phan='{bophan}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat bo phan lich su cong viec: {e}")
+        return False
+    
+def sua_chucdanh_lichsu_congviec(id,chucdanh):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Chuc_danh=N'{chucdanh}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat chuc danh lich su cong viec: {e}")
+        return False
+    
+def sua_hccategory_lichsu_congviec(id,hccategory):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set HC_CATEGORY='{hccategory}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat HC_CATEGORY lich su cong viec: {e}")
+        return False
+    
+def sua_capbac_lichsu_congviec(id,capbac):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update LICH_SU_CONG_VIEC set Grade_code=N'{capbac}' where ID='{id}'"
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat cap bac lich su cong viec: {e}")
+        return False
     
 def themtaikhoanmoi(masothe,hoten,department,gradecode):
     try: 
@@ -3581,3 +3646,4 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
     except Exception as e:
         print(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
         return False
+

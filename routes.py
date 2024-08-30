@@ -5397,3 +5397,59 @@ def thaydoi_chuyen_lichsu_congviec():
         else:
             flash(f"Sửa Chuyền bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen_filter}&bophan={bophan}")
+    
+@app.route("/thaydoi_bophan_lichsu_congviec", methods=["POST"])
+def thaydoi_bophan_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        chuyen = request.form.get("chuyen")
+        mst = request.form.get("mst")
+        bophan_filter = request.form.get("bophan_filter")
+        bophan = request.form.get("bophan")
+        if sua_bophan_lichsu_congviec(id,bophan):
+            flash(f"Sửa bộ phận cho dòng lịch sử công việc số {id} sang {bophan} thành công")
+        else:
+            flash(f"Sửa bộ phận bắt đầu cho dòng lịch sử công việc số {id} sang {bophan} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan_filter}")
+    
+@app.route("/thaydoi_chucdanh_lichsu_congviec", methods=["POST"])
+def thaydoi_chucdanh_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        chucdanh = request.form.get("chucdanh")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_chucdanh_lichsu_congviec(id,chucdanh):
+            flash(f"Sửa chức danh cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
+        else:
+            flash(f"Sửa chức danh bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+    
+@app.route("/thaydoi_capbac_lichsu_congviec", methods=["POST"])
+def thaydoi_capbac_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        capbac = request.form.get("capbac")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_capbac_lichsu_congviec(id,capbac):
+            flash(f"Sửa cấp bậc cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
+        else:
+            flash(f"Sửa cấp bậc bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+    
+@app.route("/thaydoi_hccategory_lichsu_congviec", methods=["POST"])
+def thaydoi_hccategory_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        hccategory = request.form.get("hccategory")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_hccategory_lichsu_congviec(id,hccategory):
+            flash(f"Sửa HC category cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
+        else:
+            flash(f"Sửa HC category bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
