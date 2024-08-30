@@ -104,7 +104,7 @@ def laycatheochuyen(chuyen):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT CA FROM GOI_Y_CA WHERE LINE = '{chuyen}'"
-        ##print(query)
+        ##
         row = cursor.execute(query).fetchone()
         conn.close()
         if not row:
@@ -204,7 +204,7 @@ def dichuyennghiviec(mst,
         INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
         UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -699,7 +699,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         if hoten:
             query += f"AND Ho_ten LIKE N'%{hoten}%' "
         query += "ORDER BY Ngay_thuc_hien DESC, CAST(MST AS INT) ASC"
-        ##print(query)
+        ##
         rows = cursor.execute(query)
         result = []
         for row in rows:
@@ -1502,7 +1502,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
-        ##print(query)
+        ##
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -1862,7 +1862,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
             else:
                 query += f" AND Xin_nghi_khac.Giay_to=N'{nhangiayto}'" 
         query += " ORDER BY Xin_nghi_khac.Ngay_nghi DESC, Xin_nghi_khac.MST ASC"
-        ##print(query)
+        ##
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows 
@@ -2488,7 +2488,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', '{ngayketthuc}')
         """
-        print(query)
+        
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2500,7 +2500,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', NULL )
         """
-        print(query)
+        
         cursor.execute(query)
         try:
             conn.commit()
@@ -2544,7 +2544,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
         else:
             query = ""
         if query:
-            print(query)
+            
             cursor.execute(query)
             conn.commit()
             conn.close()  
@@ -2581,7 +2581,7 @@ def xoa_hopdong(id):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"delete QUAN_LY_HD where ID='{id}'"
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2644,7 +2644,7 @@ def them_xinnghikhac(masothe,ngay,sophut,lydo,trangthai,nhangiayto):
             query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'Chưa')"
         else:
             query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'Đã nhận')"
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2678,7 +2678,7 @@ def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
             query+= "and Ngay_thuc_hien is null "
         else:
             query+= f"and Ngay_thuc_hien = '{ngaythuchien}'"
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2692,7 +2692,7 @@ def sua_dangky_ca(id,camoi):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"UPDATE Dang_ky_ca_lam_viec set Ca = N'{camoi}' where ID ='{id}' "
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2707,7 +2707,7 @@ def suadoi_ngaybatdau_ca_dangky_ca(id,ngaybatdau_camoi):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"UPDATE Dang_ky_ca_lam_viec set Tu_ngay = '{ngaybatdau_camoi}' where ID ='{id}' "
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2721,7 +2721,7 @@ def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"UPDATE Dang_ky_ca_lam_viec set Den_ngay = '{ngayketthuc_camoi}' where ID ='{id}' "
-        ##print(query)
+        ##
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2735,7 +2735,7 @@ def lay_chuyen_theo_mst(mst):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"select Line from Danh_sach_CBCNV where The_cham_cong='{mst}' and Factory='{current_user.macongty}'"
-        ##print(query)
+        ##
         row = cursor.execute(query).fetchone()
         conn.close()
         if row:
@@ -2757,7 +2757,7 @@ def danhsach_tangca(chuyen:list,ngay,pheduyet):
         if pheduyet:
             query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
         query += f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        print(query)
+        
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
@@ -2793,7 +2793,7 @@ def laychuyen_quanly(masothe,macongty):
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
             query = f"select distinct Chuyen_to from [HR].[dbo].[Phan_quyen_thu_ky] where Chuyen_to LIKE '{macongty[2]}%'"
-            ##print(query)
+            ##
             cursor = cursor.execute(query)
             rows = cursor.fetchall()
             result = [row[0] for row in rows]
@@ -2971,7 +2971,7 @@ def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen,
         query += f"'{hrpheduyet}')"
     else:
         query += 'NULL)'
-    ##print(query)
+    ##
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
     try:
@@ -3160,7 +3160,7 @@ def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay desc"
-        ##print(query) 
+        ## 
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -3187,7 +3187,7 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay desc"
-        ##print(query) 
+        ## 
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -3410,7 +3410,7 @@ def lay_cac_vitri_trong_phong(phongban):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT DISTINCT Detail_job_title_VN FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Department='{phongban}' "
-        ##print(query)
+        ##
         data = cursor.execute(query).fetchall()
         return [x[0] for x in data ]
     except Exception as e:
@@ -3514,7 +3514,7 @@ def lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay):
         if ngay:
             query += f" AND NGAY_DANG_KY='{ngay}'"
         query += " order by NGAY_DANG_KY desc, MST asc"
-        print(query)
+        
         rows =  cursor.execute(query).fetchall()
         return [x for x in rows]
     except Exception as e:
@@ -3572,7 +3572,7 @@ def them_dangky_dilam_ngayle(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into DANG_KY_LAM_VIEC_NGAY_LE values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
-        #print(query)
+        #
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3586,7 +3586,7 @@ def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into DANG_KY_LAM_VIEC_CHU_NHAT values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
-        #print(query)
+        #
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3600,7 +3600,7 @@ def them_thongbao_co_yeucautuyendung(masothe,hoten):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values ('{current_user.macongty}','{masothe}',N'{hoten}',GETDATE())"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3619,7 +3619,7 @@ def them_yeucau_tuyendung_duoc_pheduyet(id):
         nhamay = data[2]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
         query = f"insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3638,7 +3638,7 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
         nhamay = data[2]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
         query = f"insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3647,3 +3647,26 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
         print(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
         return False
 
+def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CONG_TRA_NGOAI] where NHA_MAY='{current_user.macongty}' "
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and THANG={thang} and NAM={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        rows =  cursor.execute(query).fetchall()
+        # print(len(rows))
+        return [x for x in rows]
+    except Exception as e:
+        print(f"Loi lay bang cong thang: {e}")
+        return []

@@ -1,6 +1,6 @@
 {% extends "12.html" %}
 {% block title %}
-    Bảng công chốt
+    Bảng công tổng tháng
 {% endblock title %}
 {% block style %}
     .scroll {
@@ -8,9 +8,13 @@
         margin: 10px;
     }
     table th {
-        white-space: nowrap;
+        white-space: pre-line;
         text-align: center;
         color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; 
+        vertical-align: middle;
     }
     table td {
         white-space: nowrap;
@@ -31,108 +35,121 @@
 {% block content %}
 <div class="scroll">
     <br>
-    <h1>Bảng công chốt</h1>
+    <h1>Bảng công trả ngoài</h1>
     <br>
-    <div style="display: flex; gap:20px;">
+    <div id="filter">
         <form method="GET">
-            <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
-            <input type="text" id="chuyen" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
-            <input type="text" id="bophan" name="bophan" placeholder='Phòng ban' value={{request.args.get('bophan', '')}}>
-            <select id="phanloai" name="phanloai" value={{request.args.get('phanloai', '')}}>
-                <option value="">Phân loại</option>
-                <option value="OK">OK</option>
-                <option value="Nghỉ tự do">Nghỉ tự do</option>
-            </select>
-    </div>
-    <div style="display: flex; gap:20px;">
-            <label for="ngay">Ngày</label>
-            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
-            <label for="tungay">Từ ngày</label>
-            <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
-            <label for="denngay">Đến ngày</label>
-            <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
-            <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></select>
+            <input type="text" name="nam" placeholder="Năm" value={{request.args.get('nam','')}}>
+            <input type="text" name="thang" placeholder="Tháng" value={{request.args.get('thang','')}}>
+            <input type="text" name="mst" placeholder="Mã số thẻ" value={{request.args.get('mst','')}}>
+            <input type="text" name="bophan" placeholder="Bộ phận" value={{request.args.get('bophan','')}}>
+            <input type="text" name="chuyen" placeholder="Chuyền" value={{request.args.get('chuyen','')}}>
+            <input class="btn btn-primary btn-sm" type="submit" value="Tìm kiếm"/>
+        </form>
+        <div class="pagination">{{ pagination.links }}</div>
+        <h5>Tổng: {{count}}</h5>
+        <form method="POST">
+            <input type="hidden" name="nam" value={{request.args.get('nam','')}}>
+            <input type="hidden" name="thang" value={{request.args.get('thang','')}}>
+            <input type="hidden" name="mst" value={{request.args.get('mst','')}}>
+            <input type="hidden" name="bophan" value={{request.args.get('bophan','')}}>
+            <input type="hidden" name="chuyen" value={{request.args.get('chuyen','')}}>
+            <button class="btn btn-success btn-sm" type="submit" name="export" value="1"><i class="fas fa-fw fa-download"></i></button>
         </form>
     </div>
     <br>
-    <table class="table table-hover table-sm table-bordered">
+    <table class="table table-bordered table-hover table-sm">
         <thead>
             <tr class="bg-primary">
-                <th>#</th>
-                <th>Mã số thẻ</th>
-                <th>Họ tên</th>
-                <th>Chức danh</th>
-                <th>Chuyền tổ</th>
-                <th>Phòng ban</th>
-                <th>Cấp bậc</th>
-                <th>Ngày</th>                    
-                <th>Ca</th>
-                <th>Giờ vào</th>
-                <th>Giờ ra</th>
-                <th>Phút HC</th>
-                <th>Phút nghỉ phép</th>
-                <th>Phút tăng ca 100%</th>   
-                <th>Phút tăng ca 150%</th> 
-                <th>Phút tăng ca đêm</th>
-                <th>Phút nghỉ không lương</th>
-                <th>Phút nghỉ khác</th>
-                <th>Loại nghỉ khác</th>
-                <th>Phân loại</th> 
+                <th rowspan="3">STT</th>
+                <th rowspan="3">Mã số thẻ</th>
+                <th rowspan="3">Họ tên</th>
+                <th rowspan="3">Bộ phận</th>
+                <th rowspan="3">Chuyền</th>
+                <th rowspan="3">Vị trí</th>
+                <th rowspan="3">Chức danh</th>
+                <th rowspan="3">Ngày vào</th>
+                <th rowspan="3">Ngày chính thức</th>
+                <th rowspan="3">Ca</th>
+                <th colspan="2">Công</th>
+                <th colspan="10">Làm thêm (Over Time)</th>
             </tr>
+            <tr class="bg-primary">
+                <th rowspan="2">Thử việc</th>
+                <th rowspan="2">Chính thức</th>
+                <th colspan="2">Chế độ mang thai, con nhỏ</th>
+                <th colspan="2">Ban ngày</th>
+                <th colspan="2">Ban đêm</th>
+                <th colspan="2">Chủ nhật</th>
+                <th colspan="2">Ngày lễ</th>
+            </tr>
+
+            <tr class="bg-primary">
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+            </tr>
+
         </thead>
-        
         <tbody>
             {% for row in danhsach %}
-            {% if row[20] ==  'OK' %}
-            <tr data-info='{{ row  | safe }}'>
-            {% else %}
-            <tr class="phanloailoi" data-info='{{ row  | safe }}'>
-            {% endif %}
-                <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
-                <td>{{row[1]}}</td>
-                <td class="sticky">{{row[2]}}</td>
-                <td>{{row[3]}}</td>
-                <td>{{row[4]}}</td>
-                <td>{{row[5]}}</td>
-                <td>{{row[6]}}</td>
-                <td class='date_en'>{{row[7]}}</td>
-                <td>{{row[8]}}</td>
-                {% if row[10] %}
-                <td>{{row[10]}}</td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                {% if row[11] %}
-                <td>{{row[11]}}</td>
-                {% else %}
-                <td></td>
-                {% endif %}
-                <td>{{row[12]}}</td>
-                <td>{{row[13]}}</td>
-                <td>{{row[14]}}</td>
-                <td>{{row[15]}}</td>
-                <td>{{row[16]}}</td>
-                <td>{{row[17]}}</td>
-                <td>{{row[18]}}</td>  
-                <td>{{row[19]}}</td>
-                <td>{{row[20]}}</td>                     
-            </tr>  
+                <tr data='{{row | safe }}'>
+                    <td>{{loop.index}}</td>
+                    <td>{{row[0]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td >{{row[7]}}</td>
+                    <td>{{row[8]}}</td>
+                    <td>{{row[9]}}</td>
+                    <td>{{row[10]}}</td>
+                    <td>{{row[11]}}</td>
+                    <td>{{row[12]}}</td>
+                    <td>{{row[13]}}</td>
+                    <td>{{row[14]}}</td>
+                    <td>{{row[15]}}</td>
+                    <td>{{row[16]}}</td>
+                    <td>{{row[17]}}</td>
+                    <td>{{row[18]}}</td>
+                    <td>{{row[19]}}</td>
+                    <td>{{row[20]}}</td>
+                </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table>  
 </div>
 <script>
     function changeFormatDate(date){
-        if(date == 'None') return "";
         try{
             return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
         } catch {
             return "";    
     }}
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('.date_en').forEach((element) => {
-            element.textContent = changeFormatDate(element.textContent);
+    document.addEventListener('DOMContentLoaded', function() {
+        var tds = document.querySelectorAll('td');
+        tds.forEach(td => {
+            if (td.textContent.trim() === 'None') {
+                td.textContent = '';
+            }
+        });
+
+        var ngays = document.querySelectorAll('.ngay');
+        ngays.forEach(ngay => {
+            if (ngay.textContent.trim() !== 'None') {
+                ngay.textContent = changeFormatDate(ngay.textContent);
+            }
         });
     });
+
 </script>
 {% endblock content %}
