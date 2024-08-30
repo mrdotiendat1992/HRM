@@ -4037,8 +4037,8 @@ def tangcachedo_web():
             "Chuyền": row[3],
             "Vị trí": row[4],
             "Chức danh": row[5],
-            "Ngày vào": datetime.strptime(row[6],"%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",
-            "Ngày chính thức": datetime.strptime(row[7],"%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
+            "Ngày vào": row[6] if row[6] else "",
+            "Ngày chính thức": row[7] if row[7] else "",
             "Ca": row[8], 
             "01": row[9],
             "02": row[10],
@@ -4080,6 +4080,40 @@ def tangcachedo_web():
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='coerce')
+        df["02"] = to_numeric(df['02'], errors='coerce')
+        df["03"] = to_numeric(df['03'], errors='coerce')
+        df["04"] = to_numeric(df['04'], errors='coerce')
+        df["05"] = to_numeric(df['05'], errors='coerce')
+        df["06"] = to_numeric(df['06'], errors='coerce')
+        df["07"] = to_numeric(df['07'], errors='coerce')
+        df["08"] = to_numeric(df['08'], errors='coerce')
+        df["09"] = to_numeric(df['09'], errors='coerce')
+        df["10"] = to_numeric(df['10'], errors='coerce')
+        df["11"] = to_numeric(df['11'], errors='coerce')
+        df["12"] = to_numeric(df['12'], errors='coerce')
+        df["13"] = to_numeric(df['13'], errors='coerce')
+        df["14"] = to_numeric(df['14'], errors='coerce')
+        df["15"] = to_numeric(df['15'], errors='coerce')
+        df["16"] = to_numeric(df['16'], errors='coerce')
+        df["17"] = to_numeric(df['17'], errors='coerce')
+        df["18"] = to_numeric(df['18'], errors='coerce')
+        df["19"] = to_numeric(df['19'], errors='coerce')
+        df["20"] = to_numeric(df['20'], errors='coerce')
+        df["21"] = to_numeric(df['21'], errors='coerce')
+        df["22"] = to_numeric(df['22'], errors='coerce')
+        df["23"] = to_numeric(df['23'], errors='coerce')
+        df["24"] = to_numeric(df['24'], errors='coerce')
+        df["25"] = to_numeric(df['25'], errors='coerce')
+        df["26"] = to_numeric(df['26'], errors='coerce')
+        df["27"] = to_numeric(df['27'], errors='coerce')
+        df["28"] = to_numeric(df['28'], errors='coerce')
+        df["29"] = to_numeric(df['29'], errors='coerce')
+        df["30"] = to_numeric(df['30'], errors='coerce')
+        df["31"] = to_numeric(df['31'], errors='coerce')
+        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4089,11 +4123,18 @@ def tangcachedo_web():
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -4188,6 +4229,40 @@ def tangcangay_web():
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='coerce')
+        df["02"] = to_numeric(df['02'], errors='coerce')
+        df["03"] = to_numeric(df['03'], errors='coerce')
+        df["04"] = to_numeric(df['04'], errors='coerce')
+        df["05"] = to_numeric(df['05'], errors='coerce')
+        df["06"] = to_numeric(df['06'], errors='coerce')
+        df["07"] = to_numeric(df['07'], errors='coerce')
+        df["08"] = to_numeric(df['08'], errors='coerce')
+        df["09"] = to_numeric(df['09'], errors='coerce')
+        df["10"] = to_numeric(df['10'], errors='coerce')
+        df["11"] = to_numeric(df['11'], errors='coerce')
+        df["12"] = to_numeric(df['12'], errors='coerce')
+        df["13"] = to_numeric(df['13'], errors='coerce')
+        df["14"] = to_numeric(df['14'], errors='coerce')
+        df["15"] = to_numeric(df['15'], errors='coerce')
+        df["16"] = to_numeric(df['16'], errors='coerce')
+        df["17"] = to_numeric(df['17'], errors='coerce')
+        df["18"] = to_numeric(df['18'], errors='coerce')
+        df["19"] = to_numeric(df['19'], errors='coerce')
+        df["20"] = to_numeric(df['20'], errors='coerce')
+        df["21"] = to_numeric(df['21'], errors='coerce')
+        df["22"] = to_numeric(df['22'], errors='coerce')
+        df["23"] = to_numeric(df['23'], errors='coerce')
+        df["24"] = to_numeric(df['24'], errors='coerce')
+        df["25"] = to_numeric(df['25'], errors='coerce')
+        df["26"] = to_numeric(df['26'], errors='coerce')
+        df["27"] = to_numeric(df['27'], errors='coerce')
+        df["28"] = to_numeric(df['28'], errors='coerce')
+        df["29"] = to_numeric(df['29'], errors='coerce')
+        df["30"] = to_numeric(df['30'], errors='coerce')
+        df["31"] = to_numeric(df['31'], errors='coerce')
+        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4197,11 +4272,18 @@ def tangcangay_web():
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -4296,6 +4378,40 @@ def tangcadem_web():
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='coerce')
+        df["02"] = to_numeric(df['02'], errors='coerce')
+        df["03"] = to_numeric(df['03'], errors='coerce')
+        df["04"] = to_numeric(df['04'], errors='coerce')
+        df["05"] = to_numeric(df['05'], errors='coerce')
+        df["06"] = to_numeric(df['06'], errors='coerce')
+        df["07"] = to_numeric(df['07'], errors='coerce')
+        df["08"] = to_numeric(df['08'], errors='coerce')
+        df["09"] = to_numeric(df['09'], errors='coerce')
+        df["10"] = to_numeric(df['10'], errors='coerce')
+        df["11"] = to_numeric(df['11'], errors='coerce')
+        df["12"] = to_numeric(df['12'], errors='coerce')
+        df["13"] = to_numeric(df['13'], errors='coerce')
+        df["14"] = to_numeric(df['14'], errors='coerce')
+        df["15"] = to_numeric(df['15'], errors='coerce')
+        df["16"] = to_numeric(df['16'], errors='coerce')
+        df["17"] = to_numeric(df['17'], errors='coerce')
+        df["18"] = to_numeric(df['18'], errors='coerce')
+        df["19"] = to_numeric(df['19'], errors='coerce')
+        df["20"] = to_numeric(df['20'], errors='coerce')
+        df["21"] = to_numeric(df['21'], errors='coerce')
+        df["22"] = to_numeric(df['22'], errors='coerce')
+        df["23"] = to_numeric(df['23'], errors='coerce')
+        df["24"] = to_numeric(df['24'], errors='coerce')
+        df["25"] = to_numeric(df['25'], errors='coerce')
+        df["26"] = to_numeric(df['26'], errors='coerce')
+        df["27"] = to_numeric(df['27'], errors='coerce')
+        df["28"] = to_numeric(df['28'], errors='coerce')
+        df["29"] = to_numeric(df['29'], errors='coerce')
+        df["30"] = to_numeric(df['30'], errors='coerce')
+        df["31"] = to_numeric(df['31'], errors='coerce')
+        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4305,11 +4421,18 @@ def tangcadem_web():
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -4404,6 +4527,40 @@ def tangca_ngayle_web():
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='coerce')
+        df["02"] = to_numeric(df['02'], errors='coerce')
+        df["03"] = to_numeric(df['03'], errors='coerce')
+        df["04"] = to_numeric(df['04'], errors='coerce')
+        df["05"] = to_numeric(df['05'], errors='coerce')
+        df["06"] = to_numeric(df['06'], errors='coerce')
+        df["07"] = to_numeric(df['07'], errors='coerce')
+        df["08"] = to_numeric(df['08'], errors='coerce')
+        df["09"] = to_numeric(df['09'], errors='coerce')
+        df["10"] = to_numeric(df['10'], errors='coerce')
+        df["11"] = to_numeric(df['11'], errors='coerce')
+        df["12"] = to_numeric(df['12'], errors='coerce')
+        df["13"] = to_numeric(df['13'], errors='coerce')
+        df["14"] = to_numeric(df['14'], errors='coerce')
+        df["15"] = to_numeric(df['15'], errors='coerce')
+        df["16"] = to_numeric(df['16'], errors='coerce')
+        df["17"] = to_numeric(df['17'], errors='coerce')
+        df["18"] = to_numeric(df['18'], errors='coerce')
+        df["19"] = to_numeric(df['19'], errors='coerce')
+        df["20"] = to_numeric(df['20'], errors='coerce')
+        df["21"] = to_numeric(df['21'], errors='coerce')
+        df["22"] = to_numeric(df['22'], errors='coerce')
+        df["23"] = to_numeric(df['23'], errors='coerce')
+        df["24"] = to_numeric(df['24'], errors='coerce')
+        df["25"] = to_numeric(df['25'], errors='coerce')
+        df["26"] = to_numeric(df['26'], errors='coerce')
+        df["27"] = to_numeric(df['27'], errors='coerce')
+        df["28"] = to_numeric(df['28'], errors='coerce')
+        df["29"] = to_numeric(df['29'], errors='coerce')
+        df["30"] = to_numeric(df['30'], errors='coerce')
+        df["31"] = to_numeric(df['31'], errors='coerce')
+        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4413,11 +4570,18 @@ def tangca_ngayle_web():
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -4512,6 +4676,40 @@ def tangca_chunhat_web():
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
         df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
         df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='coerce')
+        df["02"] = to_numeric(df['02'], errors='coerce')
+        df["03"] = to_numeric(df['03'], errors='coerce')
+        df["04"] = to_numeric(df['04'], errors='coerce')
+        df["05"] = to_numeric(df['05'], errors='coerce')
+        df["06"] = to_numeric(df['06'], errors='coerce')
+        df["07"] = to_numeric(df['07'], errors='coerce')
+        df["08"] = to_numeric(df['08'], errors='coerce')
+        df["09"] = to_numeric(df['09'], errors='coerce')
+        df["10"] = to_numeric(df['10'], errors='coerce')
+        df["11"] = to_numeric(df['11'], errors='coerce')
+        df["12"] = to_numeric(df['12'], errors='coerce')
+        df["13"] = to_numeric(df['13'], errors='coerce')
+        df["14"] = to_numeric(df['14'], errors='coerce')
+        df["15"] = to_numeric(df['15'], errors='coerce')
+        df["16"] = to_numeric(df['16'], errors='coerce')
+        df["17"] = to_numeric(df['17'], errors='coerce')
+        df["18"] = to_numeric(df['18'], errors='coerce')
+        df["19"] = to_numeric(df['19'], errors='coerce')
+        df["20"] = to_numeric(df['20'], errors='coerce')
+        df["21"] = to_numeric(df['21'], errors='coerce')
+        df["22"] = to_numeric(df['22'], errors='coerce')
+        df["23"] = to_numeric(df['23'], errors='coerce')
+        df["24"] = to_numeric(df['24'], errors='coerce')
+        df["25"] = to_numeric(df['25'], errors='coerce')
+        df["26"] = to_numeric(df['26'], errors='coerce')
+        df["27"] = to_numeric(df['27'], errors='coerce')
+        df["28"] = to_numeric(df['28'], errors='coerce')
+        df["29"] = to_numeric(df['29'], errors='coerce')
+        df["30"] = to_numeric(df['30'], errors='coerce')
+        df["31"] = to_numeric(df['31'], errors='coerce')
+        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -4521,11 +4719,18 @@ def tangca_chunhat_web():
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
