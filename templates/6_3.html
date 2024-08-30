@@ -60,11 +60,49 @@ td, label, p, input, h5 {
             <tr data-info='{{ row  | safe }}'>
                 <td>{{row[1]}}</td> 
                 <td>{{row[2]}}</td>
-                <td>{{row[3]}}</td>
-                <td>{{row[4]}}</td>
-                <td>{{row[5]}}</td>
-                <td>{{row[11]}}</td>
-                <td>{{row[6]}}</td>
+                <td>
+                    <form action='/thaydoi_chuyen_lichsu_congviec' method='POST'> 
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="chuyen" value={{row[3]}} onchange="this.form.submit()">
+                    </form>
+                </td>
+                <td><form action='/thaydoi_bophan_lichsu_congviec' method='POST'> 
+                    <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                    <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                    <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                    <input type="hidden" name="id" value={{row[10]}}> 
+                    <input type="date" name="bophan" value={{row[4]}} onchange="this.form.submit()">
+                </form></td>
+                <td>
+                    <form action='/thaydoi_chucdanh_lichsu_congviec' method='POST'> 
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="chucdanh" value={{row[5]}} onchange="this.form.submit()">
+                    </form>
+                </td>
+                <td>
+                    <form action='/thaydoi_hccategory_lichsu_congviec' method='POST'> 
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="hccategory" value={{row[11]}} onchange="this.form.submit()">
+                    </form>
+                </td>
+                <td>
+                    <form action='/thaydoi_capbac_lichsu_congviec' method='POST'> 
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[10]}}> 
+                        <input type="date" name="capbac" value={{row[6]}} onchange="this.form.submit()">
+                    </form>
+                </td>
                 <td>{{row[7]}}</td>
                 <td>
                     <form action='/thaydoi_ngaybatdau_lichsu_congviec' method='POST'> 

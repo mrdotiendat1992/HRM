@@ -3133,7 +3133,7 @@ def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
             query += f" and Bo_phan = '{bophan}'"
         if ngay:
             query += f" and Ngay = '{ngay}'"
-        query += " order by MST asc"
+        query += " order by MST asc,Ngay desc, Bo_phan asc, Chuyen asc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
