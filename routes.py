@@ -5383,3 +5383,17 @@ def duyet_hangloat_tangca():
     except Exception as e:
         flash(f"Lỗi phê duyệt hàng loạt")
     return redirect("/dangki_tangca_web")   
+
+@app.route("/thaydoi_chuyen_lichsu_congviec", methods=["POST"])
+def thaydoi_chuyen_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        chuyen_filter = request.form.get("chuyen_filter")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if sua_chuyen_lichsu_congviec(id,chuyen):
+            flash(f"Sửa Chuyền cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
+        else:
+            flash(f"Sửa Chuyền bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen_filter}&bophan={bophan}")
