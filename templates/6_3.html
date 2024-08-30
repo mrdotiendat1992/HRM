@@ -17,9 +17,10 @@ td, label, p, input, h5 {
     margin-left: 50px;
     margin-right: 50px;
 }
-input {
-    max-width:150px;
-    width:auto;
+.form_lscv {
+    width:100px;
+    outline: none;
+    border: none;
 }
 </style>
 {% endblock style %}
@@ -68,17 +69,17 @@ input {
                     <form action='/thaydoi_chuyen_lichsu_congviec' method='POST'> 
                         <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
-                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="chuyen_filter" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="chuyen_filter" value={{row[3]}} onchange="this.form.submit()">
+                        <input class="form_lscv" type="text" name="chuyen" value={{row[3]}} onchange="this.form.submit()">
                     </form>
                 </td>
                 <td><form action='/thaydoi_bophan_lichsu_congviec' method='POST'> 
                     <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
-                    <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                    <input type="hidden" name="bophan_filter" value="{{request.args.get('bophan', '')}}">
                     <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                     <input type="hidden" name="id" value={{row[10]}}> 
-                    <input type="text" name="bophan_filter" value={{row[4]}} onchange="this.form.submit()">
+                    <input class="form_lscv" type="text" name="bophan"  onchange="this.form.submit()" value={{row[4]}}>
                 </form></td>
                 <td>
                     <form action='/thaydoi_chucdanh_lichsu_congviec' method='POST'> 
@@ -86,7 +87,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="chucdanh" value='{{row[5]}}' onchange="this.form.submit()">
+                        <input class="form_lscv" type="text" name="chucdanh"  onchange="this.form.submit()" value='{{row[5]}}'>
                     </form>
                 </td>
                 <td>
@@ -95,7 +96,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="hccategory" value={{row[11]}} onchange="this.form.submit()">
+                        <input class="form_lscv" type="text" name="hccategory"  onchange="this.form.submit()" value={{row[11]}}>
                     </form>
                 </td>
                 <td>
@@ -104,7 +105,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="capbac" value={{row[6]}} onchange="this.form.submit()">
+                        <input class="form_lscv" type="text" name="capbac" onchange="this.form.submit()" value={{row[6]}}>
                     </form>
                 </td>
                 <td>{{row[7]}}</td>
@@ -114,7 +115,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="date" name="ngaybatdau" value={{row[8]}} onchange="this.form.submit()">
+                        <input class="form_lscv" type="date" name="ngaybatdau"  onchange="this.form.submit()" value={{row[8]}}>
                     </form>
                 </td>
                 <td>
@@ -123,7 +124,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="date" name="ngayketthuc" value={{row[9]}} onchange="this.form.submit()">
+                        <input class="form_lscv" type="date" name="ngayketthuc"  onchange="this.form.submit()" value={{row[9]}}>
                     </form>
                 </td>
             </tr>
@@ -141,6 +142,13 @@ input {
         document.addEventListener('DOMContentLoaded', (event) => {
             document.querySelectorAll('.date_en').forEach((element) => {
                 element.textContent = changeFormatDate(element.textContent);
+            });
+            const td_elements = document.querySelectorAll('td');
+    
+            td_elements.forEach((element) => {
+                if (element.textContent === 'None') {
+                    element.textContent = '';
+                }
             });
         });
     </script>
