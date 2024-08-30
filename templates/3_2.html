@@ -315,7 +315,32 @@
                         document.getElementById("noisinh").value = data["Nơi sinh"];
                         document.getElementById("ngayvao").value = changeDateFormat(data["Ngày vào"]);
                         document.getElementById("ngaynghi").value = changeDateFormat(data["Ngày nghỉ"]);
-                        document.getElementById("ngaychinhthuc").value = changeDateFormat(data["Ngày kí HĐ xác định thời hạn lần 1"]);
+                        // Chuỗi ngày tháng dạng "dd/mm/yyyy"
+                        const ngayHetHan = data["Ngày hết hạn HĐ Thử việc"];
+
+                        // Tách chuỗi ngày tháng thành ngày, tháng và năm
+                        const parts = ngayHetHan.split('/');
+                        const day = parseInt(parts[0], 10);
+                        const month = parseInt(parts[1], 10) - 1; // Tháng trong JavaScript bắt đầu từ 0
+                        const year = parseInt(parts[2], 10);
+
+                        // Tạo đối tượng Date
+                        const date = new Date(year, month, day);
+
+                        // Thêm 1 ngày vào đối tượng Date
+                        date.setDate(date.getDate() + 1);
+
+                        // Lấy các thành phần ngày, tháng và năm
+                        const newYear = date.getFullYear();
+                        const newMonth = String(date.getMonth() + 1).padStart(2, '0'); // Đảm bảo tháng có 2 chữ số
+                        const newDay = String(date.getDate()).padStart(2, '0'); // Đảm bảo ngày có 2 chữ số
+
+                        // Chuyển đối tượng Date thành chuỗi định dạng "yyyy/mm/dd"
+                        const newDateString = `${newYear}-${newMonth}-${newDay}`;
+
+                        // Gán giá trị cho phần tử HTML
+                        document.getElementById("ngaychinhthuc").value = newDateString;
+                    
                         xoahanchechinhsua()
                     }
                 })
@@ -391,3 +416,4 @@
     </script>
 </div>
 {% endblock content %}
+z

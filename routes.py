@@ -994,9 +994,10 @@ def thaydoithongtinlaodong():
             else:
                 query += f"Ngay_nghi = NULL,"
             if ngaychinhthuc:
-                query += f"Ngay_ky_HDXDTH_Lan1 = '{ngaynghi}',"
+                truocngaychinhthuc = (datetime.strptime(ngaychinhthuc,"%Y-%M-%d")-timedelta(days=1)).strftime("%Y-%M-%d")
+                query += f"Ngay_het_han_HDTV = '{truocngaychinhthuc}',"
             else:
-                query += f"Ngay_ky_HDXDTH_Lan1 = NULL,"
+                query += f"Ngay_het_han_HDTV = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
