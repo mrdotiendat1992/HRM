@@ -86,7 +86,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="chucdanh_filter" value={{row[5]}} onchange="this.form.submit()">
+                        <input type="text" name="chucdanh" value='{{row[5]}}' onchange="this.form.submit()">
                     </form>
                 </td>
                 <td>
@@ -95,7 +95,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="hccategory_filter" value={{row[11]}} onchange="this.form.submit()">
+                        <input type="text" name="hccategory" value={{row[11]}} onchange="this.form.submit()">
                     </form>
                 </td>
                 <td>
@@ -104,7 +104,7 @@ input {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[10]}}> 
-                        <input type="text" name="capbac_filter" value={{row[6]}} onchange="this.form.submit()">
+                        <input type="text" name="capbac" value={{row[6]}} onchange="this.form.submit()">
                     </form>
                 </td>
                 <td>{{row[7]}}</td>
