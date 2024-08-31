@@ -5201,8 +5201,8 @@ def bangcong_tong_web():
         df["Nghỉ việc(OSL)"] = to_numeric(df['Nghỉ việc(OSL)'], errors='coerce')
         df["Tổng cộng"] = to_numeric(df['Tổng cộng'], errors='coerce')
         df["Số biên bản kỷ luật"] = to_numeric(df['Số biên bản kỷ luật'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',dayfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce',dayfirst=True)
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',yearfirst=True)
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce',yearfirst=True)
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
