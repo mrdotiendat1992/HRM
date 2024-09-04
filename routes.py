@@ -1920,7 +1920,7 @@ def chamcongtudongchot():
 
 @app.route("/muc7_1_10", methods=["GET","POST"])
 @login_required
-def danhsachphepton():
+def muc7_1_10():
     if request.method == "GET":
         mst = request.args.get("mst")
         danhsach = laydanhsachphepton(mst)
@@ -1958,7 +1958,267 @@ def danhsachphepton():
         df.to_excel(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), index=False)
         print("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"phepton_{thoigian}.xlsx"), as_attachment=True)
-            
+
+@app.route("/muc7_1_11", methods=["GET","POST"])
+@login_required
+def muc7_1_11():
+    if request.method == "GET":
+        thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+        nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        mst = request.args.get("mst")
+        bophan = request.args.get("bophan")
+        chuyen = request.args.get("chuyen")
+        danhsach = lay_bangcong_kx(thang,nam,mst,bophan,chuyen)
+        total = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 15
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_11.html",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+        
+    elif request.method == "POST":
+        thang = request.form.get("thang")
+        nam = request.form.get("nam")
+        mst = request.form.get("mst")
+        bophan = request.form.get("bophan")
+        chuyen = request.form.get("chuyen")
+        danhsach = lay_bangcong_kx(thang,nam,mst,bophan,chuyen)
+        data = [{
+            "Mã số thẻ": row[0],
+            "Họ tên": row[1],
+            "Bộ phận": row[2],
+            "Chuyền": row[3],
+            "Vị trí": row[4],
+            "Chức danh": row[5],
+            "Ngày vào": datetime.strptime(row[6],"%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",
+            "Ngày chính thức": datetime.strptime(row[7],"%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
+            "Ca": row[8], 
+            "01": row[9],
+            "02": row[10],
+            "03": row[11],
+            "04": row[12],
+            "05": row[13],
+            "06": row[14],
+            "07": row[15],
+            "08": row[16],
+            "09": row[17],
+            "10": row[18],
+            "11": row[19],
+            "12": row[20],
+            "13": row[21],
+            "14": row[22],
+            "15": row[23],
+            "16": row[24],
+            "17": row[25],
+            "18": row[26],
+            "19": row[27],
+            "20": row[28],
+            "21": row[29],
+            "22": row[30],
+            "23": row[31],
+            "24": row[32],
+            "25": row[33],
+            "26": row[34],
+            "27": row[35],
+            "28": row[36],
+            "29": row[37],
+            "30": row[38],
+            "31": row[39],
+            "Thử việc": row[40],
+            "Chính thức": row[41],
+            "Tháng": row[42],
+            "Năm": row[43],
+            "Nhà máy": row[44]
+        } for row in danhsach]  
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
+        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
+        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
+        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bangconghanhchinh_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+    
+@app.route("/muc7_1_12", methods=["GET","POST"])
+def muc7_1_12():
+    if request.method == "GET":
+        try:
+            thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+            nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+            mst = request.args.get("mst")
+            bophan = request.args.get("bophan")
+            chuyen = request.args.get("chuyen")
+            danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("7_1_12.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            print(e)
+            return render_template("7_1_12.html",
+                                    danhsach=[])
+    else:
+        thang = int(request.form.get("thang")) if request.args.get("thang") else 0
+        nam = int(request.form.get("nam")) if request.args.get("nam") else 0
+        mst = request.form.get("mst")
+        bophan = request.form.get("bophan")
+        chuyen = request.form.get("chuyen")
+        danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
+        data = [{
+            "Mã số thẻ": row[0],
+            "Họ tên": row[1],
+            "Bộ phận": row[2],
+            "Chuyền": row[3],
+            "Vị trí": row[4],
+            "Chức danh": row[5],
+            "Ngày vào": row[6] if row[6] else "",
+            "Ngày chính thức": row[7] if row[7] else "",
+            "Ca": row[8],    
+            "Công thử việc": row[9],
+            "Công chính thức": row[10],
+            "Tăng ca chế độ thử việc": row[11],
+            "Tăng ca chế độ chính thức": row[12],
+            "Tăng ca ngày thử việc": row[13],
+            "Tăng ca ngày chính thức": row[14],
+            "Tăng ca đêm thử việc": row[15],
+            "Tăng ca đêm chính thức": row[16],
+            "Tăng ca chủ nhật thử việc": row[17],
+            "Tăng ca chủ nhật chính thức": row[18],
+            "Tăng ca ngày lễ thử việc": row[19],
+            "Tăng ca ngày lễ chính thức": row[20],
+            "Tuân thủ nội quy": row[21],
+            "Số lần nghỉ không lương": row[22],
+            "Nghỉ tự do (UA)": row[23],
+            "Số giờ UP": row[24],
+            "Nghỉ không lương (UP)": row[25],
+            "Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)": row[26],
+            "Nghỉ phép(AL)": row[27],
+            "Nghỉ phép không ảnh hưởng TTNQ(AL01)": row[28],
+            "Nghỉ hưởng lương thử việc": row[29],
+            "Nghỉ hưởng lương chính thức": row[30],
+            "Nghỉ tai nạn lao động(OCL)": row[31],
+            "Nghỉ ốm, con ốm(SL)": row[32],
+            "Công tác(BL)": row[33],
+            "Khám thai(ML03)": row[34],
+            "Nghỉ vợ sinh(ML02)": row[35],
+            "Nghỉ thai sản(LML)": row[36],
+            "Nghỉ việc(OSL)": row[37],
+            "Tổng cộng": row[38],
+            "Số biên bản kỷ luật": row[39]           
+        } for row in danhsach] 
+        df = DataFrame(data)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Công thử việc"] = to_numeric(df['Công thử việc'], errors='coerce')
+        df["Công chính thức"] = to_numeric(df['Công chính thức'], errors='coerce')
+        df["Tăng ca chế độ thử việc"] = to_numeric(df['Tăng ca chế độ thử việc'], errors='coerce')
+        df["Tăng ca chế độ chính thức"] = to_numeric(df['Tăng ca chế độ chính thức'], errors='coerce')
+        df["Tăng ca ngày thử việc"] = to_numeric(df['Tăng ca ngày thử việc'], errors='coerce')
+        df["Tăng ca ngày chính thức"] = to_numeric(df['Tăng ca ngày chính thức'], errors='coerce')
+        df["Tăng ca đêm thử việc"] = to_numeric(df['Tăng ca đêm thử việc'], errors='coerce')
+        df["Tăng ca đêm chính thức"] = to_numeric(df['Tăng ca đêm chính thức'], errors='coerce')
+        df["Tăng ca chủ nhật thử việc"] = to_numeric(df['Tăng ca chủ nhật thử việc'], errors='coerce')
+        df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'], errors='coerce')
+        df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'], errors='coerce')
+        df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'], errors='coerce')
+        df["Số lần nghỉ không lương"] = to_numeric(df['Số lần nghỉ không lương'], errors='coerce')
+        df["Nghỉ tự do (UA)"] = to_numeric(df['Nghỉ tự do (UA)'], errors='coerce')
+        df["Số giờ UP"] = to_numeric(df['Số giờ UP'], errors='coerce')
+        df["Nghỉ không lương (UP)"] = to_numeric(df['Nghỉ không lương (UP)'], errors='coerce')
+        df["Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)"] = to_numeric(df['Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)'], errors='coerce')
+        df["Nghỉ phép(AL)"] = to_numeric(df['Nghỉ phép(AL)'], errors='coerce')
+        df["Nghỉ phép không ảnh hưởng TTNQ(AL01)"] = to_numeric(df['Nghỉ phép không ảnh hưởng TTNQ(AL01)'], errors='coerce')
+        df["Nghỉ hưởng lương thử việc"] = to_numeric(df['Nghỉ hưởng lương thử việc'], errors='coerce')
+        df["Nghỉ hưởng lương chính thức"] = to_numeric(df['Nghỉ hưởng lương chính thức'], errors='coerce')
+        df["Nghỉ tai nạn lao động(OCL)"] = to_numeric(df['Nghỉ tai nạn lao động(OCL)'], errors='coerce')
+        df["Nghỉ ốm, con ốm(SL)"] = to_numeric(df['Nghỉ ốm, con ốm(SL)'], errors='coerce')
+        df["Công tác(BL)"] = to_numeric(df['Công tác(BL)'], errors='coerce')
+        df["Khám thai(ML03)"] = to_numeric(df['Khám thai(ML03)'], errors='coerce')
+        df["Nghỉ vợ sinh(ML02)"] = to_numeric(df['Nghỉ vợ sinh(ML02)'], errors='coerce')
+        df["Nghỉ thai sản(LML)"] = to_numeric(df['Nghỉ thai sản(LML)'], errors='coerce')
+        df["Nghỉ việc(OSL)"] = to_numeric(df['Nghỉ việc(OSL)'], errors='coerce')
+        df["Tổng cộng"] = to_numeric(df['Tổng cộng'], errors='coerce')
+        df["Số biên bản kỷ luật"] = to_numeric(df['Số biên bản kỷ luật'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',yearfirst=True)
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce',yearfirst=True)
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                list_col = ['G','H']
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in list_col and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bangcongthang_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+           
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
 def ykienkhieunai():
@@ -3892,8 +4152,8 @@ def capnhatdieuchuyentheofile():
                 flash(f"Cập nhật điều chuyển bằng file thất bại {e} !!!")
     return redirect("/muc6_2")
 
-@app.route("/bangcong_web", methods=["GET","POST"])
-def bangcong_web():
+@app.route("/bangcong_hanhchinh_web", methods=["GET","POST"])
+def bangcong_hanhchinh_web():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
@@ -5095,7 +5355,7 @@ def tailenjd():
             print(e)
             return redirect("/muc2_2")
 
-@app.route("/bangcong_tong_web", methods=["GET","POST"])
+@app.route("/bangcong_thang_web", methods=["GET","POST"])
 def bangcong_tong_web():
     if request.method == "GET":
         try:

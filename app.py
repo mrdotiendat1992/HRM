@@ -2916,7 +2916,7 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
                 query += f" and Gio_vao is not null"
             if cochamcong=="khong":
                 query += f" and Gio_vao is null"
-        query += "  order by The_cham_cong asc"
+        query += " and Trang_thai_lam_viec=N'Đang làm việc' order by The_cham_cong asc"
         
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
@@ -3004,7 +3004,30 @@ def lay_bangcong_thucte(thang,nam,mst,bophan,chuyen):
     except Exception as e:
         print(f"Loi lay bang cong tong thuc te: {e}")
         return []
-    
+
+def lay_bangcong_kx(thang,nam,mst,bophan,chuyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CONG_TONG_KIEM_XUONG] where Nha_may='{current_user.macongty}'"
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        print(f"Loi lay bang cong tong thuc te: {e}")
+        return []
+ 
 def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
     try:
         conn = pyodbc.connect(used_db)
@@ -3414,6 +3437,30 @@ def lay_cac_vitri_trong_phong(phongban):
         return [x[0] for x in data ]
     except Exception as e:
         print(f"Loi lay cac vi tri: {e}")
+        return []
+
+def lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_TONG_CONG_CA_THANG] where Nha_may='{current_user.macongty}' "
+        if not thang:
+            thang = datetime.now().month
+        if not nam:
+            nam =  datetime.now().year
+        query += f" and Thang={thang} and Nam={nam}"
+        if mst:
+            query += f" and MST='{mst}'"
+        if bophan:
+            query += f" and Bo_phan='{bophan}'"
+        if chuyen:
+            query += f" and Chuyen='{chuyen}'"
+        query += " order by MST asc"
+        rows =  cursor.execute(query).fetchall()
+        # print(len(rows))
+        return [x for x in rows]
+    except Exception as e:
+        print(f"Loi lay bang cong thang: {e}")
         return []
     
 def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
