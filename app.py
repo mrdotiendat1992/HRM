@@ -1848,7 +1848,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
             query += f" AND Danh_sach_CBCNV.Department='{bophan}'" 
         if ngaynghi:
             query += f" AND Xin_nghi_khac.Ngay_nghi='{ngaynghi}'" 
-        if chuyen:
+        if loainghi:
             query += f" AND Xin_nghi_khac.Loai_nghi='{loainghi}'" 
         if trangthai:
             if trangthai=="Chưa kiểm tra":

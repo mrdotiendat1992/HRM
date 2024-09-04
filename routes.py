@@ -330,25 +330,25 @@ def home():
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
         df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce',dayfirst=True)
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce',dayfirst=True)
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce',dayfirst=True)
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',dayfirst=True)
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce',dayfirst=True)
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce',dayfirst=True)
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce',dayfirst=True)
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce',dayfirst=True)
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce',dayfirst=True)
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce',dayfirst=True)
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce',dayfirst=True)
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce',dayfirst=True)
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce',dayfirst=True)
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce',dayfirst=True)
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce',dayfirst=True)
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce',dayfirst=True)
-        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce',dayfirst=True)
-        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce',dayfirst=True)
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce',dayfirst=True)
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce')
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce')
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce')
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce')
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce')
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce')
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce')
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce')
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce')
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce')
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce')
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -1789,8 +1789,8 @@ def danhsachxinnghikhac():
             "Nhận giấy tờ": row[6],            
         } for row in danhsach] 
         df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce',dayfirst=True)
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce',dayfirst=True)
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -2664,15 +2664,15 @@ def export_dsdktt():
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     
-    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce',dayfirst=True).dt.date
-    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce',dayfirst=True).dt.date
-    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce',dayfirst=True).dt.date
-    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce',dayfirst=True).dt.date
-    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce',dayfirst=True).dt.date
-    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce',dayfirst=True)
-    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce',dayfirst=True)
-    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce',dayfirst=True)
-    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce',dayfirst=True) 
+    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce').dt.date
+    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce').dt.date
+    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce').dt.date
+    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce').dt.date
+    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce').dt.date
+    df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='coerce')
+    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='coerce')
+    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='coerce')
+    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'], errors='coerce') 
     
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
@@ -5571,8 +5571,8 @@ def bangcongtrangoai_web():
         df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'], errors='coerce')
         df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'], errors='coerce')
         df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',dayfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce',dayfirst=True)
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
