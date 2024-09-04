@@ -128,8 +128,8 @@
                                         </select>
                                         <input type="text" id="vitrien" name="vitrien" hidden>
                                         <input type="text" id="capbac" name="capbac" readonly placeholder="Cấp bậc">
-                                        <select type="text" id="bacluongtu" name="bacluongtu" ></select>
-                                        <select type="text" id="bacluongden" name="bacluongden"></select>
+                                        <b>Từ:</b> <select type="text" id="bacluongtu" name="bacluongtu" ></select>
+                                        <b>Đến:</b> <select type="text" id="bacluongden" name="bacluongden"></select>
                                         <input type="text" id="soluong" name="soluong" placeholder="Số lượng">                                   
                                         <label for="thoigiandukien">Thời gian dự kiến</label>
                                         <input type="date" id="thoigiandukien" name="thoigiandukien" >
@@ -259,6 +259,10 @@
         link = document.getElementById("pdf-frame").src
         window.open(link, '_blank');
     });
+
+    function themchamvaoso(so) {
+        
+    }
 
     function changeVitri() {
         var vitri = document.getElementById("vitri").value;
