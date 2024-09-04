@@ -6,9 +6,13 @@
         margin: 10px;
     }
     table th {
-        white-space: nowrap;
+        white-space: pre-line;
         text-align: center;
         color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; 
+        vertical-align: middle;
     }
     table td {
         white-space: nowrap;
@@ -30,7 +34,7 @@
 {% block content %}
 <div class="scroll">
     <br>
-    <h1>Bảng công tăng ca ngày</h1>
+    <h1>Bảng công tổng tháng</h1>
     <br>
     <div id="filter">
         <form method="GET">
@@ -56,49 +60,61 @@
     <table class="table table-bordered table-hover table-sm">
         <thead>
             <tr class="bg-primary">
-                <th>STT</th>
-                <th>Mã số thẻ</th>
-                <th>Họ tên</th>
-                <th>Bộ phận</th>
-                <th>Chuyền</th>
-                <th>Vị trí</th>
-                <th>Chức danh</th>
-                <th>Ngày vào</th>
-                <th>Ngày chính thức</th>
-                <th>Ca</th>
-                <th>01</th>
-                <th>02</th>
-                <th>03</th>
-                <th>04</th>
-                <th>05</th>
-                <th>06</th>
-                <th>07</th>
-                <th>08</th>
-                <th>09</th>
-                <th>10</th>
-                <th>11</th>
-                <th>12</th>
-                <th>13</th>
-                <th>14</th>
-                <th>15</th>
-                <th>16</th>
-                <th>17</th>
-                <th>18</th>
-                <th>19</th>
-                <th>20</th>
-                <th>21</th>
-                <th>22</th>
-                <th>23</th>
-                <th>24</th>
-                <th>25</th>
-                <th>26</th>
-                <th>27</th>
-                <th>28</th>
-                <th>29</th>
-                <th>30</th>
-                <th>31</th>
-                <th>Tổng</th>
+                <th rowspan="3">STT</th>
+                <th rowspan="3">Mã số thẻ</th>
+                <th rowspan="3">Họ tên</th>
+                <th rowspan="3">Bộ phận</th>
+                <th rowspan="3">Chuyền</th>
+                <th rowspan="3">Vị trí</th>
+                <th rowspan="3">Chức danh</th>
+                <th rowspan="3">Ngày vào</th>
+                <th rowspan="3">Ngày chính thức</th>
+                <th rowspan="3">Ca</th>
+                <th colspan="2">Công</th>
+                <th colspan="10">Làm thêm (Over Time)</th>
+                <th rowspan="3">Tuân thủ nội quy</th>
+                <th rowspan="3">Số lần nghỉ không lương</th>
+                <th rowspan="3">Nghỉ tự do (UA)</th>
+                <th rowspan="3">Nghỉ không lương (UP)</th>
+                <th rowspan="3">Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)</th>
+                <th rowspan="3">Nghỉ phép(AL)</th>
+                <th rowspan="3">Nghỉ phép không ảnh hưởng TTNQ(AL01)</th>
+                <th colspan="2">Nghỉ hưởng lương</th>
+                <th rowspan="3">Nghỉ tai nạn lao động(OCL)</th>
+                <th rowspan="3">Nghỉ ốm, con ốm(SL)</th>
+                <th rowspan="3">Công tác(BL)</th>
+                <th rowspan="3">Khám thai(ML03)</th>
+                <th rowspan="3">Nghỉ vợ sinh(ML02)</th>
+                <th rowspan="3">Nghỉ thai sản(LML)</th>
+                <th rowspan="3">Nghỉ việc(OSL)</th>
+                <th rowspan="3">Tổng cộng</th>
+                <th rowspan="3">Số biên bản kỉ luật</th>
             </tr>
+            <tr class="bg-primary">
+                <th rowspan="2">Thử việc</th>
+                <th rowspan="2">Chính thức</th>
+                <th colspan="2">Chế độ mang thai, con nhỏ</th>
+                <th colspan="2">Ban ngày</th>
+                <th colspan="2">Ban đêm</th>
+                <th colspan="2">Chủ nhật</th>
+                <th colspan="2">Ngày lễ</th>
+                <th rowspan="2">Thử việc</th>
+                <th rowspan="2">Chính thức</th>
+            </tr>
+
+            <tr class="bg-primary">
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+                <th>Thử việc</th>
+                <th>Chính thức</th>
+            </tr>
+
         </thead>
         <tbody>
             {% for row in danhsach %}
@@ -110,8 +126,8 @@
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
-                    <td class="ngay">{{row[6]}}</td>
-                    <td class="ngay">{{row[7]}}</td>
+                    <td class='ngay'>{{row[6]}}</td>
+                    <td class='ngay'>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
                     <td>{{row[9]}}</td>
                     <td>{{row[10]}}</td>
@@ -128,7 +144,6 @@
                     <td>{{row[21]}}</td>
                     <td>{{row[22]}}</td>
                     <td>{{row[23]}}</td>   
-                    <td>{{row[24]}}</td>
                     <td>{{row[25]}}</td>
                     <td>{{row[26]}}</td>
                     <td>{{row[27]}}</td>
@@ -143,15 +158,12 @@
                     <td>{{row[36]}}</td>
                     <td>{{row[37]}}</td>
                     <td>{{row[38]}}</td>
-                    <td>{{row[39]}}</td>
-                    <td>{{row[40]}}</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>  
 </div>
 <script>
-    
     function changeFormatDate(date){
         try{
             return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
@@ -173,7 +185,6 @@
             }
         });
     });
-
 
 </script>
 {% endblock content %}

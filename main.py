@@ -1,4 +1,4 @@
-from routes import *
+from other_routes import *
 
 if __name__ == "__main__":
     while True:
