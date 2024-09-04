@@ -1818,7 +1818,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, kh
         query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
         (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}',N'{current_user.macongty}')"""
+        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}')"""
         cursor.execute(query)
         conn.commit()
         return True
@@ -3394,7 +3394,7 @@ def get_thongtin_vitri(vitri):
         cursor = conn.cursor()
         query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri}' "
         data = cursor.execute(query).fetchone()
-        query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}'"
+        query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}' and Nha_may='{current_user.macongty}'"
         data1 = cursor.execute(query1).fetchall()
         cacbacluong = []
         for x in data1:
