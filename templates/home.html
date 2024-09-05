@@ -39,7 +39,9 @@
                 <hr/>
                 <p><i>Đang làm việc:</i> <b>{{ songuoi_danglamviec }}</b></p>
                 <p><i>Đang nghỉ thai sản:</i> <b>{{ songuoi_dangnghithaisan }}</b></p>
-                <a class="btn btn-success btn-sm">Tải danh sách hiện tại</a>
+                <form action="/lay_danhsach_userhientai" method="POST">
+                    <button type="submit" class="btn btn-success btn-sm">Tải danh sách hiện tại</button>
+                </form>
                 <hr/>
                 <label>Tìm kiếm <i class="fa fa-search"></i></label>
                 <form method="GET" class="form-group">
@@ -132,21 +134,31 @@
             </div>
             <br>
             <div class="col">
-                <div style="display:flex;gap:50px;margin:50px;">
+                <div style="display:flex;gap:50px;margin-left:50px;">
                     <h5>Tổng: {{count}} </h5> 
                     <p>{{pagination.links}}</p>
                 </div>
                 <div class="list_nhanvien">
                 {% for row in users %}
-                    <div class="card">
+                    <div class="card" style="width:13rem;">
                         <div class="card-header">
                             <h5 class="card-title">{{row["MST"]}}</h5>
-                            <div class="view-info"><a class="btn btn-bg-primary brn-sm"><i class="fa fa-eye"></i></a></div>
+                            <div class="view-info">
+                                <form action="/hosonhanvien" method="GET">
+                                    <input type="hidden" value={{row['MST']}} name="mst">
+                                    <button type="submit" class="btn btn-block"><i class="fa fa-eye"></i></button>
+                                </form>
+                            </div>
                         </div>
                         <div class="card-body">
+                            {% if row["Giới tính"]=="Nam" %}
                             <img style="width:150px;" class="card-img-top" src="static/img/undraw_profile.svg" alt="Card image cap">
-                            <h5 class="card-title">{{row["Họ tên"]}}</h5>
-                            <p class=class="card-text">{{row["Số điện thoại"]}}</p>
+                            {% else %}
+                            <img style="width:150px;" class="card-img-top" src="static/img/undraw_profile_1.svg" alt="Card image cap">
+                            {% endif %}
+                            <hr/>
+                            <h5 class="card-text">{{row["Họ tên"]}}</h5>
+                            <p class="card-text">{{row["Số điện thoại"]}}</p>
                             <p class="card-text">{{row["Department"]}} - {{row["Line"]}}</p>
                             <p class="card-text">{{row["Trạng thái"]}}</p>
                         </div>

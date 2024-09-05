@@ -3709,3 +3709,89 @@ def thaydoi_hccategory_lichsu_congviec():
         else:
             flash(f"Sửa HC category bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+    
+@app.route("/hosonhanvien", methods=["GET"])
+def hosonhanvien():
+    if request.method == "GET":
+        mst = request.args.get("mst")
+        nhanvien = laydanhsachtheomst(mst)
+        if not nhanvien:
+            flash(f"Không tìm thấy nhân viên có mã số thẻ là {mst}")
+            return redirect("/")
+        return render_template("hosonhanvien.html",nhanvien=nhanvien)
+    
+@app.route("/lay_danhsach_userhientai", methods=["POST"])
+def lay_danhsach_userhientai():
+    if request.method == "POST":
+        users = laydanhsachuserhientai()
+        df = pd.DataFrame(users)
+
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='ignore')
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='ignore')
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='ignore')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='ignore')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='ignore')
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='ignore')
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='ignore')
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore')
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore')
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore')
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore')
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore')
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='ignore')
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='ignore')
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='ignore')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='ignore')
+        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='ignore')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='ignore')
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='ignore')
+        
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Adjust column width and format the header row
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['E','H','AB','AD','AF','AF','AJ','AO','AP','BG','BH','BJ','BL','BM','BM','BO','BP','BQ','BR'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        # Save the modified workbook to the output BytesIO object
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        
+        # Generate the timestamp for the filename
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        
+        # Return the file to the client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response

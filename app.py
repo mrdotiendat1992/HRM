@@ -815,7 +815,7 @@ def lay_user(user):
             "Ghi chú": user[71] if user[71] else None
         }
     else:
-        return None
+        return {}
 
 def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory,chucvu, ghichu, chuyen):
     try:
@@ -865,7 +865,19 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
     except Exception as e:
         flash(f"Lỗi khi lấy danh sách nhân viên: {e}")
         return []
-    
+
+def laydanhsachuserhientai():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE Factory = '{current_user.macongty}' ORDER BY CAST(mst AS INT) ASC"
+        users = cursor.execute(query).fetchall()
+        conn.close()
+        return [lay_user(user) for user in users]
+    except Exception as e:
+        flash(f"Lỗi khi lấy danh sách nhân viên hiện tại: {e}")
+        return []
+   
 def laycacphongban():
     try:
         conn = pyodbc.connect(used_db)
@@ -912,7 +924,7 @@ def laydanhsachtheomst(mst):
     try:
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE CAST(MST as INT) = '{mst}' AND Factory = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
         
         users = cursor.execute(query).fetchall()
         conn.close()
@@ -1417,7 +1429,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
             ON
                 Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
+                Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and Diem_danh_bu.Nha_may = '{current_user.macongty}' """
         else:
             if mstquanly:
                 query = f"""
@@ -1429,7 +1441,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
                 ON
                     Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}'"""
+                    Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}' and Diem_danh_bu.Nha_may = '{current_user.macongty}'"""
             else:
                 query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "   
                 if mst:
@@ -1451,6 +1463,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%' "    
                 query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
