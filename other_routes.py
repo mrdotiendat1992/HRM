@@ -3718,7 +3718,7 @@ def hosonhanvien():
         if not nhanvien:
             flash(f"Không tìm thấy nhân viên có mã số thẻ là {mst}")
             return redirect("/")
-        return render_template("hosonhanvien.html",nhanvien=nhanvien)
+        return render_template("hosonhanvien.html",nhanvien=nhanvien[0])
     
 @app.route("/lay_danhsach_userhientai", methods=["POST"])
 def lay_danhsach_userhientai():

@@ -7,7 +7,113 @@
 {% block content %}
 <br>
 <div class="container-fluid">
-    <h4 style="text-align:center;">HỒ SƠ NHÂN VIÊN</h4>
-    
+    <h4>HỒ SƠ NHÂN VIÊN</h4>
+    <div class="row">
+        <div class="col-3" style="border-radius:10px; border: solid gray 1px;margin-bottom:20px;">
+            <br>
+            {% if nhanvien["Giới tính"]=="Nam" %}
+                <img style="width:100px;" class="card-img-top" src="static/img/undraw_profile.svg" alt="Card image cap">
+            {% else %}
+                <img style="width:100px;" class="card-img-top" src="static/img/undraw_profile_1.svg" alt="Card image cap">
+            {% endif %}
+            <hr/>
+            <h3>Department: {{nhanvien["Department"]}}</h3>
+            <div style="display:block;gap:5px;">
+                <strong>Section code:</strong>
+                <div class="check">{{nhanvien["Section code"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Line:</strong> <div class="check">{{nhanvien["Line"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Detail job title EN:</strong> <div class="check">{{nhanvien["Job title EN"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Grade code:</strong> <div class="check">{{nhanvien["Gradecode"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>HC category:</strong> <div class="check">{{nhanvien["HC category"]}}</div>
+            </div>
+            <hr/>
+            <div style="display:block;gap:5px;">
+                <strong>Ngày sinh:</strong> <div class="ngay">{{nhanvien["Ngày sinh"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Số điện thoại:</strong> <div class="check">{{nhanvien["Số điện thoại"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Căn cước công dân:</strong> <div class="check">{{nhanvien["CCCD"]}}</div>
+            </div>
+            <div style="display:block;gap:5px;">
+                <strong>Ngày cấp:</strong> <div class="ngay">{{nhanvien["Ngày cấp CCCD"]}}</div>
+            </div>
+            <hr/>
+        </div>
+        <div class="col" style="border-radius:10px; border: solid gray 1px;margin-top:20px;">
+            <br>
+            <h1 style="text-align:center;"> {{nhanvien["Họ tên"]}} 
+                {% if nhanvien["Trạng thái"]=="Đang làm việc" %}
+                <a class="btn btn-success">{{nhanvien["Trạng thái"]}}</a>
+                {% elif nhanvien["Trạng thái"]=="Nghỉ thai sản" %}
+                <a class="btn btn-warning">{{nhanvien["Trạng thái"]}}</a>
+                {% else %}
+                <a class="btn btn-danger">{{nhanvien["Trạng thái"]}}</a>
+                {% endif %}
+            </h1>
+            <h3 style="text-align:center;"> {{nhanvien["Job title VN"]}}</h3>
+            <hr/>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày vào:</strong> <div class='ngay'>{{nhanvien["Ngày vào"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày nghỉ:</strong> <div class='ngay'>{{nhanvien["Ngày nghỉ"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày kí HĐ Thử việc:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ Thử việc"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày hết hạn HĐ Thử việc:</strong> <div class='ngay'>{{nhanvien["Ngày hết hạn HĐ Thử việc"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày kí HĐ xác định thời hạn lần 1:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ xác định thời hạn lần 1"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày hết hạn HĐ xác định thời hạn lần 1:</strong> <div class='ngay'>{{nhanvien["Ngày hết hạn HĐ xác định thời hạn lần 1"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ngày kí HĐ không thời hạn:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ không thời hạn"]}}</div>
+            </div>
+            <div style="display:flex;gap:30px;padding:10px;">
+                <strong>Ghi chú:</strong> <div class='check'>{{nhanvien["Ghi chú"]}}</div>
+            </div>
+                
+            
+        </div>
+    </div>
 </div>
+<script>
+    function changeFormatDate(date){
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', function() {
+        var tds = document.querySelectorAll('check');
+        tds.forEach(td => {
+            if (td.textContent.trim() === 'None') {
+                td.textContent = '';
+            }
+        });
+
+        var ngays = document.querySelectorAll('.ngay');
+        ngays.forEach(ngay => {
+            if (ngay.textContent.trim() !== 'None') {
+                ngay.textContent = changeFormatDate(ngay.textContent);
+            } else {
+                gay.textContent = ""
+            }
+        });
+    });
+</script>
 {% endblock content %}
