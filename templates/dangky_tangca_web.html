@@ -88,7 +88,9 @@
             <h5><b>Tổng: {{count}}</b></h5>
             <form method='POST' action="/tai_danhsach_tangca">
                 <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
-                <input hidden name="chuyen" value="{{ request.args.getlist('chuyen') }}">
+                {% for chuyen in request.args.getlist('chuyen') %}
+                    <input hidden name="chuyen" value="{{ chuyen }}">
+                {% endfor %}
                 <input hidden name="pheduyet" value="{{ request.args.get('pheduyet') }}">
                 <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
             </form>

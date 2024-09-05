@@ -2753,10 +2753,10 @@ def danhsach_tangca(chuyen:list,ngay,pheduyet):
         for ch in chuyen:
             query += f" Chuyen_to='{ch}' or"
         query = query[:-2] + " ) "
-        if pheduyet:
+        if pheduyet == "ok" or pheduyet== "notok":
             query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
         query += f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        
+        # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{

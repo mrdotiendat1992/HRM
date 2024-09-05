@@ -1600,10 +1600,11 @@ def nhansu_them_xinnghikhac():
 @app.route("/tai_danhsach_tangca", methods=["POST"])
 def tai_danhsach_tangca():
     if request.method=="POST":
-        chuyen = request.form.get("chuyen").replace("[","").replace("]", "").replace("'", "").replace(" ", "").split(",")
+        chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay")
         pheduyet =  request.form.get("pheduyet")
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        # print(danhsach)
         data = [x for x in danhsach]
         # print(data)
         ngay = datetime.now().date()     
