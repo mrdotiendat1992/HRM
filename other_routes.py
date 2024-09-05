@@ -1740,7 +1740,8 @@ def capnhatdieuchuyentheofile():
                         positioncodemoi = hc_name_moi[4]
                         positioncodedescriptionmoi = hc_name_moi[5]
                         chucdanhtamoi = hc_name_moi[2]
-                    
+
+                        khongdoica= ""
                     
                         
                         dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
@@ -1748,7 +1749,7 @@ def capnhatdieuchuyentheofile():
                                          sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
                                          phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,
                                          employeetypecu,employeetypemoi,positioncodedescriptioncu,positioncodedescriptionmoi,
-                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu)
+                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica)
                         
                     elif loaidieuchuyen == "Nghỉ việc":
                         thongtin_laodong = laydanhsachtheomst(masothe)[0]
