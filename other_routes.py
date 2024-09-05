@@ -1608,7 +1608,6 @@ def tai_danhsach_tangca():
         # print(data)
         ngay = datetime.now().date()     
         df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='ignore')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
