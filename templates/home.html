@@ -5,6 +5,7 @@
         display: flex;
         flex-wrap: wrap;
         overflow-y:scroll;
+        max-height: 800px;
     }
     .card {
         margin: 10px;
@@ -23,32 +24,118 @@
         position: absolute;
         right: 5px;
     }
+    .input-group-text {
+        width:160px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <br>
 <div class="container-fluid">
     <div class="content">
-        <h4>Danh sách nhân viên</h4>
-        <br>
-        <div class="row">
-            <form method="GET">
-                <div class="col">
-                    <input class="input-group" onchange="form.submit()" placeholder="Mã số thẻ" name="Mã số thẻ" value='{{request.args.get("Mã số thẻ","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Họ tên" name="Họ tên" value='{{request.args.get("Họ tên","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Số điện thoại" name="Số điện thoại" value='{{request.args.get("Số điện thoại","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Căn cước công dân" name="Căn cước công dân" value='{{request.args.get("Căn cước công dân","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Chuyền" name="Chuyền" value='{{request.args.get("Chuyền","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Phòng ban" name="Phòng ban" value='{{request.args.get("Phòng ban","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Trạng thái" name="Trạng thái" value='{{request.args.get("Trạng thái","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="HC Category" name="HC Category" value='{{request.args.get("HC Category","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Ghi chú" name="Ghi chú" value='{{request.args.get("Ghi chú","")}}'>
-                    <input class="input-group" onchange="form.submit()" placeholder="Giới tính" name="Giới tính" value='{{request.args.get("Giới tính","")}}'>
-                </div>
-            </form>
+        <h4 style="text-align:center;">DANH SÁCH NHÂN VIÊN</h4>
+        <div class="row">            
+            <div class="col-3-sm">
+                <hr/>
+                <p><i>Đang làm việc:</i> <b>{{ songuoi_danglamviec }}</b></p>
+                <p><i>Đang nghỉ thai sản:</i> <b>{{ songuoi_dangnghithaisan }}</b></p>
+                <a class="btn btn-success btn-sm">Tải danh sách hiện tại</a>
+                <hr/>
+                <label>Tìm kiếm <i class="fa fa-search"></i></label>
+                <form method="GET" class="form-group">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Mã số thẻ</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Mã số thẻ" value='{{request.args.get("Mã số thẻ","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Họ tên</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Họ tên" value='{{request.args.get("Họ tên","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Số điện thoại</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Số điện thoại" value='{{request.args.get("Số điện thoại","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Căn cước công dân</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Căn cước công dân" value='{{request.args.get("Căn cước công dân","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Chuyền</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Chuyền" value='{{request.args.get("Chuyền","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Phòng ban</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Phòng ban" value='{{request.args.get("Phòng ban","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Trạng thái</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Trạng thái" value='{{request.args.get("Trạng thái","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">HC Category</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="HC Category" value='{{request.args.get("HC Category","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Ghi chú</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Ghi chú" value='{{request.args.get("Ghi chú","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Giới tính</div>
+                        </div>
+                        <input type="text" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Giới tính" value='{{request.args.get("Giới tính","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Vào từ ngày</div>
+                        </div>
+                        <input type="date" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Vào từ ngày" value='{{request.args.get("Vào từ ngày","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Vào đến ngày</div>
+                        </div>
+                        <input type="date" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Vào đến ngày" value='{{request.args.get("Vào đến ngày","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Nghỉ từ ngày</div>
+                        </div>
+                        <input type="date" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Nghỉ từ ngày" value='{{request.args.get("Nghỉ từ ngày","")}}'>
+                    </div>
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                          <div class="input-group-text">Nghỉ đến ngày</div>
+                        </div>
+                        <input type="date" onchange="form.submit()" class="form-control" id="inlineFormInputGroup" name="Nghỉ đến ngày" value='{{request.args.get("Nghỉ đến ngày","")}}'>
+                    </div>
+                    <hr/>
+                </form>
+            </div>
             <br>
             <div class="col">
-                <h5>Tổng: {{count}} </h5> {{pagination.links}}
+                <div style="display:flex;gap:50px;margin:50px;">
+                    <h5>Tổng: {{count}} </h5> 
+                    <p>{{pagination.links}}</p>
+                </div>
                 <div class="list_nhanvien">
                 {% for row in users %}
                     <div class="card">
@@ -57,7 +144,7 @@
                             <div class="view-info"><a class="btn btn-bg-primary brn-sm"><i class="fa fa-eye"></i></a></div>
                         </div>
                         <div class="card-body">
-                            <img style="width:200px;" class="card-img-top" src="static/img/undraw_profile.svg" alt="Card image cap">
+                            <img style="width:150px;" class="card-img-top" src="static/img/undraw_profile.svg" alt="Card image cap">
                             <h5 class="card-title">{{row["Họ tên"]}}</h5>
                             <p class=class="card-text">{{row["Số điện thoại"]}}</p>
                             <p class="card-text">{{row["Department"]}} - {{row["Line"]}}</p>
