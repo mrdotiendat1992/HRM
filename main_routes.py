@@ -288,7 +288,7 @@ def home():
         phongban = request.args.get("Phòng ban")
         chucvu = request.args.get("Chức danh")
         trangthai = request.args.get("Trạng thái")
-        hccategory = request.args.get("Headcount Category")
+        hccategory = request.args.get("HC Category")
         ghichu = request.args.get("Ghi chú")
         chuyen = request.args.get("Chuyền")
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)   
