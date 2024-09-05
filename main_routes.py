@@ -3173,23 +3173,34 @@ def xulykiluat():
         danhsach = laydanhsachkyluat()
         return render_template("9_1.html", page="9.1 Xử lý kỉ luật",danhsach=danhsach)
     else:
-        mst = request.form.get("mst")
-        hoten = request.form.get("hoten")
-        chucvu = request.form.get("chucvu")
-        bophan = request.form.get("bophan")
-        chuyento = request.form.get("chuyento")
-        ngayvao = request.form.get("ngayvao")
-        ngayvipham = request.form.get("ngayvipham")
-        diadiem = request.form.get("diadiem")
-        ngaylapbienban = request.form.get("ngaylapbienban")
-        noidung = request.form.get("noidung")
-        bienphap = request.form.get("bienphap")
         try:
+            mst = request.form.get("mst")
+            if not mst:
+                flash("Chưa có thông tin người vi phạm")
+                return redirect("/muc9_1") 
+            hoten = request.form.get("hoten")
+            chucvu = request.form.get("chucvu")
+            bophan = request.form.get("bophan")
+            chuyento = request.form.get("chuyento")
+            ngayvao = request.form.get("ngayvao")
+            ngayvipham = request.form.get("ngayvipham")
+            diadiem = request.form.get("diadiem")
+            ngaylapbienban = request.form.get("ngaylapbienban")
+            noidung = request.form.get("noidung")
+            bienphap = request.form.get("bienphap")
+            cacanhvipham = request.files.getlist("file_anh")
+            bienbankiluat = request.files.get("file_bienban") 
+            os.makedirs(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}"),exist_ok=True)
+            
+            for anh in cacanhvipham:
+                anh.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}",f"{cacanhvipham.index(anh,start=1)}.jpg"))  
+            bienbankiluat.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}"),"bienban.pdf")
             if themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
-                print("Thêm biên bản kỷ luật thành công !!!")
-        except Exception as ex:
-            print("Thêm biên bản kỷ luật thất bại !!!")
-            print(ex)
+                flash("Thêm biên bản kỷ luật thành công !!!")
+            else:
+                flash("Thêm biên bản kỷ luật thất bại !!!")
+        except Exception as e:
+            print(f"Thêm biên bản kỷ luật thất bại {e}!!!")
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])

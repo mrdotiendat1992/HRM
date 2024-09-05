@@ -40,7 +40,7 @@
                                 <div class="form-group">
                                     <input type="text" id="masothe" name="masothe" placeholder="Mã số thẻ" onchange="kiemtrathongtinnld()">
                                 </div>
-                                <form method="POST" action="/muc9_1">
+                                <form method="POST" enctype="multipart/form-data">
                                     <input type="text" id="mst" name="mst" hidden>
                                     <div class="row">
                                         <div class="col">
@@ -60,6 +60,10 @@
                                             <label for="ngaylapbienban">Ngày lập biên bản</label>
                                             <input type="date" id="ngaylapbienban" name="ngaylapbienban">
                                             <textarea id="noidung" name="noidung" placeholder="Nội dung vi phạm ..." cols="30" rows="5"></textarea >
+                                            <label for="files">Ảnh vi phạm</label>
+                                            <input type="file" name="file_anh" multiple accept="image/*" onchange="checkFileCount(this)">
+                                            <label for="files">Biên bản </label>
+                                            <input type="file" name="file_bienban" accept="application/pdf" onchange="checkFileCount(this)">
                                             <label for="bienphap">Biện pháp kỉ luật</label>
                                             <select id="bienphap" name="bienphap">   
                                                 <option value="Khiển trách">Khiển trách </option>
@@ -158,5 +162,11 @@
             element.textContent = changeFormatDate(element.textContent);
         });
     });
+    function checkFileCount(input) {
+        if (input.files.length > 3) {
+            alert("Bạn chỉ được upload tối đa 3 ảnh.");
+            input.value = "";
+        }
+    }
 </script>
 {% endblock content %}

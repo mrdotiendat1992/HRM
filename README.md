@@ -86,11 +86,12 @@ MST |  Tên                      | Phòng ban
 3   | Nguyễn Thị Kim Anh        | IED
 5   | Nguyễn Hoàng Xuân Phúc    | MGT
 6   | Trần Lê Đại Dương         | MGT
+9   | Vũ Thị Hương Lan          | QAD
 10  | Tiến                      | ACT
 
 ### NT1:
 MST |  Tên                      | Phòng ban 
-19  | Nguyễn Thị Thắng          | IED
-23  | Vũ Thị Hương Lan          | IED
+19  | Nguyễn Thị Thắng          | PPC
+23  | Vũ Thị Hương Lan          | QAD
 25  | Nguyễn Hoàng Xuân Phúc    | MGT
 28  | Trần Lê Đại Dương         | MGT
