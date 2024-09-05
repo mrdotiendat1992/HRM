@@ -3169,7 +3169,7 @@ def bangcongtrangoai_web():
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+        danhsach = lay_bangcongtrangoai_web(mst,bophan,chuyen,thang,nam)
         data = [{
             "Mã số thẻ": row[0],
             "Họ tên": row[1],

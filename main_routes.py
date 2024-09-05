@@ -303,14 +303,17 @@ def home():
         start = (page - 1) * per_page
         end = start + per_page
         paginated_users = users[start:end]
-        
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        print(f"Xin chào {current_user.hoten} !!!")
+        songuoi_danglamviec = lay_soluong_danglamviec()
+        songuoi_dangnghithaisan = lay_soluong_dangnghithaisan()
+        flash(f"Xin chào {current_user.hoten} !!!")
         return render_template("home.html", users=paginated_users, 
                             cacphongban=cacphongban, cacto=cacto,
                             page="Trang chủ", pagination=pagination,
                             cactrangthai=cactrangthai,count=count,
-                            cachccategory=cachccategory)
+                            cachccategory=cachccategory,
+                            songuoi_danglamviec=songuoi_danglamviec,
+                            songuoi_dangnghithaisan=songuoi_dangnghithaisan)
     else:
         mst = request.form.get("Mã số thẻ")
         hoten = request.form.get("Họ tên")

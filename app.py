@@ -859,9 +859,11 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
         result = []
         for user in users:
             result.append(lay_user(user))
+        if not mst and not hoten and not sdt and not cccd and not gioitinh and not vaotungay and not vaodenngay and not nghitungay and not nghidenngay and not phongban and not trangthai and not hccategory and not chucvu and not ghichu and not chuyen:
+            return []
         return result
     except Exception as e:
-        print(e)
+        flash(f"Lỗi khi lấy danh sách nhân viên: {e}")
         return []
     
 def laycacphongban():
@@ -3831,5 +3833,27 @@ def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
         # print(len(rows))
         return [x for x in rows]
     except Exception as e:
-        print(f"Loi lay bang cong thang: {e}")
+        flash(f"Loi lay bang cong thang: {e}")
         return []
+    
+def lay_soluong_danglamviec():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and Trang_thai_lam_viec=N'Đang làm việc' "
+        count = cursor.execute(query).fetchone()
+        return count[0]
+    except Exception as e:
+        flash(f"Lỗi lấy số người đang làm việc: {e}")
+        return 0
+    
+def lay_soluong_dangnghithaisan():
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and Trang_thai_lam_viec=N'Nghỉ thai sản' "
+        count = cursor.execute(query).fetchone()
+        return count[0]
+    except Exception as e:
+        flash(f"Lỗi lấy số người đang nghỉ thai sản: {e}")
+        return 0
