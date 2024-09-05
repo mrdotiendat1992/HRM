@@ -137,6 +137,23 @@
                 <div style="display:flex;gap:50px;margin-left:50px;">
                     <h5>Tổng: {{count}} </h5> 
                     <p>{{pagination.links}}</p>
+                    <form method="POST">
+                        <input type="hidden" name="Mã số thẻ" value='{{request.args.get("Mã số thẻ","")}}'>
+                        <input type="hidden" name="Họ tên" value='{{request.args.get("Họ tên","")}}'>
+                        <input type="hidden" name="Số điện thoại" value='{{request.args.get("Số điện thoại","")}}'>
+                        <input type="hidden" name="Căn cước công dân" value='{{request.args.get("Căn cước công dân","")}}'>
+                        <input type="hidden" name="Chuyền" value='{{request.args.get("Chuyền","")}}'>
+                        <input type="hidden" name="Phòng ban" value='{{request.args.get("Phòng ban","")}}'>
+                        <input type="hidden" name="Trạng thái" value='{{request.args.get("Trạng thái","")}}'>
+                        <input type="hidden" name="HC Category" value='{{request.args.get("HC Category","")}}'>
+                        <input type="hidden" name="Ghi chú" value='{{request.args.get("Ghi chú","")}}'>
+                        <input type="hidden" name="Giới tính" value='{{request.args.get("Giới tính","")}}'>
+                        <input type="date" hidden name="Vào từ ngày" value='{{request.args.get("Vào từ ngày","")}}'>
+                        <input type="date" hidden name="Vào đến ngày" value='{{request.args.get("Vào đến ngày","")}}'>
+                        <input type="date" hidden name="Nghỉ từ ngày" value='{{request.args.get("Nghỉ từ ngày","")}}'>
+                        <input type="date" hidden name="Nghỉ đến ngày" value='{{request.args.get("Nghỉ đến ngày","")}}'>
+                        <button type="submit" class="btn btn-success"><i class="fa fa-download"></i></button>
+                    </form>
                 </div>
                 <div class="list_nhanvien">
                 {% for row in users %}
