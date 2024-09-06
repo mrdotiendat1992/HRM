@@ -299,11 +299,11 @@ def export_dsdktt():
     rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
     df = pd.DataFrame(rows)
     
-    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore').dt.date
-    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore').dt.date
-    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore').dt.date
-    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore').dt.date
-    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore').dt.date
+    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore')
+    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore')
+    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore')
+    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore')
+    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore')
     df["Ngày gửi"] = to_datetime(df['Ngày gửi'], errors='ignore')
     df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'], errors='ignore')
     df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'], errors='ignore')
