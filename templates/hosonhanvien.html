@@ -108,10 +108,9 @@
 
         var ngays = document.querySelectorAll('.ngay');
         ngays.forEach(ngay => {
-            if (ngay.textContent.trim() !== 'None') {
+            if (ngay.textContent.trim() !== 'None' && ngay.textContent.includes('-')) {
                 ngay.textContent = changeFormatDate(ngay.textContent);
-            } else {
-                gay.textContent = ""
+            
             }
         });
     });
