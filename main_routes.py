@@ -333,18 +333,18 @@ def home():
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
         
         for user in users:
-            user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày sinh"] else ""
-            user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày cấp CCCD"] else ""
-            user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày ký HĐ"] else ""
-            user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào"] else ""
-            user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày sinh"] else ""
-            user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn"] else ""
-            user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào nối thâm niên"] else ""
-            user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ Thử việc"] else ""
-            user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ Thử việc"] else ""
-            user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"] else ""
-            user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"] else ""
-            user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ không thời hạn"] else ""
+            user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày sinh"]!="" else ""
+            user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày cấp CCCD"]!="" else ""
+            user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày ký HĐ"]!="" else ""
+            user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào"]!="" else ""
+            user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày sinh"]!="" else ""
+            user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn"]!="" else ""
+            user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào nối thâm niên"]!="" else ""
+            user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ Thử việc"]!="" else ""
+            user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ Thử việc"]!="" else ""
+            user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"]!="" else ""
+            user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"]!="" else ""
+            user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ không thời hạn"]!="" else ""
             
 
         df = pd.DataFrame(users)
