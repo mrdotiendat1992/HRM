@@ -2506,23 +2506,21 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         cursor.execute(query)
         conn.commit()
         conn.close()
-        return True
+        return {"ketqua":True}
     except Exception as e:
-        flash(f"Loi khi them hop dong co ngay ket thuc: {e} !!!")
+        print(f"Loi khi them hop dong co ngay ket thuc: {e} !!!\nQuery:{query}")
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
             N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', NULL )
         """
-        
         cursor.execute(query)
         try:
             conn.commit()
             conn.close()
-            return True
-        except Exception as e:
-            flash(f"Loi khi them hop dong bo di ngay ket thuc: {e} !!!")   
-            return False
+            return {"ketqua":True}
+        except Exception as e:  
+            return {"ketqua":False,"lido":e,"query":query}
     
 def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
     try:
@@ -2558,17 +2556,17 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
         else:
             query = ""
         if query:
-            
-            cursor.execute(query)
-            conn.commit()
-            conn.close()  
-            return True
-        else:
-            print("Khong hieu loai hop dong")    
-            return False
+            try:
+                cursor.execute(query)
+                conn.commit()
+                conn.close()  
+                return {"ketqua":True}
+            except Exception as e:
+                return {"ketqua":False,"lido":e, "query":query}
+        else:   
+            return {"ketqua":False,"lido":"Khong hieu loai hop dong", "query":query}
     except Exception as e:
-        flash(f"Loi khi cap nhat thong tin hop dong: {e} !!!")
-        return False
+        return {"ketqua":False,"lido":e, "query":query}
     
 def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,
                            loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,chucdanh,phongban,luongcoban,phucap):

@@ -1047,50 +1047,60 @@ def capnhathopdongtheofilemau():
             filepath = os.path.join(FOLDER_NHAP, f"themhopdong_{thoigian}.xlsx")
             file.save(filepath)
             data = pd.read_excel(filepath).to_dict(orient="records")
+            x=1
             for row in data:
-                nhamay = row['Mã công ty']
-                mst = row['MST']
-                hoten = row['Họ tên']
-                gioitinh = row['Giới tính']
-                ngaysinh = row['Ngày sinh']
-                thuongtru = row['Địa chỉ thường trú']
-                tamtru = row["Địa chỉ tạm trú"]
-                cccd = row['CCCD']
-                ngaycapcccd = row['Ngày cấp cccd']
-                capbac = row['Cấp bậc']
-                loaihopdong = row['Loại hợp đồng']
-                luongcoban = row['Lương cơ bản']
-                phucap = row['Phụ cấp']
-                ngaybatdau = row['Ngày bắt đầu HĐ']
-                ngayketthuc = row['Ngày kết thúc HĐ']
-                chucdanh = row['Chức danh']
-                phongban = row['Phòng ban']
-                chuyen = row['Chuyền']
-                hcname= layhcname(chucdanh,chuyen)
-                if hcname:
-                    vitrien = hcname[2]
-                    employeetype = hcname[3]
-                    posotioncode = hcname[4]
-                    postitioncodedescription = hcname[5]
-                    hccategory = hcname[7]
-                    sectioncode = hcname[10]
-                    sectiondescription = hcname[11]
-                else:
-                    vitrien = 'NULL'
-                    employeetype = 'NULL'
-                    posotioncode = 'NULL'
-                    postitioncodedescription = 'NULL'
-                    hccategory = 'NULL'
-                    sectioncode = 'NULL'
-                    sectiondescription = 'NULL'
-                if themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc):
-                    print("Them HD ok")
-                if capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
-                    print("Cap nhap HD ok")
+                try:
+                    nhamay = row['Mã công ty']
+                    mst = row['MST']
+                    hoten = row['Họ tên']
+                    gioitinh = row['Giới tính']
+                    ngaysinh = row['Ngày sinh']
+                    thuongtru = row['Địa chỉ thường trú']
+                    tamtru = row["Địa chỉ tạm trú"]
+                    cccd = row['CCCD']
+                    ngaycapcccd = row['Ngày cấp cccd']
+                    capbac = row['Cấp bậc']
+                    loaihopdong = row['Loại hợp đồng']
+                    luongcoban = row['Lương cơ bản']
+                    phucap = row['Phụ cấp']
+                    ngaybatdau = row['Ngày bắt đầu HĐ']
+                    ngayketthuc = row['Ngày kết thúc HĐ']
+                    chucdanh = row['Chức danh']
+                    phongban = row['Phòng ban']
+                    chuyen = row['Chuyền']
+                    hcname= layhcname(chucdanh,chuyen)
+                    if hcname:
+                        vitrien = hcname[2]
+                        employeetype = hcname[3]
+                        posotioncode = hcname[4]
+                        postitioncodedescription = hcname[5]
+                        hccategory = hcname[7]
+                        sectioncode = hcname[10]
+                        sectiondescription = hcname[11]
+                    else:
+                        vitrien = 'NULL'
+                        employeetype = 'NULL'
+                        posotioncode = 'NULL'
+                        postitioncodedescription = 'NULL'
+                        hccategory = 'NULL'
+                        sectioncode = 'NULL'
+                        sectiondescription = 'NULL'
+                    ketquathemhd = themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc)
+                    if ketquathemhd["ketqua"]:
+                        print(f"Them HD dòng số {x} ok")
+                    else:
+                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquathemhd["lido"]}, query: {ketquathemhd["query"]}")
+                    ketquacapnhathd =  capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
+                    if ketquacapnhathd["ketqua"]:
+                        print(f"Cap nhap HD dòng số {x} ok")
+                    else:
+                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquacapnhathd["lido"]}, query: {ketquacapnhathd["query"]}")
+                except Exception as e:
+                    flash(f"Lỗi dòng số {x}, lí do: {e}")
+                x += 1
             flash("Cập nhật hợp đồng thành công !!!")
         except Exception as e:
-            print(f"Cap nhat hop dong loi: {e}")
-            flash(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
+            print(f"Cập nhật hợp đồng lỗi: ({e}) !!!")
     else:
         print("Không tìm thấy dữ liệu hợp đồng !!!")
     return redirect("/muc3_3")
@@ -3726,25 +3736,25 @@ def lay_danhsach_userhientai():
         users = laydanhsachuserhientai()
         df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='ignore')
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='ignore')
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='ignore')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='ignore')
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='ignore')
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='ignore')
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='ignore')
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore')
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore')
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore')
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore')
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore')
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='ignore')
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='ignore')
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='ignore')
-        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='ignore')
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='ignore')
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce')
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce')
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce')
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce')
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce')
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce')
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce')
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce')
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce')
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce')
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 2"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 2'], errors='coerce')
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce')
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:

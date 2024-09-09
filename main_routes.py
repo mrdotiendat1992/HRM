@@ -333,39 +333,39 @@ def home():
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
         
         for user in users:
-            user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày sinh"]!="" else ""
-            user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày cấp CCCD"]!="" else ""
-            user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày ký HĐ"]!="" else ""
-            user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào"]!="" else ""
-            user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày nghỉ"]!="" else ""
-            user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn"]!="" else ""
-            user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày vào nối thâm niên"]!="" else ""
-            user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ Thử việc"]!="" else ""
-            user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ Thử việc"]!="" else ""
-            user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"]!="" else ""
-            user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"]!="" else ""
-            user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%M-%d") if user["Ngày kí HĐ không thời hạn"]!="" else ""
+            user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày sinh"]!="" else ""
+            user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày cấp CCCD"]!="" else ""
+            user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày ký HĐ"]!="" else ""
+            user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào"]!="" else ""
+            user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày nghỉ"]!="" else ""
+            user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn"]!="" else ""
+            user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào nối thâm niên"]!="" else ""
+            user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ Thử việc"]!="" else ""
+            user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ Thử việc"]!="" else ""
+            user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"]!="" else ""
+            user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"]!="" else ""
+            user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ không thời hạn"]!="" else ""
             
 
         df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='ignore')
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='ignore')
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='ignore')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='ignore')
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='ignore')
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='ignore')
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='ignore')
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore')
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore')
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore')
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore')
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore')
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='ignore')
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='ignore')
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='ignore')
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce',dayfirst=True)
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce',dayfirst=True)
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce',dayfirst=True)
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',dayfirst=True)
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce',dayfirst=True)
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce',dayfirst=True)
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce',dayfirst=True)
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce',dayfirst=True)
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce',dayfirst=True)
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce',dayfirst=True)
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce',dayfirst=True)
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce',dayfirst=True)
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce',dayfirst=True)
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce',dayfirst=True)
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce',dayfirst=True)
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce',dayfirst=True)
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce',dayfirst=True)
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
