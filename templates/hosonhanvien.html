@@ -1,7 +1,84 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-   
+    /* Vertical Roadmap container */
+    .vertical-roadmap {
+        position: relative;
+        margin: 20px 0;
+        padding: 20px 0;
+        width: 80%; /* Adjust the width as needed */
+        margin: 0 auto; /* Center the roadmap */
+    }
+    
+    /* Individual roadmap item */
+    .roadmap-item {
+        position: relative;
+        width: 50%;
+        padding: 10px 40px;
+        box-sizing: border-box;
+    }
+    
+    /* Common styles for all roadmap items */
+    .roadmap-item .roadmap-marker {
+        position: absolute;
+        top: 20px;
+        width: 12px;
+        height: 12px;
+        background-color: #007bff;
+        border-radius: 50%;
+        border: 2px solid #fff;
+        z-index: 1;
+    }
+    
+    .roadmap-item .roadmap-content {
+        background-color: #f8f9fa;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Left side styling */
+    .roadmap-item.left {
+        left: 0;
+        text-align: right;
+    }
+    
+    .roadmap-item.left .roadmap-marker {
+        right: -6px; /* Position marker to the right */
+    }
+    
+    .roadmap-item.left .roadmap-content {
+        margin-right: 30px; /* Push content left */
+    }
+    
+    /* Right side styling */
+    .roadmap-item.right {
+        left: 50%;
+        text-align: left;
+    }
+    
+    .roadmap-item.right .roadmap-marker {
+        left: -6px; /* Position marker to the left */
+    }
+    
+    .roadmap-item.right .roadmap-content {
+        margin-left: 30px; /* Push content right */
+    }
+    
+    /* Connecting line */
+    .vertical-roadmap::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 2px;
+        height: 100%;
+        background-color: #007bff; /* Line color */
+        z-index: 0;
+    }
+    
+
 </style>
 {% endblock style %}
 {% block content %}
@@ -57,35 +134,57 @@
                 {% elif nhanvien["Trạng thái"]=="Nghỉ thai sản" %}
                 <a class="btn btn-warning">{{nhanvien["Trạng thái"]}}</a>
                 {% else %}
-                <a class="btn btn-danger">{{nhanvien["Trạng thái"]}}</a>
+                <a class="btn btn-danger">{{nhanvien["Trạng thái"]}}</a> <a class="btn btn-info">{{nhanvien["Ghi chú"]}}</a>
                 {% endif %}
             </h1>
             <h3 style="text-align:center;"> {{nhanvien["Job title VN"]}}</h3>
             <hr/>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày vào:</strong> <div class='ngay'>{{nhanvien["Ngày vào"]}}</div>
+            <div class="vertical-roadmap">
+                <div class="roadmap-item left">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày vào:</strong> <span>{{nhanvien["Ngày vào"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item right">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày kí HĐ Thử việc:</strong> <span>{{nhanvien["Ngày kí HĐ Thử việc"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item left">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày hết hạn HĐ Thử việc:</strong> <span>{{nhanvien["Ngày hết hạn HĐ Thử việc"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item right">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày kí HĐ xác định thời hạn lần 1:</strong> <span>{{nhanvien["Ngày kí HĐ xác định thời hạn lần 1"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item left">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày hết hạn HĐ xác định thời hạn lần 1:</strong> <span>{{nhanvien["Ngày hết hạn HĐ xác định thời hạn lần 1"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item right">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày kí HĐ không thời hạn:</strong> <span>{{nhanvien["Ngày kí HĐ không thời hạn"]}}</span>
+                    </div>
+                </div>
+                <div class="roadmap-item left">
+                    <div class="roadmap-marker"></div>
+                    <div class="roadmap-content">
+                        <strong>Ngày nghỉ:</strong> <span>{{nhanvien["Ngày nghỉ"]}}</span>
+                    </div>
+                </div>
             </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày nghỉ:</strong> <div class='ngay'>{{nhanvien["Ngày nghỉ"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày kí HĐ Thử việc:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ Thử việc"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày hết hạn HĐ Thử việc:</strong> <div class='ngay'>{{nhanvien["Ngày hết hạn HĐ Thử việc"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày kí HĐ xác định thời hạn lần 1:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ xác định thời hạn lần 1"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày hết hạn HĐ xác định thời hạn lần 1:</strong> <div class='ngay'>{{nhanvien["Ngày hết hạn HĐ xác định thời hạn lần 1"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ngày kí HĐ không thời hạn:</strong> <div class='ngay'>{{nhanvien["Ngày kí HĐ không thời hạn"]}}</div>
-            </div>
-            <div style="display:flex;gap:30px;padding:10px;">
-                <strong>Ghi chú:</strong> <div class='check'>{{nhanvien["Ghi chú"]}}</div>
-            </div>
+            
+            
                 
             
         </div>

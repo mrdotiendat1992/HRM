@@ -2156,9 +2156,8 @@ def laydanhsachcahientai(mst,chuyen, phongban):
             query += f" AND Danh_sach_CBCNV.Line LIKE '%{chuyen}%'"
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
-        query += " AND Danh_sach_CBCNV.Ghi_chu != N'Rút hồ sơ'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
