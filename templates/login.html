@@ -49,6 +49,41 @@
             input,select {
                 width: 200px;
             }
+            /* Overlay to cover the whole page */
+            .loading-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000; /* Ensures it is on top of other content */
+                backdrop-filter: blur(5px); /* Blurs the background */
+            }
+
+            /* Spinner styles */
+            .spinner {
+                width: 40px;
+                height: 40px;
+                border: 4px solid rgba(0, 0, 0, 0.1);
+                border-top-color: #007bff;
+                border-radius: 50%;
+                animation: spin 1s linear infinite;
+            }
+
+            /* Keyframes for spinner animation */
+            @keyframes spin {
+                0% {
+                    transform: rotate(0deg);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+
         </style>
     </head>
     <body>
@@ -59,7 +94,7 @@
             <div class="row" id="main_window">
                 <h3 style="font-weight: bold;margin-bottom:50px;">PHẦN MỀM QUẢN LÝ NHÂN SỰ</h3>
                 <div>
-                    <form action="login" method="POST">
+                    <form action="login" method="POST" onsubmit="showLoading()">
                         <p>
                             <label for="macongty">Mã công ty</label>
                             <select name="macongty" id="macongty">
@@ -81,6 +116,17 @@
                     </form>
                 </div>
             </div>
+            <!-- Loading overlay -->
+            <div id="loading-overlay" class="loading-overlay" style="display: none;">
+                <div class="spinner"></div>
+            </div>
         </div>
+        <script>
+            function showLoading() {
+                // Show the loading overlay
+                document.getElementById("loading-overlay").style.display = "flex";
+            }
+        </script>            
+            
     </body>
 </html>
