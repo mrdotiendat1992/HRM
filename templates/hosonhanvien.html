@@ -32,7 +32,7 @@
     
     .roadmap-item .roadmap-content {
         background-color: #f8f9fa;
-        padding: 10px;
+        padding: 3px;
         border: 1px solid #ddd;
         border-radius: 8px;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -41,7 +41,7 @@
     /* Left side styling */
     .roadmap-item.left {
         left: 0;
-        text-align: right;
+        text-align: left;
     }
     
     .roadmap-item.left .roadmap-marker {
@@ -77,7 +77,15 @@
         background-color: #007bff; /* Line color */
         z-index: 0;
     }
-    
+    .chart-container {
+        width: 80%;
+        margin: 30px auto;
+        padding: 20px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        background-color: #fff;
+    }
 
 </style>
 {% endblock style %}
@@ -183,13 +191,99 @@
                     </div>
                 </div>
             </div>
-            
-            
-                
+            <hr/>
+            <section id="chart-section" class="chart-container">
+                <h2>Số ngày làm việc các tháng trong năm</h2>
+                <label for="yearSelect">Chọn năm:</label>
+                <select id="yearSelect">
+                </select>
+                <canvas id="workdaysChart" width="400" height="200"></canvas>
+            </section>
+        
             
         </div>
     </div>
 </div>
+<script>
+    // Sample data for different years
+    const yearlyData = {
+        2023: [0, 0, 0, 0, 0, 0, 0, 22, 0, 0, 0, 0],
+        2024: [0, 0, 0, 0, 0, 0, 0, 23, 0, 0, 0, 0]
+        // Add more years and data as needed
+    };
+
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+    // Create chart
+    const ctx = document.getElementById('workdaysChart').getContext('2d');
+    let workdaysChart;
+
+    function updateChart(year) {
+        const data = yearlyData[year] || [];
+        
+        if (workdaysChart) {
+            workdaysChart.destroy(); // Destroy existing chart instance
+        }
+
+        workdaysChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: months,
+                datasets: [{
+                    label: 'Số ngày làm việc',
+                    data: data,
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)',
+                    borderColor: 'rgba(0, 123, 255, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Số ngày làm việc'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tháng'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    tooltip: {
+                        enabled: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Populate year select options
+    const yearSelect = document.getElementById('yearSelect');
+    Object.keys(yearlyData).forEach(year => {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    });
+
+    // Set initial chart
+    updateChart(yearSelect.value);
+
+    // Update chart on year change
+    yearSelect.addEventListener('change', (event) => {
+        updateChart(event.target.value);
+    });
+</script>
 <script>
     function changeFormatDate(date){
         try{
@@ -213,5 +307,6 @@
             }
         });
     });
+    
 </script>
 {% endblock content %}

@@ -2157,7 +2157,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        print(query)
+        # print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -3521,7 +3521,7 @@ def themtaikhoanmoi(masothe,hoten,department,gradecode):
     try: 
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
-        query = f"insert into Nhanvien values ('{current_user.macongty}','{masothe}','{hoten}','{department}','{gradecode}','user','1')"
+        query = f"insert into Nhanvien values ('{current_user.macongty}','{masothe}',N'{hoten}','{department}','{gradecode}','user','1')"
         cursor.execute(query)
         conn.commit()
         conn.close()
