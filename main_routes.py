@@ -1064,7 +1064,7 @@ def inhopdonglaodong():
             sectiondescription = request.form.get("sectiondescription")
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
                 print("Thêm hợp đồng thành công !!!")
-                capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
+                # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:
                 print("Thêm hợp đồng thất bại")
             return redirect("/muc3_3")
@@ -1300,7 +1300,7 @@ def dieuchuyen():
             
             if loaidieuchuyen == "Chuyển vị trí":
                 try:
-                    dieuchuyennhansu(mst,
+                    ketqua = dieuchuyennhansu(mst,
                                     loaidieuchuyen,
                                     vitricu,
                                     vitrimoi,
@@ -1328,41 +1328,46 @@ def dieuchuyen():
                                     ghichu,
                                     khongdoica
                                     )
-                    print("Điều chuyển thành công !!!")
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(e)
-                    print("Điều chuyển thất bại !!!")
-                    return redirect(f"/muc6_1")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
                 
             elif loaidieuchuyen == "Nghỉ việc":
                 try:
-                    dichuyennghiviec(mst,
+                    ketqua = dichuyennghiviec(mst,
                         vitricu,
                         chuyencu,
                         gradecodecu,
                         hccategorycu,
                         ngaydieuchuyen,
-                        ghichu
-                                )
-                    print("Điều chuyển thành công !!!")
+                        ghichu)
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(e)
-                    print("Điều chuyển thất bại !!!")
-                    return redirect(f"/muc6_1")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Nghỉ thai sản":
                 try:
-                    dichuyennghithaisan(mst,
+                    ketqua = dichuyennghithaisan(mst,
                                 vitricu,
                                 chuyencu,
                                 gradecodecu,
                                 hccategorycu,
                                 ngaydieuchuyen
                                 )
-                    print("Điều chuyển thành công !!!")
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(e)
-                    print("Điều chuyển thất bại !!!")
-                    return redirect(f"/muc6_1")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
                     dichuyenthaisandilamlai(mst,
@@ -1390,11 +1395,13 @@ def dieuchuyen():
                                     vitrienmoi,
                                     ngaydieuchuyen
                             )
-                    print("Điều chuyển thành công !!!")
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(e)
-                    print("Điều chuyển thất bại !!!")
-                    return redirect(f"/muc6_1")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
             return redirect(f"/muc6_1")
         elif request.method == "GET":
             cacvitri= laycacvitri()
@@ -1402,7 +1409,7 @@ def dieuchuyen():
                             cacvitri=cacvitri,
                             page="6.1 Điều chuyển chức vụ, bộ phận")
     except Exception as e:
-        print(e)
+        flash(e)
         cacvitri= laycacvitri()
         return render_template("6_1.html",
                             cacvitri=cacvitri,

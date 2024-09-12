@@ -154,27 +154,39 @@ def dieuchuyennhansu(mst,
         cursor = conn.cursor()
         ghichu = "" if str(ghichu)=='nan' else ghichu
         query1 = f"INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())"
-        print(query1)
-        cursor.execute(query1)
-        conn.commit()
-        query2 = f"UPDATE HR.dbo.Danh_sach_CBCNV SET Job_title_VN = N'{vitrimoi}', Line = '{chuyenmoi}', Headcount_category = '{hccategorymoi}', Department = '{departmentmoi}', Section_description = '{sectiondescriptionmoi}', Emp_type = '{employeetypemoi}', Position_code_description = '{positioncodedescriptionmoi}', Section_code = '{sectioncodemoi}', Grade_code = '{gradecodemoi}', Position_code = '{positioncodemoi}', Job_title_EN = N'{vitrienmoi}', Ghi_chu = N'{ghichu}' WHERE The_cham_cong = '{int(mst)}' AND Factory = '{current_user.macongty}'"
-        print(query2)
-        cursor.execute(query2)
-        conn.commit()
-        camoi = laycatheochuyen(chuyenmoi)
+        try:
+            cursor.execute(query1)
+            conn.commit()
+        except Exception as e:
+            return {
+                "ketqua": False,
+                "lido":e,
+                "query":query1
+            }
+        
         if not khongdoica:
+            camoi = laycatheochuyen(chuyenmoi)
             query3 = f"""
             UPDATE HR.dbo.Dang_ky_ca_lam_viec SET Den_ngay = '{datetime.strptime(str(ngaydieuchuyen)[:10], '%Y-%m-%d') - timedelta(days=1)}'  WHERE MST = '{int(mst)}' AND Factory = '{current_user.macongty}' AND Den_ngay='2054-12-31'
             INSERT INTO HR.dbo.Dang_ky_ca_lam_viec VALUES ('{int(mst)}','{current_user.macongty}','{ngaydieuchuyen}','2054-12-31','{camoi}')
             """
-            print(query3)
-            cursor.execute(query3)
-        conn.commit()
-        conn.close()
-        return True
+            try:
+                cursor.execute(query3)
+                conn.commit()
+            except Exception as e:
+                return {
+                    "ketqua": False,
+                    "lido":e,
+                    "query":query3
+                    }
+            conn.close()
+        return {"ketqua":True}
     except Exception as e:
-        print(e)
-        return False
+        return {
+                "ketqua": False,
+                "lido":e,
+                "query":""
+                }
     
 def laydanhsachca(mst):
     try:
@@ -201,16 +213,28 @@ def dichuyennghiviec(mst,
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"""
-        INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
-        UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ việc', Ngay_nghi = '{ngaydieuchuyen}', Ghi_chu = N'{ghichu}' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
+        INSERT INTO HR.dbo.Lich_su_cong_tac 
+        VALUES ('{current_user.macongty}','{mst}',N'{chuyencu}',N'{vitricu}',
+        NULL,NULL,N'Nghỉ việc','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}',
+        NULL,'{hccategorycu}',NULL,GETDATE())
             """
-        ##
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        try:
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            return {"ketqua":True} 
+        except Exception as e:
+            return {
+                "ketqua": False,
+                "lido":e,
+                "query":query
+                }
     except Exception as e:
-        print(e)
-        return
+        return {
+                "ketqua": False,
+                "lido":e,
+                "query":""
+                }
 
 def dichuyennghithaisan(mst,
                         vitricu,
@@ -224,14 +248,24 @@ def dichuyennghithaisan(mst,
         cursor = conn.cursor()
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
-            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Nghỉ thai sản' WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
             """    
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+        try:
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            return {"ketqua":True} 
+        except Exception as e:
+            return {
+                "ketqua": False,
+                "lido":e,
+                "query":query
+                }
     except Exception as e:
-        print(e)
-        return
+        return {
+                "ketqua": False,
+                "lido":e,
+                "query":""
+                }
 
 def dichuyenthaisandilamlai(mst,
                             vitricu,
@@ -263,18 +297,24 @@ def dichuyenthaisandilamlai(mst,
         cursor = conn.cursor()
         query = f"""
             INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())
-            UPDATE HR.dbo.Danh_sach_CBCNV SET Trang_thai_lam_viec = N'Đang làm việc',Ghi_chu=NULL,
-            Line='{chuyenmoi}', Job_title_VN=N'{vitrimoi}', Grade_code='{gradecodemoi}', Department='{departmentmoi}'
-            Section_description='{sectiondescriptionmoi}', Emp_type='{employeetypemoi}', Position_code_description='{positioncodedescriptionmoi}',
-            Position_code='{positioncodemoi}', Job_title_EN=N'{vitrienmoi}'
-            WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'
-            """    
-        cursor.execute(query)
-        conn.commit()
-        conn.close()
+            """ 
+        try:   
+            cursor.execute(query)
+            conn.commit()
+            conn.close()
+            return {"ketqua":True} 
+        except Exception as e:
+            return {
+                "ketqua": False,
+                "lido":e,
+                "query":query
+                }
     except Exception as e:
-        print(e)
-        return
+        return {
+                "ketqua": False,
+                "lido":e,
+                "query":""
+                }
     
 def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):   
     

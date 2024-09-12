@@ -1774,10 +1774,8 @@ def capnhatdieuchuyentheofile():
                         hccategorycu = thongtin_laodong["HC category"]
                         dichuyenthaisandilamlai(masothe,chucdanhcu,chuyencu,
                                                 capbaccu,hccategorycu,ngay)
-                        
                     flash("Cập nhật điều chuyển bằng file thành công !!!")
             except Exception as e:
-                print(e)
                 flash(f"Cập nhật điều chuyển bằng file thất bại {e} !!!")
     return redirect("/muc6_2")
 
