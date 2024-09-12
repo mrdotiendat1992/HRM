@@ -1506,7 +1506,7 @@ def pheduyet_tangca():
             else:
                 flash(f"Phê duyệt tăng ca ID = {id} không được")
         except Exception as e:   
-            flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
+            flash(f"Lỗi khi phê duyệt tăng ca ({e})")
         link = f"/dangki_tangca_web?ngay={ngay_filter}&pheduyet={pheduyet}"
         for chuyen in chuyen_filter:
             link += f"&chuyen={chuyen}"
