@@ -77,7 +77,7 @@
             <tr data-info='{{ row  | safe }}'>
                 <td>{{row["MST"]}}</td> 
                 <td>{{row["Họ tên"]}}</td>
-                <td>{{row["Ngày chính thức"]}}</td>
+                <td class="date_en">{{row["Ngày chính thức"]}}</td>
                 <td>{{row["Chuyền cũ"]}}</td>
                 <td>
                     <form action='/capnhat_chuyenmoi_lichsu_congtac' method='POST'>
@@ -129,7 +129,25 @@
         </tbody>
     </table>
     <script>
-
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.date_en').forEach((element) => {
+                element.textContent = changeFormatDate(element.textContent);
+            });
+            const td_elements = document.querySelectorAll('td');
+    
+            td_elements.forEach((element) => {
+                if (element.textContent === 'None') {
+                    element.textContent = '';
+                }
+            });
+        });
     </script>
 </div>
 {% endblock content %}
