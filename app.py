@@ -704,6 +704,8 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         result = []
         for row in rows:
             result.append({
+                "Nhà máy": row[12],
+                "ID": row[13],
                 "MST": row[1],
                 "Họ tên": row[0],
                 "Ngày chính thức": row[2] if row[2] else '',
@@ -3903,3 +3905,83 @@ def lay_soluong_dangnghithaisan():
     except Exception as e:
         flash(f"Lỗi lấy số người đang nghỉ thai sản: {e}")
         return 0
+    
+def thaydoi_chuyen_lichsu_congtac(id,chuyenmoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update Lich_su_cong_tac set Line_moi='{chuyenmoi}' where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+        
+def thaydoi_vitri_lichsu_congtac(id,vitrimoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update Lich_su_cong_tac set Chuc_vu_moi=N'{vitrimoi}' where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+        
+def thaydoi_phanloai_lichsu_congtac(id,phanloaimoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update Lich_su_cong_tac set Phan_loai=N'{phanloaimoi}' where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+        
+def thaydoi_ngaythuchien_lichsu_congtac(id,ngaythuchienmoi):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"update Lich_su_cong_tac set Ngay_thuc_hien='{ngaythuchienmoi}' where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+        
+def xoabo_lichsu_congtac(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"delete Lich_su_cong_tac where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }

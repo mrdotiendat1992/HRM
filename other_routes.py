@@ -1337,23 +1337,6 @@ def taidanhsachdonxinnghiviec():
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response   
 
-@app.route("/capnhat_lichsu_congtac", methods=["POST"])
-def capnhat_lichsu_congtac():
-    
-    mst_filter = request.form.get("mst_filter")
-    mst = request.form.get("mst")
-    ngaythuchien = request.form.get("ngaythuchien")
-    phanloai = request.form.get("phanloai")
-    ghichumoi = request.form.get("ghichu")   
-    try:
-        if capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
-            print(f"Cap nhat Lich su cong tac mst={mst} thanh cong")
-        else:
-            print(f"Cap nhat Lich su cong tac mst={mst} that bai")
-    except Exception as e:
-        print(f"Loi khi cap nhat lich su cong tac ({e})")
-    return redirect(f"/muc6_2?mst={mst_filter}")
-
 @app.route("/suadoi_dangky_ca", methods=["POST"])
 def suadoi_dangky_ca():
     mst_filter = request.form.get("mst_filter")
@@ -3818,3 +3801,56 @@ def lay_danhsach_userhientai():
         response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
+    
+@app.route("/capnhat_chuyenmoi_lichsu_congtac", methods=["POST"])
+def capnhat_chuyenmoi_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        print(id)
+        chuyenmoi = request.form.get("chuyenmoi")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = thaydoi_chuyen_lichsu_congtac(id,chuyenmoi)
+        if ketqua["ketqua"]:
+            flash(f"Thay đổi lịch sử công tác dòng {id} chuyền thành {chuyenmoi} thành công")
+        else:
+            flash(f"Thay đổi lịch sử công tác dòng {id} chuyền thành {chuyenmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")
+    
+@app.route("/capnhat_vitrimoi_lichsu_congtac", methods=["POST"])
+def capnhat_vitrimoi_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        vitrimoi = request.form.get("vitrimoi")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = thaydoi_vitri_lichsu_congtac(id,vitrimoi)
+        if ketqua["ketqua"]:
+            flash(f"Thay đổi lịch sử công tác dòng {id} vị trí thành {vitrimoi} thành công")
+        else:
+            flash(f"Thay đổi lịch sử công tác dòng {id} vị trí thành {vitrimoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")
+    
+@app.route("/capnhat_phanloaimoi_lichsu_congtac", methods=["POST"])
+def capnhat_phanloaimoi_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        phanloaimoi = request.form.get("phanloaimoi")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = thaydoi_phanloai_lichsu_congtac(id,phanloaimoi)
+        if ketqua["ketqua"]:
+            flash(f"Thay đổi lịch sử công tác dòng {id} phân loại thành {phanloaimoi} thành công")
+        else:
+            flash(f"Thay đổi lịch sử công tác dòng {id} phân loại thành {phanloaimoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")
+    
+@app.route("/capnhat_ngaythuchienmoi_lichsu_congtac", methods=["POST"])
+def capnhat_ngaythuchienmoi_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        ngaythuchienmoi = request.form.get("ngaythuchienmoi")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = thaydoi_ngaythuchien_lichsu_congtac(id,ngaythuchienmoi)
+        if ketqua["ketqua"]:
+            flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thành công")
+        else:
+            flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")

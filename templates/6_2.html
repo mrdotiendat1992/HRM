@@ -1,32 +1,32 @@
 {% extends  "base.html" %}
 {% block style%}
 <style>
-table, th, td {
-    font-size: 10px;
-    font-weight:bold;
-}
-th {
-    color: white;
-}
-td, label, p, input, h5 {
-    color: #4e73df;
-    font-weight: bold;
-}
-input, select, label {
-    width: 150px;
-    font-size: 12px;
-    text-align: right;
-}
-.pagination {
-    font-size: 10px;
-    margin-left: 50px;
-    margin-right: 50px;
-}
-.ghichumoi {
-    outline: none;
-    border: none;
-    text-align: center;
-}
+    container-fluid{
+        overflow-x: auto;
+    }
+    table, th, td {
+        font-size: 10px;
+        font-weight:bold;
+    }
+    th {
+        color: white;
+    }
+    td, label, p, input, h5 {
+        color: #4e73df;
+        font-weight: bold;
+    }
+    input, select, label {
+        width: 150px;
+        font-size: 12px;
+        text-align: left;
+        max-width: 100px;
+        width:auto;
+    }
+    .pagination {
+        font-size: 10px;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -49,7 +49,7 @@ input, select, label {
             <input type="text" id="hoten" name="hoten" hidden value='{{request.args.get('hoten', '')}}'>
             <input type="text" id="kieudieuchuyen" name="kieudieuchuyen" hidden value='{{request.args.get('kieudieuchuyen', '')}}'>
             <input type="date" id="ngay" name="ngay" hidden value={{request.args.get('ngay', '')}}>
-            <input class="btn btn-success btn-sm" value="Xuất Excel" type="submit">
+            <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-download"></i></button>
         </form>
     </div>
     <table class="table table-bordered table-hover table-sm">
@@ -64,6 +64,7 @@ input, select, label {
                 <th>Vị trí mới</th>
                 <th>Phòng ban cũ</th>
                 <th>Phòng ban mới</th>
+
                 <th>Kiểu điều chuyển</th>
                 <th>Ngày thực hiện</th>
                 <th>Ghi chú</th>
@@ -73,41 +74,54 @@ input, select, label {
         <tbody>
             {% for row in danhsach %}
             <tr data-info='{{ row  | safe }}'>
-                <form action='/capnhat_lichsu_congtac' method='POST'>
-                    <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}></input>
-                    <input type="hidden" name="mst" value={{row["MST"]}}></input>
-                    <input type="hidden" name="ngaythuchien" value={{row["Ngày thực hiện"]}}></input>
-                    <input type="hidden" name="phanloai" value='{{row["Phân loại"]}}'></input>
-                    <td>{{row["MST"]}}</td> 
-                    <td>{{row["Họ tên"]}}</td>
-                    <td>{{row["Ngày chính thức"]}}</td>
-                    <td>{{row["Chuyền cũ"]}}</td>
-                    <td>{{row["Chuyền mới"]}}</td>
-                    <td>{{row["Vị trí cũ"]}}</td>
-                    <td>{{row["Vị trí mới"]}}</td>
-                    <td>{{row["Phòng ban cũ"]}}</td>
-                    <td>{{row["Phòng ban mới"]}}</td>
-                    <td>{{row["Phân loại"]}}</td>
-                    <td>{{row["Ngày thực hiện"]}}</td>
-                    <td style="display: flex;"><input class="ghichumoi" name="ghichu" value='{{row["Ghi chú"]}}'></input><button type="submit" class="btn btn-primary btn-sm">Lưu</button></td>
-                </form>
+                <td>{{row["MST"]}}</td> 
+                <td>{{row["Họ tên"]}}</td>
+                <td>{{row["Ngày chính thức"]}}</td>
+                <td>{{row["Chuyền cũ"]}}</td>
+                <td>
+                    <form action='/capnhat_chuyenmoi_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <input type="text" name="chuyenmoi" onchange="form.submit()" value='{{row["Chuyền mới"]}}'>
+                    </form>
+                </td>
+                <td>{{row["Vị trí cũ"]}}</td>
+                <td>
+                    <form action='/capnhat_vitrimoi_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <input type="text" name="vitrimoi" onchange="form.submit()" value='{{row["Vị trí mới"]}}'>
+                    </form>
+                </td>
+                <td>{{row["Phòng ban cũ"]}}</td>
+                <td>{{row["Phòng ban mới"]}}</td>
+                <td>
+                    <form action='/capnhat_phanloaimoi_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <input type="text" name="phanloaimoi" onchange="form.submit()" value='{{row["Phân loại"]}}'>
+                    </form>
+                </td>
+                <td>
+                    <form action='/capnhat_ngaythuchienmoi_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <input type="date" name="ngaythuchienmoi" onchange="form.submit()" value={{row["Ngày thực hiện"]}}>
+                    </form>
+                </td>
+                <td>
+                    <form action='/capnhat_ghichumoi_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <input type="text" name="ghichumoi" onchange="form.submit()" value={{row["Ghi chứ"]}}>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <script>
-        function changeFormatDate(date){
-            if(date == 'None') return "";
-            try{
-                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-            } catch {
-                return "";    
-        }}
-        document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('.date_en').forEach((element) => {
-                element.textContent = changeFormatDate(element.textContent);
-            });
-        });
+
     </script>
 </div>
 {% endblock content %}
