@@ -248,7 +248,7 @@
                                     <input hidden name="chuyen" value="{{ chuyen }}">
                                 {% endfor %}
                                 <input type="hidden" name= "ngay_filter" value = {{request.args.get('ngay', '')}}>
-                                <input type="hidden" name="pheduyet" value="{{request.args.get('pheduyet', ''}}">
+                                <input type="hidden" name="pheduyet" value={{request.args.get('pheduyet', '')}}>
                             </form>
                         </td>
                         {% else %}
