@@ -1597,25 +1597,39 @@ def tai_danhsach_tangca():
         ngay = request.form.get("ngay")
         pheduyet =  request.form.get("pheduyet")
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
-        # print(danhsach)
         data = [x for x in danhsach]
-        # print(data)
         ngay = datetime.now().date()     
         df = DataFrame(data)
+        df["Ngày"] = to_datetime(df["Ngày"],errors="ignore")
         output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
 
-        # Điều chỉnh độ rộng cột
+        # Adjust column width and format the header row
         output.seek(0)
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -1623,11 +1637,15 @@ def tai_danhsach_tangca():
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[column_letter].width = adjusted_width
 
+        # Save the modified workbook to the output BytesIO object
         output = BytesIO()
         workbook.save(output)
         output.seek(0)
+        
+        # Generate the timestamp for the filename
         time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
+        
+        # Return the file to the client
         response = make_response(output.read())
         response.headers['Content-Disposition'] = f'attachment; filename=danhsach_tangca_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -1682,7 +1700,7 @@ def capnhatdieuchuyentheofile():
         if file:
             try:
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-                filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
+                filepath = os.path.join(FOLDER_NHAP, f"danhsach_dieuchuyen_{thoigian}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath ).to_dict(orient="records")
                 x = 1
@@ -2770,7 +2788,7 @@ def bangcong5ngay_web():
         } for row in danhsach] 
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='ignore')
-        df["Ngày"] = to_datetime(df['Ngày'], errors='ignore', dayfirst=True)
+        df["Ngày"] = to_datetime(df['Ngày'], errors='ignore')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)

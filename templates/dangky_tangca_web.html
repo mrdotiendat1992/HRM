@@ -191,7 +191,7 @@
                     <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
                         <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
                         <td>{{row["Chuyền"]}}</td>
-                        <td>{{row["Ngày"]}}</td>
+                        <td class="ngay">{{row["Ngày"]}}</td>
                         <td class="gio">{{row["Tăng ca sáng"]}}</td>
                         <td class="gio">{{row["Tăng ca sáng thực tế"]}}</td>
                         <td class="gio">{{row["Giờ tăng ca"]}}</td>
@@ -265,7 +265,9 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         updateToggleButton();
-
+        document.querySelectorAll('.ngay').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
         // Function to toggle select all/deselect all
         window.toggleSelectAll = function(event) {
             event.preventDefault();
@@ -284,6 +286,13 @@
             let button = document.getElementById("select-toggle-btn");
             button.textContent = allChecked ? "Bỏ chọn hết" : "Chọn hết";
         }
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
     });
 </script>
 {% endblock content %}
