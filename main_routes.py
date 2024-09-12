@@ -1439,8 +1439,8 @@ def lichsudieuchuyen():
         kieudieuchuyen = request.args.get("kieudieuchuyen")
         data = laylichsucongtac(mst,hoten,ngay,kieudieuchuyen)
         df = DataFrame(data)
-        df["Ngày thực hiện"] = to_datetime(df['Ngày thực hiện'], errors='coerce', dayfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce', dayfirst=True)
+        df["Ngày thực hiện"] = to_datetime(df['Ngày thực hiện'], errors='ignore')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='ignore')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -1521,8 +1521,8 @@ def lichsucongviec():
             "Ngày kết thúc": row[9]
         } for row in rows]
         df = DataFrame(data)
-        df["Ngày bắt đầu"] = to_datetime(df['Ngày bắt đầu'], errors='coerce', dayfirst=True)
-        df["Ngày kết thúc"] = to_datetime(df['Ngày kết thúc'], errors='coerce', dayfirst=True)
+        df["Ngày bắt đầu"] = to_datetime(df['Ngày bắt đầu'], errors='ignore')
+        df["Ngày kết thúc"] = to_datetime(df['Ngày kết thúc'], errors='ignore')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)

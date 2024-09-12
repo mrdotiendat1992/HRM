@@ -706,7 +706,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
             result.append({
                 "MST": row[1],
                 "Họ tên": row[0],
-                "Ngày chính thức": datetime.strptime(row[2], "%Y-%m-%d").strftime("%d/%m/%Y") if row[2] else '',
+                "Ngày chính thức": row[2] if row[2] else '',
                 "Chuyền cũ": row[3],
                 "Chuyền mới": row[5] if row[5] else '',
                 "Vị trí cũ": row[8],
@@ -714,7 +714,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
                 "Phòng ban cũ": row[4],
                 "Phòng ban mới": row[6] if row[6] else '',
                 "Phân loại": row[10],
-                "Ngày thực hiện": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else '',
+                "Ngày thực hiện": row[7] if row[7] else '',
                 "Ghi chú": row[11] if row[1] else ''
             })
         conn.commit()
@@ -925,6 +925,22 @@ def laydanhsachtheomst(mst):
         conn = pyodbc.connect(used_db)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+        
+        users = cursor.execute(query).fetchall()
+        conn.close()
+        result = []
+        for user in users:
+            result.append(lay_user(user))
+        return result
+    except Exception as e:
+        print(e)
+        return []
+    
+def laydanhsachtheothechamcong(mst):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE The_cham_cong = '{mst}' AND Factory = '{current_user.macongty}'"
         
         users = cursor.execute(query).fetchall()
         conn.close()
@@ -2679,7 +2695,7 @@ def lay_chuyen_va_capbac(macongty, mst):
         print(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
         return None
     
-def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
+def capnhat_ghichu_lsct(mst,ngaythuchien,phanloai,ghichumoi):
     try:
         
         conn = pyodbc.connect(used_db)
@@ -2689,6 +2705,26 @@ def capnhat_ghichu_lichsu_congtac(mst,ngaythuchien,phanloai,ghichumoi):
             query+= "and Ngay_thuc_hien is null "
         else:
             query+= f"and Ngay_thuc_hien = '{ngaythuchien}'"
+        ##
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+def capnhat_ngaythuchien_lsct(mst,ngaythuchienmoi,phanloai,chuyencu,chuyenmoi):
+    try:
+        
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"""UPDATE Lich_su_Cong_tac 
+        set Ngay_thuc_hien = N'{ngaythuchienmoi}' 
+        where MST='{int(mst)}' and Phan_loai=N'{phanloai}' 
+        and Nha_may='{current_user.macongty}' 
+        and Line_cu='{chuyencu}'
+        and Line_moi='{chuyenmoi}'"""
         ##
         cursor.execute(query)
         conn.commit()

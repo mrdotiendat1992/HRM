@@ -1727,7 +1727,7 @@ def capnhatdieuchuyentheofile():
                     ghichu = row["Ghi chú"] 
                     if loaidieuchuyen == "Chuyển vị trí":
                         
-                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
                         chucdanhcu = thongtin_laodong["Job title VN"]
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
@@ -1762,7 +1762,7 @@ def capnhatdieuchuyentheofile():
                                          positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica)
                         
                     elif loaidieuchuyen == "Nghỉ việc":
-                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
                         chucdanhcu = thongtin_laodong["Job title VN"]
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
@@ -1770,7 +1770,7 @@ def capnhatdieuchuyentheofile():
                         dichuyennghiviec(masothe,chucdanhcu,chuyencu,capbaccu,hccategorycu,ngay,ghichu)
                         
                     elif loaidieuchuyen == "Nghỉ thai sản":
-                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
                         chucdanhcu = thongtin_laodong["Job title VN"]
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
@@ -1784,7 +1784,7 @@ def capnhatdieuchuyentheofile():
                                             ghichu)
                         
                     elif loaidieuchuyen == "Thai sản đi làm lại":
-                        thongtin_laodong = laydanhsachtheomst(masothe)[0]
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
                         chucdanhcu = thongtin_laodong["Job title VN"]
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
