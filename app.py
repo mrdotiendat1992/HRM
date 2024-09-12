@@ -4025,3 +4025,47 @@ def xoabo_lichsu_congtac(id):
             "lido":e,
             "query":query
         }
+
+def xoabo_lichsu_congviec(id):
+    try:
+        conn = pyodbc.connect(used_db)
+        cursor = conn.cursor()
+        query = f"delete Lich_su_cong_viec where id={id}"
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+        
+def lay_dulieu_tongcong(mst):
+    data = {}
+    try:
+        conn = pyodbc.connect(used_db)
+        cur = conn.cursor()
+        query = f"select distinct NAM from BANG_TONG_CONG_CA_THANG where MST='{mst}' and NHA_MAY='{current_user.macongty}'"
+        print(query)
+        rows = cur.execute(query).fetchall()
+        print(rows)
+        for row in rows:
+            data[int(row[0])]=[0,0,0,0,0,0,0,0,0,0,0,0]
+
+        query1 = f"select TONG_CONG,THANG,NAM from BANG_TONG_CONG_CA_THANG where MST='{mst}' and NHA_MAY='{current_user.macongty}'"
+        rows1 = cur.execute(query1).fetchall()
+        for row in rows1:
+            nam = int(row[2])
+            thang = int(row[1])-1
+            data[nam][thang]= row[0]
+        conn.close()
+        for year in data:
+            data[year] = [float(value) if isinstance(value, Decimal) else value for value in data[year]]
+        return data
+    except Exception as e:
+        print(e)
+        return data
+    
+    

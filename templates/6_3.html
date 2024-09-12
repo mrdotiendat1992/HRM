@@ -127,6 +127,15 @@ td, label, p, input, h5 {
                         <input class="form_lscv" type="date" name="ngayketthuc"  onchange="this.form.submit()" value={{row[9]}}>
                     </form>
                 </td>
+                <td>
+                    <form action='/xoa_lichsu_congviec' method='POST'>
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen" value="{{request.args.get('chuyen', '')}}">
+                        <input type="hidden" name="id" value={{row[11]}}> 
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
+                    </form>
+                </td>
             </tr>
             {% endfor %}
         </tbody>

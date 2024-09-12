@@ -2821,6 +2821,7 @@ def bangcong5ngay_web():
         response.headers['Content-Disposition'] = f'attachment; filename=bangcong5ngay_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
+    
 @app.route("/bangcongchot_web", methods=["GET","POST"])
 def bangcongchot_web():
     if request.method == "GET":
@@ -3660,7 +3661,7 @@ def thaydoi_chuyen_lichsu_congviec():
         if sua_chuyen_lichsu_congviec(id,chuyen):
             flash(f"Sửa Chuyền cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
         else:
-            flash(f"Sửa Chuyền bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+            flash(f"Sửa Chuyền cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen_filter}&bophan={bophan}")
     
 @app.route("/thaydoi_bophan_lichsu_congviec", methods=["POST"])
@@ -3674,7 +3675,7 @@ def thaydoi_bophan_lichsu_congviec():
         if sua_bophan_lichsu_congviec(id,bophan):
             flash(f"Sửa bộ phận cho dòng lịch sử công việc số {id} sang {bophan} thành công")
         else:
-            flash(f"Sửa bộ phận bắt đầu cho dòng lịch sử công việc số {id} sang {bophan} thất bại")
+            flash(f"Sửa bộ phận cho dòng lịch sử công việc số {id} sang {bophan} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan_filter}")
     
 @app.route("/thaydoi_chucdanh_lichsu_congviec", methods=["POST"])
@@ -3688,7 +3689,7 @@ def thaydoi_chucdanh_lichsu_congviec():
         if sua_chucdanh_lichsu_congviec(id,chucdanh):
             flash(f"Sửa chức danh cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
         else:
-            flash(f"Sửa chức danh bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+            flash(f"Sửa chức danh cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/thaydoi_capbac_lichsu_congviec", methods=["POST"])
@@ -3702,7 +3703,7 @@ def thaydoi_capbac_lichsu_congviec():
         if sua_capbac_lichsu_congviec(id,capbac):
             flash(f"Sửa cấp bậc cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
         else:
-            flash(f"Sửa cấp bậc bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+            flash(f"Sửa cấp bậc cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/thaydoi_hccategory_lichsu_congviec", methods=["POST"])
@@ -3716,7 +3717,20 @@ def thaydoi_hccategory_lichsu_congviec():
         if sua_hccategory_lichsu_congviec(id,hccategory):
             flash(f"Sửa HC category cho dòng lịch sử công việc số {id} sang {chuyen} thành công")
         else:
-            flash(f"Sửa HC category bắt đầu cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+            flash(f"Sửa HC category cho dòng lịch sử công việc số {id} sang {chuyen} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
+
+@app.route("/xoa_lichsu_congviec", methods=["POST"])
+def xoa_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        if xoabo_lichsu_congviec(id):
+            flash(f"Xoá dòng lịch sử công việc số {id} sang {chuyen} thành công")
+        else:
+            flash(f"Xoá dòng lịch sử công việc số {id} sang {chuyen} thất bại")
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/hosonhanvien", methods=["GET"])
@@ -3724,10 +3738,12 @@ def hosonhanvien():
     if request.method == "GET":
         mst = request.args.get("mst")
         nhanvien = laydanhsachtheomst(mst)
+        dulieucong = lay_dulieu_tongcong(mst)
+        print(dulieucong)
         if not nhanvien:
             flash(f"Không tìm thấy nhân viên có mã số thẻ là {mst}")
             return redirect("/")
-        return render_template("hosonhanvien.html",nhanvien=nhanvien[0])
+        return render_template("hosonhanvien.html",nhanvien=nhanvien[0],dulieucong=dulieucong)
     
 @app.route("/lay_danhsach_userhientai", methods=["POST"])
 def lay_danhsach_userhientai():
@@ -3881,3 +3897,4 @@ def xoa_lichsu_congtac():
         else:
             flash(f"Xoá lịch sử công tác dòng {id} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
         return redirect(f"/muc6_2?mst={mst_filter}")
+    

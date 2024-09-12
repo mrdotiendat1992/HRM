@@ -1370,7 +1370,7 @@ def dieuchuyen():
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
-                    dichuyenthaisandilamlai(mst,
+                    ketqua = dichuyenthaisandilamlai(mst,
                                     vitricu,
                                     vitrimoi,
                                     chuyencu,
