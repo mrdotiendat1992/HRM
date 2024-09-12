@@ -3806,7 +3806,6 @@ def lay_danhsach_userhientai():
 def capnhat_chuyenmoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
-        print(id)
         chuyenmoi = request.form.get("chuyenmoi")
         mst_filter = request.form.get("mst_filter")
         ketqua = thaydoi_chuyen_lichsu_congtac(id,chuyenmoi)
@@ -3853,4 +3852,16 @@ def capnhat_ngaythuchienmoi_lichsu_congtac():
             flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thành công")
         else:
             flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")
+    
+@app.route("/xoa_lichsu_congtac", methods=["POST"])
+def xoa_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = xoabo_lichsu_congtac(id)
+        if ketqua["ketqua"]:
+            flash(f"Xoá lịch sử công tác dòng {id} thành công")
+        else:
+            flash(f"Xoá lịch sử công tác dòng {id} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
         return redirect(f"/muc6_2?mst={mst_filter}")

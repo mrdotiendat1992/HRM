@@ -68,6 +68,7 @@
                 <th>Kiểu điều chuyển</th>
                 <th>Ngày thực hiện</th>
                 <th>Ghi chú</th>
+                <th></th>
             </tr>
         </thead>
       
@@ -114,6 +115,13 @@
                         <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
                         <input type="hidden" name="id" value={{row["ID"]}}>
                         <input type="text" name="ghichumoi" onchange="form.submit()" value={{row["Ghi chứ"]}}>
+                    </form>
+                </td>
+                <td>
+                    <form action='/xoa_lichsu_congtac' method='POST'>
+                        <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
+                        <input type="hidden" name="id" value={{row["ID"]}}>
+                        <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
                     </form>
                 </td>
             </tr>
