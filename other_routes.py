@@ -3910,7 +3910,7 @@ def hr_pheduyet_hangloat_xinnghikhac():
         nhangiayto = request.form.get("nhangiayto")
         danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
         for dong in danhsach:
-            print(dong[5],dong[7])
+            # print(dong[5],dong[7])
             if dong[5]=="Đã phê duyệt":
                 nhansu_nhangiayto_xinnghikhac(dong[7])
         return redirect(f"/muc7_1_6?mst={mst}&bophan={bophan}&chuyen={chuyen}&ngaynghi={ngaynghi}&loainghi={loainghi}&trangthai={trangthai}&nhangiayto={nhangiayto}")
