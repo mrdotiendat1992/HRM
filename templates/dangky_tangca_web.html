@@ -161,7 +161,14 @@
                 {% for chuyen in request.args.getlist('chuyen') %}
                     <input hidden name="chuyen" value="{{ chuyen }}">
                 {% endfor %}
-                <button type="submit" class="btn btn-success btn-sm" style=""><i class="fa fa-check"></i></button>
+                <button type="submit" class="btn btn-success btn-sm" title="Phê duyệt hàng loạt"><i class="fa fa-check"></i></button>
+            </form>
+            <form method="POST" action="/boduyet_hangloat_tangca">
+                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                {% for chuyen in request.args.getlist('chuyen') %}
+                    <input hidden name="chuyen" value="{{ chuyen }}">
+                {% endfor %}
+                <button type="submit" class="btn btn-danger btn-sm" title="Bỏ phê duyệt hàng loạt"><i class="fa fa-ban"></i></button>
             </form>
             {% endif %}
         </div>

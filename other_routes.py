@@ -3643,12 +3643,30 @@ def duyet_hangloat_tangca():
         ngay = request.form.get("ngay") 
         pheduyet = ""  
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
-        print(len(danhsach))
         for x in danhsach:
             print(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
     except Exception as e:
-        flash(f"Lỗi phê duyệt hàng loạt")
-    return redirect("/dangki_tangca_web")   
+        flash(f"Lỗi phê duyệt hàng loạt: {e}")
+    link = f"/dangki_tangca_web?ngay={ngay}"
+    for ch in chuyen:
+        link+=f"&chuyen={ch}"
+    return redirect(link)  
+
+@app.route('/boduyet_hangloat_tangca',methods=["POST"])
+def boduyet_hangloat_tangca():  
+    try:
+        chuyen = request.form.getlist("chuyen")
+        ngay = request.form.get("ngay") 
+        pheduyet = ""  
+        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        for x in danhsach:
+            print(x['ID'],hr_pheduyet_tangca(x['ID'],"") )   
+    except Exception as e:
+        flash(f"Lỗi bỏ phê duyệt hàng loạt: {e}")
+    link = f"/dangki_tangca_web?ngay={ngay}"
+    for ch in chuyen:
+        link+=f"&chuyen={ch}"
+    return redirect(link)  
 
 @app.route("/thaydoi_chuyen_lichsu_congviec", methods=["POST"])
 def thaydoi_chuyen_lichsu_congviec():
