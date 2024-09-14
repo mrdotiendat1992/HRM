@@ -726,7 +726,8 @@ def thaydoithongtinlaodong():
             sdtnguoithan = request.form.get("sdtnguoithan")
             ngayvao = request.form.get("ngayvao")
             ngaynghi = request.form.get("ngaynghi")
-            ngaychinhthuc = request.form.get("ngaychinhthuc")
+            ngaykyhdtv = request.form.get("ngaykyhdtv")
+            ngayhethanhdtv = request.form.get("ngayhethanhdtv")
             
             query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
             if thechamcong:
@@ -1008,11 +1009,14 @@ def thaydoithongtinlaodong():
                 query += f"Ngay_nghi = '{ngaynghi}',"
             else:
                 query += f"Ngay_nghi = NULL,"
-            if ngaychinhthuc:
-                truocngaychinhthuc = (datetime.strptime(ngaychinhthuc,"%Y-%M-%d")-timedelta(days=1)).strftime("%Y-%M-%d")
-                query += f"Ngay_het_han_HDTV = '{truocngaychinhthuc}',"
+            if ngaykyhdtv:
+                query += f"Ngày kí HĐ Thử việc = '{ngaykyhdtv}',"
             else:
-                query += f"Ngay_het_han_HDTV = NULL,"
+                query += f"Ngày kí HĐ Thử việc = NULL,"
+            if ngayhethanhdtv:
+                query += f"Ngày hết hạn HĐ Thử việc = '{ngayhethanhdtv}',"
+            else:
+                query += f"Ngày hết hạn  HĐ Thử việc = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
