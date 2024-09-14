@@ -71,7 +71,7 @@ td, label, p, input, h5 {
                         <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
                         <input type="hidden" name="chuyen_filter" value="{{request.args.get('chuyen', '')}}"> 
                         <input type="hidden" name="id" value={{row[11]}}> 
-                        <input class="form_lscv" type="text" name="chuyen" value={{row[3]}} onchange="this.form.submit()">
+                        <input class="form_lscv" onchange="this.form.submit()" type="text" name="chuyen" value={{row[3]}}>
                     </form>
                 </td>
                 <td><form action='/thaydoi_bophan_lichsu_congviec' method='POST'> 
@@ -141,22 +141,13 @@ td, label, p, input, h5 {
         </tbody>
     </table>
     <script>
-        function changeFormatDate(date){
-            if(date == 'None') return "";
-            try{
-                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-            } catch {
-                return "";    
-        }}
         document.addEventListener('DOMContentLoaded', (event) => {
-            document.querySelectorAll('.date_en').forEach((element) => {
-                element.textContent = changeFormatDate(element.textContent);
-            });
-            const td_elements = document.querySelectorAll('td');
+
+            const input_elements = document.querySelectorAll('input');
     
-            td_elements.forEach((element) => {
-                if (element.textContent === 'None') {
-                    element.textContent = '';
+            input_elements.forEach((element) => {
+                if (element.value === 'None') {
+                    element.value = '';
                 }
             });
         });

@@ -110,19 +110,31 @@
         <br>
         <table class="table table-hover table-sm">
             <thead>
-                <form action = "/muc7_1_6" method = "GET">
-                    <tr class="bg-primary">
-                        <th>Mã số thẻ</th>
-                        <th>Họ tên</th>
-                        <th>Chuyền</th>
-                        <th>Phòng ban</th>
-                        <th>Ngày nghỉ </th>
-                        <th>Tổng số phút</th>
-                        <th>Loại nghỉ</th>
-                        <th>Trạng thái</th>
-                        <th>Nhận giấy tờ</th>
-                    </tr>
-                </form>
+                <tr class="bg-primary">
+                    <th>Mã số thẻ</th>
+                    <th>Họ tên</th>
+                    <th>Chuyền</th>
+                    <th>Phòng ban</th>
+                    <th>Ngày nghỉ </th>
+                    <th>Tổng số phút</th>
+                    <th>Loại nghỉ</th>
+                    <th>Trạng thái</th>
+                    <th>
+                        Nhận giấy tờ 
+                        {% if 'HRD' in current_user.phongban %}
+                        <form action="/hr_pheduyet_hangloat_xinnghikhac" method="POST">
+                            <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                            <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
+                            <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                            <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                            <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                            <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                            <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
+                            <button type"submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
+                        </form>
+                            {% endif %}
+                    </th>
+                </tr>
             </thead>
             
             <tbody>

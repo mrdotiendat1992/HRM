@@ -130,8 +130,8 @@
     </table>
     <script>
         function changeFormatDate(date){
-            if(date == 'None') return "";
-            try{
+            if(date == '') return "";
+            try {
                 return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
             } catch {
                 return "";    

@@ -3897,4 +3897,20 @@ def xoa_lichsu_congtac():
         else:
             flash(f"Xoá lịch sử công tác dòng {id} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
         return redirect(f"/muc6_2?mst={mst_filter}")
-    
+
+@app.route("/hr_pheduyet_hangloat_xinnghikhac", methods=["POST"])
+def hr_pheduyet_hangloat_xinnghikhac():
+    if request.method == "POST":
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngaynghi = request.form.get("ngaynghi")
+        loainghi = request.form.get("loainghi")
+        trangthai = request.form.get("trangthai")
+        nhangiayto = request.form.get("nhangiayto")
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
+        for dong in danhsach:
+            print(dong[5],dong[7])
+            if dong[5]=="Đã phê duyệt":
+                nhansu_nhangiayto_xinnghikhac(dong[7])
+        return redirect(f"/muc7_1_6?mst={mst}&bophan={bophan}&chuyen={chuyen}&ngaynghi={ngaynghi}&loainghi={loainghi}&trangthai={trangthai}&nhangiayto={nhangiayto}")
