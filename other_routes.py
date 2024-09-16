@@ -365,7 +365,8 @@ def check_hcname():
             "Factory": "",
             "Department": "",
             "Section_code": "",
-            "Section_description": ""
+            "Section_description": "",
+            "Chuc_vu": ""
         })
     return jsonify({
         "Line": hcname[0],
@@ -379,7 +380,8 @@ def check_hcname():
         "Factory": hcname[8],
         "Department": hcname[9],
         "Section_code": hcname[10],
-        "Section_description": hcname[11]        
+        "Section_description": hcname[11] ,
+        "Chuc_vu": hcname[12]    
     })
 
 @app.route("/check_line_from_detailjob", methods=["POST"])

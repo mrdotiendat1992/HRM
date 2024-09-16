@@ -13,11 +13,6 @@ input, select {
     margin-left: 10px;
     width: 150px;
 }
-input[readonly] {
-    border-style: none;
-    outline: none;
-    background-color: transparent;
-}
 
 </style>
 {% endblock style %}
@@ -26,7 +21,7 @@ input[readonly] {
     <form action="/muc3_1" method="POST">
         <div class="form-group">
             <label for="anh">Ảnh</label>
-            <input type="text" id="anh" name="anh" style="width:200px;height:200px;">
+            <input type="text" id="anh" name="anh" style="width:200px;height:200px;" readonly>
             <label for="masothe">Mã số thẻ</label>
             <input type="text" id="masothe" name="masothe" readonly value={{masothe}}>
             
@@ -54,8 +49,11 @@ input[readonly] {
         </div>
 
         <div class="form-group">
+            <label for="tamtru">Tạm trú</label>
             <input type="text" id="tamtru" name="tamtru">
+            <label for="thuongtru">Thường trú</label>
             <input type="text" id="thuongtru" name="thuongtru">
+            <label for="hoten">Nơi sinh</label>
             <input type="text" id="noisinh" name="noisinh">
         </div>
 
@@ -197,8 +195,6 @@ input[readonly] {
             <input type="text" id="tenvitri" name="tenvitri">
 
         </div>
-        <hr />
-
         <hr />
         <input value="Lưu" class="btn btn-primary" onclick="return submitForm()" type="submit">
     </form>
@@ -443,7 +439,7 @@ input[readonly] {
                                 document.getElementById("loailaodong").value = data["Employee_type"]; // 8
                                 document.getElementById("mavitri").value = data["Position_code"]; // 9
                                 document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
-                                document.getElementById("chucvu").value = data["Detail_job_title_VN"]; // 11
+                                document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
                                 axios({
                                     method: 'post',
                                     url: '/laycatheoline?line=' + data["Line"]
@@ -484,7 +480,7 @@ input[readonly] {
                     document.getElementById("loailaodong").value = data["Employee_type"]; // 8
                     document.getElementById("mavitri").value = data["Position_code"]; // 9
                     document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
-                    document.getElementById("chucvu").value = data["Detail_job_title_VN"]; // 11
+                    document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
                 }
             })
             .catch(function (error) {
