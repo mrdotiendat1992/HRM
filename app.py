@@ -4013,7 +4013,7 @@ def thaydoi_ngaythuchien_lichsu_congtac(id,ngaythuchienmoi):
 def thaydoi_ghichu_lichsu_congtac(id,ghichumoi):
     conn = pyodbc.connect(used_db)
     cursor = conn.cursor()
-    query = f"update Lich_su_cong_tac set Ghi_chu='{ghichumoi}' where id={id}"
+    query = f"update Lich_su_cong_tac set Ghi_chu=N'{ghichumoi}' where id={id}"
     try:
         cursor.execute(query)
         cursor.commit()

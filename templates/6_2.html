@@ -114,7 +114,7 @@
                     <form action='/capnhat_ghichumoi_lichsu_congtac' method='POST'>
                         <input type="hidden" name="mst_filter" value={{request.args.get('mst', '')}}>
                         <input type="hidden" name="id" value={{row["ID"]}}>
-                        <input type="text" name="ghichumoi" onchange="form.submit()" value={{row["Ghi chứ"]}}>
+                        <input type="text" name="ghichumoi" onchange="form.submit()" value='{{row["Ghi chú"]}}'>
                     </form>
                 </td>
                 <td>
