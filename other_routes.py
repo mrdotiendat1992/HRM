@@ -2912,6 +2912,7 @@ def bangcongchot_web():
         return response
     
 @app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
+@login_required
 def tailen_nhansu_pheduyet_tangca():
     if request.method=="POST":
         file = request.files.get("file")
@@ -2948,6 +2949,7 @@ def laybangcalamviec():
         return jsonify({"data": data})
     
 @app.route("/thaydoi_ngaybatdau_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_ngaybatdau_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -2962,6 +2964,7 @@ def thaydoi_ngaybatdau_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/thaydoi_ngayketthuc_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_ngayketthuc_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -2976,6 +2979,7 @@ def thaydoi_ngayketthuc_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/lay_thongtin_vitri", methods=["POST"])
+@login_required
 def lay_thongtin_vitri():
     try:
         vitri = request.args.get("vitri")
@@ -3004,6 +3008,7 @@ def tailenjd():
             return redirect("/muc2_2")
 
 @app.route("/bangcong_thang_web", methods=["GET","POST"])
+@login_required
 def bangcong_tong_web():
     if request.method == "GET":
         try:
@@ -3151,6 +3156,7 @@ def bangcong_tong_web():
         return response
 
 @app.route("/bangcongtrangoai_web", methods=["GET","POST"])
+@login_required
 def bangcongtrangoai_web():
     if request.method == "GET":
         try:
@@ -3261,6 +3267,7 @@ def bangcongtrangoai_web():
         return response
     
 @app.route("/gd_pheduyet_tuyendung", methods=["POST"])
+@login_required
 def gd_pheduyet_tuyendung():
     if request.method == "POST":
         try:
@@ -3281,6 +3288,7 @@ def gd_pheduyet_tuyendung():
             return redirect("/muc2_2")
         
 @app.route("/gd_tuchoi_tuyendung", methods=["POST"])
+@login_required
 def gd_tuchoi_tuyendung():
     if request.method == "POST":
         try:
@@ -3300,6 +3308,7 @@ def gd_tuchoi_tuyendung():
             return redirect("/muc2_2")
             
 @app.route("/td_capnhat_tuyendung", methods=["POST"])
+@login_required
 def td_capnhat_tuyendung():
     if request.method == "POST":
         try:   
@@ -3316,6 +3325,7 @@ def td_capnhat_tuyendung():
             return redirect("/muc2_2")
 
 @app.route("/td_capnhat_ghichu_tuyendung", methods=["POST"])
+@login_required
 def td_capnhat_ghichu_tuyendung():
     if request.method == "POST":
         try:   
@@ -3332,6 +3342,7 @@ def td_capnhat_ghichu_tuyendung():
             return redirect("/muc2_2")
 
 @app.route("/dangky_ngayle_web", methods=["GET","POST"])
+@login_required
 def dangky_ngayle_web():
     if request.method == "GET":
         try:
@@ -3461,6 +3472,7 @@ def dangky_ngayle_web():
         return response   
             
 @app.route("/dangky_chunhat_web", methods=["GET","POST"])
+@login_required
 def dangky_chunhat_web():
     if request.method == "GET":
         try:
@@ -3590,6 +3602,7 @@ def dangky_chunhat_web():
         return response  
 
 @app.route("/dangky_dilam_ngayle", methods=["POST"])
+@login_required
 def dangky_dilam_ngayle():
     if request.method == "POST":
         file = request.files.get("file")
@@ -3626,6 +3639,7 @@ def dangky_dilam_ngayle():
         return redirect("/dangky_ngayle_web")
             
 @app.route("/dangky_dilam_chunhat", methods=["POST"])
+@login_required
 def dangky_dilam_chunhat():
     if request.method == "POST":
         file = request.files.get("file")
@@ -3663,6 +3677,7 @@ def dangky_dilam_chunhat():
                 return redirect("/dangky_chunhat_web")
 
 @app.route('/download_JD',methods=["POST"])
+@login_required
 def download_file():
     try:
         filename = request.form.get("filename")
@@ -3673,6 +3688,7 @@ def download_file():
         return redirect("/muc2_2")
  
 @app.route('/duyet_hangloat_tangca',methods=["POST"])
+@login_required
 def duyet_hangloat_tangca():  
     try:
         chuyen = request.form.getlist("chuyen")
@@ -3689,6 +3705,7 @@ def duyet_hangloat_tangca():
     return redirect(link)  
 
 @app.route('/boduyet_hangloat_tangca',methods=["POST"])
+@login_required
 def boduyet_hangloat_tangca():  
     try:
         chuyen = request.form.getlist("chuyen")
@@ -3705,6 +3722,7 @@ def boduyet_hangloat_tangca():
     return redirect(link)  
 
 @app.route("/thaydoi_chuyen_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_chuyen_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3719,6 +3737,7 @@ def thaydoi_chuyen_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen_filter}&bophan={bophan}")
     
 @app.route("/thaydoi_bophan_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_bophan_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3733,6 +3752,7 @@ def thaydoi_bophan_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan_filter}")
     
 @app.route("/thaydoi_chucdanh_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_chucdanh_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3747,6 +3767,7 @@ def thaydoi_chucdanh_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/thaydoi_capbac_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_capbac_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3761,6 +3782,7 @@ def thaydoi_capbac_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/thaydoi_hccategory_lichsu_congviec", methods=["POST"])
+@login_required
 def thaydoi_hccategory_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3775,6 +3797,7 @@ def thaydoi_hccategory_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
 
 @app.route("/xoa_lichsu_congviec", methods=["POST"])
+@login_required
 def xoa_lichsu_congviec():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3788,6 +3811,7 @@ def xoa_lichsu_congviec():
         return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen}&bophan={bophan}")
     
 @app.route("/hosonhanvien", methods=["GET"])
+@login_required
 def hosonhanvien():
     if request.method == "GET":
         mst = request.args.get("mst")
@@ -3800,6 +3824,7 @@ def hosonhanvien():
         return render_template("hosonhanvien.html",nhanvien=nhanvien[0],dulieucong=dulieucong)
     
 @app.route("/lay_danhsach_userhientai", methods=["POST"])
+@login_required
 def lay_danhsach_userhientai():
     if request.method == "POST":
         users = laydanhsachuserhientai()
@@ -3889,6 +3914,7 @@ def lay_danhsach_userhientai():
         return response
     
 @app.route("/capnhat_chuyenmoi_lichsu_congtac", methods=["POST"])
+@login_required
 def capnhat_chuyenmoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3902,6 +3928,7 @@ def capnhat_chuyenmoi_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_vitrimoi_lichsu_congtac", methods=["POST"])
+@login_required
 def capnhat_vitrimoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3915,6 +3942,7 @@ def capnhat_vitrimoi_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_phanloaimoi_lichsu_congtac", methods=["POST"])
+@login_required
 def capnhat_phanloaimoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3928,6 +3956,7 @@ def capnhat_phanloaimoi_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_ngaythuchienmoi_lichsu_congtac", methods=["POST"])
+@login_required
 def capnhat_ngaythuchienmoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3941,6 +3970,7 @@ def capnhat_ngaythuchienmoi_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_ghichumoi_lichsu_congtac", methods=["POST"])
+@login_required
 def capnhat_ghichumoi_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3954,6 +3984,7 @@ def capnhat_ghichumoi_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/xoa_lichsu_congtac", methods=["POST"])
+@login_required
 def xoa_lichsu_congtac():
     if request.method == "POST":
         id = request.form.get("id")
@@ -3966,6 +3997,7 @@ def xoa_lichsu_congtac():
         return redirect(f"/muc6_2?mst={mst_filter}")
 
 @app.route("/hr_pheduyet_hangloat_xinnghikhac", methods=["POST"])
+@login_required
 def hr_pheduyet_hangloat_xinnghikhac():
     if request.method == "POST":
         mst = request.form.get("mst")
@@ -3982,3 +4014,22 @@ def hr_pheduyet_hangloat_xinnghikhac():
             else:
                 flash(f"{dong[7]} chưa phê duyệt")
         return redirect(f"/muc7_1_6?mst={mst}&bophan={bophan}&chuyen={chuyen}&ngaynghi={ngaynghi}&loainghi={loainghi}&trangthai={trangthai}&nhangiayto={nhangiayto}")
+
+@app.route("/check_phanquyen", methods=["POST"])
+@login_required
+def check_phanquyen():
+    if request.method == "POST":
+        masothe = request.args.get("masothe")
+        macongty= request.args.get("macongty")
+        phanquyen = lay_phanquyen_hientai(macongty,masothe)
+        return jsonify({"phanquyen":phanquyen})
+    
+@app.route("/capnhat_phanquyen", methods=["POST"])
+@login_required
+def capnhat_phanquyen():
+    if request.method == "POST":
+        masothe = request.form.get("masothe")
+        macongty= request.form.get("macongty")
+        phanquyen = request.form.get("phanquyenmoi")
+        suadoi_phanquyen(macongty,masothe,phanquyen)
+        return redirect("/admin")

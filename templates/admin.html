@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>Quản trị hệ thống</title>
 </head>
 <body>
@@ -33,24 +34,31 @@
                                 <h5 class="modal-title" id="phanquyenModalLabel">Phân quyền người dùng</h5>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" action="/phanquyen">
+                                <form method="POST" action="/capnhat_phanquyen">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="masothe" placeholder="Mã số thẻ">
+                                        <input type="text" class="form-control" id="masothe" name="masothe" placeholder="Mã số thẻ">
                                     </div>
                                     <div class="form-group">
-                                        <input type="hidden" class="form-control" name="macongty"  value={{current_user.macongty}}>
+                                        <input type="hidden" class="form-control" id="macongty" name="macongty"  value={{current_user.macongty}}>
                                     </div>
                                     <div class="form-group">
                                         <input type="text" class="form-control" readonly id="phanquyencu">
                                     </div>
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="phanquyenmoi" placeholder="Phân quyền mới">
+                                        <select type="text" class="form-control" name="phanquyenmoi">
+                                            <option value="sa">Super Admin</option>
+                                            <option value="hr">Nhân sự</option>
+                                            <option value="td">Tuyển dụng</option>
+                                            <option value="tbp">Trưởng bộ phận</option>
+                                            <option value="gd">Giám đốc</option>
+                                        </select>
                                     </div>
-                                </form>
+                                
                             </div>
                             <div class="modal-footer">
                                 <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
                                 <button class="btn btn-primary" type="submit">Lưu</button>
+                            </form>
                             </div>
                         </div>
                     </div>
@@ -63,5 +71,25 @@
         </div>
     </div>
     <script>
+        document.getElementById("masothe").addEventListener("change", function() {
+            var masothe = document.getElementById("masothe").value;
+            var macongty = document.getElementById("macongty").value;
+            axios({
+                method: 'post',
+                url: '/check_phanquyen?masothe=' + masothe+"&macongty="+macongty
+            })
+            .then(function (response) {
+                var data = response.data
+                if (response.data != "") {
+                    data = response.data
+                    console.log(data)
+                    document.getElementById("phanquyencu").value = data["phanquyen"];
+                    
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+        })
         
     </script>

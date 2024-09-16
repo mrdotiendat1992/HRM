@@ -4084,4 +4084,26 @@ def lay_dulieu_tongcong(mst):
         print(e)
         return data
     
+def lay_phanquyen_hientai(macongty,masothe):
+    try:
+        conn = pyodbc.connect(used_db)
+        cur = conn.cursor()
+        query = f"select phanquyen from Nhanvien where macongty='{macongty}' and masothe='{masothe}'"
+        result = cur.execute(query).fetchone()
+        return result[0] if result else ""
+    except Exception as e:
+        print(e)
+        return ""
     
+def suadoi_phanquyen(macongty,masothe,phanquyen):
+    try:
+        conn = pyodbc.connect(used_db)
+        cur = conn.cursor()
+        query = f"update Nhanvien set phanquyen='{phanquyen}' where macongty='{macongty}' and masothe='{masothe}'"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(e)
+        return False
