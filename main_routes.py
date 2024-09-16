@@ -1010,13 +1010,13 @@ def thaydoithongtinlaodong():
             else:
                 query += f"Ngay_nghi = NULL,"
             if ngaykyhdtv:
-                query += f"Ngày kí HĐ Thử việc = '{ngaykyhdtv}',"
+                query += f"Ngay_ky_HDTV = '{ngaykyhdtv}',"
             else:
-                query += f"Ngày kí HĐ Thử việc = NULL,"
+                query += f"Ngay_ky_HDTV = NULL,"
             if ngayhethanhdtv:
-                query += f"Ngày hết hạn HĐ Thử việc = '{ngayhethanhdtv}',"
+                query += f"Ngay_het_han_HDTV = '{ngayhethanhdtv}',"
             else:
-                query += f"Ngày hết hạn  HĐ Thử việc = NULL,"
+                query += f"Ngay_het_han_HDTV = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(used_db)
             cursor = conn.cursor()
