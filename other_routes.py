@@ -3904,6 +3904,19 @@ def capnhat_ngaythuchienmoi_lichsu_congtac():
             flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
+@app.route("/capnhat_ghichumoi_lichsu_congtac", methods=["POST"])
+def capnhat_ghichumoi_lichsu_congtac():
+    if request.method == "POST":
+        id = request.form.get("id")
+        ghichumoi = request.form.get("ghichumoi")
+        mst_filter = request.form.get("mst_filter")
+        ketqua = thaydoi_ghichu_lichsu_congtac(id,ghichumoi)
+        if ketqua["ketqua"]:
+            flash(f"Thay đổi lịch sử công tác dòng {id} ghi chú thành {ghichumoi} thành công")
+        else:
+            flash(f"Thay đổi lịch sử công tác dòng {id} ghi chú thành {ghichumoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+        return redirect(f"/muc6_2?mst={mst_filter}")
+    
 @app.route("/xoa_lichsu_congtac", methods=["POST"])
 def xoa_lichsu_congtac():
     if request.method == "POST":

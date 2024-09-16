@@ -4009,7 +4009,23 @@ def thaydoi_ngaythuchien_lichsu_congtac(id,ngaythuchienmoi):
             "lido":e,
             "query":query
         }
-        
+
+def thaydoi_ghichu_lichsu_congtac(id,ghichumoi):
+    conn = pyodbc.connect(used_db)
+    cursor = conn.cursor()
+    query = f"update Lich_su_cong_tac set Ghi_chu='{ghichumoi}' where id={id}"
+    try:
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return {"ketqua":True}
+    except Exception as e:
+        return {
+            "ketqua":False,
+            "lido":e,
+            "query":query
+        }
+    
 def xoabo_lichsu_congtac(id):
     try:
         conn = pyodbc.connect(used_db)
