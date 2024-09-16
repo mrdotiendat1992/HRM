@@ -1662,7 +1662,7 @@ def tailen_danhsach_tangca():
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
                 file.save(filepath)
-                data = pd.read_excel(filepath ).to_dict(orient="records")
+                data = pd.read_excel(filepath, engine='openpyxl', index=False).to_dict(orient="records")
                 for row in data:
                     nhamay = row['Nhà máy']
                     mst = int(row["Mã số thẻ"])
