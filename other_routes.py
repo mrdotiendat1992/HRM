@@ -934,6 +934,7 @@ def nhansunhangiaytoxinnghikhac():
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
             #     return redirect(f"/muc7_1_3?mst={mst_filter}&hoten{hoten_filter}=&chucvu={chucvu_filter}&chuyen={chuyen_filter}&bophan={bophan_filter}&loaidiemdanh={loaidiemdanh_filter}&ngay={ngay_filter}&lydo={lydo_filter}&trangthai={trangthai_filter}")
+            print(current_user.macongty,current_user.masothe)
             if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369 ):
                 if nhangiayto == "Có":    
                     nhansu_nhangiayto_xinnghikhac(id)
