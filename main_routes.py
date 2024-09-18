@@ -2830,11 +2830,12 @@ def muc7_1_14():
 def muc7_1_15():
     if request.method=="GET":
         mst = request.args.get("mst")
+        chuyen = request.args.get('chuyen')
         phongban = request.args.get("phongban")
         tungay = request.args.get("tungay")
         denngay = request.args.get("denngay")
         phanloai = request.args.get("phanloai")
-        rows = laydanhsachchamcongchot(mst,phongban,tungay,denngay,phanloai)
+        rows = laydanhsachchamcongchot(mst,chuyen,phongban,tungay,denngay,phanloai)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
