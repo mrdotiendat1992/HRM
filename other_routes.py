@@ -1835,8 +1835,8 @@ def bangcong_hanhchinh_web():
             "Chuyền": row[3],
             "Vị trí": row[4],
             "Chức danh": row[5],
-            "Ngày vào": datetime.strptime(row[6],"%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",
-            "Ngày chính thức": datetime.strptime(row[7],"%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
+            "Ngày vào": row[6] if row[6] else "",
+            "Ngày chính thức": row[7] if row[7] else "",
             "Ca": row[8], 
             "01": row[9],
             "02": row[10],
@@ -1876,25 +1876,76 @@ def bangcong_hanhchinh_web():
             "Nhà máy": row[44]
         } for row in danhsach]  
         df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='ignore')
-        df["Thử việc"] = to_numeric(df['Thử việc'], errors='ignore')
-        df["Chính thức"] = to_numeric(df['Chính thức'], errors='ignore')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='ignore')
-        df["Năm"] = to_numeric(df['Năm'], errors='ignore')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='ignore')
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='ignore')
+        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
+        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
+        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
+        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
+        df["01"] = to_numeric(df['01'], errors='ignore')
+        df["02"] = to_numeric(df['02'], errors='ignore')
+        df["03"] = to_numeric(df['03'], errors='ignore')
+        df["04"] = to_numeric(df['04'], errors='ignore')
+        df["05"] = to_numeric(df['05'], errors='ignore')
+        df["06"] = to_numeric(df['06'], errors='ignore')
+        df["07"] = to_numeric(df['07'], errors='ignore')
+        df["08"] = to_numeric(df['08'], errors='ignore')
+        df["09"] = to_numeric(df['09'], errors='ignore')
+        df["10"] = to_numeric(df['10'], errors='ignore')
+        df["11"] = to_numeric(df['11'], errors='ignore')
+        df["12"] = to_numeric(df['12'], errors='ignore')
+        df["13"] = to_numeric(df['13'], errors='ignore')
+        df["14"] = to_numeric(df['14'], errors='ignore')
+        df["15"] = to_numeric(df['15'], errors='ignore')
+        df["16"] = to_numeric(df['16'], errors='ignore')
+        df["17"] = to_numeric(df['17'], errors='ignore')
+        df["18"] = to_numeric(df['18'], errors='ignore')
+        df["19"] = to_numeric(df['19'], errors='ignore')
+        df["20"] = to_numeric(df['20'], errors='ignore')
+        df["21"] = to_numeric(df['21'], errors='ignore')
+        df["22"] = to_numeric(df['22'], errors='ignore')
+        df["23"] = to_numeric(df['23'], errors='ignore')
+        df["24"] = to_numeric(df['24'], errors='ignore')
+        df["25"] = to_numeric(df['25'], errors='ignore')
+        df["26"] = to_numeric(df['26'], errors='ignore')
+        df["27"] = to_numeric(df['27'], errors='ignore')
+        df["28"] = to_numeric(df['28'], errors='ignore')
+        df["29"] = to_numeric(df['29'], errors='ignore')
+        df["30"] = to_numeric(df['30'], errors='ignore')
+        df["31"] = to_numeric(df['31'], errors='ignore')
         output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
 
-        # Điều chỉnh độ rộng cột
+        # Adjust column width and format the header row
         output.seek(0)
         workbook = openpyxl.load_workbook(output)
         sheet = workbook.active
 
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
         for column in sheet.columns:
             max_length = 0
             column_letter = column[0].column_letter
             for cell in column:
                 try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if cell.column_letter in ['J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP'] and cell.value is not None:
+                        cell.number_format = '0.00'
+                    if cell.column_letter in ['A','AQ','AR'] and cell.value is not None:
+                        cell.number_format = '0'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
@@ -1902,6 +1953,7 @@ def bangcong_hanhchinh_web():
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[column_letter].width = adjusted_width
 
+        # Save the modified workbook to the output BytesIO object
         output = BytesIO()
         workbook.save(output)
         output.seek(0)
