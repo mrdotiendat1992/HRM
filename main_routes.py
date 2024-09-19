@@ -50,17 +50,27 @@ def run_before_every_request():
                         Xin_nghi_khong_luong.Nha_may= a.Nha_may and Xin_nghi_khong_luong.Chuyen=a.Chuyen_to
                     WHERE 
                         Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
-
+                quanly_soluong_xinnghikhac = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
+                    INNER JOIN 
+                        Xin_nghi_khac 
+                    ON
+                        Xin_nghi_khac.Nha_may= a.Nha_may and Xin_nghi_khac.Line=a.Chuyen_to
+                    WHERE 
+                        Xin_nghi_khac.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{current_user.masothe}'""").fetchone()[0]
                 g.notice["Quản lý"]={"Điểm danh bù":quanly_soluong_diemdanhbu,
                     "Xin nghỉ phép": quanly_soluong_xinnghiphep,
                     "Xin nghỉ không lương": quanly_soluong_xinnghikhongluong,
-                    "Số thông báo": quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong
+                    "Xin nghỉ khác": quanly_soluong_xinnghikhac,
+                    "Số thông báo": quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong + quanly_soluong_xinnghikhac
                     }
-                g.notice["Tổng"] = g.notice["Tổng"] + quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong
+                g.notice["Tổng"] = g.notice["Tổng"] + quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong + quanly_soluong_xinnghikhac
             else:
                 g.notice["Quản lý"]={}
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
-            # print(f"Thuky: {row}")
             if row[0]>0:
                 cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
                 query_kiemtra_loithe = f"""
@@ -79,9 +89,9 @@ def run_before_every_request():
                     WHERE 
                         Danh_sach_loi_the_3.Trang_thai IS NULL 
                         AND distinct_pqt.MST = '{current_user.masothe}'"""
-                # print(query_kiemtra_loithe)
+
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
-                # print(f"Loi the: {soluong_loithe}")
+
                 thuky_soluong_diemdanhbu = cursor.execute(f"""
                 SELECT 
                     COUNT(*) as row_count 
@@ -130,13 +140,31 @@ def run_before_every_request():
                     WHERE 
                         Xin_nghi_khong_luong.Trang_thai = N'Chờ kiểm tra' 
                         AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                thuky_soluong_xinnghikhac = cursor.execute(f"""
+                    SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        (
+                            SELECT DISTINCT Nha_may, Chuyen_to, MST
+                            FROM Phan_quyen_thu_ky
+                        ) as distinct_pqt 
+                    INNER JOIN 
+                        Xin_nghi_khac
+                    ON
+                        Xin_nghi_khac.Nha_may = distinct_pqt.Nha_may 
+                        AND Xin_nghi_khac.Line = distinct_pqt.Chuyen_to
+                    WHERE 
+                        Xin_nghi_khac.Trang_thai = N'Chờ kiểm tra' 
+                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                
                 g.notice["Thư ký"]={"Danh sách lỗi thẻ":soluong_loithe,
                                     "Điểm danh bù":thuky_soluong_diemdanhbu,
                                     "Xin nghỉ phép": thuky_soluong_xinnghiphep,
                                     "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
+                                    "Xin nghỉ khác": thuky_soluong_xinnghikhac,
                                     "Line":cac_chuyen_thuky_quanly[0] if len(cac_chuyen_thuky_quanly)==1 else "",
                                     "Số thông báo":soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
-                g.notice["Tổng"] = g.notice["Tổng"] + soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong
+                g.notice["Tổng"] = g.notice["Tổng"] + soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong + thuky_soluong_xinnghikhac
             else:
                 g.notice["Thư ký"]={}
             
@@ -173,7 +201,18 @@ def run_before_every_request():
             so_don_xinnghikhongluong = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
             
-            so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong
+            so_don_xinnghikhac_chuakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Chờ kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhac_dakiemtra = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã kiểm tra' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhac_dapheduyet = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai=N'Đã phê duyệt' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhac_bituchoi = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Trang_thai LIKE N'Bị từ chối%' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            so_don_xinnghikhac = cursor.execute(f"""select count(*) from Xin_nghi_khong_luong 
+                                                           where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]
+            
+            so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong + so_don_xinnghikhac
             so_lan_loi_cham_cong = cursor.execute(f"""select count(*) from Danh_sach_loi_the_3 
                                                            where MST='{current_user.masothe}' and Nha_may= '{current_user.macongty}'""").fetchone()[0]           
             
@@ -199,11 +238,11 @@ def run_before_every_request():
                                                     "Bị từ chối": so_don_xinnghikhongluong_bituchoi,
                                                 },
                                   "Xin nghỉ khác":{
-                                                    "Chưa kiểm tra":0,
-                                                    "Đã kiểm tra": 0,
-                                                    "Đã phê duyệt": 0,
-                                                    "Tổng": 0,
-                                                    "Bị từ chối": 0,
+                                                    "Chưa kiểm tra":so_don_xinnghikhac_chuakiemtra,
+                                                    "Đã kiểm tra": so_don_xinnghikhac_dakiemtra,
+                                                    "Đã phê duyệt": so_don_xinnghikhac_dapheduyet,
+                                                    "Tổng": so_don_xinnghikhac,
+                                                    "Bị từ chối": so_don_xinnghikhac_bituchoi,
                                                 },
                                   "Tổng":so_don,
                                   "Lỗi chấm công": so_lan_loi_cham_cong
