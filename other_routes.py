@@ -605,29 +605,6 @@ def export_dscctt():
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
 
-@app.route("/export_dsxnk", methods=["POST"])
-def export_dsxnk():
-    mst = request.form.get('mst')
-    ngaynghi = request.form.get('ngaynghi')
-    loainghi = request.form.get("loainghi")
-    danhsach = laydanhsachxinnghikhac(mst,ngaynghi,loainghi)
-    result = []
-    for row in danhsach:
-        result.append(
-            {
-                'Nhà máy': row[0],
-                'MST': row[1],
-                'Ngày nghỉ': datetime.strptime(row[2], '%Y-%m-%d').strftime('%d/%m/%Y'),
-                'Tổng số phút': row[3],
-                'Loại nghỉ': row[4],
-            }
-        )
-    df = pd.DataFrame(result)
-    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhac_{thoigian}.xlsx"), index=False)
-    
-    return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhac_{thoigian}.xlsx"), as_attachment=True)
-
 @app.route("/thuky_kiemtra_diemdanhbu", methods=["POST"])
 def thukykiemtradiemdanhbu():
     if request.method == "POST":

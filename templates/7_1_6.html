@@ -114,6 +114,7 @@
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
                     <th>Chuyền</th>
+                    <th>Chức danh</th>
                     <th>Phòng ban</th>
                     <th>Ngày nghỉ </th>
                     <th>Tổng số phút</th>
@@ -141,49 +142,50 @@
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
                     <td>{{row[1]}}</td>
-                    <td>{{row[8]}}</td>
-                    <td>{{row[9]}}</td>
-                    <td>{{row[10]}}</td>
-                    <td class="date_en">{{row[2]}}</td>
-                    <td>{{row[3]}}</td>
+                    <td>{{row[2]}}</td>
                     <td>{{row[4]}}</td>
-                    {% if not row[5] or row[5] == 'Chờ kiểm tra'%}
+                    <td>{{row[3]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td class="date_en">{{row[6]}}</td>
+                    <td>{{row[7]}}</td>
+                    <td>{{row[8]}}</td>
+                    {% if not row[9] or row[9] == 'Chờ kiểm tra'%}
                         <td style="display: flex;" >Chờ kiểm tra 
                             <form action="/thuky_kiemtra_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                 <input type="submit" class="btn btn-warning btn-sm" id="kiemtra" name="kiemtra" value="Kiểm tra">
                             </form>
                             <form action="/thuky_kiemtra_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                 <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
                             </form>
                         </td>
                         <td>Chưa nhận</td>
-                    {% elif row[5] == 'Đã kiểm tra' or row[5] == 'Đã kiểm tra'  %}
+                    {% elif row[9] == 'Đã kiểm tra' or row[9] == 'Đã kiểm tra'  %}
                         <td style="display: flex;" >
                             Đã kiểm tra 
                             <form action="/quanly_pheduyet_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                 <input type="submit" class="btn btn-warning btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                             </form>
                             <form action="/quanly_pheduyet_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[7]}}">
+                                <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                 <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                             </form>
                         </td>
                         <td>Chưa nhận</td>
-                    {% elif row[5] == 'Đã phê duyệt' or row[5] == 'Đã phê duyệt' %}
+                    {% elif row[9] == 'Đã phê duyệt' or row[9] == 'Đã phê duyệt' %}
                         <td>Đã phê duyệt </td>
-                        {% if row[6] == 'Đã nhận' or row[6] == 'Không có' %}
-                            <td>{{row[6]}}</td>
+                        {% if row[10] == 'Đã nhận' or row[10] == 'Không có' %}
+                            <td>{{row[10]}}</td>
                         {% else %}
                             <td style="display: flex;">
                                 Chưa nhận 
@@ -202,7 +204,7 @@
                             </td>
                         {% endif %}
                     {% else %}
-                        <td>{{row[5]}} </td>
+                        <td>{{row[9]}} </td>
                         <td></td>
                     {% endif %}
                 </tr>  
@@ -222,6 +224,11 @@
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
+        });
+        document.querySelectorAll('td').forEach((element) => {
+            if (element.textContent.trim() === 'None') {
+                element.textContent = '';
+            }
         });
     });
 </script>
