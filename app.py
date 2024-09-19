@@ -1893,34 +1893,58 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, kh
         print(e)
         return False
     
-def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto):
+def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""SELECT * from Xin_nghi_khac where Xin_nghi_khac.Nha_may='{current_user.macongty}' """
-        
-        if mst:
-            query += f" AND MST='{mst}'" 
-        if chuyen:
-            query += f" AND Line='{chuyen}'" 
-        if bophan:
-            query += f" AND Bo_phan='{bophan}'" 
-        if ngaynghi:
-            query += f" AND Ngay_nghi='{ngaynghi}'" 
-        if loainghi:
-            query += f" AND Loai_nghi='{loainghi}'" 
-        if trangthai:
-            if trangthai=="Chưa kiểm tra":
-                query += f" AND (Trang_thai=N'{trangthai}' or Trang_thai is NULL)"
+        if mstthuky:
+            query = f"""
+            SELECT  *
+            FROM 
+                Xin_nghi_khac 
+            INNER JOIN 
+                Phan_quyen_thu_ky
+            ON
+                Xin_nghi_khac.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khac.Line=Phan_quyen_thu_ky.Chuyen_to
+            WHERE 
+                Xin_nghi_khac.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
+        else:
+            if mstquanly:
+                query = f"""
+                SELECT *
+                FROM 
+                    Xin_nghi_khac 
+                INNER JOIN 
+                    Phan_quyen_thu_ky
+                ON
+                    Xin_nghi_khac.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khac.Line=Phan_quyen_thu_ky.Chuyen_to
+                WHERE 
+                    Xin_nghi_khac.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}'"""
             else:
-                query += f" AND Trang_thai=N'{trangthai}'"
-        if nhangiayto:
-            if nhangiayto=="Chưa nhận":
-                query += f" AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
-            else:
-                query += f" AND Giay_to=N'{nhangiayto}'" 
-        query += " ORDER BY Ngay_nghi DESC, MST ASC"
-        
+                query = f"""SELECT * from Xin_nghi_khac where Nha_may='{current_user.macongty}' """
+                
+                if mst:
+                    query += f" AND MST='{mst}'" 
+                if chuyen:
+                    query += f" AND Line='{chuyen}'" 
+                if bophan:
+                    query += f" AND Bo_phan='{bophan}'" 
+                if ngaynghi:
+                    query += f" AND Ngay_nghi='{ngaynghi}'" 
+                if loainghi:
+                    query += f" AND Loai_nghi='{loainghi}'" 
+                if trangthai:
+                    if trangthai=="Chưa kiểm tra":
+                        query += f" AND (Trang_thai=N'{trangthai}' or Trang_thai is NULL)"
+                    else:
+                        query += f" AND Trang_thai=N'{trangthai}'"
+                if nhangiayto:
+                    if nhangiayto=="Chưa nhận":
+                        query += f" AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
+                    else:
+                        query += f" AND Giay_to=N'{nhangiayto}'" 
+                query += " ORDER BY Ngay_nghi DESC, MST ASC"
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows 

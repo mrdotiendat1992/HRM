@@ -411,6 +411,18 @@
                                             <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ không lương"]}} đơn xin nghỉ không lương cần bạn phê duyệt</span>
                                         </div>
                                     </a>
+                                    {% endif %} 
+                                    {% if notice["Quản lý"]["Xin nghỉ khác"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_6?mstquanly={{current_user.masothe}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-danger">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ khác"]}} đơn xin nghỉ khác cần bạn phê duyệt</span>
+                                        </div>
+                                    </a>
                                     {% endif %}                                       
                                     {% endif %}
 
@@ -448,6 +460,18 @@
                                         </div>
                                         <div>
                                             <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ không lương"]}} đơn xin nghỉ không lương cần bạn kiểm tra.</span>
+                                        </div>
+                                    </a>
+                                    {% endif %} 
+                                    {% if notice["Thư ký"]["Xin nghỉ khác"] %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc7_1_6?mstthuky={{current_user.masothe}}">
+                                        <div class="mr-3">
+                                            <div class="icon-circle bg-danger">
+                                                <i class="fas fa-file-alt text-white"></i>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ khác"]}} đơn xin nghỉ khác cần bạn kiểm tra.</span>
                                         </div>
                                     </a>
                                     {% endif %} 

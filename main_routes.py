@@ -1809,6 +1809,8 @@ def xinnghikhongluong():
 @login_required
 def danhsachxinnghikhac():
     if request.method == "GET":
+        mstthuky = request.args.get("mstthuky")
+        mstquanly = request.args.get("mstquanly")
         mst = request.args.get("mst")
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
@@ -1816,7 +1818,7 @@ def danhsachxinnghikhac():
         loainghi = request.args.get("loainghi")
         trangthai = request.args.get("trangthai")
         nhangiayto = request.args.get("nhangiayto")
-        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -1831,6 +1833,8 @@ def danhsachxinnghikhac():
                                 pagination=pagination,
                                 count=count)
     elif request.method == "POST":
+        mstthuky = request.form.get("mstthuky")
+        mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
@@ -1838,7 +1842,7 @@ def danhsachxinnghikhac():
         loainghi = request.form.get("loainghi")
         trangthai = request.form.get("trangthai")
         nhangiayto = request.form.get("nhangiayto")
-        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto)
+        danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly)
         data = [{
             "Nhà máy": row[0],
             "Mã số thẻ": row[1],
