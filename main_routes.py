@@ -12,8 +12,8 @@ def run_before_every_request():
     try:
         if current_user.is_authenticated:
             f12 = trang_thai_function_12()
-            g.notice={"f12":f12, "db":used_db ,"Tổng":0}
-            conn = pyodbc.connect(used_db)
+            g.notice={"f12":f12, "db":url_database_pyodbc ,"Tổng":0}
+            conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST_QL='{current_user.masothe}'").fetchone()
             if row[0]>0:
@@ -212,7 +212,7 @@ def run_before_every_request():
     except Exception as e:  
         print(e)
         f12 = trang_thai_function_12()    
-        g.notice={"f12":f12,"db":used_db }
+        g.notice={"f12":f12,"db":url_database_pyodbc }
     # print(g.notice)
     
 @app.context_processor
@@ -237,21 +237,21 @@ def login():
             user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()    
             if user and user.matkhau == matkhau:
                 if login_user(user):    
-                    print(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
+                    app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
                     return redirect(url_for('home'))
             return redirect(url_for("login"))
         except Exception as e:
-            print(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
+            app.logger.error(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
             return redirect(url_for("login"))
     return render_template("login.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
     try:
-        print(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
+        app.logger.info(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
         logout_user()
     except Exception as e:
-        print(f'Không thế đăng xuất {e} !!!')
+        app.logger.error(f'Không thế đăng xuất {e} !!!')
     return redirect("/")
 
 @app.route("/doimatkhau", methods=['POST'])
@@ -261,11 +261,10 @@ def doimatkhau():
     matkhaumoi = request.form.get("matkhaumoi")
     try:
         if doimatkhautaikhoan(macongty,masothe,matkhaumoi):
-            print("Đổi mật khẩu thành công")
+            flash("Đổi mật khẩu thành công")
     except Exception as e:
-        print(f"Đổi mật khẩu không thành công: {e}")
+        app.logger.error(f"{masothe} o {macongty} doi mat khau thanh {matkhaumoi} thanh cong !!!")
     return redirect(url_for("home"))
-
 
 @app.route("/home", methods=['GET','POST'])
 @login_required
@@ -293,10 +292,6 @@ def home():
         chuyen = request.args.get("Chuyền")
         users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)   
         count = len(users)
-        cacphongban = laycacphongban()
-        cacto = laycacto()
-        cactrangthai = laycactrangthai()
-        cachccategory = laycachccategory()
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
         total = len(users)
@@ -307,115 +302,116 @@ def home():
         songuoi_danglamviec = lay_soluong_danglamviec()
         songuoi_dangnghithaisan = lay_soluong_dangnghithaisan()
         flash(f"Xin chào {current_user.hoten} !!!")
-        return render_template("home.html", users=paginated_users, 
-                            cacphongban=cacphongban, cacto=cacto,
-                            page="Trang chủ", pagination=pagination,
-                            cactrangthai=cactrangthai,count=count,
-                            cachccategory=cachccategory,
+        return render_template("home.html", users=paginated_users,
+                            page="Trang chủ", pagination=pagination,count=count,
                             songuoi_danglamviec=songuoi_danglamviec,
                             songuoi_dangnghithaisan=songuoi_dangnghithaisan)
     else:
-        mst = request.form.get("Mã số thẻ")
-        hoten = request.form.get("Họ tên")
-        sdt = request.form.get("Số điện thoại")
-        cccd = request.form.get("Căn cước công dân")
-        gioitinh = request.form.get("Giới tính")
-        vaotungay = request.form.get("Vào từ ngày")
-        vaodenngay = request.form.get("Vào đến ngày")
-        nghitungay = request.form.get("Nghỉ từ ngày")
-        nghidenngay = request.form.get("Nghỉ đến ngày")
-        phongban = request.form.get("Phòng ban")
-        chucvu = request.form.get("Chức danh")
-        trangthai = request.form.get("Trạng thái")
-        hccategory = request.form.get("Headcount Category")
-        ghichu = request.form.get("Ghi chú")
-        chuyen = request.form.get("Chuyền")
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
-        
-        for user in users:
-            user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày sinh"]!="" else ""
-            user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày cấp CCCD"]!="" else ""
-            user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày ký HĐ"]!="" else ""
-            user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào"]!="" else ""
-            user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày nghỉ"]!="" else ""
-            user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn"]!="" else ""
-            user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào nối thâm niên"]!="" else ""
-            user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ Thử việc"]!="" else ""
-            user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ Thử việc"]!="" else ""
-            user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"]!="" else ""
-            user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"]!="" else ""
-            user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ không thời hạn"]!="" else ""
+        try:
+            mst = request.form.get("Mã số thẻ")
+            hoten = request.form.get("Họ tên")
+            sdt = request.form.get("Số điện thoại")
+            cccd = request.form.get("Căn cước công dân")
+            gioitinh = request.form.get("Giới tính")
+            vaotungay = request.form.get("Vào từ ngày")
+            vaodenngay = request.form.get("Vào đến ngày")
+            nghitungay = request.form.get("Nghỉ từ ngày")
+            nghidenngay = request.form.get("Nghỉ đến ngày")
+            phongban = request.form.get("Phòng ban")
+            chucvu = request.form.get("Chức danh")
+            trangthai = request.form.get("Trạng thái")
+            hccategory = request.form.get("Headcount Category")
+            ghichu = request.form.get("Ghi chú")
+            chuyen = request.form.get("Chuyền")
+            users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
             
+            # Chuyển thông tin ngày về định dạng YYYY-MM-DD
+            for user in users:
+                user["Ngày sinh"] = datetime.strptime(user["Ngày sinh"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày sinh"]!="" else ""
+                user["Ngày cấp CCCD"] = datetime.strptime(user["Ngày cấp CCCD"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày cấp CCCD"]!="" else ""
+                user["Ngày ký HĐ"] = datetime.strptime(user["Ngày ký HĐ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày ký HĐ"]!="" else ""
+                user["Ngày vào"] = datetime.strptime(user["Ngày vào"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào"]!="" else ""
+                user["Ngày nghỉ"] = datetime.strptime(user["Ngày nghỉ"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày nghỉ"]!="" else ""
+                user["Ngày hết hạn"] = datetime.strptime(user["Ngày hết hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn"]!="" else ""
+                user["Ngày vào nối thâm niên"] = datetime.strptime(user["Ngày vào nối thâm niên"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày vào nối thâm niên"]!="" else ""
+                user["Ngày kí HĐ Thử việc"] = datetime.strptime(user["Ngày kí HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ Thử việc"]!="" else ""
+                user["Ngày hết hạn HĐ Thử việc"] = datetime.strptime(user["Ngày hết hạn HĐ Thử việc"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ Thử việc"]!="" else ""
+                user["Ngày hết hạn HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày hết hạn HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày hết hạn HĐ xác định thời hạn lần 1"]!="" else ""
+                user["Ngày kí HĐ xác định thời hạn lần 1"] = datetime.strptime(user["Ngày kí HĐ xác định thời hạn lần 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ xác định thời hạn lần 1"]!="" else ""
+                user["Ngày kí HĐ không thời hạn"] = datetime.strptime(user["Ngày kí HĐ không thời hạn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["Ngày kí HĐ không thời hạn"]!="" else ""
+                
 
-        df = pd.DataFrame(users)
+            df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='ignore')
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='ignore')
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='ignore')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='ignore')
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='ignore')
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='ignore')
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='ignore')
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='ignore')
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='ignore')
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='ignore')
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='ignore')
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='ignore')
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='ignore')
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='ignore')
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='ignore')
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='ignore')
-        
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+            df["Ngày sinh"] = to_datetime(df['Ngày sinh'])
+            df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'])
+            df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'])
+            df["Ngày vào"] = to_datetime(df['Ngày vào'])
+            df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'])
+            df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'])
+            df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'])
+            df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
+            df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'])
+            df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'])
+            df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'])
+            df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'])
+            df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'])
+            df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'])
+            df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'])
+            df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'])
+            df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'])
+            
+            output = BytesIO()
+            with pd.ExcelWriter(output, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False)
 
-        # Adjust column width and format the header row
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+            # Adjust column width and format the header row
+            output.seek(0)
+            workbook = openpyxl.load_workbook(output)
+            sheet = workbook.active
 
-        # Style the header row
-        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
-        header_font = Font(bold=True, color="FFFFFF")
+            # Style the header row
+            header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+            header_font = Font(bold=True, color="FFFFFF")
 
-        for cell in sheet[1]:
-            cell.fill = header_fill
-            cell.font = header_font
+            for cell in sheet[1]:
+                cell.fill = header_fill
+                cell.font = header_font
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
-                try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['E','H','AB','AD','AF','AF','AJ','AO','AP','BG','BH','BJ','BL','BM','BM','BO','BP','BQ','BR'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+            # Create a date format for short date
+            date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+            if "short_date" not in workbook.named_styles:
+                workbook.add_named_style(date_format)
+            for column in sheet.columns:
+                max_length = 0
+                column_letter = column[0].column_letter
+                for cell in column:
+                    try:
+                        # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                        if cell.column_letter in ['E','H','AB','AD','AF','AF','AJ','AO','AP','BG','BH','BJ','BL','BM','BM','BO','BP','BQ','BR'] and cell.value is not None:
+                            cell.number_format = 'DD/MM/YYYY'
+                        if len(str(cell.value)) > max_length:
+                            max_length = len(cell.value)
+                    except:
+                        pass
+                adjusted_width = (max_length + 2)
+                sheet.column_dimensions[column_letter].width = adjusted_width
 
-        # Save the modified workbook to the output BytesIO object
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        
-        # Generate the timestamp for the filename
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        
-        # Return the file to the client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+            # Save the modified workbook to the output BytesIO object
+            output = BytesIO()
+            workbook.save(output)
+            output.seek(0)
+            
+            # Generate the timestamp for the filename
+            time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+            
+            # Return the file to the client
+            response = make_response(output.read())
+            response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
+            response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            return response
+        except Exception as e:
+            flash(f"Lỗi kết xuất danh sách nhân viên")
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
@@ -470,7 +466,7 @@ def danhsachdangkytuyendung():
         luuhoso = request.form.get("luuhoso")
         ghichu = request.form.get("ghichu")
         cccd = request.form.get("cccd")
-        if capnhatthongtinungvien(id,
+        ketqua = capnhatthongtinungvien(id,
                                sdt,
                                ngayhendilam,
                                hieusuat,
@@ -495,10 +491,11 @@ def danhsachdangkytuyendung():
                                luuhoso,
                                ghichu,
                                cccd
-                               ):
+                               )
+        if ketqua["ketqua"]:
             flash("Cập nhật thông tin ứng viên thành công !!!")
         else:
-            flash("Cập nhật thông tin ứng viên thất bại !!!")
+            flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2", methods=["GET","POST"])
@@ -534,9 +531,9 @@ def dangkytuyendung():
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
                 if them_thongbao_co_yeucautuyendung(current_user.masothe,current_user.hoten):
-                    flash("Thêm thoong báo có yêu cầu tuyển dụng mới thành công !!!")
+                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
                 else:
-                    flash("Thêm thoong báo có yêu cầu tuyển dụng mới thất bại !!!")
+                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thất bại !!!")
                 
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
@@ -635,17 +632,18 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdvth = "NULL"
 
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
-            if themnhanvienmoi(nhanvienmoi):
+            ketqua = themnhanvienmoi(nhanvienmoi)
+            if ketqua["ketqua"]:
                 flash("Thêm lao động mới thành công !!!")
                 ca = laycatheochuyen(request.form.get("line"))
-                themdoicamoi(
+                thangdangkycalamviec(
                     request.form.get("masothe"),
                     ca,
                     ca,
                     datetime.now().date().strftime("%Y-%m-%d"),  # This returns a datetime.date object
                     datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  # Convert to datetime.date
                 )
-                flash("Tạo ca mặc định cho người mới thành công !!!")  
+                flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
                 themtaikhoanmoi(
                     int(request.form.get("masothe")),
                     request.form.get("hoten"),
@@ -1018,7 +1016,7 @@ def thaydoithongtinlaodong():
             else:
                 query += f"Ngay_het_han_HDTV = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
-            conn = pyodbc.connect(used_db)
+            conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
             cursor.execute(query)
             conn.commit()
@@ -1450,8 +1448,8 @@ def lichsudieuchuyen():
         kieudieuchuyen = request.args.get("kieudieuchuyen")
         data = laylichsucongtac(mst,hoten,ngay,kieudieuchuyen)
         df = DataFrame(data)
-        df["Ngày thực hiện"] = to_datetime(df['Ngày thực hiện'], errors='ignore')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='ignore')
+        df["Ngày thực hiện"] = to_datetime(df['Ngày thực hiện'])
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'])
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -1532,8 +1530,8 @@ def lichsucongviec():
             "Ngày kết thúc": row[9]
         } for row in rows]
         df = DataFrame(data)
-        df["Ngày bắt đầu"] = to_datetime(df['Ngày bắt đầu'], errors='ignore')
-        df["Ngày kết thúc"] = to_datetime(df['Ngày kết thúc'], errors='ignore')
+        df["Ngày bắt đầu"] = to_datetime(df['Ngày bắt đầu'])
+        df["Ngày kết thúc"] = to_datetime(df['Ngày kết thúc'])
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)

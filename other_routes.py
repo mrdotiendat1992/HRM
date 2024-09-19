@@ -38,7 +38,7 @@ def capnhattrangthaiungvien():
 @app.route("/laythongtincccd", methods=["POST"])
 def laythongtincccd():
     
-    conn = pyodbc.connect(used_db)
+    conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
 
     if request.method == "POST":
@@ -398,7 +398,7 @@ def doicacanhan():
         camoi = request.form.get("camoi")
         ngaybatdau = request.form.get("ngaybatdau")
         ngayketthuc = request.form.get("ngayketthuc")
-        themdoicamoi(mst,cacu,camoi,ngaybatdau,ngayketthuc)
+        thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc)
         flash(f"Đổi ca thành công cho MST {mst} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
@@ -430,7 +430,7 @@ def doicanhom():
                         data = pd.read_excel(filepath).to_dict(orient="records")
                         for row in data:
                             print(row)
-                            themdoicamoi(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
+                            thangdangkycalamviec(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
             camoi = request.form.get("camoinhom")
@@ -438,7 +438,7 @@ def doicanhom():
             ngayketthuc = request.form.get("ngayketthuc")
             
             for user in danhsach:
-                themdoicamoi(user['MST'],laycahientai(user['MST']),camoi,ngaybatdau,ngayketthuc)
+                thangdangkycalamviec(user['MST'],laycahientai(user['MST']),camoi,ngaybatdau,ngayketthuc)
             cacmst = [user['MST'] for user in danhsach]
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
