@@ -191,13 +191,13 @@
                                 Chưa nhận 
                                 <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                    <input type="hidden" name="id" value="{{row[7]}}">
+                                    <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                     <input type="submit" class="btn btn-warning btn-sm" id="nhangiayto" name="nhangiayto" value="Có">
                                 </form>
                                 <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                    <input type="hidden" name="id" value="{{row[7]}}">
+                                    <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                     <input type="submit" class="btn btn-danger btn-sm" id="nhangiayto" name="nhangiayto" value="Không">
                                 </form>

@@ -52,6 +52,8 @@
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ffcc00; color: white;">
                 {% elif row["Loại hợp đồng"]=='Phụ lục hợp đồng' %}
                 <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ff4d4d; color: white;">
+                {% else %}
+                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: purple ; color: white;">
                 {% endif %}
                     <div class="card-body">
                         <h5 class="card-title"><b>{{row["Loại hợp đồng"]}}</b></h5>
