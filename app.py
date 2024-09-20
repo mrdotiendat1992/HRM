@@ -2720,9 +2720,9 @@ def them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,tra
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         if not nhangiayto:
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{hoten}','{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"
+            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"
         else:
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{hoten}','{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'{nhangiayto}')"
+            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'{nhangiayto}')"
         
         cursor.execute(query)
         conn.commit()
