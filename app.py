@@ -1940,7 +1940,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
                         query += f" AND Trang_thai=N'{trangthai}'"
                 if nhangiayto:
                     if nhangiayto=="Chưa nhận":
-                        query += f" AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
+                        query += f" AND Trang_thai=N'Đã phê duyệt' AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
                     else:
                         query += f" AND Giay_to=N'{nhangiayto}'" 
                 query += " ORDER BY Ngay_nghi DESC, MST ASC"
