@@ -2714,16 +2714,16 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
         flash(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
 
-def them_xinnghikhac(masothe,ngay,sophut,lydo,trangthai,nhangiayto):
+def them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,trangthai,nhangiayto):
     try:
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0] if "/" in ngay else ngay 
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        if nhangiayto == "Chưa":
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'Chưa')"
+        if not nhangiayto:
+            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{hoten}','{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"
         else:
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'Đã nhận')"
-        ##
+            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}','{hoten}','{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'{nhangiayto}')"
+        
         cursor.execute(query)
         conn.commit()
         conn.close()

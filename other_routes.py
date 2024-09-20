@@ -1253,8 +1253,8 @@ def xinnghikhac_web():
         sophut = request.form.get("sophut_xinnghikhac")
         lydo = request.form.get("lydo_xinnghikhac")
         trangthai = "Chờ kiểm tra"
-        nhangiayto = "Chưa"
-        if them_xinnghikhac(masothe,ngay,sophut,lydo,trangthai,nhangiayto):
+        nhangiayto = "Chưa nhận"
+        if them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,trangthai,nhangiayto):
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
         else:
             print(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
@@ -1551,20 +1551,26 @@ def nhansu_them_xinnghikhac():
                 filepath = os.path.join(FOLDER_NHAP, f"themxinnghikhac_{thoigian}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath ).to_dict(orient="records")
+                x=1
                 for row in data:
                     try:
                         masothe = int(row['Mã số thẻ'])
                         ngaynghi = str(row['Ngày nghỉ'])[:10]
                         sophut = int(row['Tổng số phút'])
                         loainghi = row['Loại nghỉ']
+                        hoten = row["Họ tên"]
+                        chucdanh = row["Chức danh"]
+                        chuyen = row["Chuyền"]
+                        bophan = row["Bộ phận"]
                         trangthai = "Đã phê duyệt"
                         nhangiayto = "Đã nhận"
-                        if them_xinnghikhac(masothe,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
-                            flash(f"Thêm xin nghỉ khác thành công")
+                        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,bophan,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
+                            flash(f"Thêm xin nghỉ khác thành công, dòng {x}")
                         else:
-                            flash(f"Thêm xin nghỉ khác thất bại")
+                            flash(f"Thêm xin nghỉ khác thất bại, dòng {x}")
+                        x+=1
                     except Exception as e:
-                        print(f"Loi them dong xin nghi khac: {e}")
+                        print(f"Loi them xin nghi khac: {e}")
                         break
             except Exception as e:
                 print(e)
