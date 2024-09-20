@@ -1564,7 +1564,7 @@ def nhansu_them_xinnghikhac():
                         bophan = row["Bộ phận"]
                         trangthai = "Đã phê duyệt"
                         nhangiayto = "Đã nhận"
-                        if them_xinnghikhac(masothe,hoten,chucdanh,chuyen,bophan,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
+                        if them_xinnghikhac(masothe,hoten,chuyen,bophan,chucdanh,ngaynghi,sophut,loainghi,trangthai,nhangiayto):
                             flash(f"Thêm xin nghỉ khác thành công, dòng {x}")
                         else:
                             flash(f"Thêm xin nghỉ khác thất bại, dòng {x}")
