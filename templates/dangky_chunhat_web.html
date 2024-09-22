@@ -14,7 +14,7 @@
         font-weight: bold;
     }
     .pagination {
-        font-size: 10px;
+        font-size: 10px; 
     }
     #header {
         display: flex;
@@ -42,6 +42,12 @@
             <input type="file" name="file"> 
             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
         </form>
+        {% if HR in current_user.phongban %}
+        <form method="POST" action="/hr_pheduyet_dangky_dilam_chunhat"  enctype="multipart/form-data">
+            <input type="file" name="file"> 
+            <button type="submit" class="btn btn-primary btn-sm">HR phê duyệt</button>
+        </form>
+        {% endif %}
         <b>{{count}}</b>
         <div class="pagination">{{pagination.links}}</div>
     </div>

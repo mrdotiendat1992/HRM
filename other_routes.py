@@ -3685,33 +3685,45 @@ def dangky_dilam_chunhat():
                 filepath = os.path.join(FOLDER_NHAP, f"dangki_dilam_chunhat_{thoigian}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath ).to_dict(orient="records")
-                if "HR" in current_user.phongban:
-                    for row in data:
-                        id = row["ID"]
-                        hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
-                        congkhai = row["Công khai"] if not pd.isna(row["Công khai"]) else ""
-                        if hr_pheduyet_dilam_chunhat(id,hrpheduyet,congkhai):
-                            flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thành công !!!")
-                        else:
-                            flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thất bại !!!")       
-                else:
-                    for row in data:
-                        nhamay = current_user.macongty
-                        mst = row["Mã số thẻ"]
-                        hoten = row["Họ tên"]
-                        chuyen = row["Chuyền"]
-                        bophan = row["Bộ phận"]
-                        vitri = row["Vị trí"]
-                        ngay = row["Ngày đăng ký"]
-                        if them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
-                            flash(f"Thêm làm Chủ nhật thành công !!!")
-                        else:
-                            flash(f"Thêm làm Chủ nhật  thất bại !!!")       
+                for row in data:
+                    nhamay = current_user.macongty
+                    mst = row["Mã số thẻ"]
+                    hoten = row["Họ tên"]
+                    chuyen = row["Chuyền"]
+                    bophan = row["Bộ phận"]
+                    vitri = row["Vị trí"]
+                    ngay = row["Ngày đăng ký"]
+                    if them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
+                        flash(f"Thêm làm Chủ nhật thành công !!!")
+                    else:
+                        flash(f"Thêm làm Chủ nhật  thất bại !!!")       
             except Exception as e:
                 print(e)
-            finally:         
-                return redirect("/dangky_chunhat_web")
+        return redirect("/dangky_chunhat_web")
 
+@app.route("/hr_pheduyet_dangky_dilam_chunhat", methods=["POST"])
+@login_required
+def hr_pheduyet_dangky_dilam_chunhat():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"dangki_dilam_chunhat_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                for row in data:
+                    id = row["ID"]
+                    hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
+                    congkhai = row["Công khai"] if not pd.isna(row["Công khai"]) else ""
+                    if hr_pheduyet_dilam_chunhat(id,hrpheduyet,congkhai):
+                        flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thành công !!!")
+                    else:
+                        flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thất bại !!!")       
+            except Exception as e:
+                print(e)
+        return redirect("/dangky_chunhat_web")
+    
 @app.route('/download_JD',methods=["POST"])
 @login_required
 def download_file():
@@ -3732,7 +3744,7 @@ def duyet_hangloat_tangca():
         pheduyet = ""  
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
         for x in danhsach:
-            print(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
+            flash(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
     except Exception as e:
         flash(f"Lỗi phê duyệt hàng loạt: {e}")
     link = f"/dangki_tangca_web?ngay={ngay}"
@@ -3749,7 +3761,7 @@ def boduyet_hangloat_tangca():
         pheduyet = ""  
         danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
         for x in danhsach:
-            print(x['ID'],hr_pheduyet_tangca(x['ID'],"") )   
+            flash(x['ID'],hr_pheduyet_tangca(x['ID'],"") )   
     except Exception as e:
         flash(f"Lỗi bỏ phê duyệt hàng loạt: {e}")
     link = f"/dangki_tangca_web?ngay={ngay}"
