@@ -2883,7 +2883,7 @@ def danhsach_tangca(chuyen:list,ngay,pheduyet):
         conn.close()
         return result
     except Exception as e:
-        flash(f"Lỗi lấy bảng đăng ký tang ca: ({e})")
+        # flash(f"Lỗi lấy bảng đăng ký tang ca: ({e})")
         return []
 
 def laychuyen_quanly(masothe,macongty):
