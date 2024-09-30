@@ -3851,7 +3851,7 @@ def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"insert into DANG_KY_LAM_VIEC_CHU_NHAT values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
-        #
+        print(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
