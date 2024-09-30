@@ -3663,6 +3663,7 @@ def dangky_dilam_chunhat():
                     bophan = row["Bộ phận"]
                     vitri = row["Vị trí"]
                     ngay = row["Ngày đăng ký"]
+                    print(mst,hoten, chuyen, bophan,vitri,ngay)
                     if them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
                         flash(f"Thêm làm Chủ nhật thành công !!!")
                     else:
