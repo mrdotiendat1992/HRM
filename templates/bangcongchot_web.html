@@ -63,6 +63,8 @@
             <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
         </form>
+        <h5>Tổng: {{count}}</h5>
+        <div class="pagination">{{ pagination.links }}</div>
     </div>
     <br>
     <table class="table table-hover table-sm table-bordered">
