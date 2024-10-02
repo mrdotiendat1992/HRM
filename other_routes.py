@@ -3231,8 +3231,8 @@ def bangcongtrangoai_web():
         df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'])
         df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'])
         df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'])
-        df["Ngày vào"] = to_datetime(df['Ngày vào'])
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'])
+        df["Ngày vào"] = to_datetime(df['Ngày vào'],yearfirst=True)
+        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'],yearfirst=True)
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
