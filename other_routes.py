@@ -3234,43 +3234,43 @@ def bangcongtrangoai_web():
         df["Ngày vào"] = to_datetime(df['Ngày vào'],yearfirst=True)
         df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'],yearfirst=True)
         output = BytesIO()
-            with pd.ExcelWriter(output, engine='openpyxl') as writer:
-                df.to_excel(writer, index=False)
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
-            # Adjust column width and format the header row
-            output.seek(0)
-            workbook = openpyxl.load_workbook(output)
-            sheet = workbook.active
+        # Adjust column width and format the header row
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
 
-            # Style the header row
-            header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
-            header_font = Font(bold=True, color="FFFFFF")
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
 
-            for cell in sheet[1]:
-                cell.fill = header_fill
-                cell.font = header_font
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
 
-            # Create a date format for short date
-            date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-            if "short_date" not in workbook.named_styles:
-                workbook.add_named_style(date_format)
-            for column in sheet.columns:
-                max_length = 0
-                column_letter = column[0].column_letter
-                for cell in column:
-                    try:
-                        # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                        if cell.column_letter in ['G','H'] and cell.value is not None:
-                            cell.number_format = 'DD/MM/YYYY'
-                        if len(str(cell.value)) > max_length:
-                            max_length = len(cell.value)
-                    except:
-                        pass
-                adjusted_width = (max_length + 2)
-                sheet.column_dimensions[column_letter].width = adjusted_width
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['G','H'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
 
-            # Save the modified workbook to the output BytesIO object
-            output = BytesIO()
+        # Save the modified workbook to the output BytesIO object
+        output = BytesIO()
         workbook.save(output)
         output.seek(0)
         time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
