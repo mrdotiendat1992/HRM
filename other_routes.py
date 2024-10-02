@@ -3231,8 +3231,8 @@ def bangcongtrangoai_web():
         df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'])
         df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'])
         df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'])
-        df["Ngày vào"] = to_datetime(df['Ngày vào'],yearfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'],yearfirst=True)
+        # df["Ngày vào"] = to_datetime(df['Ngày vào'],yearfirst=True)
+        # df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'],yearfirst=True)
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -3253,8 +3253,8 @@ def bangcongtrangoai_web():
                 list_col = ['G','H']
                 try:
                     # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in list_col and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
+                    # if cell.column_letter in list_col and cell.value is not None:
+                    #     cell.number_format = 'DD/MM/YYYY'
                     if len(str(cell.value)) > max_length:
                         max_length = len(cell.value)
                 except:
