@@ -182,9 +182,9 @@
                             </form>
                         </td>
                         <td>Chưa nhận</td>
-                    {% elif row[9] == 'Đã phê duyệt' or row[9] == 'Đã phê duyệt' %}
+                    {% elif 'Đã phê' in row[9] %}
                         <td>Đã phê duyệt </td>
-                        {% if row[10] == 'Đã nhận' or row[10] == 'Không có' %}
+                        {% if row[10] == 'Đã nhận' or row[10] == 'Không có' %} 
                             <td>{{row[10]}}</td>
                         {% else %}
                             <td style="display: flex;">
