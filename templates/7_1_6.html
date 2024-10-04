@@ -131,6 +131,7 @@
                             <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                             <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                             <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
+                            <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                             <button type"submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
                         </form>
                             {% endif %}
@@ -155,12 +156,14 @@
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                 <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                 <input type="submit" class="btn btn-warning btn-sm" id="kiemtra" name="kiemtra" value="Kiểm tra">
                             </form>
                             <form action="/thuky_kiemtra_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                 <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                 <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
                             </form>
                         </td>
@@ -172,12 +175,14 @@
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                 <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                 <input type="submit" class="btn btn-warning btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
                             </form>
                             <form action="/quanly_pheduyet_xinnghikhac" method="POST">
                                 <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                 <input type="hidden" name="id" value="{{row[11]}}">
                                 <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                 <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                             </form>
                         </td>
@@ -193,12 +198,14 @@
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                     <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                     <input type="submit" class="btn btn-warning btn-sm" id="nhangiayto" name="nhangiayto" value="Có">
                                 </form>
                                 <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                     <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
                                     <input type="submit" class="btn btn-danger btn-sm" id="nhangiayto" name="nhangiayto" value="Không">
                                 </form>
                             </td>

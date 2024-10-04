@@ -859,6 +859,7 @@ def thukykiemtraxinnghikhac():
             chuyen = lay_chuyen_theo_mst(mst)
             mstduyet = current_user.masothe
             kiemtra = request.form.get("kiemtra")
+            page = request.form.get("page")
             id = request.form["id"]
             # if mstdiemdanh==mstduyet:
             #     print(f"Bạn không thể kiểm tra cho chính mình, vui lòng liên hệ thư ký !!!")
@@ -874,7 +875,7 @@ def thukykiemtraxinnghikhac():
                 flash(f"{current_user.hoten} không có quyền điểm danh chuyền {chuyen} !!!")
         except Exception as e:
             flash(f"Lỗi thư ký xin nghỉ khác: {e}")
-        return redirect(f"/muc7_1_6?mst={mst_filter}")
+        return redirect(f"/muc7_1_6?mst={mst_filter}&page={page}")
         
 @app.route("/quanly_pheduyet_xinnghikhac", methods=["POST"])
 def quanlypheduyetxinnghikhac():
@@ -885,6 +886,7 @@ def quanlypheduyetxinnghikhac():
             chuyen = lay_chuyen_theo_mst(mst)
             mstduyet = current_user.masothe
             pheduyet = request.form.get("pheduyet")
+            page = request.form.get("page")
             id = request.form["id"]
             if mst==mstduyet:
                 print(f"Bạn không thể phê duyệt cho chính mình, vui lòng liên hệ quản lý !!!")
@@ -899,13 +901,14 @@ def quanlypheduyetxinnghikhac():
                 print(f"{current_user.hoten} không có quyền phê duyệt !!!")
         except Exception as e:
             print(f"Lỗi quản lý phê duyệt xin nghỉ khác: {e}")
-        return redirect(f"/muc7_1_6?mst={mst_filter}")
+        return redirect(f"/muc7_1_6?mst={mst_filter}&page={page}")
 
 @app.route("/nhansu_nhangiayto_xinnghikhac", methods=["POST"])
 def nhansunhangiaytoxinnghikhac():
     if request.method == "POST":
         try:
             mst_filter = request.form.get("mst_filter")
+            page = request.form.get("page")
             id = request.form["id"]
             nhangiayto = request.form.get("nhangiayto")
             # if mstdiemdanh==mstduyet:
@@ -923,7 +926,7 @@ def nhansunhangiaytoxinnghikhac():
                 flash(f"{current_user.hoten} không có quyền nhận giấy tờ, vui lòng liên hệ HRD !!!")
         except Exception as e:
             flash(f"Lỗi thư ký xin nghỉ khác: {e}")
-        return redirect(f"/muc7_1_6?mst={mst_filter}")
+        return redirect(f"/muc7_1_6?mst={mst_filter}&page={page}")
 
 @app.route("/taifilemaukp", methods=["GET"])
 def taifilemaukp():
