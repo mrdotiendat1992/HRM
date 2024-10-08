@@ -3823,7 +3823,7 @@ def hr_pheduyet_dilam_chunhat(id,hrpheduyet:str,congkhai):
         else:
             query += f" CONG_KHAI=NULL "
         query += f"WHERE ID='{id}'"
-
+        app.logger.info(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
