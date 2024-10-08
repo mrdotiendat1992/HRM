@@ -3659,7 +3659,7 @@ def dangky_dilam_ngayle():
 @login_required
 def dangky_dilam_chunhat():
     if request.method == "POST":
-        file = request.files.get("file")
+        file = request.files.get("file_tailen")
         if file:
             try:
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
@@ -3687,7 +3687,7 @@ def dangky_dilam_chunhat():
 @login_required
 def hr_pheduyet_dangky_dilam_chunhat():
     if request.method == "POST":
-        file = request.files.get("file")
+        file = request.files.get("file_pheduyet")
         print(f"File:{file}")
         if file:
             try:
