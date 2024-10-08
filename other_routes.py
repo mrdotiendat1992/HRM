@@ -3688,12 +3688,14 @@ def dangky_dilam_chunhat():
 def hr_pheduyet_dangky_dilam_chunhat():
     if request.method == "POST":
         file = request.files.get("file")
+        print(f"File:{file}")
         if file:
             try:
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                 filepath = os.path.join(FOLDER_NHAP, f"dangki_dilam_chunhat_{thoigian}.xlsx")
                 file.save(filepath)
-                data = pd.read_excel(filepath ).to_dict(orient="records")
+                data = pd.read_excel(filepath).to_dict(orient="records")
+                print(data)
                 for row in data:
                     print(row)
                     id = row["ID"]
