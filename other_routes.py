@@ -3695,7 +3695,7 @@ def hr_pheduyet_dangky_dilam_chunhat():
                 file.save(filepath)
                 data = pd.read_excel(filepath ).to_dict(orient="records")
                 for row in data:
-                    app.logger.info(row)
+                    print(row)
                     id = row["ID"]
                     hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
                     congkhai = row["Công khai"] if not pd.isna(row["Công khai"]) else ""
