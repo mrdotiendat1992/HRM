@@ -43,12 +43,12 @@
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-download"></i> Tải xuống</button>
             </form>
             <form method="POST" action="/dangky_dilam_chunhat" enctype="multipart/form-data">
-                <input id="file-upload" type="file" name="file" >
+                <input class="file-upload" type="file" name="file" >
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
             </form>
             {% if 'HR' in current_user.phongban %}
             <form method="POST" action="/hr_pheduyet_dangky_dilam_chunhat" enctype="multipart/form-data">
-                <input id="file-upload" type="file" name="file" />
+                <input class="file-upload" type="file" name="file" />
                 <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-upload"></i></button>
             </form>
             {% endif %}
