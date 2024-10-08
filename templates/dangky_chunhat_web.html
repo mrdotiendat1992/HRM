@@ -25,18 +25,6 @@
         display: none;
     }
     
-    .custom-file-upload {
-        display: inline-block;
-        padding: 6px 12px;
-        cursor: pointer;
-        border-radius: 5px;
-        font-size: 14px;
-        transition: background-color 0.3s ease;
-    }
-    
-    .custom-file-upload:hover {
-        background-color: #218838;
-    }
 {% endblock style %}
     
 {% block content %}
@@ -60,13 +48,13 @@
             </form>
             <form method="POST" action="/dangky_dilam_chunhat" enctype="multipart/form-data">
                 <label for="file-upload" class="custom-file-upload btn btn-outline-success"/>Chọn file tải lên</label>
-                <input type="file" name="file" >
+                <input id="file-upload" type="file" name="file" >
                 <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-upload"></i></button>
             </form>
             {% if 'HR' in current_user.phongban %}
             <form method="POST" action="/hr_pheduyet_dangky_dilam_chunhat" enctype="multipart/form-data">
                 <label for="file-upload" class="custom-file-upload btn btn-outline-primary"/>Chọn file phê duyệt</label>
-                <input type="file" name="file" />
+                <input id="file-upload" type="file" name="file" />
                 <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-upload"></i></button>
             </form>
             {% endif %}
