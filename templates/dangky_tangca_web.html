@@ -69,7 +69,7 @@
                 {% for chuyen in cacchuyen %}
                 <tr>
                     <td>{{chuyen}}</td>
-                    <td>
+                    <td class="text-center">
                         {% if chuyen in request.args.getlist('chuyen') %}
                         <input type="checkbox" name="chuyen" value="{{chuyen}}" checked>
                         {% else %}
@@ -170,6 +170,7 @@
                 {% endfor %}
                 <button type="submit" class="btn btn-danger btn-sm" title="Bỏ phê duyệt hàng loạt"><i class="fa fa-ban"></i></button>
             </form>
+            <input type="number" onchange="tim_theomst()">
             {% endif %}
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
@@ -270,6 +271,27 @@
     </div>
 </div>  
 <script>
+    function tim_theomst() {
+    // Lấy giá trị MST được nhập vào.
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.querySelector("input[type='number']");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("danhsachtangca");
+    tr = table.getElementsByTagName("tr");
+
+    // Lặp qua tất cả các hàng trong bảng và ẩn những hàng không khớp với MST.
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0]; // Cột đầu tiên chứa MST
+        if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+        }
+    }
+    }
     document.addEventListener("DOMContentLoaded", function() {
         updateToggleButton();
         document.querySelectorAll('.ngay').forEach((element) => {
