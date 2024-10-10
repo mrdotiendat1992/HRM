@@ -2849,8 +2849,9 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where ("
+        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where Nha_may='{current_user.macongty}' "
         if chuyen:
+            query += " ("
             for ch in chuyen:
                 query += f" Chuyen_to='{ch}' or"
             query = query[:-2] + " ) "
@@ -2860,7 +2861,7 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
             query += f" and MST = '{mst}' "
         if ngay:
             query += f" and Ngay_dang_ky = '{ngay}'"
-        query += f" and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
+        query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
         print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
