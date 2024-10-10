@@ -2851,7 +2851,7 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where Nha_may='{current_user.macongty}' "
         if chuyen:
-            query += " ("
+            query += "and ("
             for ch in chuyen:
                 query += f" Chuyen_to='{ch}' or"
             query = query[:-2] + " ) "
