@@ -2859,7 +2859,7 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
             query += f" and MST = '{mst}' "
         if ngay:
             query += f" and Ngay_dang_ky = '{ngay}'"
-        query += " and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
+        query += f" and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
         print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
