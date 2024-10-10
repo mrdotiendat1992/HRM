@@ -1389,7 +1389,7 @@ def off_f12():
 @app.route("/dangki_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
-        mst = request.args.getlist("mst")
+        mst = request.args.get("mst")
         chuyen = request.args.getlist("chuyen")
         ngay = request.args.get("ngay") 
         pheduyet = request.args.get("pheduyet")  
