@@ -2850,9 +2850,10 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[Dang_ky_tang_ca] where ("
-        for ch in chuyen:
-            query += f" Chuyen_to='{ch}' or"
-        query = query[:-2] + " ) "
+        if chuyen:
+            for ch in chuyen:
+                query += f" Chuyen_to='{ch}' or"
+            query = query[:-2] + " ) "
         if pheduyet == "ok" or pheduyet== "notok":
             query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
         if mst:
