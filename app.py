@@ -2845,7 +2845,7 @@ def lay_chuyen_theo_mst(mst):
         print(e)
         return None 
     
-def danhsach_tangca(chuyen:list,ngay,pheduyet):
+def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -2855,8 +2855,12 @@ def danhsach_tangca(chuyen:list,ngay,pheduyet):
         query = query[:-2] + " ) "
         if pheduyet == "ok" or pheduyet== "notok":
             query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
-        query += f" and Ngay_dang_ky = '{ngay}' and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        # print(query)
+        if mst:
+            query += f" and MST = '{mst}' "
+        if ngay:
+            query += f" and Ngay_dang_ky = '{ngay}'"
+        query += " and Nha_may='{current_user.macongty}' ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
+        print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{

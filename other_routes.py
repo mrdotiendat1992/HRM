@@ -1389,11 +1389,12 @@ def off_f12():
 @app.route("/dangki_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
+        mst = request.args.getlist("mst")
         chuyen = request.args.getlist("chuyen")
         ngay = request.args.get("ngay") 
         pheduyet = request.args.get("pheduyet")  
         cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 100
@@ -1408,10 +1409,11 @@ def dangky_tangca_bangweb():
                                 pagination=pagination,
                                 count=count)
     if request.method=="POST":
+        mst = request.args.getlist("mst")
         cacchuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay")
         pheduyet = request.form.get("pheduyet")
-        link = f"/dangki_tangca_web?ngay={ngay}&pheduyet={pheduyet}"
+        link = f"/dangki_tangca_web?ngay={ngay}&pheduyet={pheduyet}&mst={mst}"
         for chuyen in cacchuyen:
             link += f"&chuyen={chuyen}"
         return redirect(link)
@@ -1582,14 +1584,15 @@ def nhansu_them_xinnghikhac():
 @app.route("/tai_danhsach_tangca", methods=["POST"])
 def tai_danhsach_tangca():
     if request.method=="POST":
+        mst = request.args.get("mst")
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay")
         pheduyet =  request.form.get("pheduyet")
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         data = [x for x in danhsach]
         ngay = datetime.now().date()     
         df = DataFrame(data)
-        df["Ngày"] = to_datetime(df["Ngày"],errors="ignore")
+        df["Ngày"] = to_datetime(df["Ngày"],errors="coerce")
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -3724,10 +3727,11 @@ def download_file():
 @login_required
 def duyet_hangloat_tangca():  
     try:
+        mst = request.form.get("ngay") 
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay") 
         pheduyet = ""  
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         for x in danhsach:
             flash(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
     except Exception as e:
@@ -3741,15 +3745,16 @@ def duyet_hangloat_tangca():
 @login_required
 def boduyet_hangloat_tangca():  
     try:
+        mst = request.form.get("mst")
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay") 
         pheduyet = ""  
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         for x in danhsach:
             flash(x['ID'],hr_pheduyet_tangca(x['ID'],"") )   
     except Exception as e:
         flash(f"Lỗi bỏ phê duyệt hàng loạt: {e}")
-    link = f"/dangki_tangca_web?ngay={ngay}"
+    link = f"/dangki_tangca_web?ngay={ngay}&mst={mst}"
     for ch in chuyen:
         link+=f"&chuyen={ch}"
     return redirect(link)  

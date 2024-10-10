@@ -170,7 +170,10 @@
                 {% endfor %}
                 <button type="submit" class="btn btn-danger btn-sm" title="Bỏ phê duyệt hàng loạt"><i class="fa fa-ban"></i></button>
             </form>
-            <input type="number" onchange="tim_theomst()">
+            <form method="GET">
+                <input name="mst" placeholder="Mã số thẻ" onchange="form.submit()">
+                <input name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+            </form>
             {% endif %}
         </div>
         <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
