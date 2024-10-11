@@ -159,6 +159,7 @@
                 </ul>
             </div>
             <form method="POST" action="/duyet_hangloat_tangca">
+                <input hidden name="mst" value="{{request.args.get('mst', '')}}">
                 <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
                 {% for chuyen in request.args.getlist('chuyen') %}
                     <input hidden name="chuyen" value="{{ chuyen }}">
@@ -166,6 +167,7 @@
                 <button type="submit" class="btn btn-success btn-sm" title="Phê duyệt hàng loạt"><i class="fa fa-check"></i></button>
             </form>
             <form method="POST" action="/boduyet_hangloat_tangca">
+                <input hidden name="mst" value="{{request.args.get('mst', '')}}">
                 <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
                 {% for chuyen in request.args.getlist('chuyen') %}
                     <input hidden name="chuyen" value="{{ chuyen }}">
