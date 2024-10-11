@@ -1409,11 +1409,10 @@ def dangky_tangca_bangweb():
                                 pagination=pagination,
                                 count=count)
     if request.method=="POST":
-        mst = request.args.getlist("mst")
         cacchuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay")
         pheduyet = request.form.get("pheduyet")
-        link = f"/dangki_tangca_web?ngay={ngay}&pheduyet={pheduyet}&mst={mst}"
+        link = f"/dangki_tangca_web?ngay={ngay}&pheduyet={pheduyet}&"
         for chuyen in cacchuyen:
             link += f"&chuyen={chuyen}"
         return redirect(link)
