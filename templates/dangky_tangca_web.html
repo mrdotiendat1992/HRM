@@ -136,6 +136,7 @@
                     </li>
                     <li>
                         <form method="POST">
+                            <input hidden name="mst" value="{{request.args.get('mst', '')}}">
                             <input hidden name="pheduyet" value="ok">
                             <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
                             {% for chuyen in request.args.getlist('chuyen') %}
@@ -146,6 +147,7 @@
                     </li>
                     <li>
                         <form method="POST">
+                            <input hidden name="mst" value="{{request.args.get('mst', '')}}">
                             <input hidden name="pheduyet" value="notok">
                             <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
                             {% for chuyen in request.args.getlist('chuyen') %}
@@ -171,7 +173,7 @@
                 <button type="submit" class="btn btn-danger btn-sm" title="Bỏ phê duyệt hàng loạt"><i class="fa fa-ban"></i></button>
             </form>
             <form method="GET">
-                <input name="mst" placeholder="Mã số thẻ" onchange="form.submit()">
+                <input name="mst" placeholder="Mã số thẻ" onchange="form.submit()" value="{{request.args.get('mst', '')}}">
                 <input name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
             </form>
             {% endif %}
