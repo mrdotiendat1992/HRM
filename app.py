@@ -2948,6 +2948,7 @@ def capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,
             query += "Tang_ca_dem_thuc_te = NULL"
         query += f" WHERE ID='{id}'"
         
+        print(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
