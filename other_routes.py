@@ -1389,11 +1389,12 @@ def off_f12():
 @app.route("/dangki_tangca_web", methods=["GET","POST"])
 def dangky_tangca_bangweb():
     if request.method=="GET":
+        mst = request.args.get("mst")
         chuyen = request.args.getlist("chuyen")
         ngay = request.args.get("ngay") 
         pheduyet = request.args.get("pheduyet")  
         cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         count = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 100
@@ -1431,8 +1432,6 @@ def capnhat_tangca():
         
         chuyen_filter = request.form.get("chuyen_filter")
         ngay_filter = request.form.get("ngay_filter")
-
-        print(tangcademthucte)
         try:  
             if capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
                 flash(f"Cập nhật tăng ca id = {id} thành công")
