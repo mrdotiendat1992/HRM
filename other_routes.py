@@ -1583,14 +1583,15 @@ def nhansu_them_xinnghikhac():
 @app.route("/tai_danhsach_tangca", methods=["POST"])
 def tai_danhsach_tangca():
     if request.method=="POST":
+        mst = request.args.get("mst")
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay")
         pheduyet =  request.form.get("pheduyet")
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         data = [x for x in danhsach]
         ngay = datetime.now().date()     
         df = DataFrame(data)
-        df["Ngày"] = to_datetime(df["Ngày"],errors="ignore")
+        df["Ngày"] = to_datetime(df["Ngày"],errors="coerce")
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -3660,7 +3661,7 @@ def dangky_dilam_ngayle():
 @login_required
 def dangky_dilam_chunhat():
     if request.method == "POST":
-        file = request.files.get("file")
+        file = request.files.get("file_tailen")
         if file:
             try:
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
@@ -3688,7 +3689,7 @@ def dangky_dilam_chunhat():
 @login_required
 def hr_pheduyet_dangky_dilam_chunhat():
     if request.method == "POST":
-        file = request.files.get("file")
+        file = request.files.get("file_pheduyet")
         if file:
             try:
                 thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
@@ -3722,10 +3723,11 @@ def download_file():
 @login_required
 def duyet_hangloat_tangca():  
     try:
+        mst = request.form.get("ngay") 
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay") 
         pheduyet = ""  
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         for x in danhsach:
             flash(x['ID'],hr_pheduyet_tangca(x['ID'],"OK") )   
     except Exception as e:
@@ -3739,15 +3741,16 @@ def duyet_hangloat_tangca():
 @login_required
 def boduyet_hangloat_tangca():  
     try:
+        mst = request.form.get("mst")
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay") 
         pheduyet = ""  
-        danhsach = danhsach_tangca(chuyen,ngay,pheduyet)
+        danhsach = danhsach_tangca(mst,chuyen,ngay,pheduyet)
         for x in danhsach:
             flash(x['ID'],hr_pheduyet_tangca(x['ID'],"") )   
     except Exception as e:
         flash(f"Lỗi bỏ phê duyệt hàng loạt: {e}")
-    link = f"/dangki_tangca_web?ngay={ngay}"
+    link = f"/dangki_tangca_web?ngay={ngay}&mst={mst}"
     for ch in chuyen:
         link+=f"&chuyen={ch}"
     return redirect(link)  
