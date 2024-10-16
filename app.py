@@ -2943,7 +2943,7 @@ def capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,
         else:
             query += "Tang_ca_dem = NULL,"
         if tangcademthucte:
-            query += f"Tang_ca_dem_thuc_te = '{tangcadem}'"
+            query += f"Tang_ca_dem_thuc_te = '{tangcademthucte}'"
         else:
             query += "Tang_ca_dem_thuc_te = NULL"
         query += f" WHERE ID='{id}'"
