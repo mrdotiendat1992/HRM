@@ -3723,7 +3723,7 @@ def download_file():
 @login_required
 def duyet_hangloat_tangca():  
     try:
-        mst = request.form.get("ngay") 
+        mst = request.form.get("mst") 
         chuyen = request.form.getlist("chuyen")
         ngay = request.form.get("ngay") 
         pheduyet = ""  
