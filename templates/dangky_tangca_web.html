@@ -175,7 +175,7 @@
                 <button type="submit" class="btn btn-danger btn-sm" title="Bỏ phê duyệt hàng loạt"><i class="fa fa-ban"></i></button>
             </form>
             <form method="GET">
-                <input name="mst" placeholder="Mã số thẻ" onchange="form.submit()" value="{{request.args.get('mst', '')}}">
+                <input name="mst" placeholder="Mã số thẻ" onchange="this.form.submit()" value="{{request.args.get('mst', '')}}">
                 <input name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
             </form>
             {% endif %}
