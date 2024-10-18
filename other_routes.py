@@ -1439,7 +1439,7 @@ def capnhat_tangca():
                 flash(f"Cập nhật tăng ca id = {id} thất bại")
         except Exception as e:   
             flash(f"Loi khi cap nhat tang ca ({e})")
-        # return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
     
 @app.route("/bopheduyet_tangca", methods=["POST"])   
 def bopheduyet_tangca():
