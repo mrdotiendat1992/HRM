@@ -1732,7 +1732,6 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
             query += f"AND Ngay_dang_ky < '{today.strftime('%Y-%m-%d')}'"
         query += f" ORDER BY Ngay_dang_ky desc, CAST(MST as INT) asc"
         
-        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
