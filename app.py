@@ -1709,7 +1709,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return False
         
-def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=None,denngay=None):
+def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=None,denngay=None,backday=False):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1727,8 +1727,12 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
             query += f"AND Ngay_dang_ky >= '{tungay}'"
         if denngay:
             query += f"AND Ngay_dang_ky <= '{denngay}'"
+        if backday:
+            today = datetime.now()
+            query += f"AND Ngay_dang_ky < '{today.strftime('%Y-%m-%d')}'"
         query += f" ORDER BY Ngay_dang_ky desc, CAST(MST as INT) asc"
         
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows

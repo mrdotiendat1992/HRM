@@ -151,7 +151,9 @@
                     <th>Họ tên</th>
                     <th>Phòng ban</th>
                     <th>Ngày</th>
+                    <th>Giờ tăng sáng</th>
                     <th>Giờ tăng ca</th>
+                    <th>Giờ tăng ca đêm</th>
                 </tr>
             </thead>
             <tbody>
@@ -162,8 +164,18 @@
                     <td>{{row[2]}}</td>
                     <td>{{row[5]}}</td>
                     <td class="date_en">{{row[6]}}</td>
-                    {% if row[7] %}
-                    <td>{{row[7][:5]}}</td>
+                    {% if row[9] %}
+                    <td class="time_en">{{row[7]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% if row[9] %}
+                    <td class="time_en">{{row[9]}}</td>
+                    {% else %}
+                    <td></td>
+                    {% endif %}
+                    {% if row[9] %}
+                    <td class="time_en">{{row[11]}}</td>
                     {% else %}
                     <td></td>
                     {% endif %}
@@ -194,6 +206,19 @@
         document.addEventListener('DOMContentLoaded', (event) => {
             document.querySelectorAll('.date_en').forEach((element) => {
                 element.textContent = changeFormatDate(element.textContent);
+            });
+        });
+
+        function changeFormatTime(time){
+            if(time == 'None') return "";
+            try{
+                return time.split(":")[0] + ":" + time.split(":")[1];
+            } catch {
+                return "";    
+        }}
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('.time_en').forEach((element) => {
+                element.textContent = changeFormatTime(element.textContent);
             });
         });
     </script>
