@@ -2958,23 +2958,12 @@ def capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,
     except:
         return False
     
-def nhansu_bopheduyet_tangca(id):
+def nhansu_pheduyet_tangca(id, type):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
-        cursor = cursor.execute(query)
-        conn.commit()
-        conn.close()
-        return cursor
-    except:
-        return False 
-    
-def nhansu_pheduyet_tangca(id):
-    try:
-        conn = pyodbc.connect(url_database_pyodbc)
-        cursor = conn.cursor()
-        query = f"UPDATE Dang_ky_tang_ca SET HR='OK' WHERE ID='{id}'"
+        query = f"UPDATE Dang_ky_tang_ca SET HR='OK' WHERE ID='{id}'" if type == 1 else f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
+        print(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()

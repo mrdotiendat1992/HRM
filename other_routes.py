@@ -1420,64 +1420,36 @@ def dangky_tangca_bangweb():
         
 @app.route("/capnhat_tangca", methods=["POST"])
 def capnhat_tangca():
-    if request.method=="POST":
+    data = request.get_json() 
+    id = data.get("id")
+    tangcasang = data.get("tangcasang")
+    tangcasangthucte = data.get("tangcasangthucte")
+    tangca = data.get("tangca")
+    tangcathucte = data.get("tangcathucte")
+    tangcadem = data.get("tangcadem")
+    tangcademthucte = data.get("tangcademthucte")
         
-        id = request.form.get("id")
-        tangcasang = request.form.get("tangcasang")
-        tangcasangthucte = request.form.get("tangcasangthucte")
-        tangca = request.form.get("tangca")
-        tangcathucte = request.form.get("tangcathucte")
-        tangcadem = request.form.get("tangcadem")
-        tangcademthucte = request.form.get("tangcademthucte")
-        
-        chuyen_filter = request.form.get("chuyen_filter")
-        ngay_filter = request.form.get("ngay_filter")
-        try:  
-            if capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
-                flash(f"Cập nhật tăng ca id = {id} thành công")
-            else:
-                flash(f"Cập nhật tăng ca id = {id} thất bại")
-        except Exception as e:   
-            flash(f"Loi khi cap nhat tang ca ({e})")
-        return redirect(f"/dangki_tangca_web?chuyen={chuyen_filter}&ngay={ngay_filter}")
+    try:  
+        if capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
+            return jsonify({"status": "Success"})
+        else:
+            return jsonify({"status": "Error"})
+    except Exception as e:   
+        return jsonify({"status": "Error"})
     
-@app.route("/bopheduyet_tangca", methods=["POST"])   
-def bopheduyet_tangca():
-    if request.method=="POST":
-        chuyen_filter = request.form.getlist("chuyen")
-        ngay_filter = request.form.get("ngay_filter")
-        pheduyet = request.form.get("pheduyet")
-        id = request.form.get("id")
-        try:
-            if nhansu_bopheduyet_tangca(id):
-                flash(f"Bỏ phê duyệt tăng ca ID = {id}")
-            else:
-                flash(f"Bỏ phê duyệt tăng ca ID = {id} không được")
-        except Exception as e:   
-            flash(f"Loi khi bo phe duyet tang ca tang ca ({e})")
-        link = f"/dangki_tangca_web?ngay={ngay_filter}&pheduyet={pheduyet}"
-        for chuyen in chuyen_filter:
-            link += f"&chuyen={chuyen}"
-        return redirect(link)
-
 @app.route("/pheduyet_tangca", methods=["POST"])   
 def pheduyet_tangca():
-    if request.method=="POST":
-        chuyen_filter = request.form.getlist("chuyen")
-        ngay_filter = request.form.get("ngay_filter")
-        pheduyet = request.form.get("pheduyet")
-        id = request.form.get("id")
-        try:
-            if nhansu_pheduyet_tangca(id):
-                flash(f"Phê duyệt tăng ca ID = {id}")
-            else:
-                flash(f"Phê duyệt tăng ca ID = {id} không được")
-        except Exception as e:   
-            flash(f"Lỗi khi phê duyệt tăng ca ({e})")
-        link = f"/dangki_tangca_web?ngay={ngay_filter}&pheduyet={pheduyet}"
-        for chuyen in chuyen_filter:
-            link += f"&chuyen={chuyen}"
-        return redirect(link)
+    data = request.get_json()
+    id = data.get("id")
+    type = data.get("type")
+    try:
+        if nhansu_pheduyet_tangca(id, type):
+            return jsonify({"status": "Success"})
+        else:
+            return jsonify({"status": "Error"})
+    except Exception as e:   
+        return jsonify({"status": "Error"})
+
     
 @app.route("/chamcong_sang_web", methods=["GET","POST"])
 def chamcong_sang_web():
