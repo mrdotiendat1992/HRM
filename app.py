@@ -3023,7 +3023,7 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
     except Exception as e:
         return []
     
-def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen, 
+def them_dangky_tangca(cursor, nhamay, mst, hoten, chucdanh, chuyen, 
                        phongban, ngay, giotangcasang, giotangcasangthucte, 
                        giotangca, giotangcathucte, giotangcadem, giotangcademthucte, 
                        ca, giovao, giora, hrpheduyet):
@@ -3068,13 +3068,8 @@ def them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen,
         query += f"'{hrpheduyet}')"
     else:
         query += 'NULL)'
-    ##
-    conn = pyodbc.connect(url_database_pyodbc)
-    cursor = conn.cursor()
     try:
         cursor.execute(query)
-        conn.commit()
-        conn.close()
         return True
     except Exception as e:
         print(f"Loi them dang ky tang ca: {e}")
@@ -4115,3 +4110,19 @@ def suadoi_phanquyen(macongty,masothe,phanquyen):
     except Exception as e:
         print(e)
         return False
+
+def laydanhsach_phanquyenthuky(filters):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"select * from Phan_quyen_thu_ky where nha_may='{current_user.macongty}'"
+        query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
+        if query_condition:
+            query += f" and {query_condition}"
+
+        rows = cur.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        print(e)
+        return []

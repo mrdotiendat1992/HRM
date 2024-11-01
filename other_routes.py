@@ -1624,6 +1624,10 @@ def tailen_danhsach_tangca():
                 filepath = os.path.join(FOLDER_NHAP, f"danhsach_tangca_{thoigian}.xlsx")
                 file.save(filepath)
                 data = pd.read_excel(filepath, engine='openpyxl').to_dict(orient="records")
+                
+                conn = pyodbc.connect(url_database_pyodbc)
+                cursor = conn.cursor()
+
                 for row in data:
                     nhamay = row['Nhà máy']
                     mst = int(row["Mã số thẻ"])
@@ -1642,10 +1646,13 @@ def tailen_danhsach_tangca():
                     giovao = row["Giờ vào"] if not pd.isna(row["Giờ vào"]) else ""
                     giora = row["Giờ ra"] if not pd.isna(row["Giờ ra"]) else ""
                     hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
-                    if them_dangky_tangca(nhamay, mst, hoten, chucdanh, chuyen, phongban, ngay, giotangcasang, giotangcasangthucte, giotangca, giotangcathucte, giotangcadem, giotangcademthucte, ca, giovao, giora, hrpheduyet):
+                    if them_dangky_tangca(cursor, nhamay, mst, hoten, chucdanh, chuyen, phongban, ngay, giotangcasang, giotangcasangthucte, giotangca, giotangcathucte, giotangcadem, giotangcademthucte, ca, giovao, giora, hrpheduyet):
                         flash("Thêm đăng ký tăng ca thành công !!!")
                     else:
-                        flash("Thêm đăng ký tăng ca thất bại !!!")        
+                        flash("Thêm đăng ký tăng ca thất bại !!!")    
+
+                conn.commit()
+                conn.close()    
             except Exception as e:
                 print(e)
                     
@@ -4039,3 +4046,91 @@ def capnhat_phanquyen():
         phanquyen = request.form.get("phanquyenmoi")
         suadoi_phanquyen(macongty,masothe,phanquyen)
         return redirect("/admin")
+
+@app.route("/phanquyenthuky", methods=["GET"])
+@login_required
+def phanquyen_thuky():
+    try:
+        if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369):
+            action = request.args.get("action")
+            if action == "Xóa tìm kiếm":
+                return redirect("/phanquyenthuky")
+
+            mst = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            mst_ql = request.args.get("mst_ql")
+
+            filters = {
+                "mst": mst,
+                "chuyen_to": chuyen,
+                "mst_ql": mst_ql
+            }
+            danhsach = laydanhsach_phanquyenthuky(filters)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 20
+            total = len(danhsach)
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+            return render_template("phanquyenthuky.html", danhsach=paginated_rows, pagination=pagination)
+    except Exception as e:
+        print(e)
+        return render_template("phanquyenthuky.html", danhsach=[])
+
+@app.route("/add_phanquyenthuky", methods=["POST"])
+@login_required
+def add_phanquyenthuky():
+    try:
+        if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369):
+            data = request.json
+            conn = pyodbc.connect(url_database_pyodbc)
+            cur = conn.cursor()
+            query = f"INSERT INTO Phan_quyen_thu_ky VALUES ('{current_user.macongty}', {data.get("mst", "")}, '{data.get("chuyen", "")}', {data.get("mst_ql", "")})"
+            print(query)
+            cur.execute(query)
+            conn.commit()
+            conn.close()
+
+        return {"message": "Thêm thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Thêm thất bại"}
+
+@app.route("/update_phanquyenthuky", methods=["POST"])
+@login_required
+def update_phanquyenthuky():
+    try:
+        if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369):
+            data = request.json
+            conn = pyodbc.connect(url_database_pyodbc)
+            cur = conn.cursor()
+            query = f"UPDATE Phan_quyen_thu_ky SET MST = '{data.get("mst", "")}', Chuyen_to = '{data.get("chuyen", "")}', MST_QL = '{data.get("mst_ql", "")}' WHERE ID = {data.get("id", "")}"
+            print(query)
+            cur.execute(query)
+            conn.commit()
+            conn.close()
+
+        return {"message": "Sửa thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Sửa thất bại"}
+
+@app.route("/delete_phanquyenthuky", methods=["GET"])
+@login_required
+def delete_phanquyenthuky():
+    try:
+        if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369):
+            id = request.args.get("id")
+            conn = pyodbc.connect(url_database_pyodbc)
+            cur = conn.cursor()
+            query = f"DELETE FROM Phan_quyen_thu_ky WHERE ID = {id}"
+            cur.execute(query)
+            conn.commit()
+            conn.close()
+
+        return {"message": "Xóa thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Xóa thất bại"}

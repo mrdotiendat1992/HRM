@@ -134,11 +134,15 @@
                                         <img src="/static/img/manghikhac.png">
                                     </ul>
                                 </div>   
+                                <div>
+                                    {%if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369 )%}
+                                        <a class="btn btn-primary btn-sm" href="/phanquyenthuky">Phân quyền thư ký</a>
+                                    {%endif%}
+                                </div>                                
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
                                     <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button></form>
                                 </li>
-                                
                             </ul>
                         </div>
                     </div>
