@@ -1420,7 +1420,7 @@ def dangky_tangca_bangweb():
         
 @app.route("/capnhat_tangca", methods=["POST"])
 def capnhat_tangca():
-    data = request.get_json() 
+    data = request.json 
     id = data.get("id")
     tangcasang = data.get("tangcasang")
     tangcasangthucte = data.get("tangcasangthucte")
@@ -1439,7 +1439,7 @@ def capnhat_tangca():
     
 @app.route("/pheduyet_tangca", methods=["POST"])   
 def pheduyet_tangca():
-    data = request.get_json()
+    data = request.json
     id = data.get("id")
     type = data.get("type")
     try:
