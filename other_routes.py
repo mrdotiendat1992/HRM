@@ -1433,9 +1433,9 @@ def capnhat_tangca():
         if capnhat_tangca_thanhcong(id,tangcasang,tangcasangthucte,tangca,tangcathucte,tangcadem,tangcademthucte):
             return jsonify({"status": "Success"})
         else:
-            return jsonify({"status": "Error"})
+            return jsonify({"status": "Error"}), 400
     except Exception as e:   
-        return jsonify({"status": "Error"})
+        return jsonify({"status": "Error"}), 400
     
 @app.route("/pheduyet_tangca", methods=["POST"])   
 def pheduyet_tangca():
@@ -1446,9 +1446,9 @@ def pheduyet_tangca():
         if nhansu_pheduyet_tangca(id, type):
             return jsonify({"status": "Success"})
         else:
-            return jsonify({"status": "Error"})
+            return jsonify({"status": "Error"}), 400
     except Exception as e:   
-        return jsonify({"status": "Error"})
+        return jsonify({"status": "Error"}), 400
 
     
 @app.route("/chamcong_sang_web", methods=["GET","POST"])
