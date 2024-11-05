@@ -7,6 +7,7 @@ FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat/xuat')
 FOLDER_BIENBAN = os.path.join(os.path.dirname(__file__), r'nhapxuat/bienban')
 FOLDER_JD = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/jd')
 
+HINHANH_LOGO = os.path.join(os.path.dirname(__file__), r'static/img/logo.png')
 FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')
 FILE_MAU_HDTV_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdtv.xlsx')
 FILE_MAU_HDCTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdcth.xlsx')
@@ -28,3 +29,5 @@ FILE_MAU_DANGKY_KPI = os.path.join(os.path.dirname(__file__), r'static/uploads/m
 FILE_MAU_CAPNHAT_STK = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/capnhatstk/capnhatstk.xlsx')
 FILE_MAU_THEM_HOPDONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/nhaphophong/taohopdong.xlsx')
 FILE_MAU_DIEU_CHUYEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/dieuchuyen/dieuchuyen.xlsx')
+FILE_MAU_BANGCONG_HANHCHINH = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_hanhchinh.xlsx')
+FILE_MAU_BANGCONG_TONGHOP = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_tonghop.xlsx')

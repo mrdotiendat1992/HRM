@@ -28,3 +28,4 @@ from waitress import serve
 import sys
 from configparser import ConfigParser
 from decimal import Decimal
+from openpyxl.drawing.image import Image
