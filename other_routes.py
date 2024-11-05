@@ -1797,7 +1797,7 @@ def bangcong_hanhchinh_web():
         danhsach = lay_bangcong_thucte(thang,nam,mst,bophan,chuyen)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_HANHCHINH)
 
-        sheet = workbook['BẢNG CHẤM CÔNG HÀNH CHÍNH NT']  # Thay 'Sheet1' bằng tên sheet của bạn
+        sheet = workbook['BẢNG CHẤM CÔNG HÀNH CHÍNH']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
         # Tạo đối tượng hình ảnh
         img = Image(image_path)
@@ -2986,8 +2986,6 @@ def bangcong_tong_web():
         sheet.add_image(img)
 
         sheet['A2'] = f'Tháng {thang} năm {nam}'
-        socong = max([x[-5] for x in danhsach])
-        sheet['A3'] = f'Số công trong tháng = {int(socong)}'
 
         # Xóa hàng từ hàng 7 đến hàng 10000
         sheet.delete_rows(7, 10000 - 7 + 1)
