@@ -31,3 +31,6 @@ FILE_MAU_THEM_HOPDONG = os.path.join(os.path.dirname(__file__), r'static/uploads
 FILE_MAU_DIEU_CHUYEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/dieuchuyen/dieuchuyen.xlsx')
 FILE_MAU_BANGCONG_HANHCHINH = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_hanhchinh.xlsx')
 FILE_MAU_BANGCONG_TONGHOP = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_tonghop.xlsx')
+FILE_MAU_BANGCONG_CHUACHOT = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chuachot.xlsx')
+FILE_MAU_BANGCONG_CHOT = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chot.xlsx')
+FILE_MAU_BANGCONG_TRANGOAI = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_trangoai.xlsx')
