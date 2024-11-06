@@ -1797,7 +1797,7 @@ def bangcong_hanhchinh_web():
         danhsach = lay_bangcong_thucte(thang,nam,mst,bophan,chuyen)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_HANHCHINH)
 
-        sheet = workbook['BẢNG CHẤM CÔNG HÀNH CHÍNH NT']  # Thay 'Sheet1' bằng tên sheet của bạn
+        sheet = workbook['BẢNG CHẤM CÔNG HÀNH CHÍNH']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
         # Tạo đối tượng hình ảnh
         img = Image(image_path)
@@ -2692,65 +2692,54 @@ def bangcong5ngay_web():
         denngay = request.form.get("denngay")
         ngay = request.form.get("ngay")
         danhsach = lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
-        data = [{
-            "Nhà máy": row[0],
-            "Mã số thẻ": row[1],
-            "Họ tên": row[2],
-            "Bộ phận": row[5],
-            "Chuyền": row[4],
-            "Chức danh": row[3],
-            "Cấp bậc": row[6],
-            "HC category": row[21],
-            "Ngày": row[7],    
-            "Ca": row[8],
-            "Số phút ca": row[9],
-            "Giờ vào": row[10],
-            "Giờ ra": row[11],
-            "Phút hành chính": row[12],
-            "Phút nghỉ phép": row[13],
-            "Phút tăng ca 100%": row[14],
-            "Phút tăng ca 150%": row[15],
-            "Phút tăng đêm": row[16],
-            "Phút nghỉ không lương": row[17],
-            "Phút nghỉ khác": row[18],
-            "Loại nghỉ khác": row[19],
-            "Phân loại": row[20]
-        } for row in danhsach] 
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'])
-        df["Ngày"] = to_datetime(df['Ngày'])
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUACHOT)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(5, 10000 - 5 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    if cell.column_letter == 'I' and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangcong5ngay_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"), as_attachment=True)
     
 @app.route("/bangcongchot_web", methods=["GET","POST"])
 def bangcongchot_web():
@@ -2783,61 +2772,55 @@ def bangcongchot_web():
         denngay = request.form.get("denngay")
         ngay = request.form.get("ngay")
         danhsach = lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
-        data = [{
-            "Nhà máy": row[0],
-            "Mã số thẻ": row[1],
-            "Họ tên": row[2],
-            "Bộ phận": row[5],
-            "Chuyền": row[4],
-            "Chức danh": row[3],
-            "Cấp bậc": row[6],
-            "HC category": row[20],
-            "Ngày": row[7],    
-            "Ca": row[8],
-            "Số phút ca": row[9],
-            "Giờ vào": row[10],
-            "Giờ ra": row[11],
-            "Phút hành chính": row[12],
-            "Phút nghỉ phép": row[13],
-            "Phút tăng ca 100%": row[14],
-            "Phút tăng ca 150%": row[15],
-            "Phút tăng đêm": row[16],
-            "Phút nghỉ không lương": row[17],
-            "Phút tăng nghỉ khác": row[18],
-            "Phân loại": row[19]
-        } for row in danhsach] 
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'])
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHOT)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(5, 10000 - 5 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangcongchot_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
+
     
 @app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
 @login_required
@@ -2986,8 +2969,6 @@ def bangcong_tong_web():
         sheet.add_image(img)
 
         sheet['A2'] = f'Tháng {thang} năm {nam}'
-        socong = max([x[-5] for x in danhsach])
-        sheet['A3'] = f'Số công trong tháng = {int(socong)}'
 
         # Xóa hàng từ hàng 7 đến hàng 10000
         sheet.delete_rows(7, 10000 - 7 + 1)
@@ -3050,97 +3031,61 @@ def bangcongtrangoai_web():
             return render_template("bangcongtrangoai_web.html",
                                     danhsach=[])
     else:
-        thang = int(request.form.get("thang")) if request.args.get("thang") else 0
-        nam = int(request.form.get("nam")) if request.args.get("nam") else 0
+        thang = int(request.form.get("thang")) if request.args.get("thang") else datetime.now().month
+        nam = int(request.form.get("nam")) if request.args.get("nam") else datetime.now().year
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_bangcongtrangoai_web(mst,bophan,chuyen,thang,nam)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8],    
-            "Công thử việc": row[9],
-            "Công chính thức": row[10],
-            "Tăng ca chế độ thử việc": row[11],
-            "Tăng ca chế độ chính thức": row[12],
-            "Tăng ca ngày thử việc": row[13],
-            "Tăng ca ngày chính thức": row[14],
-            "Tăng ca đêm thử việc": row[15],
-            "Tăng ca đêm chính thức": row[16],
-            "Tăng ca chủ nhật thử việc": row[17],
-            "Tăng ca chủ nhật chính thức": row[18],
-            "Tăng ca ngày lễ thử việc": row[19],
-            "Tăng ca ngày lễ chính thức": row[20]          
-        } for row in danhsach] 
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'])
-        df["Công thử việc"] = to_numeric(df['Công thử việc'])
-        df["Công chính thức"] = to_numeric(df['Công chính thức'])
-        df["Tăng ca chế độ thử việc"] = to_numeric(df['Tăng ca chế độ thử việc'])
-        df["Tăng ca chế độ chính thức"] = to_numeric(df['Tăng ca chế độ chính thức'])
-        df["Tăng ca ngày thử việc"] = to_numeric(df['Tăng ca ngày thử việc'])
-        df["Tăng ca ngày chính thức"] = to_numeric(df['Tăng ca ngày chính thức'])
-        df["Tăng ca đêm thử việc"] = to_numeric(df['Tăng ca đêm thử việc'])
-        df["Tăng ca đêm chính thức"] = to_numeric(df['Tăng ca đêm chính thức'])
-        df["Tăng ca chủ nhật thử việc"] = to_numeric(df['Tăng ca chủ nhật thử việc'])
-        df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'])
-        df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'])
-        df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'])
-        df["Ngày vào"] = to_datetime(df['Ngày vào'],yearfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'],yearfirst=True)
-        output = BytesIO()
-        with pd.ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        danhsach = lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TRANGOAI)
 
-        # Adjust column width and format the header row
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Style the header row
-        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
-        header_font = Font(bold=True, color="FFFFFF")
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
 
-        for cell in sheet[1]:
-            cell.fill = header_fill
-            cell.font = header_font
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(5, 10000 - 5 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0")
+        # Duyệt qua các ô trong khu vực G5:H10000
+        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G','H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J','M','N', 'O','P', 'Q','R', 'S','T','U']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
 
-        # Save the modified workbook to the output BytesIO object
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangcongtrangoai_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_trangoai_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_trangoai_{timestamp}.xlsx"), as_attachment=True)
     
 @app.route("/gd_pheduyet_tuyendung", methods=["POST"])
 @login_required

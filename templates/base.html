@@ -19,7 +19,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet"/>
     {% block style %}
-        
+        <style>
+            .collapse-item {
+            display: inline-flex;
+            align-items: center;
+            overflow: hidden;
+            }
+
+            .scroll-text {
+            display: inline-block;
+            white-space: nowrap;
+            animation: scroll-text 5s linear infinite;
+            }
+
+            @keyframes scroll-text {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+            }
+        </style>
     {% endblock style %}
 </head>
 
@@ -166,23 +187,23 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Lương, thưởng</h6>
                         <p class="collapse-item"><b>7.1</b> Chấm công</p>
-                        <a class="collapse-item" href="/muc7_1_1"> <b>7.1.1</b> <i>Đổi ca làm việc</i></a>
-                        <a class="collapse-item" href="/muc7_1_2"> <b>7.1.2</b> <i>DS lỗi chấm công</i></a>
-                        <a class="collapse-item" href="/muc7_1_3"> <b>7.1.3</b> <i>DS điểm danh bù</i></a>
-                        <a class="collapse-item" href="/muc7_1_4"> <b>7.1.4</b> <i>DS nghỉ phép</i></a>
-                        <a class="collapse-item" href="/muc7_1_5"> <b>7.1.5</b> <i>DS nghỉ không lương</i></a>
-                        <a class="collapse-item" href="/muc7_1_6"> <b>7.1.6</b> <i>DS nghỉ khác</i></a>
-                        <a class="collapse-item" href="/muc7_1_7"> <b>7.1.7</b> <i>DS phép tồn</i></a>
-                        <a class="collapse-item" href="/muc7_1_8"> <b>7.1.8</b> <i>Đăng kí tăng ca</i></a>
-                        <a class="collapse-item" href="/muc7_1_9"> <b>7.1.9</b> <i>DS tăng ca chế độ</i></a>
-                        <a class="collapse-item" href="/muc7_1_10"> <b>7.1.10</b> <i>DS tăng ca ngày</i></a>
-                        <a class="collapse-item" href="/muc7_1_11"> <b>7.1.11</b> <i>DS tăng ca đêm</i></a>
-                        <a class="collapse-item" href="/muc7_1_12"> <b>7.1.12</b> <i>DS tăng ca chủ nhật</i></a>
-                        <a class="collapse-item" href="/muc7_1_13"> <b>7.1.13</b> <i>DS tăng ca ngày lễ</i></a>
-                        <a class="collapse-item" href="/muc7_1_14"> <b>7.1.14</b> <i>Bảng công 5 ngày</i></a>
-                        <a class="collapse-item" href="/muc7_1_15"> <b>7.1.15</b> <i>Bảng công chốt</i></a>
-                        <a class="collapse-item" href="/muc7_1_16"> <b>7.1.16</b> <i>Bảng công HC</i></a>
-                        <a class="collapse-item" href="/muc7_1_17"> <b>7.1.17</b> <i>Bảng công tháng</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_1"> <b>7.1.1</b> <i style="white-space: nowrap;"> Đổi ca làm việc</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_2"> <b>7.1.2</b> <i style="white-space: nowrap;"> DS lỗi chấm công</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_3"> <b>7.1.3</b> <i style="white-space: nowrap;"> DS điểm danh bù</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_4"> <b>7.1.4</b> <i style="white-space: nowrap;"> DS nghỉ phép</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_5"> <b>7.1.5</b> <i style="white-space: nowrap;"> DS nghỉ không lương</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_6"> <b>7.1.6</b> <i style="white-space: nowrap;"> DS nghỉ khác</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_7"> <b>7.1.7</b> <i style="white-space: nowrap;"> DS phép tồn</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_8"> <b>7.1.8</b> <i style="white-space: nowrap;"> Đăng kí làm thêm giờ</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_9"> <b>7.1.9</b> <i style="white-space: nowrap;"> Bảng làm thêm giờ chế độ NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_10"> <b>7.1.10</b> <i style="white-space: nowrap;"> Bảng làm thêm giờ ban ngày NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_11"> <b>7.1.11</b> <i style="white-space: nowrap;"> Bảng làm thêm giờ ban đêm NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_12"> <b>7.1.12</b> <i style="white-space: nowrap;"> Bảng làm thêm giờ Chủ nhật NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_13"> <b>7.1.13</b> <i style="white-space: nowrap;"> Bảng làm thêm giờ ngày lễ NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_14"> <b>7.1.14</b> <i style="white-space: nowrap;"> Bảng chấm công chi tiết chưa chốt NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_15"> <b>7.1.15</b> <i style="white-space: nowrap;"> Bảng chấm công chi tiết chốt NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_16"> <b>7.1.16</b> <i style="white-space: nowrap;"> Bảng chấm công hành chính NT</i></a>
+                        <a class="collapse-item" style = "display: inline-flex; align-items: center; overflow: hidden;" href="/muc7_1_17"> <b>7.1.17</b> <i style="white-space: nowrap;"> Bảng chấm công tổng hợp NT</i></a>
                     </div>
                 </div>
             </li>
