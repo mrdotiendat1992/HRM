@@ -2895,6 +2895,53 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
         # flash(f"Lỗi lấy bảng đăng ký tang ca: ({e})")
         return []
 
+def danhsach_tangca_quakhu(mst,chuyen,ngay,pheduyet):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[Dang_ky_tang_ca_qua_khu] where Nha_may='{current_user.macongty}' "
+        if chuyen:
+            query += "and ("
+            for ch in chuyen:
+                query += f" Chuyen_to='{ch}' or"
+            query = query[:-2] + " ) "
+        if pheduyet == "ok" or pheduyet== "notok":
+            query += f" and HR IS NOT NULL " if pheduyet == "ok" else f" and HR IS NULL "
+        if mst:
+            query += f" and MST = '{mst}' "
+        if ngay:
+            query += f" and Ngay_dang_ky = '{ngay}'"
+        query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
+        print(query)
+        cursor = cursor.execute(query)
+        rows = cursor.fetchall()
+        result = [{
+            "ID": row[17],
+            "Nhà máy": row[0],
+            "Mã số thẻ": row[1],
+            "Họ tên": row[2],
+            "Chức danh": row[3],
+            "Chuyền": row[4],
+            "Phòng ban": row[5],
+            "Ngày": row[6],
+            "Tăng ca sáng": row[7][:5] if row[7] else "",
+            "Tăng ca sáng thực tế": row[8][:5] if row[8] else "",
+            "Giờ tăng ca": row[9][:5] if row[9] else "",
+            "Giờ tăng ca thực tế": row[10][:5] if row[10] else "",
+            "Tăng ca đêm": row[11][:5] if row[11] else "",
+            "Tăng ca đêm thực tế": row[12][:5] if row[12] else "",
+            "Ca": row[13],
+            "Giờ vào": row[14][:5] if row[14] else "",
+            "Giờ ra": row[15][:5] if row[15] else "",
+            "HR phê duyệt": row[16] if row[16] else ""     
+            } for row in rows]
+        # print(result)
+        conn.close()
+        return result
+    except Exception as e:
+        # flash(f"Lỗi lấy bảng đăng ký tang ca: ({e})")
+        return []
+    
 def laychuyen_quanly(masothe,macongty):
     try:
         if "HRD" in current_user.phongban:

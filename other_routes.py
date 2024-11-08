@@ -1417,7 +1417,29 @@ def dangky_tangca_bangweb():
             link += f"&chuyen={chuyen}"
         return redirect(link)
         
-        
+@app.route("/duieu_tangca_web", methods=["GET"])
+def duieu_tangca_web():
+    if request.method=="GET":
+        mst = request.args.get("mst")
+        chuyen = request.args.getlist("chuyen")
+        ngay = request.args.get("ngay") 
+        pheduyet = request.args.get("pheduyet")  
+        cacchuyen = laychuyen_quanly(current_user.masothe,current_user.macongty)    
+        danhsach = danhsach_tangca_quakhu(mst,chuyen,ngay,pheduyet)
+        count = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 100
+        total = len(danhsach)
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("duieu_tangca_web.html",
+                               cacchuyen=cacchuyen,
+                               danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=count)
+           
 @app.route("/capnhat_tangca", methods=["POST"])
 def capnhat_tangca():
     data = request.json 

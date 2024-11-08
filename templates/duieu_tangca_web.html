@@ -1,0 +1,368 @@
+{% extends "12.html" %}
+
+{% block style %}
+    #main_window {
+        display: flex;
+        gap: 50px;
+    }
+    #danhsachchuyen {
+        width: 150px;
+    }
+    #danhsachtangca {
+        overflow-x: scroll;
+    }
+    th, td {
+        white-space: nowrap; /* Không cho phép xuống dòng */
+        overflow: hidden; /* Ẩn phần văn bản tràn ra */
+        text-overflow: ellipsis; /* Thêm dấu ... vào phần văn bản bị ẩn */
+        font-weight: bold;
+        font-size: 11px;
+        vertical-align: middle;
+    }
+    th {
+        text-align: center;
+        color: white;
+    }
+    .mst {
+        width: 60px;
+        position: sticky;
+        left:0;
+        z-index: 1;
+    }
+    .hoten {
+        position: sticky;
+        left: 50px;
+        z-index: 2;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+    .highlightable {
+        background-color: yellow;
+    }
+    #header {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    .pointer {
+        cursor: pointer;
+    }
+    .hide {
+        display: none;
+    }
+{% endblock style %}
+    
+{% block content %}
+<div class="container-fluid" id="main_window">
+    <div id="danhsachchuyen">
+        <table class="table table-bordered">
+            <form method='GET'>
+            <tbody>
+                <tr>
+                    <th>
+                        <button type="submit" class="btn btn-outline-primary btn-sm">Xem</button>
+                    </th>
+                    <th>
+                        <button id="select-toggle-btn" class="btn btn-outline-primary btn-sm" onclick="toggleSelectAll(event)">Chọn hết</button>    
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="2">
+                        <input type="date" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}">
+                    </th>
+                </tr>
+
+                {% for chuyen in cacchuyen %}
+                <tr>
+                    <td>{{chuyen}}</td>
+                    <td class="text-center">
+                        {% if chuyen in request.args.getlist('chuyen') %}
+                        <input type="checkbox" name="chuyen" value="{{chuyen}}" checked>
+                        {% else %}
+                        <input type="checkbox" name="chuyen" value="{{chuyen}}">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </form>
+        </table>
+    </div>
+    <div>
+        <h3>Danh sách tăng ca</h3>
+        <div id="header">
+            <h5><b>Tổng: {{count}}</b></h5>
+            <form method='POST' action="/tai_danhsach_tangca">
+                <input hidden name="ngay" value="{{ request.args.get('ngay', '') }}">
+                {% for chuyen in request.args.getlist('chuyen') %}
+                    <input hidden name="chuyen" value="{{ chuyen }}">
+                {% endfor %}
+                <input hidden name="pheduyet" value="{{ request.args.get('pheduyet') }}">
+                <button class="btn btn-success btn-sm" type="submit"><i class="fas fa-fw fa-download"></i></button>
+            </form>
+            <form method='POST' action="/tailen_danhsach_tangca" enctype="multipart/form-data">
+                <input type="file" name="file">
+                <button class="btn btn-success btn-sm"><i class="fas fa-fw fa-upload"></i></button>
+            </form>
+            <div class="pagination">{{pagination.links}}</div>
+            <form method="GET">
+                <input name="mst" placeholder="Mã số thẻ" onchange="this.form.submit()" value="{{request.args.get('mst', '')}}">
+                <input name="ngay" value="{{ request.args.get('ngay', '') }}" hidden>
+            </form>
+        </div>
+        <table class="table table-bordered table-hover table-sm"  id="danhsachtangca">
+            <thead>
+                <tr class="bg-primary">
+                    <th>MST</th>
+                    <th>Họ tên</th>
+                    <th>Chuyền</th>
+                    <th>Ngày</th>
+                    <th>Tăng ca sáng</th>
+                    <th>Tăng ca sáng thực tế</th>
+                    <th>Giờ tăng ca</th>
+                    <th>Giờ tăng ca thực tế</th>
+                    <th>Tăng ca đêm</th>
+                    <th>Tăng ca đêm thực tế</th>
+                    <th>Ca</th>
+                    <th>Giờ vào</th>
+                    <th>Giờ ra</th>
+                    <th>HR phê duyệt</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                {% if row["HR phê duyệt"] %}
+                <tr class="highlightable">
+                    <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
+                        <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
+                        <td>{{row["Chuyền"]}}</td>
+                        <td class="ngay">{{row["Ngày"]}}</td>
+                        <td class="gio edit">{{row["Tăng ca sáng"]}}</td>
+                        <td class="gio edit">{{row["Tăng ca sáng thực tế"]}}</td>
+                        <td class="gio edit">{{row["Giờ tăng ca"]}}</td>
+                        <td class="gio edit">{{row["Giờ tăng ca thực tế"]}}</td>
+                        <td class="gio edit">{{row["Tăng ca đêm"]}}</td>
+                        <td class="gio edit">{{row["Tăng ca đêm thực tế"]}}</td>
+                        <td>{{row["Ca"]}}</td>
+                        <td class="gio">{{row["Giờ vào"]}}</td>
+                        <td class="gio">{{row["Giờ ra"]}}</td>
+                
+                        {% if ('HRD' in current_user.phongban) %}
+                        <td>
+                            <button onclick="handleAccept(this, {{row["ID"]}})" class="btn-danger btn-sm" type="submit">Bỏ phê duyệt</button>
+                        </td>
+                        {% else %}
+                        <td>{{row["HR phê duyệt"]}}</td>
+                        {% endif %}
+                        <td class="action">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d31717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-off"><path d="m10 10-6.157 6.162a2 2 0 0 0-.5.833l-1.322 4.36a.5.5 0 0 0 .622.624l4.358-1.323a2 2 0 0 0 .83-.5L14 13.982"/><path d="m12.829 7.172 4.359-4.346a1 1 0 1 1 3.986 3.986l-4.353 4.353"/><path d="m15 5 4 4"/><path d="m2 2 20 20"/></svg>
+                            <svg onclick="handleEdit(this)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil pointer edit-btn hide"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                            <svg onclick="handleSave(this)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#24d317" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check success pointer hide"><path d="M20 6 9 17l-5-5"/></svg>
+                        </td>
+                </tr>
+                {% else %}
+                <tr data-info='{{ row | tojson | safe }}' class="rows">
+                        <input type="hidden" name="id" value="{{row['ID']}}">
+                        <td class="mst" style="background-color: blue; color: white;">{{row["Mã số thẻ"]}}</td>
+                        <td class="hoten" style="background-color: blue; color: white;">{{row["Họ tên"]}}</td>
+                        <td>{{row["Chuyền"]}}</td>
+                        <td>{{row["Ngày"]}}</td>
+                        <td name="tangcasang" class="gio edit">{{row["Tăng ca sáng"]}}</td>
+                        <td name="tangcasangthucte" class="gio edit">{{row["Tăng ca sáng thực tế"]}}</td>
+                        <td name="tangca" class="gio edit">{{row["Giờ tăng ca"]}}</td>
+                        <td name="tangcathucte" class="gio edit">{{row["Giờ tăng ca thực tế"]}}</td>
+                        <td name="tangcadem" class="gio edit">{{row["Tăng ca đêm"]}}</td>
+                        <td name="tangcademthucte" class="gio edit">{{row["Tăng ca đêm thực tế"]}}</td>
+                        <td>{{row["Ca"]}}</td>
+                        <td class="gio">{{row["Giờ vào"]}}</td>
+                        <td class="gio">{{row["Giờ ra"]}}</td>
+                        {% if ('HRD' in current_user.phongban) %}
+                        <td>
+                            <button onclick="handleAccept(this, {{row["ID"]}})" class="btn-primary btn-sm" type="submit">Phê duyệt</button>
+                        </td>
+                        {% else %}
+                        <td>{{row["HR phê duyệt"]}}</td>
+                        {% endif %}
+                    </form>
+                    <td class="action">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d31717" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil-off hide"><path d="m10 10-6.157 6.162a2 2 0 0 0-.5.833l-1.322 4.36a.5.5 0 0 0 .622.624l4.358-1.323a2 2 0 0 0 .83-.5L14 13.982"/><path d="m12.829 7.172 4.359-4.346a1 1 0 1 1 3.986 3.986l-4.353 4.353"/><path d="m15 5 4 4"/><path d="m2 2 20 20"/></svg>
+                        <svg onclick="handleEdit(this)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil pointer edit-btn"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                        <svg onclick="handleSave(this)" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#24d317" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check success pointer hide"><path d="M20 6 9 17l-5-5"/></svg>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>  
+<script>
+    function tim_theomst() {
+    // Lấy giá trị MST được nhập vào.
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.querySelector("input[type='number']");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("danhsachtangca");
+    tr = table.getElementsByTagName("tr");
+
+    // Lặp qua tất cả các hàng trong bảng và ẩn những hàng không khớp với MST.
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0]; // Cột đầu tiên chứa MST
+        if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+        } else {
+            tr[i].style.display = "none";
+        }
+        }
+    }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+        updateToggleButton();
+        document.querySelectorAll('.ngay').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+        // Function to toggle select all/deselect all
+        window.toggleSelectAll = function(event) {
+            event.preventDefault();
+            let checkboxes = document.querySelectorAll('input[type="checkbox"][name="chuyen"]');
+            let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+
+            checkboxes.forEach(checkbox => checkbox.checked = !allChecked);
+
+            updateToggleButton();
+        }
+
+        // Function to update button text based on checkbox states
+        function updateToggleButton() {
+            let checkboxes = document.querySelectorAll('input[type="checkbox"][name="chuyen"]');
+            let allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
+            let button = document.getElementById("select-toggle-btn");
+            button.textContent = allChecked ? "Bỏ chọn hết" : "Chọn hết";
+        }
+        function changeFormatDate(date){
+            if(date == 'None') return "";
+            try{
+                return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+            } catch {
+                return "";    
+        }}
+    });
+
+    function handleEdit(element) {
+        const tr = element.closest("tr")
+        const editElements = tr.querySelectorAll(".edit")
+        editElements.forEach(editElement => {
+            editElement.innerHTML = `<input type="time" name=${editElement.getAttribute("name")} value="${editElement.innerText}"/>`
+        })
+        element.classList.add("hide")
+        element.nextElementSibling.classList.remove("hide")
+    }
+
+    function handleSave(element) {
+        const tr = element.closest("tr")
+        const form = tr.querySelector("form[action='/capnhat_tangca']")
+        const id = tr.querySelector("input[name='id']")?.value
+        const tangcasang = tr.querySelector("input[name='tangcasang']")?.value
+        const tangcasangthucte = tr.querySelector("input[name='tangcasangthucte']")?.value
+        const tangca = tr.querySelector("input[name='tangca']")?.value
+        const tangcathucte = tr.querySelector("input[name='tangcathucte']")?.value
+        const tangcadem = tr.querySelector("input[name='tangcadem']")?.value
+        const tangcademthucte = tr.querySelector("input[name='tangcademthucte']")?.value
+
+        fetch("/capnhat_tangca", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({  
+                id,
+                tangcasang,
+                tangcasangthucte,
+                tangca,
+                tangcathucte,
+                tangcadem,
+                tangcademthucte
+            })
+        })
+        .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(() => {
+            changeToInput(tr)
+        })
+        .catch(() => {
+            changeToText(tr)
+        })
+    }
+
+    function changeToInput(tr) {
+        const successElm = tr.querySelector(".action svg:last-child")
+        successElm.classList.add("hide")
+        successElm.previousElementSibling.classList.remove("hide")
+        const editElements = tr.querySelectorAll(".edit")
+        editElements.forEach(editElement => {
+            editElement.innerHTML = `${editElement.querySelector("input")?.value}`
+        })
+    }
+
+    function changeToText(tr) {
+        const successElm = tr.querySelector(".action svg:last-child")
+        successElm.classList.add("hide")
+        successElm.previousElementSibling.classList.remove("hide")
+        const editElements = tr.querySelectorAll(".edit")
+        editElements.forEach(editElement => {
+            editElement.innerHTML = ""
+        })
+    }
+
+    function handleAccept(element, id) {
+        const type = element.innerText === "Phê duyệt" ? 1 : 0
+        fetch("/pheduyet_tangca", {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({id, type})
+        })
+        .then((response) => {
+            if (response.ok) {
+              return response.json();
+            }
+            throw new Error('Something went wrong');
+        })
+        .then(() => {
+            const tr = element.closest("tr")
+            const action = tr.querySelector(".action")
+            const editOffElm = action.querySelector("svg:first-child")
+            const editElm = action.querySelector("svg:nth-child(2)")
+            const successElm = action.querySelector("svg:last-child")
+            if (type) {
+                element.innerText = "Bỏ phê duyệt"
+                element.classList.add("btn-danger")
+                element.classList.remove("btn-primary")
+                tr.classList.add("highlightable")
+                editOffElm.classList.remove("hide")
+                if (!successElm.classList.contains("hide")) changeToText(tr)
+                editElm.classList.add("hide")
+            } else {
+                element.innerText = "Phê duyệt"
+                element.classList.add("btn-primary")
+                element.classList.remove("btn-danger")
+                tr.classList.remove("highlightable")
+                editOffElm.classList.add("hide")
+                if (!successElm.classList.contains("hide")) changeToText(tr)
+                editElm.classList.remove("hide")
+            }
+        })
+        .catch((e) => {console.log(e)})
+    }
+
+</script>
+{% endblock content %}
