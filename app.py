@@ -2917,7 +2917,7 @@ def danhsach_tangca_quakhu(mst,chuyen,ngay,pheduyet):
                     FROM Dang_ky_tang_ca_qua_khu 
                     )"""
         query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        print(query)
+        # print(query)
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{

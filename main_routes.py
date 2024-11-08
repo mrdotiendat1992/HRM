@@ -88,7 +88,9 @@ def run_before_every_request():
                         AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
                     WHERE 
                         Danh_sach_loi_the_3.Trang_thai IS NULL 
-                        AND distinct_pqt.MST = '{current_user.masothe}'"""
+                        AND distinct_pqt.MST = '{current_user.masothe}'
+                        AND Danh_sach_loi_the_3.Nha_may = '{current_user.masothe}'
+                        """
 
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
 
