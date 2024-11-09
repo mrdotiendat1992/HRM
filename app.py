@@ -3075,7 +3075,7 @@ def danhsach_chamcong_sang(chuyen,bophan,cochamcong):
     except Exception as e:
         return []
     
-def them_dangky_tangca(cursor, nhamay, mst, hoten, chucdanh, chuyen, 
+def them_dangky_tangca(cursor, conn, nhamay, mst, hoten, chucdanh, chuyen, 
                        phongban, ngay, giotangcasang, giotangcasangthucte, 
                        giotangca, giotangcathucte, giotangcadem, giotangcademthucte, 
                        ca, giovao, giora, hrpheduyet):
@@ -3122,6 +3122,7 @@ def them_dangky_tangca(cursor, nhamay, mst, hoten, chucdanh, chuyen,
         query += 'NULL)'
     try:
         cursor.execute(query)
+        conn.commit()
         return True
     except Exception as e:
         print(f"Loi them dang ky tang ca: {e}")

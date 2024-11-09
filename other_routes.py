@@ -1668,12 +1668,11 @@ def tailen_danhsach_tangca():
                     giovao = row["Giờ vào"] if not pd.isna(row["Giờ vào"]) else ""
                     giora = row["Giờ ra"] if not pd.isna(row["Giờ ra"]) else ""
                     hrpheduyet = row["HR phê duyệt"] if not pd.isna(row["HR phê duyệt"]) else ""
-                    if them_dangky_tangca(cursor, nhamay, mst, hoten, chucdanh, chuyen, phongban, ngay, giotangcasang, giotangcasangthucte, giotangca, giotangcathucte, giotangcadem, giotangcademthucte, ca, giovao, giora, hrpheduyet):
+                    if them_dangky_tangca(cursor, conn, nhamay, mst, hoten, chucdanh, chuyen, phongban, ngay, giotangcasang, giotangcasangthucte, giotangca, giotangcathucte, giotangcadem, giotangcademthucte, ca, giovao, giora, hrpheduyet):
                         flash("Thêm đăng ký tăng ca thành công !!!")
                     else:
-                        flash("Thêm đăng ký tăng ca thất bại !!!")    
+                        flash("Thêm đăng ký tăng ca thất bại !!!")
 
-                conn.commit()
                 conn.close()    
             except Exception as e:
                 print(e)
