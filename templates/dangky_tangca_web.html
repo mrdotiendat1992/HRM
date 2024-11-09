@@ -384,7 +384,7 @@
         successElm.previousElementSibling.classList.remove("hide")
         const editElements = tr.querySelectorAll(".edit")
         editElements.forEach(editElement => {
-            editElement.innerHTML = `${editElement.querySelector("input")?.value}`
+            editElement.innerHTML = `${editElement.querySelector("input")?.value ?? ""}`
         })
     }
 
