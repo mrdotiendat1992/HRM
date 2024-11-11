@@ -1,6 +1,7 @@
 from lib import *
+from config import url_database_pyodbc
 
-url_database_pyodbc = r"Driver={SQL Server};Server=172.16.60.100;Database=HR;UID=huynguyen;PWD=Namthuan@123;"
+url_database_pyodbc = url_database_pyodbc
 
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat/nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat/xuat')

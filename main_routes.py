@@ -1762,6 +1762,7 @@ def xinnghikhongluong():
         lydo = request.args.get("lydo")
         trangthai = request.args.get("trangthai")
         danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
+        print(danhsach)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10

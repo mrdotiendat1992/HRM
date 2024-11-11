@@ -8,3 +8,5 @@ nhapxuat/xuat/*.xlsx
 instance/db.sqlite
 
 *.pdf
+
+.env
