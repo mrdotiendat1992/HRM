@@ -3221,7 +3221,99 @@ def muc7_1_17():
         response.headers['Content-Disposition'] = f'attachment; filename=bangcongthang_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
-           
+
+@app.route("/muc7_1_18", methods=["GET","POST"])
+@login_required
+def muc7_1_18():
+    if request.method=="GET":
+        mst = request.args.get("mst")
+        chuyen = request.args.get('chuyen')
+        phongban = request.args.get("phongban")
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        phanloai = request.args.get("phanloai")
+        rows = laydanhsachchamcongchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
+        count = len(rows)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(rows)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = rows[start:end]
+        danhsachphongban = laycacphongban()
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_18.html", page="7.1.18 Bảng công chốt",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=count,
+                            danhsachphongban=danhsachphongban)
+    elif request.method=="POST":
+        mst = request.form.get('mst')
+        chuyen = request.form.get('chuyen')
+        phongban = request.form.get('phongban')
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        phanloai = request.form.get("phanloai")
+        danhsach = laydanhsachchamcongchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
+        result = []
+        for row in danhsach:
+            result.append(
+                {
+                    'Nhà máy': row[0],
+                    'MST': row[1],
+                    'Họ tên': row[2],
+                    'Chức danh': row[3],
+                    'Chuyền': row[4],
+                    'Phòng ban': row[5],
+                    'Cấp bậc': row[6],
+                    'Ngày': row[7],
+                    'Ca': row[8],
+                    'Số giờ làm việc': row[9],
+                    'Giờ vào': row[10],
+                    'Giờ ra': row[11],
+                    'Phút HC': row[12],
+                    'Phút nghỉ phép': row[13],
+                    'Phút tăng ca 100%': row[14],
+                    'Phút tăng ca 150%': row[15],
+                    'Phút tăng ca đêm': row[16],
+                    'Phút nghỉ không lương': row[17],
+                    'Phút nghỉ khác': row[18],
+                    'Loại nghỉ khác': row[19],
+                    'Phân loại': row[20]
+                }
+            )
+        df = DataFrame(result)
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=bang_chamcongchotquakhu_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response
+            
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
 def ykienkhieunai():
