@@ -2831,6 +2831,86 @@ def bangcongchot_web():
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
                 cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0: 
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
+
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
+
+@app.route("/bangcongchotquakhu_web", methods=["GET","POST"])
+def bangcongchotquakhu_web():
+    if request.method == "GET":
+        masothe = request.args.get("mst")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        phanloai = request.args.get("phanloai")
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        ngay = request.args.get("ngay")
+        danhsach = lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        total = len(danhsach)
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 15
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("bangcongchotquakhu_web.html",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=total)
+    elif request.method == "POST":
+        masothe = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        phanloai = request.form.get("phanloai")
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        ngay = request.form.get("ngay")
+        danhsach = lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHOT)
+
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
+
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(5, 10000 - 5 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
+                
+                try:
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+                cell = sheet[f"{col}{row}"]
                 if cell.value and int(cell.value) > 0:
                     try:
                         cell.style = number_style
@@ -2842,7 +2922,6 @@ def bangcongchot_web():
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
 
-    
 @app.route("/tailen_nhansu_pheduyet_tangca", methods=["POST"])
 @login_required
 def tailen_nhansu_pheduyet_tangca():

@@ -1,6 +1,7 @@
 # Tham số kết nối đển database (trong config flask, dùng cho phần đăng nhập sử dụng ORM với flask_sqlalchemy) 
 import os
 from dotenv import load_dotenv
+
 load_dotenv()
 
 odbc_driver = "{ODBC Driver 17 for SQL Server}"

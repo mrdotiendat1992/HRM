@@ -1,0 +1,150 @@
+{% extends "12.html" %}
+{% block title %}
+    Bảng công chốt
+{% endblock title %}
+{% block style %}
+    .scroll {
+        overflow-x: scroll;
+        margin: 10px;
+    }
+    table th {
+        white-space: nowrap;
+        text-align: center;
+        color: white;
+    }
+    table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+        font-weight: bold;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+    #filter {
+        display: flex;
+        gap: 10px;
+    }
+{% endblock style %}
+    
+{% block content %}
+<div class="scroll">
+    <br>
+    <h1>Bảng công chốt</h1>
+    <br>
+    <div style="display: flex; gap:20px;">
+        <form method="GET">
+            <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
+            <input type="text" id="chuyen" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
+            <input type="text" id="bophan" name="bophan" placeholder='Phòng ban' value={{request.args.get('bophan', '')}}>
+            <select id="phanloai" name="phanloai" value={{request.args.get('phanloai', '')}}>
+                <option value="">Phân loại</option>
+                <option value="OK">OK</option>
+                <option value="Nghỉ tự do">Nghỉ tự do</option>
+            </select>
+    </div>
+    <div style="display: flex; gap:20px;">
+            <label for="ngay">Ngày</label>
+            <input type="date" id="ngay" name="ngay" value={{request.args.get('ngay', '')}}>
+            <label for="tungay">Từ ngày</label>
+            <input type="date" id="tungay" name="tungay" value={{request.args.get('tungay', '')}}>
+            <label for="denngay">Đến ngày</label>
+            <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
+            <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></select>
+        </form>
+        <form method="POST" >
+            <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
+            <input type="text" id="chuyen" name="chuyen" hidden value={{request.args.get('chuyen', '')}}>
+            <input type="text" id="bophan" name="bophan" hidden value={{request.args.get('bophan', '')}}>
+            <input type="date" id="ngay" name="ngay" hidden value={{request.args.get('ngay', '')}}>
+            <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
+            <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
+            <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
+            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
+        </form>
+        <h5>Tổng: {{count}}</h5>
+        <div class="pagination">{{ pagination.links }}</div>
+    </div>
+    <br>
+    <table class="table table-hover table-sm table-bordered">
+        <thead>
+            <tr class="bg-primary">
+                <th>#</th>
+                <th>Mã số thẻ</th>
+                <th>Họ tên</th>
+                <th>Chức danh</th>
+                <th>Chuyền tổ</th>
+                <th>Phòng ban</th>
+                <th>Cấp bậc</th>
+                <th>Ngày</th>                    
+                <th>Ca</th>
+                <th>Giờ vào</th>
+                <th>Giờ ra</th>
+                <th>Phút HC</th>
+                <th>Phút nghỉ phép</th>
+                <th>Phút tăng ca 100%</th>   
+                <th>Phút tăng ca 150%</th> 
+                <th>Phút tăng ca đêm</th>
+                <th>Phút nghỉ không lương</th>
+                <th>Phút nghỉ khác</th>
+                <th>Loại nghỉ khác</th>
+                <th>Phân loại</th> 
+            </tr>
+        </thead>
+        
+        <tbody>
+            {% for row in danhsach %}
+            {% if row[20] ==  'OK' %}
+            <tr data-info='{{ row  | safe }}'>
+            {% else %}
+            <tr class="phanloailoi" data-info='{{ row  | safe }}'>
+            {% endif %}
+                <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
+                <td>{{row[1]}}</td>
+                <td class="sticky">{{row[2]}}</td>
+                <td>{{row[3]}}</td>
+                <td>{{row[4]}}</td>
+                <td>{{row[5]}}</td>
+                <td>{{row[6]}}</td>
+                <td class='date_en'>{{row[7]}}</td>
+                <td>{{row[8]}}</td>
+                {% if row[10] %}
+                <td>{{row[10]}}</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                {% if row[11] %}
+                <td>{{row[11]}}</td>
+                {% else %}
+                <td></td>
+                {% endif %}
+                <td>{{row[12]}}</td>
+                <td>{{row[13]}}</td>
+                <td>{{row[14]}}</td>
+                <td>{{row[15]}}</td>
+                <td>{{row[16]}}</td>
+                <td>{{row[17]}}</td>
+                <td>{{row[18]}}</td>  
+                <td>{{row[19]}}</td>
+                <td>{{row[20]}}</td>                     
+            </tr>  
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+    function changeFormatDate(date){
+        if(date == 'None') return "";
+        try{
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";    
+    }}
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
+{% endblock content %}
