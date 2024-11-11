@@ -1515,7 +1515,6 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%' "    
                 query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
-        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -1529,7 +1528,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  *
+            SELECT DISTINCT DS_Xin_nghi_phep.* 	
             FROM 
                 DS_Xin_nghi_phep 
             INNER JOIN 
@@ -1541,8 +1540,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         else:
             if mstquanly:
                 query = f"""
-                SELECT 
-                    *
+                SELECT DISTINCT DS_Xin_nghi_phep.* 
                 FROM 
                     DS_Xin_nghi_phep 
                 INNER JOIN 
@@ -1582,7 +1580,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  *
+            SELECT DISTINCT Xin_nghi_khong_luong.*
             FROM 
                 Xin_nghi_khong_luong 
             INNER JOIN 
@@ -1594,7 +1592,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         else:
             if mstquanly:
                 query = f"""
-                SELECT *
+                SELECT DISTINCT Xin_nghi_khong_luong.*
                 FROM 
                     Xin_nghi_khong_luong 
                 INNER JOIN 
