@@ -2813,7 +2813,7 @@ def bangcongchot_web():
         sheet.delete_rows(5, 10000 - 5 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-3]]
+            data = [y for y in row]
             data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
@@ -2829,13 +2829,13 @@ def bangcongchot_web():
                     cell.style = date_style
                 except ValueError:
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
-                cell = sheet[f"{col}{row}"]
-                if cell.value and int(cell.value) > 0: 
-                    try:
-                        cell.style = number_style
-                    except ValueError:
-                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            # for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+            #     cell = sheet[f"{col}{row}"]
+            #     if cell.value and int(cell.value) > 0: 
+            #         try:
+            #             cell.style = number_style
+            #         except ValueError:
+            #             pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
@@ -2861,7 +2861,7 @@ def bangcongchotquakhu_web():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("bangcongchotquakhu_web.html",
-                                danhsach=paginated_rows, 
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2893,7 +2893,7 @@ def bangcongchotquakhu_web():
         sheet.delete_rows(5, 10000 - 5 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-3]]
+            data = [y for y in row]
             data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
@@ -2909,15 +2909,14 @@ def bangcongchotquakhu_web():
                     cell.style = date_style
                 except ValueError:
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
-                cell = sheet[f"{col}{row}"]
-                if cell.value and int(cell.value) > 0:
-                    try:
-                        cell.style = number_style
-                    except ValueError:
-                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            # for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+            #     cell = sheet[f"{col}{row}"]
+            #     if cell.value and int(cell.value) > 0:
+            #         try:
+            #             cell.style = number_style
+            #         except ValueError:
+            #             pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             
-
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)

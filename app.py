@@ -3526,7 +3526,6 @@ def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,dennga
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay desc"
-        ## 
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
