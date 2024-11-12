@@ -1930,7 +1930,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  *
+            SELECT DISTINCT Xin_nghi_khac.*
             FROM 
                 Xin_nghi_khac 
             INNER JOIN 
@@ -1942,7 +1942,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
         else:
             if mstquanly:
                 query = f"""
-                SELECT *
+                SELECT DISTINCT Xin_nghi_khac.*
                 FROM 
                     Xin_nghi_khac 
                 INNER JOIN 
