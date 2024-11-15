@@ -1840,7 +1840,7 @@ def bangcong_hanhchinh_web():
         for row in danhsach:
             data = [y for y in row[:-3]]
             data[6] = datetime.strptime(data[6],"%Y-%m-%d")
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
