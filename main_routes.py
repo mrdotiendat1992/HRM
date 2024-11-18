@@ -2038,7 +2038,7 @@ def muc7_1_8():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_9", methods=["GET","POST"]) # Danh sách tăng ca chế độ
+@app.route("/muc7_1_9", methods=["GET","POST"]) # Bảng làm thêm giờ chế độ
 def muc7_1_9():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2059,133 +2059,53 @@ def muc7_1_9():
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
-        thang = request.form.get("thang")
-        nam = request.form.get("nam")
+        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
+        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_tangcachedo(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Tổng": row[40],
-            "Tháng": row[41],
-            "Năm": row[42],
-            "Nhà máy": row[43]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        df["01"] = to_numeric(df['01'], errors='coerce')
-        df["02"] = to_numeric(df['02'], errors='coerce')
-        df["03"] = to_numeric(df['03'], errors='coerce')
-        df["04"] = to_numeric(df['04'], errors='coerce')
-        df["05"] = to_numeric(df['05'], errors='coerce')
-        df["06"] = to_numeric(df['06'], errors='coerce')
-        df["07"] = to_numeric(df['07'], errors='coerce')
-        df["08"] = to_numeric(df['08'], errors='coerce')
-        df["09"] = to_numeric(df['09'], errors='coerce')
-        df["10"] = to_numeric(df['10'], errors='coerce')
-        df["11"] = to_numeric(df['11'], errors='coerce')
-        df["12"] = to_numeric(df['12'], errors='coerce')
-        df["13"] = to_numeric(df['13'], errors='coerce')
-        df["14"] = to_numeric(df['14'], errors='coerce')
-        df["15"] = to_numeric(df['15'], errors='coerce')
-        df["16"] = to_numeric(df['16'], errors='coerce')
-        df["17"] = to_numeric(df['17'], errors='coerce')
-        df["18"] = to_numeric(df['18'], errors='coerce')
-        df["19"] = to_numeric(df['19'], errors='coerce')
-        df["20"] = to_numeric(df['20'], errors='coerce')
-        df["21"] = to_numeric(df['21'], errors='coerce')
-        df["22"] = to_numeric(df['22'], errors='coerce')
-        df["23"] = to_numeric(df['23'], errors='coerce')
-        df["24"] = to_numeric(df['24'], errors='coerce')
-        df["25"] = to_numeric(df['25'], errors='coerce')
-        df["26"] = to_numeric(df['26'], errors='coerce')
-        df["27"] = to_numeric(df['27'], errors='coerce')
-        df["28"] = to_numeric(df['28'], errors='coerce')
-        df["29"] = to_numeric(df['29'], errors='coerce')
-        df["30"] = to_numeric(df['30'], errors='coerce')
-        df["31"] = to_numeric(df['31'], errors='coerce')
-        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_LAMTHEMGIO_CHEDO_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=tangcachedo_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chedo_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chedo_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_10", methods=["GET","POST"]) # Danh sách làm thêm giờ ban ngày
 def muc7_1_10():
@@ -2208,139 +2128,59 @@ def muc7_1_10():
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
-        thang = request.form.get("thang")
-        nam = request.form.get("nam")
+        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
+        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_tangcangay(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Tổng": row[40],
-            "Tháng": row[41],
-            "Năm": row[42],
-            "Nhà máy": row[43]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        df["01"] = to_numeric(df['01'], errors='coerce')
-        df["02"] = to_numeric(df['02'], errors='coerce')
-        df["03"] = to_numeric(df['03'], errors='coerce')
-        df["04"] = to_numeric(df['04'], errors='coerce')
-        df["05"] = to_numeric(df['05'], errors='coerce')
-        df["06"] = to_numeric(df['06'], errors='coerce')
-        df["07"] = to_numeric(df['07'], errors='coerce')
-        df["08"] = to_numeric(df['08'], errors='coerce')
-        df["09"] = to_numeric(df['09'], errors='coerce')
-        df["10"] = to_numeric(df['10'], errors='coerce')
-        df["11"] = to_numeric(df['11'], errors='coerce')
-        df["12"] = to_numeric(df['12'], errors='coerce')
-        df["13"] = to_numeric(df['13'], errors='coerce')
-        df["14"] = to_numeric(df['14'], errors='coerce')
-        df["15"] = to_numeric(df['15'], errors='coerce')
-        df["16"] = to_numeric(df['16'], errors='coerce')
-        df["17"] = to_numeric(df['17'], errors='coerce')
-        df["18"] = to_numeric(df['18'], errors='coerce')
-        df["19"] = to_numeric(df['19'], errors='coerce')
-        df["20"] = to_numeric(df['20'], errors='coerce')
-        df["21"] = to_numeric(df['21'], errors='coerce')
-        df["22"] = to_numeric(df['22'], errors='coerce')
-        df["23"] = to_numeric(df['23'], errors='coerce')
-        df["24"] = to_numeric(df['24'], errors='coerce')
-        df["25"] = to_numeric(df['25'], errors='coerce')
-        df["26"] = to_numeric(df['26'], errors='coerce')
-        df["27"] = to_numeric(df['27'], errors='coerce')
-        df["28"] = to_numeric(df['28'], errors='coerce')
-        df["29"] = to_numeric(df['29'], errors='coerce')
-        df["30"] = to_numeric(df['30'], errors='coerce')
-        df["31"] = to_numeric(df['31'], errors='coerce')
-        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_LAMTHEMGIO_BANNGAY_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=tangcangay_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response  
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_banngay_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_banngay_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_11", methods=["GET","POST"]) # Danh sách làm thêm giờ ban đêm
 def muc7_1_11():
     if request.method == "GET":
-        thang = int(request.args.get("thang")) if request.args.get("thang") else 0
-        nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
+        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
         mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
@@ -2363,133 +2203,53 @@ def muc7_1_11():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_tangcadem(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Tổng": row[40],
-            "Tháng": row[41],
-            "Năm": row[42],
-            "Nhà máy": row[43]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        df["01"] = to_numeric(df['01'], errors='coerce')
-        df["02"] = to_numeric(df['02'], errors='coerce')
-        df["03"] = to_numeric(df['03'], errors='coerce')
-        df["04"] = to_numeric(df['04'], errors='coerce')
-        df["05"] = to_numeric(df['05'], errors='coerce')
-        df["06"] = to_numeric(df['06'], errors='coerce')
-        df["07"] = to_numeric(df['07'], errors='coerce')
-        df["08"] = to_numeric(df['08'], errors='coerce')
-        df["09"] = to_numeric(df['09'], errors='coerce')
-        df["10"] = to_numeric(df['10'], errors='coerce')
-        df["11"] = to_numeric(df['11'], errors='coerce')
-        df["12"] = to_numeric(df['12'], errors='coerce')
-        df["13"] = to_numeric(df['13'], errors='coerce')
-        df["14"] = to_numeric(df['14'], errors='coerce')
-        df["15"] = to_numeric(df['15'], errors='coerce')
-        df["16"] = to_numeric(df['16'], errors='coerce')
-        df["17"] = to_numeric(df['17'], errors='coerce')
-        df["18"] = to_numeric(df['18'], errors='coerce')
-        df["19"] = to_numeric(df['19'], errors='coerce')
-        df["20"] = to_numeric(df['20'], errors='coerce')
-        df["21"] = to_numeric(df['21'], errors='coerce')
-        df["22"] = to_numeric(df['22'], errors='coerce')
-        df["23"] = to_numeric(df['23'], errors='coerce')
-        df["24"] = to_numeric(df['24'], errors='coerce')
-        df["25"] = to_numeric(df['25'], errors='coerce')
-        df["26"] = to_numeric(df['26'], errors='coerce')
-        df["27"] = to_numeric(df['27'], errors='coerce')
-        df["28"] = to_numeric(df['28'], errors='coerce')
-        df["29"] = to_numeric(df['29'], errors='coerce')
-        df["30"] = to_numeric(df['30'], errors='coerce')
-        df["31"] = to_numeric(df['31'], errors='coerce')
-        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_LAMTHEMGIO_BANDEM_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=tangcadem_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_bandem_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_bandem_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_12", methods=["GET","POST"]) # Danh sách làm thêm giờ Chủ nhật
 def muc7_1_12():
     if request.method == "GET":
-        thang = int(request.args.get("thang")) if request.args.get("thang") else 0
-        nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
+        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
         mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
@@ -2512,133 +2272,55 @@ def muc7_1_12():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_tangcachunhat(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Tổng": row[40],
-            "Tháng": row[41],
-            "Năm": row[42],
-            "Nhà máy": row[43]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        df["01"] = to_numeric(df['01'], errors='coerce')
-        df["02"] = to_numeric(df['02'], errors='coerce')
-        df["03"] = to_numeric(df['03'], errors='coerce')
-        df["04"] = to_numeric(df['04'], errors='coerce')
-        df["05"] = to_numeric(df['05'], errors='coerce')
-        df["06"] = to_numeric(df['06'], errors='coerce')
-        df["07"] = to_numeric(df['07'], errors='coerce')
-        df["08"] = to_numeric(df['08'], errors='coerce')
-        df["09"] = to_numeric(df['09'], errors='coerce')
-        df["10"] = to_numeric(df['10'], errors='coerce')
-        df["11"] = to_numeric(df['11'], errors='coerce')
-        df["12"] = to_numeric(df['12'], errors='coerce')
-        df["13"] = to_numeric(df['13'], errors='coerce')
-        df["14"] = to_numeric(df['14'], errors='coerce')
-        df["15"] = to_numeric(df['15'], errors='coerce')
-        df["16"] = to_numeric(df['16'], errors='coerce')
-        df["17"] = to_numeric(df['17'], errors='coerce')
-        df["18"] = to_numeric(df['18'], errors='coerce')
-        df["19"] = to_numeric(df['19'], errors='coerce')
-        df["20"] = to_numeric(df['20'], errors='coerce')
-        df["21"] = to_numeric(df['21'], errors='coerce')
-        df["22"] = to_numeric(df['22'], errors='coerce')
-        df["23"] = to_numeric(df['23'], errors='coerce')
-        df["24"] = to_numeric(df['24'], errors='coerce')
-        df["25"] = to_numeric(df['25'], errors='coerce')
-        df["26"] = to_numeric(df['26'], errors='coerce')
-        df["27"] = to_numeric(df['27'], errors='coerce')
-        df["28"] = to_numeric(df['28'], errors='coerce')
-        df["29"] = to_numeric(df['29'], errors='coerce')
-        df["30"] = to_numeric(df['30'], errors='coerce')
-        df["31"] = to_numeric(df['31'], errors='coerce')
-        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_LAMTHEMGIO_CHUNHAT_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangtangcachunhat_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chunhat_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chunhat_{timestamp}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_13", methods=["GET","POST"]) # Danh sách làm thêm giờ ngày lễ
 def muc7_1_13():
     if request.method == "GET":
-        thang = int(request.args.get("thang")) if request.args.get("thang") else 0
-        nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
+        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
         mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
@@ -2661,127 +2343,49 @@ def muc7_1_13():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_tangcangayle(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Tổng": row[40],
-            "Tháng": row[41],
-            "Năm": row[42],
-            "Nhà máy": row[43]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        df["01"] = to_numeric(df['01'], errors='coerce')
-        df["02"] = to_numeric(df['02'], errors='coerce')
-        df["03"] = to_numeric(df['03'], errors='coerce')
-        df["04"] = to_numeric(df['04'], errors='coerce')
-        df["05"] = to_numeric(df['05'], errors='coerce')
-        df["06"] = to_numeric(df['06'], errors='coerce')
-        df["07"] = to_numeric(df['07'], errors='coerce')
-        df["08"] = to_numeric(df['08'], errors='coerce')
-        df["09"] = to_numeric(df['09'], errors='coerce')
-        df["10"] = to_numeric(df['10'], errors='coerce')
-        df["11"] = to_numeric(df['11'], errors='coerce')
-        df["12"] = to_numeric(df['12'], errors='coerce')
-        df["13"] = to_numeric(df['13'], errors='coerce')
-        df["14"] = to_numeric(df['14'], errors='coerce')
-        df["15"] = to_numeric(df['15'], errors='coerce')
-        df["16"] = to_numeric(df['16'], errors='coerce')
-        df["17"] = to_numeric(df['17'], errors='coerce')
-        df["18"] = to_numeric(df['18'], errors='coerce')
-        df["19"] = to_numeric(df['19'], errors='coerce')
-        df["20"] = to_numeric(df['20'], errors='coerce')
-        df["21"] = to_numeric(df['21'], errors='coerce')
-        df["22"] = to_numeric(df['22'], errors='coerce')
-        df["23"] = to_numeric(df['23'], errors='coerce')
-        df["24"] = to_numeric(df['24'], errors='coerce')
-        df["25"] = to_numeric(df['25'], errors='coerce')
-        df["26"] = to_numeric(df['26'], errors='coerce')
-        df["27"] = to_numeric(df['27'], errors='coerce')
-        df["28"] = to_numeric(df['28'], errors='coerce')
-        df["29"] = to_numeric(df['29'], errors='coerce')
-        df["30"] = to_numeric(df['30'], errors='coerce')
-        df["31"] = to_numeric(df['31'], errors='coerce')
-        df["Tổng"] = to_numeric(df['Tổng'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_LAMTHEMGIO_NGAYLE_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in ['G','H'] and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=tangcangayle_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_ngayle_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_ngayle_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_14", methods=["GET","POST"]) # Bảng chấm công chi tiết chưa chốt
 @login_required
