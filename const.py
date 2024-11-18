@@ -35,3 +35,7 @@ FILE_MAU_BANGCONG_TONGHOP = os.path.join(os.path.dirname(__file__), r'static/upl
 FILE_MAU_BANGCONG_CHUACHOT = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chuachot.xlsx')
 FILE_MAU_BANGCONG_CHOT = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chot.xlsx')
 FILE_MAU_BANGCONG_TRANGOAI = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_trangoai.xlsx')
+FILE_MAU_BANGCONG_HANHCHINH_KX = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_hanhchinh_kx.xlsx')
+FILE_MAU_BANGCONG_TONGHOP_KX = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_tonghop_kx.xlsx')
+FILE_MAU_BANGCONG_CHUACHOT_KX = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chuachot_kx.xlsx')
+FILE_MAU_BANGCONG_CHOT_KX = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/bangcong/mau_bangchamcong_chitiet_chot_kx.xlsx')

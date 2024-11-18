@@ -1,4 +1,5 @@
-{% extends  "base.html" %}
+{% extends  "bangchamcong.html" %}
+{% block title %}Bảng chấm công chi tiết chốt quá khứ{% endblock title %}
 {% block style%}
 <style>
     table, th, td {
@@ -53,6 +54,14 @@
     }
     th.sticky {
         z-index: 2;
+    }
+    #bangcongchitietquakhupage {
+        background-color: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
     }
 </style>
 {% endblock style %}

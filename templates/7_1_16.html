@@ -1,4 +1,5 @@
-{% extends "base.html" %}
+{% extends "bangchamcong.html" %}
+{% block title %}Bảng chấm công hành chính{% endblock title %}
 {% block style %}
 <style>
     .scroll {
@@ -24,13 +25,19 @@
         display: flex;
         gap: 10px;
     }
+    #bangconghanhchinhpage {
+        background-color: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 </style>
 {% endblock style %}
     
 {% block content %}
 <div class="scroll">
-    <br>
-    <h1>Bảng công hành chính</h1>
     <br>
     <div id="filter">
         <form method="GET">

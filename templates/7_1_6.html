@@ -1,4 +1,4 @@
-{% extends  "base.html" %}
+{% extends  "loichamcong.html" %}
 {% block style%}
 <style>
     table, th, td {
@@ -34,190 +34,200 @@
         margin-left: 10px;
         font-size: 10px;
     }
+    #xinnghikhacpage {
+        background-color: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="scroll-container">
-    <div class="content">
-        <div style="display: flex; align-items: center; gap:20px;">
-            <h5><b>Tổng: {{count}}</b></h5>
-            <button data-toggle="modal" data-target="#myModal" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
-            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Thêm số lượng lớn</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="form-group">
-                                <form method="POST" action="/taifilexinnghiphepkhacmau">
-                                    <input type="submit" class="btn btn-success btn-sm" value="Tải file mẫu">
-                                </form>
+<div class="container-fluid">
+    <div class="scroll-container">
+        <div class="content">
+            <div style="display: flex; align-items: center; gap:20px;">
+                <h5><b>Tổng: {{count}}</b></h5>
+                <button data-toggle="modal" data-target="#myModal" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Thêm số lượng lớn</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                            <div class="form-group">
-                                <form method="POST" action="/nhansu_themxinnghikhac" enctype="multipart/form-data">
-                                    <input type="file" id="file" name="file">
-                                    <input type="submit" class="btn btn-success btn-sm" value="Tải lên">
-                                </form>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <form method="POST" action="/taifilexinnghiphepkhacmau">
+                                        <input type="submit" class="btn btn-success btn-sm" value="Tải file mẫu">
+                                    </form>
+                                </div>
+                                <div class="form-group">
+                                    <form method="POST" action="/nhansu_themxinnghikhac" enctype="multipart/form-data">
+                                        <input type="file" id="file" name="file">
+                                        <input type="submit" class="btn btn-success btn-sm" value="Tải lên">
+                                    </form>
+                                </div>
                             </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <form method="GET">
+                    <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()" placeholder="Mã số thẻ">
+                    <input type="text" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange="this.form.submit()" placeholder="Bộ phân">
+                    <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()" placeholder="Chuyền">
+                    <input type="date" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange="this.form.submit()">
+                    <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()" placeholder="Loại nghỉ">
+                    <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
+                        <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
+                        <option value=""></option>
+                        <option value="Chờ kiểm tra">Chờ kiểm tra</option>
+                        <option value="Đã kiểm tra">Đã kiểm tra</option>
+                        <option value="Đã phê duyệt">Đã phê duyệt</option>
+                        <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
+                        <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
+                    </select>
+                    <select class="nhaplieu" id="nhangiayto" name="nhangiayto" onchange='this.form.submit()'>
+                        <option value="{{ request.args.get('nhangiayto', '') }}">{{ request.args.get('nhangiayto', '') }}</option>
+                        <option value=""></option>
+                        <option value="Chưa nhận">Chưa nhận</option>
+                        <option value="Đã nhận">Đã nhận</option>
+                        <option value="Không có">Không có</option>
+                    </select>
+                </form>            
+
+                <form method="POST">
+                    <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                    <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
+                    <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                    <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                    <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
+                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
+                </form>
+                <div class="pagination">{{ pagination.links }}</div>
             </div>
-
-            <form method="GET">
-                <input type="text" name="mst" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()" placeholder="Mã số thẻ">
-                <input type="text" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange="this.form.submit()" placeholder="Bộ phân">
-                <input type="text" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange="this.form.submit()" placeholder="Chuyền">
-                <input type="date" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange="this.form.submit()">
-                <input type="text" name="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange="this.form.submit()" placeholder="Loại nghỉ">
-                <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
-                    <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
-                    <option value=""></option>
-                    <option value="Chờ kiểm tra">Chờ kiểm tra</option>
-                    <option value="Đã kiểm tra">Đã kiểm tra</option>
-                    <option value="Đã phê duyệt">Đã phê duyệt</option>
-                    <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
-                    <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
-                </select>
-                <select class="nhaplieu" id="nhangiayto" name="nhangiayto" onchange='this.form.submit()'>
-                    <option value="{{ request.args.get('nhangiayto', '') }}">{{ request.args.get('nhangiayto', '') }}</option>
-                    <option value=""></option>
-                    <option value="Chưa nhận">Chưa nhận</option>
-                    <option value="Đã nhận">Đã nhận</option>
-                    <option value="Không có">Không có</option>
-                </select>
-            </form>            
-
-            <form method="POST">
-                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
-                <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
-                <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
-                <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
-            </form>
-            <div class="pagination">{{ pagination.links }}</div>
-        </div>
-        <br>
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr class="bg-primary">
-                    <th>Mã số thẻ</th>
-                    <th>Họ tên</th>
-                    <th>Chuyền</th>
-                    <th>Chức danh</th>
-                    <th>Phòng ban</th>
-                    <th>Ngày nghỉ </th>
-                    <th>Tổng số phút</th>
-                    <th>Loại nghỉ</th>
-                    <th>Trạng thái</th>
-                    <th style="display:flex;gap:5px;">
-                        Nhận giấy tờ 
-                        {% if 'HRD' in current_user.phongban %}
-                        <form action="/hr_pheduyet_hangloat_xinnghikhac" method="POST">
-                            <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                            <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
-                            <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
-                            <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                            <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                            <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
-                            <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
-                            <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                            <button type"submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
-                        </form>
-                            {% endif %}
-                    </th>
-                </tr>
-            </thead>
-            
-            <tbody>
-                {% for row in danhsach %}
-                <tr data-info='{{ row  | safe }}'>
-                    <td>{{row[1]}}</td>
-                    <td>{{row[2]}}</td>
-                    <td>{{row[4]}}</td>
-                    <td>{{row[3]}}</td>
-                    <td>{{row[5]}}</td>
-                    <td class="date_en">{{row[6]}}</td>
-                    <td>{{row[7]}}</td>
-                    <td>{{row[8]}}</td>
-                    {% if not row[9] or row[9] == 'Chờ kiểm tra'%}
-                        <td style="display: flex;" >Chờ kiểm tra 
-                            <form action="/thuky_kiemtra_xinnghikhac" method="POST">
-                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[11]}}">
-                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+            <br>
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th>Mã số thẻ</th>
+                        <th>Họ tên</th>
+                        <th>Chuyền</th>
+                        <th>Chức danh</th>
+                        <th>Phòng ban</th>
+                        <th>Ngày nghỉ </th>
+                        <th>Tổng số phút</th>
+                        <th>Loại nghỉ</th>
+                        <th>Trạng thái</th>
+                        <th style="display:flex;gap:5px;">
+                            Nhận giấy tờ 
+                            {% if 'HRD' in current_user.phongban %}
+                            <form action="/hr_pheduyet_hangloat_xinnghikhac" method="POST">
+                                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                                <input type="date" name="ngaynghi" hidden value="{{ request.args.get('ngaynghi', '') }}">
+                                <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
+                                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                                <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                                <input type="hidden" name="nhangiayto" value="{{ request.args.get('nhangiayto', '') }}">
                                 <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                <input type="submit" class="btn btn-warning btn-sm" id="kiemtra" name="kiemtra" value="Kiểm tra">
+                                <button type"submit" class="btn btn-success btn-sm"><i class="fa fa-check"></i></button>
                             </form>
-                            <form action="/thuky_kiemtra_xinnghikhac" method="POST">
-                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[11]}}">
-                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
-                            </form>
-                        </td>
-                        <td>Chưa nhận</td>
-                    {% elif row[9] == 'Đã kiểm tra' or row[9] == 'Đã kiểm tra'  %}
-                        <td style="display: flex;" >
-                            Đã kiểm tra 
-                            <form action="/quanly_pheduyet_xinnghikhac" method="POST">
-                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[11]}}">
-                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                <input type="submit" class="btn btn-warning btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
-                            </form>
-                            <form action="/quanly_pheduyet_xinnghikhac" method="POST">
-                                <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
-                                <input type="hidden" name="id" value="{{row[11]}}">
-                                <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
-                            </form>
-                        </td>
-                        <td>Chưa nhận</td>
-                    {% elif 'Đã phê' in row[9] %}
-                        <td>Đã phê duyệt </td>
-                        {% if row[10] == 'Đã nhận' or row[10] == 'Không có' %} 
-                            <td>{{row[10]}}</td>
-                        {% else %}
-                            <td style="display: flex;">
-                                Chưa nhận 
-                                <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                {% endif %}
+                        </th>
+                    </tr>
+                </thead>
+                
+                <tbody>
+                    {% for row in danhsach %}
+                    <tr data-info='{{ row  | safe }}'>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                        <td>{{row[4]}}</td>
+                        <td>{{row[3]}}</td>
+                        <td>{{row[5]}}</td>
+                        <td class="date_en">{{row[6]}}</td>
+                        <td>{{row[7]}}</td>
+                        <td>{{row[8]}}</td>
+                        {% if not row[9] or row[9] == 'Chờ kiểm tra'%}
+                            <td style="display: flex;" >Chờ kiểm tra 
+                                <form action="/thuky_kiemtra_xinnghikhac" method="POST">
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                     <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                     <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                    <input type="submit" class="btn btn-warning btn-sm" id="nhangiayto" name="nhangiayto" value="Có">
+                                    <input type="submit" class="btn btn-warning btn-sm" id="kiemtra" name="kiemtra" value="Kiểm tra">
                                 </form>
-                                <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                <form action="/thuky_kiemtra_xinnghikhac" method="POST">
                                     <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
                                     <input type="hidden" name="id" value="{{row[11]}}">
                                     <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
                                     <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
-                                    <input type="submit" class="btn btn-danger btn-sm" id="nhangiayto" name="nhangiayto" value="Không">
+                                    <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
                                 </form>
                             </td>
+                            <td>Chưa nhận</td>
+                        {% elif row[9] == 'Đã kiểm tra' or row[9] == 'Đã kiểm tra'  %}
+                            <td style="display: flex;" >
+                                Đã kiểm tra 
+                                <form action="/quanly_pheduyet_xinnghikhac" method="POST">
+                                    <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                    <input type="hidden" name="id" value="{{row[11]}}">
+                                    <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
+                                    <input type="submit" class="btn btn-warning btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
+                                </form>
+                                <form action="/quanly_pheduyet_xinnghikhac" method="POST">
+                                    <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                    <input type="hidden" name="id" value="{{row[11]}}">
+                                    <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                    <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
+                                    <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
+                                </form>
+                            </td>
+                            <td>Chưa nhận</td>
+                        {% elif 'Đã phê' in row[9] %}
+                            <td>Đã phê duyệt </td>
+                            {% if row[10] == 'Đã nhận' or row[10] == 'Không có' %} 
+                                <td>{{row[10]}}</td>
+                            {% else %}
+                                <td style="display: flex;">
+                                    Chưa nhận 
+                                    <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                        <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                        <input type="hidden" name="id" value="{{row[11]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
+                                        <input type="submit" class="btn btn-warning btn-sm" id="nhangiayto" name="nhangiayto" value="Có">
+                                    </form>
+                                    <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
+                                        <input type="hidden" name="mst_xinnghikhac" value="{{row[1]}}">
+                                        <input type="hidden" name="id" value="{{row[11]}}">
+                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                        <input type="hidden" name="page" value="{{ request.args.get('page', '') }}">
+                                        <input type="submit" class="btn btn-danger btn-sm" id="nhangiayto" name="nhangiayto" value="Không">
+                                    </form>
+                                </td>
+                            {% endif %}
+                        {% else %}
+                            <td>{{row[9]}} </td>
+                            <td></td>
                         {% endif %}
-                    {% else %}
-                        <td>{{row[9]}} </td>
-                        <td></td>
-                    {% endif %}
-                </tr>  
-                {% endfor %}
-            </tbody>
-        </table>
+                    </tr>  
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script>

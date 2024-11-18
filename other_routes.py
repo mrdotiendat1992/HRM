@@ -15,7 +15,6 @@ from main_routes import *
 #             db.session.commit()
 #         return redirect("/admin")
 
-
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():
     if request.method == "POST":        
@@ -1835,19 +1834,19 @@ def bangcong_hanhchinh_web():
         sheet['A2'] = f'Tháng {thang} năm {nam}'
 
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(5, 10000 - 5 + 1)
+        sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
             data = [y for y in row[:-3]]
-            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
                 
@@ -2725,23 +2724,23 @@ def bangcong5ngay_web():
 
         # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
         img.anchor = 'A1'
-
+        
         # Chèn hình ảnh vào sheet
         sheet.add_image(img)
 
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(5, 10000 - 5 + 1)
+        sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
             data = [y for y in row[:-1]]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
                 
@@ -2810,7 +2809,7 @@ def bangcongchot_web():
         sheet.add_image(img)
 
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(5, 10000 - 5 + 1)
+        sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
             data = [y for y in row[:-1]]
@@ -2821,7 +2820,7 @@ def bangcongchot_web():
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
                 
@@ -2890,10 +2889,10 @@ def bangcongchotquakhu_web():
         sheet.add_image(img)
 
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(5, 10000 - 5 + 1)
+        sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
-            data = [y for y in row]
+            data = [y for y in row[:-1]]
             data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
@@ -2901,7 +2900,7 @@ def bangcongchotquakhu_web():
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
                 
@@ -3070,19 +3069,19 @@ def bangcong_tong_web():
         sheet['A2'] = f'Tháng {thang} năm {nam}'
 
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(7, 10000 - 7 + 1)
+        sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
             data = [y for y in row[:-3]]
-            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(7, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
                 
@@ -3151,9 +3150,9 @@ def bangcongtrangoai_web():
 
         # Chèn hình ảnh vào sheet
         sheet.add_image(img)
-
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
         # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(5, 10000 - 5 + 1)
+        sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
             data = [y for y in row[:-3]]
@@ -3165,7 +3164,7 @@ def bangcongtrangoai_web():
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G5:H10000
-        for row in range(5, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
             for col in ['G','H']:
                 cell = sheet[f"{col}{row}"]
                 

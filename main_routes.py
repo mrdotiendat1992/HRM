@@ -1611,7 +1611,7 @@ def lichsucongviec():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
     
-@app.route("/muc7_1_1", methods=["GET","POST"])
+@app.route("/muc7_1_1", methods=["GET","POST"]) # Đổi ca làm việc
 @login_required
 @roles_required('hr','sa','gd')
 def khaibaochamcong():
@@ -1663,7 +1663,7 @@ def khaibaochamcong():
         print("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), as_attachment=True)
             
-@app.route("/muc7_1_2", methods=["GET","POST"])
+@app.route("/muc7_1_2", methods=["GET","POST"]) # Danh sách lỗi chấm công
 @login_required
 def loichamcong():
     mstthuky = request.args.get("mstthuky")
@@ -1681,12 +1681,13 @@ def loichamcong():
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template("7_1_2.html",
-                            page="7.1.2 Danh sách lỗi chấm công",
+                            page="Lỗi chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count)
 
-@app.route("/muc7_1_3", methods=["GET"])
+
+@app.route("/muc7_1_3", methods=["GET"]) # Danh sách điểm danh bù
 @login_required
 def diemdanhbu():
     mstthuky = request.args.get("mstthuky")
@@ -1712,14 +1713,14 @@ def diemdanhbu():
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template("7_1_3.html",
-                        page="7.1.3 Danh sách điểm danh bù",
+                        page="Lỗi chấm công",
                         danhsach=paginated_rows, 
                         pagination=pagination,
                         count=count,
                         danh_sach_chuyen=danh_sach_chuyen,
                         danh_sach_bophan=danh_sach_bophan)
  
-@app.route("/muc7_1_4", methods=["GET"])
+@app.route("/muc7_1_4", methods=["GET"]) # Danh sách xin nghỉ phép 
 @login_required
 def xinnghiphep():
     mstthuky = request.args.get("mstthuky")
@@ -1742,12 +1743,12 @@ def xinnghiphep():
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template("7_1_4.html",
-                        page="7.1.4 Danh sách xin nghỉ phép",
+                        page="Lỗi chấm công",
                         danhsach=paginated_rows, 
                         pagination=pagination,
                         count=count)
 
-@app.route("/muc7_1_5", methods=["GET","POST"])
+@app.route("/muc7_1_5", methods=["GET","POST"]) # Danh sách xin nghỉ không lương
 @login_required
 def xinnghikhongluong():
     if request.method == 'GET':
@@ -1771,7 +1772,7 @@ def xinnghikhongluong():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_5.html",
-                            page="7.1.5 Danh sách xin nghỉ không lương",
+                            page="Lỗi chấm công",
                             danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
@@ -1806,7 +1807,7 @@ def xinnghikhongluong():
         print("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
         
-@app.route("/muc7_1_6", methods=["GET","POST"])
+@app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sách xin nghỉ khác
 @login_required
 def danhsachxinnghikhac():
     if request.method == "GET":
@@ -1829,7 +1830,7 @@ def danhsachxinnghikhac():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_6.html", 
-                               page="7.1.6 Danh sách xin nghỉ khác", 
+                               page="Lỗi chấm công", 
                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=count)
@@ -1890,7 +1891,7 @@ def danhsachxinnghikhac():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_7", methods=["GET","POST"])
+@app.route("/muc7_1_7", methods=["GET","POST"]) # Danh sách phép tồn
 @login_required
 def muc7_1_7():
     if request.method == "GET":
@@ -1903,7 +1904,7 @@ def muc7_1_7():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_7.html", page="7.1.7 Danh sách phép tồn",
+        return render_template("7_1_7.html", page="Lỗi chấm công",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -1957,7 +1958,7 @@ def muc7_1_7():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
            
-@app.route("/muc7_1_8", methods=["GET","POST"])
+@app.route("/muc7_1_8", methods=["GET","POST"]) # Đăng ký làm thêm giờ
 @login_required
 def muc7_1_8():
     
@@ -1979,7 +1980,7 @@ def muc7_1_8():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_8.html", 
-                               page="7.1.8 Đăng ký tăng ca",
+                               page="Làm thêm giờ",
                                danhsach=paginated_rows,
                                pagination=pagination,
                                count=count
@@ -2037,7 +2038,7 @@ def muc7_1_8():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_9", methods=["GET","POST"])
+@app.route("/muc7_1_9", methods=["GET","POST"]) # Danh sách tăng ca chế độ
 def muc7_1_9():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2053,7 +2054,7 @@ def muc7_1_9():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_9.html", page="7.1.9 Tăng ca chế độ",
+        return render_template("7_1_9.html", page="Làm thêm giờ",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2186,7 +2187,7 @@ def muc7_1_9():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_10", methods=["GET","POST"])
+@app.route("/muc7_1_10", methods=["GET","POST"]) # Danh sách làm thêm giờ ban ngày
 def muc7_1_10():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2202,7 +2203,7 @@ def muc7_1_10():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_10.html", page="7.1.10 Tăng ca ngày",
+        return render_template("7_1_10.html", page="Làm thêm giờ",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2335,7 +2336,7 @@ def muc7_1_10():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response  
 
-@app.route("/muc7_1_11", methods=["GET","POST"])
+@app.route("/muc7_1_11", methods=["GET","POST"]) # Danh sách làm thêm giờ ban đêm
 def muc7_1_11():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2351,7 +2352,7 @@ def muc7_1_11():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_11.html", page="7.1.11 Tăng ca đêm",
+        return render_template("7_1_11.html", page="Làm thêm giờ",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2484,7 +2485,7 @@ def muc7_1_11():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_12", methods=["GET","POST"])
+@app.route("/muc7_1_12", methods=["GET","POST"]) # Danh sách làm thêm giờ Chủ nhật
 def muc7_1_12():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2500,7 +2501,7 @@ def muc7_1_12():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_12.html", page="7.1.12 Tăng ca Chủ nhật",
+        return render_template("7_1_12.html", page="Làm thêm giờ",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2633,7 +2634,7 @@ def muc7_1_12():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
         
-@app.route("/muc7_1_13", methods=["GET","POST"])
+@app.route("/muc7_1_13", methods=["GET","POST"]) # Danh sách làm thêm giờ ngày lễ
 def muc7_1_13():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2649,7 +2650,7 @@ def muc7_1_13():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_13.html", page="7.1.13 Tăng ca ngày lễ",
+        return render_template("7_1_13.html", page="Làm thêm giờ",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2782,7 +2783,7 @@ def muc7_1_13():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_14", methods=["GET","POST"])
+@app.route("/muc7_1_14", methods=["GET","POST"]) # Bảng chấm công chi tiết chưa chốt
 @login_required
 def muc7_1_14():
     if request.method=="GET":
@@ -2801,7 +2802,7 @@ def muc7_1_14():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_14.html", page="7.1.14 Bảng công 5 ngày",
+        return render_template("7_1_14.html", page="Bảng chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count)
@@ -2813,62 +2814,47 @@ def muc7_1_14():
         denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcong(mst,chuyen,phongban,tungay,denngay,phanloai)
-        result = [
-                {'Nhà máy': row[0],
-                    'MST': row[1],
-                    'Họ tên': row[2],
-                    'Chức danh': row[3],
-                    'Chuyền': row[4],
-                    'Phòng ban': row[5],
-                    'Cấp bậc': row[6],
-                    'Ngày': row[7],
-                    'Ca': row[8],
-                    'Số giờ làm việc': row[9],
-                    'Giờ vào': row[10],
-                    'Giờ ra': row[11],
-                    'Phút HC': row[12],
-                    'Phút nghỉ phép': row[13],
-                    'Phút tăng ca 100%': row[14],
-                    'Phút tăng ca 150%': row[15],
-                    'Phút tăng ca đêm': row[16],
-                    'Phút nghỉ không lương': row[17],
-                    'Phút nghỉ khác': row[18],
-                    'Loại nghỉ khác': row[19],
-                    'Phân loại': row[20]}
-            for row in danhsach]
-        df = DataFrame(result)
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUACHOT_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
-                try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+        
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bang_chamcong_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response  
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-1]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # Duyệt qua các ô trong khu vực G4:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
                 
-@app.route("/muc7_1_15", methods=["GET","POST"])
+                try:
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này            
+
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"), as_attachment=True)
+                
+@app.route("/muc7_1_15", methods=["GET","POST"]) # Bảng chấm công chi tiết chốt
 @login_required
 def muc7_1_15():
     if request.method=="GET":
@@ -2888,7 +2874,7 @@ def muc7_1_15():
         paginated_rows = rows[start:end]
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_15.html", page="7.1.15 Bảng công chốt",
+        return render_template("7_1_15.html", page="Bảng chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count,
@@ -2901,66 +2887,47 @@ def muc7_1_15():
         denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchot(mst,chuyen,phongban,tungay,denngay,phanloai)
-        result = []
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHOT_KX)
+
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
+
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 50000 - 4 + 1)
+
         for row in danhsach:
-            result.append(
-                {
-                    'Nhà máy': row[0],
-                    'MST': row[1],
-                    'Họ tên': row[2],
-                    'Chức danh': row[3],
-                    'Chuyền': row[4],
-                    'Phòng ban': row[5],
-                    'Cấp bậc': row[6],
-                    'Ngày': row[7],
-                    'Ca': row[8],
-                    'Số giờ làm việc': row[9],
-                    'Giờ vào': row[10],
-                    'Giờ ra': row[11],
-                    'Phút HC': row[12],
-                    'Phút nghỉ phép': row[13],
-                    'Phút tăng ca 100%': row[14],
-                    'Phút tăng ca 150%': row[15],
-                    'Phút tăng ca đêm': row[16],
-                    'Phút nghỉ không lương': row[17],
-                    'Phút nghỉ khác': row[18],
-                    'Loại nghỉ khác': row[19],
-                    'Phân loại': row[20]
-                }
-            )
-        df = DataFrame(result)
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+            data = [y for y in row[:-1]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
-
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 50001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
+                    cell.style = date_style
+                except ValueError:
                     pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bang_chamcongchot_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response  
-
-@app.route("/muc7_1_16", methods=["GET","POST"])
+@app.route("/muc7_1_16", methods=["GET","POST"]) # Bảng chấm công hành chính
 @login_required
 def muc7_1_16():
     
@@ -2978,7 +2945,7 @@ def muc7_1_16():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_16.html", page="7.1.16 Bảng chấm hành chính",
+        return render_template("7_1_16.html", page="Bảng chấm công",
                                 danhsach=paginated_rows, 
                                 pagination=pagination,
                                 count=total)
@@ -2990,91 +2957,51 @@ def muc7_1_16():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_bangcong_kx(thang,nam,mst,bophan,chuyen)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": datetime.strptime(row[6],"%Y-%m-%d").strftime("%d/%m/%Y") if row[6] else "",
-            "Ngày chính thức": datetime.strptime(row[7],"%Y-%m-%d").strftime("%d/%m/%Y") if row[7] else "",
-            "Ca": row[8], 
-            "01": row[9],
-            "02": row[10],
-            "03": row[11],
-            "04": row[12],
-            "05": row[13],
-            "06": row[14],
-            "07": row[15],
-            "08": row[16],
-            "09": row[17],
-            "10": row[18],
-            "11": row[19],
-            "12": row[20],
-            "13": row[21],
-            "14": row[22],
-            "15": row[23],
-            "16": row[24],
-            "17": row[25],
-            "18": row[26],
-            "19": row[27],
-            "20": row[28],
-            "21": row[29],
-            "22": row[30],
-            "23": row[31],
-            "24": row[32],
-            "25": row[33],
-            "26": row[34],
-            "27": row[35],
-            "28": row[36],
-            "29": row[37],
-            "30": row[38],
-            "31": row[39],
-            "Thử việc": row[40],
-            "Chính thức": row[41],
-            "Tháng": row[42],
-            "Năm": row[43],
-            "Nhà máy": row[44]
-        } for row in danhsach]  
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Thử việc"] = to_numeric(df['Thử việc'], errors='coerce')
-        df["Chính thức"] = to_numeric(df['Chính thức'], errors='coerce')
-        df["Tháng"] = to_numeric(df['Tháng'], errors='coerce')
-        df["Năm"] = to_numeric(df['Năm'], errors='coerce')
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_HANHCHINH_KX)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['BẢNG CHẤM CÔNG HÀNH CHÍNH']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 10000 - 4 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này          
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangconghanhchinh_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_hanhchinh_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_hanhchinh_{timestamp}.xlsx"), as_attachment=True)
     
-@app.route("/muc7_1_17", methods=["GET","POST"])
+@app.route("/muc7_1_17", methods=["GET","POST"]) # Bảng chấm công tổng hợp
 def muc7_1_17():
     if request.method == "GET":
         try:
@@ -3091,7 +3018,7 @@ def muc7_1_17():
             end = start + per_page
             paginated_rows = danhsach[start:end]
             pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-            return render_template("7_1_17.html", page="7.1.17 Bảng chấm tổng tháng",
+            return render_template("7_1_17.html", page="Bảng chấm công",
                                     danhsach=paginated_rows, 
                                     pagination=pagination,
                                     count=total)
@@ -3106,122 +3033,59 @@ def muc7_1_17():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
-        data = [{
-            "Mã số thẻ": row[0],
-            "Họ tên": row[1],
-            "Bộ phận": row[2],
-            "Chuyền": row[3],
-            "Vị trí": row[4],
-            "Chức danh": row[5],
-            "Ngày vào": row[6] if row[6] else "",
-            "Ngày chính thức": row[7] if row[7] else "",
-            "Ca": row[8],    
-            "Công thử việc": row[9],
-            "Công chính thức": row[10],
-            "Tăng ca chế độ thử việc": row[11],
-            "Tăng ca chế độ chính thức": row[12],
-            "Tăng ca ngày thử việc": row[13],
-            "Tăng ca ngày chính thức": row[14],
-            "Tăng ca đêm thử việc": row[15],
-            "Tăng ca đêm chính thức": row[16],
-            "Tăng ca chủ nhật thử việc": row[17],
-            "Tăng ca chủ nhật chính thức": row[18],
-            "Tăng ca ngày lễ thử việc": row[19],
-            "Tăng ca ngày lễ chính thức": row[20],
-            "Tuân thủ nội quy": row[21],
-            "Số lần nghỉ không lương": row[22],
-            "Nghỉ tự do (UA)": row[23],
-            "Số giờ UP": row[24],
-            "Nghỉ không lương (UP)": row[25],
-            "Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)": row[26],
-            "Nghỉ phép(AL)": row[27],
-            "Nghỉ phép không ảnh hưởng TTNQ(AL01)": row[28],
-            "Nghỉ hưởng lương thử việc": row[29],
-            "Nghỉ hưởng lương chính thức": row[30],
-            "Nghỉ tai nạn lao động(OCL)": row[31],
-            "Nghỉ ốm, con ốm(SL)": row[32],
-            "Công tác(BL)": row[33],
-            "Khám thai(ML03)": row[34],
-            "Nghỉ vợ sinh(ML02)": row[35],
-            "Nghỉ thai sản(LML)": row[36],
-            "Nghỉ việc(OSL)": row[37],
-            "Tổng cộng": row[38],
-            "Số biên bản kỷ luật": row[39]           
-        } for row in danhsach] 
-        df = DataFrame(data)
-        df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
-        df["Công thử việc"] = to_numeric(df['Công thử việc'], errors='coerce')
-        df["Công chính thức"] = to_numeric(df['Công chính thức'], errors='coerce')
-        df["Tăng ca chế độ thử việc"] = to_numeric(df['Tăng ca chế độ thử việc'], errors='coerce')
-        df["Tăng ca chế độ chính thức"] = to_numeric(df['Tăng ca chế độ chính thức'], errors='coerce')
-        df["Tăng ca ngày thử việc"] = to_numeric(df['Tăng ca ngày thử việc'], errors='coerce')
-        df["Tăng ca ngày chính thức"] = to_numeric(df['Tăng ca ngày chính thức'], errors='coerce')
-        df["Tăng ca đêm thử việc"] = to_numeric(df['Tăng ca đêm thử việc'], errors='coerce')
-        df["Tăng ca đêm chính thức"] = to_numeric(df['Tăng ca đêm chính thức'], errors='coerce')
-        df["Tăng ca chủ nhật thử việc"] = to_numeric(df['Tăng ca chủ nhật thử việc'], errors='coerce')
-        df["Tăng ca chủ nhật chính thức"] = to_numeric(df['Tăng ca chủ nhật chính thức'], errors='coerce')
-        df["Tăng ca ngày lễ thử việc"] = to_numeric(df['Tăng ca ngày lễ thử việc'], errors='coerce')
-        df["Tăng ca ngày lễ chính thức"] = to_numeric(df['Tăng ca ngày lễ chính thức'], errors='coerce')
-        df["Số lần nghỉ không lương"] = to_numeric(df['Số lần nghỉ không lương'], errors='coerce')
-        df["Nghỉ tự do (UA)"] = to_numeric(df['Nghỉ tự do (UA)'], errors='coerce')
-        df["Số giờ UP"] = to_numeric(df['Số giờ UP'], errors='coerce')
-        df["Nghỉ không lương (UP)"] = to_numeric(df['Nghỉ không lương (UP)'], errors='coerce')
-        df["Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)"] = to_numeric(df['Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)'], errors='coerce')
-        df["Nghỉ phép(AL)"] = to_numeric(df['Nghỉ phép(AL)'], errors='coerce')
-        df["Nghỉ phép không ảnh hưởng TTNQ(AL01)"] = to_numeric(df['Nghỉ phép không ảnh hưởng TTNQ(AL01)'], errors='coerce')
-        df["Nghỉ hưởng lương thử việc"] = to_numeric(df['Nghỉ hưởng lương thử việc'], errors='coerce')
-        df["Nghỉ hưởng lương chính thức"] = to_numeric(df['Nghỉ hưởng lương chính thức'], errors='coerce')
-        df["Nghỉ tai nạn lao động(OCL)"] = to_numeric(df['Nghỉ tai nạn lao động(OCL)'], errors='coerce')
-        df["Nghỉ ốm, con ốm(SL)"] = to_numeric(df['Nghỉ ốm, con ốm(SL)'], errors='coerce')
-        df["Công tác(BL)"] = to_numeric(df['Công tác(BL)'], errors='coerce')
-        df["Khám thai(ML03)"] = to_numeric(df['Khám thai(ML03)'], errors='coerce')
-        df["Nghỉ vợ sinh(ML02)"] = to_numeric(df['Nghỉ vợ sinh(ML02)'], errors='coerce')
-        df["Nghỉ thai sản(LML)"] = to_numeric(df['Nghỉ thai sản(LML)'], errors='coerce')
-        df["Nghỉ việc(OSL)"] = to_numeric(df['Nghỉ việc(OSL)'], errors='coerce')
-        df["Tổng cộng"] = to_numeric(df['Tổng cộng'], errors='coerce')
-        df["Số biên bản kỷ luật"] = to_numeric(df['Số biên bản kỷ luật'], errors='coerce')
-        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce',yearfirst=True)
-        df["Ngày chính thức"] = to_datetime(df['Ngày chính thức'], errors='coerce',yearfirst=True)
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
+        sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
 
-        # Create a date format for short date
-        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-        if "short_date" not in workbook.named_styles:
-            workbook.add_named_style(date_format)
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
-                list_col = ['G','H']
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(6, 10000 - 6 + 1)
+
+        for row in danhsach:
+            data = [y for y in row[:-3]]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0.00")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                    if cell.column_letter in list_col and cell.value is not None:
-                        cell.number_format = 'DD/MM/YYYY'
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
 
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bangcongthang_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_18", methods=["GET","POST"])
+@app.route("/muc7_1_18", methods=["GET","POST"]) # Bảng chấm công chi tiết chốt quá khứ
 @login_required
 def muc7_1_18():
     if request.method=="GET":
@@ -3241,7 +3105,7 @@ def muc7_1_18():
         paginated_rows = rows[start:end]
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_18.html", page="7.1.18 Bảng công chốt",
+        return render_template("7_1_18.html", page="Bảng chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count,
@@ -3254,64 +3118,45 @@ def muc7_1_18():
         denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
-        result = []
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHOT_KX)
+
+        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
+
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(4, 50000 - 4 + 1)
+
         for row in danhsach:
-            result.append(
-                {
-                    'Nhà máy': row[0],
-                    'MST': row[1],
-                    'Họ tên': row[2],
-                    'Chức danh': row[3],
-                    'Chuyền': row[4],
-                    'Phòng ban': row[5],
-                    'Cấp bậc': row[6],
-                    'Ngày': row[7],
-                    'Ca': row[8],
-                    'Số giờ làm việc': row[9],
-                    'Giờ vào': row[10],
-                    'Giờ ra': row[11],
-                    'Phút HC': row[12],
-                    'Phút nghỉ phép': row[13],
-                    'Phút tăng ca 100%': row[14],
-                    'Phút tăng ca 150%': row[15],
-                    'Phút tăng ca đêm': row[16],
-                    'Phút nghỉ không lương': row[17],
-                    'Phút nghỉ khác': row[18],
-                    'Loại nghỉ khác': row[19],
-                    'Phân loại': row[20]
-                }
-            )
-        df = DataFrame(result)
-        output = BytesIO()
-        with ExcelWriter(output, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
+            data = [y for y in row[:-1]]
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            sheet.append(data)
 
-        # Điều chỉnh độ rộng cột
-        output.seek(0)
-        workbook = openpyxl.load_workbook(output)
-        sheet = workbook.active
-
-        for column in sheet.columns:
-            max_length = 0
-            column_letter = column[0].column_letter
-            for cell in column:
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        # Duyệt qua các ô trong khu vực G7:H10000
+        for row in range(4, 50001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['H']:
+                cell = sheet[f"{col}{row}"]
+                
                 try:
-                    if len(str(cell.value)) > max_length:
-                        max_length = len(cell.value)
-                except:
-                    pass
-            adjusted_width = (max_length + 2)
-            sheet.column_dimensions[column_letter].width = adjusted_width
-
-        output = BytesIO()
-        workbook.save(output)
-        output.seek(0)
-        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-        # Trả file về cho client
-        response = make_response(output.read())
-        response.headers['Content-Disposition'] = f'attachment; filename=bang_chamcongchotquakhu_{time_stamp}.xlsx'
-        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        return response
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
             
 @app.route("/muc8_1", methods=["GET","POST"])
 @login_required
