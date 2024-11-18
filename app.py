@@ -1343,7 +1343,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
                     ON
                         Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
-                        Phan_quyen_thu_ky.MST='{mstthuky}' and Trang_thai is null """
+                        Phan_quyen_thu_ky.MST='{mstthuky}' and Trang_thai is null and Phan_quyen_thu_ky.Nha_may = '{current_user.macongty}'"""
         else:
             query = f"SELECT * FROM HR.dbo.Danh_sach_loi_the_3 WHERE Nha_may = '{current_user.macongty}'"
             if mst:
@@ -1565,7 +1565,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
             ON
                 DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                DS_Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
+                DS_Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
         else:
             if mstquanly:
                 query = f"""
@@ -1577,7 +1577,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 ON
                     DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    DS_Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}'"""
+                    DS_Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
             else:            
                 query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
                 if mst:
@@ -1596,6 +1596,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
         ##
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows

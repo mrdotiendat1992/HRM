@@ -72,7 +72,7 @@ def run_before_every_request():
                 g.notice["Quản lý"]={}
             row = cursor.execute(f"select count(*) from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchone()
             if row[0]>0:
-                cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}'").fetchall())
+                cac_chuyen_thuky_quanly = list(x[0] for x in cursor.execute(f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{current_user.masothe}' and Nha_may='{current_user.macongty}'").fetchall())
                 query_kiemtra_loithe = f"""
                     SELECT 
                         COUNT(*) as row_count 
@@ -89,6 +89,7 @@ def run_before_every_request():
                     WHERE 
                         Danh_sach_loi_the_3.Trang_thai IS NULL 
                         AND distinct_pqt.MST = '{current_user.masothe}'
+                        AND distinct_pqt.Nha_may='{current_user.macongty}'
                         """
 
                 soluong_loithe = cursor.execute(query_kiemtra_loithe).fetchone()[0]    
@@ -108,7 +109,8 @@ def run_before_every_request():
                     AND Diem_danh_bu.Line = distinct_pqt.Chuyen_to
                 WHERE 
                     Diem_danh_bu.Trang_thai = N'Chờ kiểm tra' 
-                    AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                    AND distinct_pqt.MST = '{current_user.masothe}'
+                    AND distinct_pqt.Nha_may='{current_user.macongty}'""").fetchone()[0]
                 thuky_soluong_xinnghiphep = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
@@ -124,7 +126,8 @@ def run_before_every_request():
                         AND Xin_nghi_phep.Line = distinct_pqt.Chuyen_to
                     WHERE 
                         Xin_nghi_phep.Trang_thai = N'Chờ kiểm tra' 
-                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                        AND distinct_pqt.MST = '{current_user.masothe}'
+                        AND distinct_pqt.Nha_may='{current_user.macongty}'""").fetchone()[0]
                 thuky_soluong_xinnghikhongluong = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
@@ -140,7 +143,8 @@ def run_before_every_request():
                         AND Xin_nghi_khong_luong.Chuyen = distinct_pqt.Chuyen_to
                     WHERE 
                         Xin_nghi_khong_luong.Trang_thai = N'Chờ kiểm tra' 
-                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                        AND distinct_pqt.MST = '{current_user.masothe}'
+                        AND distinct_pqt.Nha_may='{current_user.macongty}'""").fetchone()[0]
                 thuky_soluong_xinnghikhac = cursor.execute(f"""
                     SELECT 
                         COUNT(*) as row_count 
@@ -156,7 +160,8 @@ def run_before_every_request():
                         AND Xin_nghi_khac.Line = distinct_pqt.Chuyen_to
                     WHERE 
                         Xin_nghi_khac.Trang_thai = N'Chờ kiểm tra' 
-                        AND distinct_pqt.MST = '{current_user.masothe}'""").fetchone()[0]
+                        AND distinct_pqt.MST = '{current_user.masothe}'
+                        AND distinct_pqt.Nha_may='{current_user.macongty}'""").fetchone()[0]
                 
                 g.notice["Thư ký"]={"Danh sách lỗi thẻ":soluong_loithe,
                                     "Điểm danh bù":thuky_soluong_diemdanhbu,
