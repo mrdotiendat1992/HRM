@@ -1469,6 +1469,8 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
 
 def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
+        if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}'"
@@ -3509,6 +3511,8 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
 
 def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
     try:
+        if not masothe and not chuyen and not bophan and not phanloai and not ngay and not tungay and not denngay:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[Bang_cham_cong_qua_khu_thuc_te] where Nha_may='{current_user.macongty}' "

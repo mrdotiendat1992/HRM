@@ -1,4 +1,5 @@
-{% extends  "base.html" %}
+{% extends  "loichamcong.html" %}
+{% block title %}Danh sách xin nghỉ phép{% endblock title %}
 {% block style%}
 <style>
     table, th, td {
@@ -90,184 +91,194 @@
         color:black;
         font-weight: bold;
     }
+    #xinnghipheppage {
+        background-color: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 </style>
 {% endblock style %}
 {% block content %}
-<div class="scroll-container">
-    <div class="content">
-        <div style="display: flex; align-items: center;">
-            <h5>Tổng: {{count}}</h5>
+<div class="container-fluid">
+    <div class="scroll-container">
+        <div class="content">
+            <div style="display: flex; align-items: center;">
+                <h5>Tổng: {{count}}</h5>
 
-            <form method="POST" action="/export_dsxnp">
-                <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
-                <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
-                <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
-                <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
-                <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
-            </form>
-            <div class="pagination">{{ pagination.links }}</div>
-            {% if notice %}
-            {% if not request.args.get('mstquanly') %}
-            <form method = "GET" style="margin-left: 50px;">
-                <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
-                <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
-            </form>
-            {% else %}
-            <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 50px;">Quay lại</button>
-            {% endif %}
-            {% endif %}
-        </div>
-        <br>
-        <table class="table table-hover table-sm">
-            <thead>
-                <tr class="bg-primary">
-                    <th class="sticky_1">Mã số thẻ</th>
-                    <th class="sticky_2">Họ tên</th>
-                    <th>Chức danh</th>
-                    <th>Chuyền tổ</th>
-                    <th>Phòng ban</th>
-                    <th>Ngày nghỉ</th>                    
-                    <th>Số phút xin nghỉ</th>
-                    <th>Số phút phép tồn</th>
-                    <th>Trạng thái</th>
-                    <th></th>
-                </tr>
-                <tr class="table-light">
-                    <form action="/muc7_1_4" method="get">
-                        <th class="sticky_1"><input type="text" class="nhaplieu" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
-                        <th class="sticky_2"><input type="text" class="nhaplieu" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="chucvu" class="nhaplieu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="chuyen" class="nhaplieu" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="text" name="bophan" class="nhaplieu" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
-                        <th><input type="date" name="ngaynghi" class="nhaplieu" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
-                        <th></th>
-                        <th></th> 
-                        <th>
-                            <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
-                                <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
-                                <option value=""></option>
-                                <option value="Chờ kiểm tra">Chờ kiểm tra</option>
-                                <option value="Đã kiểm tra">Đã kiểm tra</option>
-                                <option value="Đã phê duyệt">Đã phê duyệt</option>
-                                <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
-                                <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
-                            </select>
-                        </th>
-                        <th></th>
-                    </form>
-                </tr>
-            </thead>
-        
-            <tbody>
-                {% for row in danhsach %}
-                {% if row[9]=='Chờ kiểm tra'%}
-                    <tr data-info='{{ row  | safe }}' class="row_chokiemtra">
-                {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
-                    <tr data-info='{{ row  | safe }}' class="row_dakiemtra">
-                {% elif row[9]=='Đã phê duyệt'%}
-                    <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
-                {% elif row[9]=='Bị từ chối bởi người kiểm tra' or row[9]=='Bị từ chối bởi người phê duyệt' %}
-                    <tr data-info='{{ row  | safe }}' class="row_bituchoi">  
+                <form method="POST" action="/export_dsxnp">
+                    <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                    <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
+                    <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                    <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
+                    <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                    <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                    <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                    <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                    <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
+                </form>
+                <div class="pagination">{{ pagination.links }}</div>
+                {% if notice %}
+                {% if not request.args.get('mstquanly') %}
+                <form method = "GET" style="margin-left: 50px;">
+                    <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
+                    <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
+                </form>
                 {% else %}
-                    <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
-                {% endif %} 
-                        <td class="sticky_1">{{row[1]}}</td>
-                        <td class="sticky_2">{{row[2]}}</td>
-                        <td>{{row[3]}}</td>
-                        <td>{{row[4]}}</td>
-                        <td>{{row[5]}}</td>
-                        <td class="date_en">{{row[6]}}</td>
-                        {% if row[8] and (row[8] <= 0) %}
-                        <td style="color: red">{{row[7]}}</td>
-                        {% else %}
-                        <td>{{row[7]}}</td>
-                        {% endif %}
-                        <td>{{row[8]}}</td>
-                        <td>{{row[9]}}</td>
-                        {% if row[9]=='Chờ kiểm tra'%}
-                            <td>
-                                <div style="display: flex;">
-                                    <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                        <input type="hidden" name="id" value="{{row[10]}}">
-                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                        <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
-                                    </form>
-                                    <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                        <input type="hidden" name="id" value="{{row[10]}}">
-                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                        <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
-                                    </form>
-                                </div>
-                            </td>
-                            {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
-                            <td>
-                                <div style="display: flex;">
-                                    <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                        <input type="hidden" name="id" value="{{row[10]}}">
-                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                        <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
-                                    </form>
-                                    <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                        <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                        <input type="hidden" name="id" value="{{row[10]}}">
-                                        <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                        <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                        <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                        <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                        <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                        <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                        <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                        <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                        <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
-                                    </form>
-                                </div>
-                            </td>
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 50px;">Quay lại</button>
+                {% endif %}
+                {% endif %}
+            </div>
+            <br>
+            <table class="table table-hover table-sm">
+                <thead>
+                    <tr class="bg-primary">
+                        <th class="sticky_1">Mã số thẻ</th>
+                        <th class="sticky_2">Họ tên</th>
+                        <th>Chức danh</th>
+                        <th>Chuyền tổ</th>
+                        <th>Phòng ban</th>
+                        <th>Ngày nghỉ</th>                    
+                        <th>Số phút xin nghỉ</th>
+                        <th>Số phút phép tồn</th>
+                        <th>Trạng thái</th>
+                        <th></th>
+                    </tr>
+                    <tr class="table-light">
+                        <form action="/muc7_1_4" method="get">
+                            <th class="sticky_1"><input type="text" class="nhaplieu" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
+                            <th class="sticky_2"><input type="text" class="nhaplieu" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
+                            <th><input type="text" name="chucvu" class="nhaplieu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                            <th><input type="text" name="chuyen" class="nhaplieu" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                            <th><input type="text" name="bophan" class="nhaplieu" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                            <th><input type="date" name="ngaynghi" class="nhaplieu" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
+                            <th></th>
+                            <th></th> 
+                            <th>
+                                <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
+                                    <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
+                                    <option value=""></option>
+                                    <option value="Chờ kiểm tra">Chờ kiểm tra</option>
+                                    <option value="Đã kiểm tra">Đã kiểm tra</option>
+                                    <option value="Đã phê duyệt">Đã phê duyệt</option>
+                                    <option value="Bị từ chối bởi người kiểm tra">Bị tổ chối bởi người kiểm tra</option>
+                                    <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
+                                </select>
+                            </th>
+                            <th></th>
+                        </form>
+                    </tr>
+                </thead>
+            
+                <tbody>
+                    {% for row in danhsach %}
+                    {% if row[9]=='Chờ kiểm tra'%}
+                        <tr data-info='{{ row  | safe }}' class="row_chokiemtra">
+                    {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
+                        <tr data-info='{{ row  | safe }}' class="row_dakiemtra">
+                    {% elif row[9]=='Đã phê duyệt'%}
+                        <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
+                    {% elif row[9]=='Bị từ chối bởi người kiểm tra' or row[9]=='Bị từ chối bởi người phê duyệt' %}
+                        <tr data-info='{{ row  | safe }}' class="row_bituchoi">  
+                    {% else %}
+                        <tr data-info='{{ row  | safe }}' class="row_dapheduyet">
+                    {% endif %} 
+                            <td class="sticky_1">{{row[1]}}</td>
+                            <td class="sticky_2">{{row[2]}}</td>
+                            <td>{{row[3]}}</td>
+                            <td>{{row[4]}}</td>
+                            <td>{{row[5]}}</td>
+                            <td class="date_en">{{row[6]}}</td>
+                            {% if row[8] and (row[8] <= 0) %}
+                            <td style="color: red">{{row[7]}}</td>
                             {% else %}
-                            <td></td>
-                        {% endif %}
-                    </tr>  
-                {% endfor %}
-            </tbody>
-        </table>
-        
+                            <td>{{row[7]}}</td>
+                            {% endif %}
+                            <td>{{row[8]}}</td>
+                            <td>{{row[9]}}</td>
+                            {% if row[9]=='Chờ kiểm tra'%}
+                                <td>
+                                    <div style="display: flex;">
+                                        <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
+                                            <input type="hidden" name="id" value="{{row[10]}}">
+                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                            <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
+                                        </form>
+                                        <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
+                                            <input type="hidden" name="id" value="{{row[10]}}">
+                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                            <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
+                                        </form>
+                                    </div>
+                                </td>
+                                {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
+                                <td>
+                                    <div style="display: flex;">
+                                        <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
+                                            <input type="hidden" name="id" value="{{row[10]}}">
+                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                            <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
+                                        </form>
+                                        <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
+                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
+                                            <input type="hidden" name="id" value="{{row[10]}}">
+                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
+                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
+                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
+                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
+                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
+                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
+                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
+                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
+                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                                            <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
+                                        </form>
+                                    </div>
+                                </td>
+                                {% else %}
+                                <td></td>
+                            {% endif %}
+                        </tr>  
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+        </div>
     </div>
 </div>
 <script>

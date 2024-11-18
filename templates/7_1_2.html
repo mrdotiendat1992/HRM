@@ -1,4 +1,5 @@
-{% extends  "base.html" %}
+{% extends  "loichamcong.html" %}
+{% block title %}Danh sách lỗi chấm công{% endblock title %}
 {% block style%}
 <style>
 table, th, td {
@@ -44,10 +45,19 @@ input, select {
     margin-left: 20px;
 }
 
+#loichamcongpage {
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 
 </style>
 {% endblock style %}
 {% block content %}
+<div class="container-fluid">
 <div class="scroll-container">
     <div class="content">
         <form method="GET" action="/muc7_1_2">
@@ -293,6 +303,7 @@ input, select {
             </div>
         </div>
     </div>
+</div>
 </div>
 <script>
     function changeFormatDate(date){

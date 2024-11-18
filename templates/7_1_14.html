@@ -1,4 +1,5 @@
-{% extends  "base.html" %}
+{% extends  "bangchamcong.html" %}
+{% block title %}Bảng chấm công chi tiết chưa chốt{% endblock title %}
 {% block style%}
 <style>
     table, th, td {
@@ -54,6 +55,14 @@
     th.sticky {
         z-index: 2;
     }
+    #bangcongchitietchuachotpage {
+        background-color: blue;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        cursor: pointer;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -73,7 +82,7 @@
                 <label for="denngay">Đến ngày</label>
                 <input type="date" id="denngay" name="denngay" value="{{request.args.get('denngay', '')}}">
             </div>
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 50px;">
             <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
             </form>
             <form method="POST">
