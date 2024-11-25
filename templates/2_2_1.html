@@ -40,6 +40,7 @@
             Thêm ứng viên
         </button>
     </div>
+    {% if current_user.phongban == "td" or current_user.phanquyen == "sa" %}
     <div class="modal fade" id="UVModal" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -78,6 +79,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
     <br>
     <div class="content">
         <table class="table table-bordered table-hover table-sm">
@@ -120,13 +122,20 @@
                         {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv1_yctd" method="POST">
                             <input type="date" name="ngaypv1" value="{{ row[6] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                            {% if row[6] %}
+                                <input type="date" value={{ row[6] }} readonly>
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv1_yctd" method="POST">
                             <select name="ketquapv1" onchange="this.form.submit()"> 
                                 {% if row[7] == "pass" %}
@@ -148,6 +157,15 @@
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                            {% if row[7] == "pass" %}
+                            ✔️
+                            {% elif row[7] == "failed" %}
+                            ❌
+                            {% elif not row[7] %}
+                            ⏳
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td>
                         {% if row[8] %}
@@ -155,50 +173,59 @@
                             <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[8] }}')"></td>
                         </button>
                         {% else %}
-                        <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal1">
-                            <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
-                        </button>
-                        <div class="modal fade" id="KQUVModal1" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="KQUVModal1Label">File đánh giá kết quả phỏng vấn</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <form method="POST" action="/upload_danhgia_uvtd_pv1" enctype="multipart/form-data">
-                                    <div class="modal-body">
-                                        <div class="container">
-                                            <div class="row">
-                                                <div class="col-sm-6">
-                                                    <div class="form-group">
-                                                        <input type="file" class="form-control" name="file" required>
-                                                        <input type="hidden" name="id" value={{row[0]}}>
-                                                        <input type="hidden" name="id_yctd" value={{row[17]}}>
+                            {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                            <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal1">
+                                <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
+                            </button>
+                            <div class="modal fade" id="KQUVModal1" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="KQUVModal1Label">File đánh giá kết quả phỏng vấn</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="/upload_danhgia_uvtd_pv1" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group">
+                                                            <input type="file" class="form-control" name="file" required>
+                                                            <input type="hidden" name="id" value={{row[0]}}>
+                                                            <input type="hidden" name="id_yctd" value={{row[17]}}>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-primary" value="Tải lên"></input>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                            {% endif %}
                         {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv2_yctd" method="POST">
                             <input type="date" name="ngaypv2" value="{{ row[9] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                            {% if row[9] %}
+                                <input type="date" value={{ row[9] }} readonly>
+                                {% endif %}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv2_yctd" method="POST">
                             <select name="ketquapv2" onchange="this.form.submit()"> 
                                 {% if row[10] == "pass" %}
@@ -220,6 +247,15 @@
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                            {% if row[10] == "pass" %}
+                            ✔️
+                            {% elif row[10] == "failed" %}
+                            ❌
+                            {% elif not row[10] %}
+                            ⏳
+                            {% endif %}
+                        {% endif %}
                     </td>
                     <td>
                         {% if row[11] %}
@@ -227,6 +263,7 @@
                             <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[11] }}')"></td>
                         </button>
                         {% else %}
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal2">
                             <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
                         </button>
@@ -262,15 +299,23 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv3_yctd" method="POST">
                             <input type="date" name="ngaypv1" value="{{ row[12] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                            {% if row[12] %}
+                                <input type="date" value={{ row[12] }} readonly>
+                                {% endif %}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv3_yctd" method="POST">
                             <select name="ketquapv3" onchange="this.form.submit()"> 
                                 {% if row[13] == "pass" %}
@@ -292,6 +337,15 @@
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
+                        {% else %}
+                        {% if row[13] == "pass" %}
+                        ✔️
+                        {% elif row[13] == "failed" %}
+                        ❌
+                        {% elif not row[13] %}
+                        ⏳
+                        {% endif %}
+                        {% endif %}
                     </td>
                     <td>
                         {% if row[14] %}
@@ -299,6 +353,7 @@
                             <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[14] }}')"></td>
                         </button>
                         {% else %}
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal3">
                             <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
                         </button>
@@ -334,8 +389,10 @@
                             </div>
                         </div>
                         {% endif %}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_trangthai_uvtd" method="POST">
                             <input type="hidden" name="id" value={{row[0]}}>
                             <input type="hidden" name="id_yctd" value={{row[17]}}>
@@ -369,8 +426,12 @@
                             </select>
                             {% endif %}
                         </form>
+                        {% else %}
+                        {{ row[15] }}
+                        {% endif %}
                     </td>
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ghichu_uvtd" method="POST">
                             <input type="hidden" name="id" value={{row[0]}}>
                             <input type="hidden" name="id_yctd" value={{row[17]}}>
@@ -380,13 +441,18 @@
                             <input type="text" name="ghichu" value="" onchange="form.submit()"> 
                             {% endif %}
                         </form>
+                        {% else %}
+                        {{ row[16] }}
+                        {% endif %}
                     </td>  
                     <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/xoa_uvtd" method="POST">
                             <button class="btn btn-danger" type="submit"><i class="fa fa-lg fa-trash"></i></button>
                             <input type="hidden" name="id" value={{row[0]}}>
                             <input type="hidden" name="id_yctd" value={{row[17]}}>
                         </form>
+                        {% endif %}
                     </td>  
 
                 </tr>
@@ -415,6 +481,9 @@
 
         inputs.forEach((element) => {
             element.style.border = 'none';
+            if (element.textContent === 'None') {
+                element.textContent = '';
+            }
         });
 
         const selects = document.querySelectorAll('select');
