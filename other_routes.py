@@ -258,6 +258,7 @@ def export_dsddb():
 @app.route("/export_dsxnp", methods=["POST"])
 def export_dsxnp():
     mstquanly = request.form.get("mstquanly")
+    mstthuky = request.args.get("mstthuky")
     mst = request.form.get("mst")
     hoten = request.form.get("hoten")
     chucvu = request.form.get("chucvu")
@@ -266,7 +267,7 @@ def export_dsxnp():
     ngay = request.form.get("ngaynghi")
     lydo = request.form.get("lydo")
     trangthai = request.form.get("trangthai")
-    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
     result = []
     for row in danhsach:
         result.append({
