@@ -1,4 +1,5 @@
 {% extends  "base.html" %}
+{% block title %}Yêu cầu tuyển dụng{% endblock title %}
 {% block style%}
 <style>
     .scroll-container {
@@ -7,7 +8,7 @@
     }
 
     .content {
-        width: auto;
+        width: 200%;
     }
     table, th, td {
         font-size: 12px;
@@ -52,6 +53,107 @@
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
+    <div class="filter">
+        <form method="GET">
+            <div class="row">
+                <div class="col-md-3">
+                    <input type="text" name="phongban" class="form-control" placeholder="Phòng ban" value="{{request.args.get('phongban','')}}">
+                </div>
+                <div class="col-md-3">
+                    {% if request.args.get('trangthaiyeucau') == "Chưa phê duyệt" %}
+                    <select name="trangthaiyeucau" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa phê duyệt" selected>Chưa phê duyệt</option>
+                        <option value="Phê duyệt">Phê duyệt</option>
+                        <option value="Từ chối">Từ chối</option>
+                    </select>
+                    {% elif request.args.get('trangthaiyeucau') == "Phê duyệt"%}
+                    <select name="trangthaiyeucau" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa phê duyệt">Chưa phê duyệt</option>
+                        <option value="Phê duyệt" selected>Phê duyệt</option>
+                        <option value="Từ chối">Từ chối</option>
+                    </select>
+                    {% elif request.args.get('trangthaiyeucau') == "Từ chối"%}
+                    <select name="trangthaiyeucau" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa phê duyệt">Chưa phê duyệt</option>
+                        <option value="Phê duyệt">Phê duyệt</option>
+                        <option value="Từ chối" selected>Từ chối</option>
+                    </select>
+                    {% else %}
+                    <select name="trangthaiyeucau" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa phê duyệt">Chưa phê duyệt</option>
+                        <option value="Phê duyệt">Phê duyệt</option>
+                        <option value="Từ chối">Từ chối</option>
+                    </select>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    {% if request.args.get('trangthaithuchien') == "Chưa tuyển" %}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển" selected>Chưa tuyển</option>
+                        <option value="Đã đăng tuyển">Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn">Chờ phỏng vấn</option>
+                        <option value="Đang tuyển">Đang tuyển</option>
+                        <option value="Đã tuyển">Đã tuyển</option>
+                    </select>
+                    {% elif request.args.get('trangthaithuchien') == "Đã đăng tuyển"%}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển">Chưa tuyển</option>
+                        <option value="Đã đăng tuyển" selected>Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn">Chờ phỏng vấn</option>
+                        <option value="Đang tuyển">Đang tuyển</option>
+                        <option value="Đã tuyển">Đã tuyển</option>
+                    </select>
+                    {% elif request.args.get('trangthaithuchien') == "Chờ phỏng vấn"%}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển">Chưa tuyển</option>
+                        <option value="Đã đăng tuyển">Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn" selected>Chờ phỏng vấn</option>
+                        <option value="Đang tuyển">Đang tuyển</option>
+                        <option value="Đã tuyển">Đã tuyển</option>
+                    </select>
+                    {% elif request.args.get('trangthaithuchien') == "Đang tuyển"%}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển">Chưa tuyển</option>
+                        <option value="Đã đăng tuyển">Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn">Chờ phỏng vấn</option>
+                        <option value="Đang tuyển" selected>Đang tuyển</option>
+                        <option value="Đã tuyển">Đã tuyển</option>
+                    </select>
+                    {% elif request.args.get('trangthaithuchien') == "Đã tuyển"%}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển">Chưa tuyển</option>
+                        <option value="Đã đăng tuyển">Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn">Chờ phỏng vấn</option>
+                        <option value="Đang tuyển">Đang tuyển</option>
+                        <option value="Đã tuyển" selected>Đã tuyển</option>
+                    </select>
+                    {% else %}
+                    <select name="trangthaithuchien" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Chưa tuyển">Chưa tuyển</option>
+                        <option value="Đã đăng tuyển">Đã đăng tuyển</option>
+                        <option value="Chờ phỏng vấn">Chờ phỏng vấn</option>
+                        <option value="Đang tuyển">Đang tuyển</option>
+                        <option value="Đã tuyển">Đã tuyển</option>
+                    </select>
+                    {% endif %}
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Tìm kếm</button>
+                </div>
+            </div>
+        </form>
+        <br>
+    </div>
     <div class="content">
         {% if current_user.phanquyen == "tbp" or current_user.phanquyen == "sa" %}
         <div id="nutbam">
@@ -154,7 +256,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-primary" value="Gửi yêu cầu"></input>
+                        <p id="thongbao" style="color:red;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
+                        <input type="submit" class="btn btn-primary" id="themyctd" value="Gửi yêu cầu" disabled></input>
                     </form>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
                     </div>
@@ -168,6 +271,7 @@
         <table class="table table-bordered table-hover table-sm">
             <thead>
                 <tr class="bg-primary">
+                    <th></th>
                     <th>Bộ phận</th>
                     <th>Vị trí</th>
                     <th>Cấp bậc</th>
@@ -179,12 +283,15 @@
                     <th>Phân loại</th>
                     <th>Trạng thái yêu cầu</th>
                     <th>Trạng thái thực hiện</th>
-                    <th style="width: 200px;">Ghi chú</th>
+                    <th>Ghi chú</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in danhsach %}
                 <tr>
+                    <td>
+                        <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}"><i class="fa-eye fas fa-fw view-details"></i></a>
+                    </td>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
@@ -198,7 +305,7 @@
                         </form>
                     <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
-                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
+                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
                             <div>{{row[10]}}</div>
@@ -245,10 +352,14 @@
                             </form>
                         </td>
                     {% else %}
+                        {% if row[12] %}
                         <td>{{row[12]}}</td>
-                    {% endif %}
-                    
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                    {% endif %} 
                 </tr>
+                
                 {% endfor %}
             </tbody>
         </table>
@@ -266,6 +377,8 @@
 
     function changeVitri() {
         var vitri = document.getElementById("vitri").value;
+        var thongbao = document.getElementById("thongbao");
+        var nutgui_yctd = document.getElementById("themyctd");
         console.log(vitri)
         axios({
             method: 'post',
@@ -285,14 +398,20 @@
                 xhr.onload = function() {
                     if (xhr.status === 200) {
                         pdfFrame.src = pdfPath;
+                        thongbao.innerHTML = ""
+                        nutgui_yctd.disabled = false
                     } else {
                         alert("Không tìm thấy mô tả công việc");
                         pdfFrame.src = ""; // Optionally clear the iframe
+                        thongbao.innerHTML = "Vị trí chưa có JD, vui lòng tải lên"
+                        nutgui_yctd.disabled = true
                     }
                 };
                 xhr.onerror = function() {
                     alert("Không tìm thấy mô tả công việc");
                     pdfFrame.src = ""; // Optionally clear the iframe
+                    thongbao.innerHTML = "Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào"
+                    nutgui_yctd.disabled = true
                 };
                 xhr.send();
 

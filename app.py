@@ -1897,12 +1897,18 @@ def laycahientai(mst):
         print(e)
         return None
 
-def laydanhsachyeucautuyendung(maso):
+def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Bo_phan LIKE '{maso}%'"
-        
+        query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Nha_may = '{nhamay}' "
+        if phongban:
+            query += f"and Bo_phan='{phongban}'"
+        if trangthaiyeucau:
+            query += f"and Trang_thai_yeu_cau=N'{trangthaiyeucau}'"
+        if trangthaithuchien:
+            query += f"and Trang_thai_thuc_hien=N'{trangthaithuchien}'"
+        print(query)
         rows = cursor.execute(query).fetchall()
         result =[]
         for row in rows:
@@ -4238,3 +4244,609 @@ def laydanhsach_phanquyenthuky(filters):
     except Exception as e:
         print(e)
         return []
+
+
+def la_quanly(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select count(*) from Phan_quyen_thu_ky where MST_QL='{masothe}' and Nha_may='{nhamay}'"
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        if result:
+            return True
+        return False
+    except Exception as e:
+        flash(f"Lỗi kiểm tra có phải quản lý không: {e}")
+        return False
+    
+def la_thuky(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select count(*) from Phan_quyen_thu_ky where MST='{masothe}' and Nha_may='{nhamay}'"
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        if result:
+            return True
+        return False
+    except Exception as e:
+        flash(f"Lỗi kiểm tra có phải thư ký không: {e}")
+        return False
+
+def lay_soluong_diemdanhbu_quanly_canduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+        SELECT 
+            COUNT(*) as row_count 
+        FROM 
+            (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
+        INNER JOIN 
+            Diem_danh_bu 
+        ON
+            Diem_danh_bu.Nha_may= '{nhamay}' and Diem_danh_bu.Line=a.Chuyen_to
+        WHERE 
+            Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù quản lý cần duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_quanly_canduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+        SELECT 
+            COUNT(*) as row_count 
+        FROM 
+            (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
+        INNER JOIN 
+            Xin_nghi_phep 
+        ON
+            Xin_nghi_phep.Nha_may= '{nhamay}' and Xin_nghi_phep.Line=a.Chuyen_to
+        WHERE 
+            Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ phép quản lý cần duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_quanly_canduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+        SELECT 
+            COUNT(*) as row_count 
+        FROM 
+            (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
+        INNER JOIN 
+            Xin_nghi_khong_luong 
+        ON
+            Xin_nghi_khong_luong.Nha_may= '{nhamay}' and Xin_nghi_khong_luong.Chuyen=a.Chuyen_to
+        WHERE 
+            Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ không lương quản lý cần duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_quanly_canduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+        SELECT 
+            COUNT(*) as row_count 
+        FROM 
+            (select distinct Nha_may,Chuyen_to,MST_QL from phan_quyen_thu_ky) a
+        INNER JOIN 
+            Xin_nghi_khac 
+        ON
+            Xin_nghi_khac.Nha_may= '{nhamay}' and Xin_nghi_khac.Line=a.Chuyen_to
+        WHERE 
+            Xin_nghi_khac.Trang_thai=N'Đã kiểm tra' and a.MST_QL='{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ khác quản lý cần duyệt: {e}")
+        return 0
+
+def lay_danhsach_chuyen_thuky_quanly(macongty,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select distinct Chuyen_to from Phan_quyen_thu_ky where MST='{masothe}' and Nha_may='{macongty}'"
+        result = cursor.execute(query).fetchall()
+        conn.close()
+        if result:
+            return [x[0] for x in result]
+        return []
+    except Exception as e:
+        flash(f"Lỗi lấy danh sách chuyền thư ký quản lý: {e}")
+        return []
+
+def lay_soluong_loithe_thuky_canxuly(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT 
+                COUNT(*) as row_count 
+            FROM 
+                (
+                    SELECT DISTINCT Nha_may, Chuyen_to, MST
+                    FROM Phan_quyen_thu_ky
+                ) as distinct_pqt 
+            INNER JOIN 
+                Danh_sach_loi_the_3
+            ON
+                Danh_sach_loi_the_3.Nha_may = '{nhamay}'
+                AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
+            WHERE 
+                Danh_sach_loi_the_3.Trang_thai IS NULL 
+                AND distinct_pqt.MST = '{masothe}'
+                """
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng lỗi thẻ cần thư ký xử lý: {e}")
+        return 0
+    
+def lay_soluong_diemdanhbu_thuky_cankiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT 
+                COUNT(*) as row_count 
+            FROM 
+                (
+                    SELECT DISTINCT Nha_may, Chuyen_to, MST
+                    FROM Phan_quyen_thu_ky
+                ) as distinct_pqt 
+            INNER JOIN 
+                Diem_danh_bu
+            ON
+                Diem_danh_bu.Nha_may = '{nhamay}' 
+                AND Diem_danh_bu.Line = distinct_pqt.Chuyen_to
+            WHERE 
+                Diem_danh_bu.Trang_thai = N'Chờ kiểm tra' 
+                AND distinct_pqt.MST = '{masothe}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù thư ký cần kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_thuky_cankiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT 
+                COUNT(*) as row_count 
+            FROM 
+                (
+                    SELECT DISTINCT Nha_may, Chuyen_to, MST
+                    FROM Phan_quyen_thu_ky
+                ) as distinct_pqt 
+            INNER JOIN 
+                Xin_nghi_phep
+            ON
+                Xin_nghi_phep.Nha_may = '{nhamay}'
+                AND Xin_nghi_phep.Line = distinct_pqt.Chuyen_to
+            WHERE 
+                Xin_nghi_phep.Trang_thai = N'Chờ kiểm tra' 
+                AND distinct_pqt.MST = '{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ phép thư ký cần kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_thuky_cankiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT 
+                COUNT(*) as row_count 
+            FROM 
+                (
+                    SELECT DISTINCT Nha_may, Chuyen_to, MST
+                    FROM Phan_quyen_thu_ky
+                ) as distinct_pqt 
+            INNER JOIN 
+                Xin_nghi_khong_luong
+            ON
+                Xin_nghi_khong_luong.Nha_may = '{nhamay}'
+                AND Xin_nghi_khong_luong.Chuyen = distinct_pqt.Chuyen_to
+            WHERE 
+                Xin_nghi_khong_luong.Trang_thai = N'Chờ kiểm tra' 
+                AND distinct_pqt.MST = '{masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ không lương thư ký cần kiểm tra {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_thuky_cankiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT 
+                COUNT(*) as row_count 
+            FROM 
+                (
+                    SELECT DISTINCT Nha_may, Chuyen_to, MST
+                    FROM Phan_quyen_thu_ky
+                ) as distinct_pqt 
+            INNER JOIN 
+                Xin_nghi_khac
+            ON
+                Xin_nghi_khac.Nha_may = '{nhamay}'
+                AND Xin_nghi_khac.Line = distinct_pqt.Chuyen_to
+            WHERE 
+                Xin_nghi_khac.Trang_thai = N'Chờ kiểm tra' 
+                AND distinct_pqt.MST = '{current_user.masothe}'"""
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng xin nghỉ khác thư ký cần kiểm tra: {e}")
+        return 0
+
+def lay_soluong_diemdanhbu_chuakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Diem_danh_bu 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Chờ kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù chưa kiểm tra: {e}")
+        return 0
+
+def lay_soluong_diemdanhbu_dakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Diem_danh_bu 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù đã kiểm tra: {e}")
+        return 0
+
+def lay_soluong_diemdanhbu_dapheduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Diem_danh_bu 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã phê duyệt' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù đã phê duyệt: {e}")
+        return 0
+
+def lay_soluong_diemdanhbu_bituchoi(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Diem_danh_bu 
+                    where MST='{masothe}' 
+                    and Trang_thai like N'Bị từ chối%' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù bị từ chối: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_chuakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_phep 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Chờ kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù chưa kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_dakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_phep 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_dapheduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_phep 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã phê duyệt' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã phê duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghiphep_bituchoi(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_phep 
+                    where MST='{masothe}' 
+                    and Trang_thai like N'Bị từ chối%' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù bị từ chối: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_chuakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khong_luong
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Chờ kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù chưa kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_dakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khong_luong 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_dapheduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khong_luong 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã phê duyệt' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã phê duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghikhongluong_bituchoi(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khong_luong 
+                    where MST='{masothe}' 
+                    and Trang_thai like N'Bị từ chối%' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù bị từ chối: {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_chuakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khac
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Chờ kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+    
+        flash(f"Lỗi lấy số lượng điểm danh bù chưa kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_dakiemtra(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khac 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã kiểm tra' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã kiểm tra: {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_dapheduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khac 
+                    where MST='{masothe}' 
+                    and Trang_thai=N'Đã phê duyệt' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù đã phê duyệt: {e}")
+        return 0
+
+def lay_soluong_xinnghikhac_bituchoi(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Xin_nghi_khac 
+                    where MST='{masothe}' 
+                    and Trang_thai like N'Bị từ chối%' 
+                    and Nha_may= '{nhamay}'"""        
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng điểm danh bù bị từ chối: {e}")
+        return 0
+    
+def lay_soluong_loichamcong(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from Danh_sach_loi_the_3 
+                    where MST='{masothe}' 
+                    and Nha_may= '{nhamay}'"""       
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng lỗi chấm công tổng: {e}")
+        return 0
+
+def lay_soluong_yeucautuyendung_chopheduyet(nhamay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and Trang_thai_yeu_cau=N'Chưa phê duyệt'"      
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng chờ phê duyệt: {e}")
+        return 0
+
+def lay_soluong_yeucautuyendung_dapheduyet(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and MST='{masothe}' and Trang_thai_yeu_cau=N'Phê duyệt'"    
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng đã phê duyệt: {e}")
+        return 0
+
+def lay_soluong_yeucautuyendung_bituchoi(nhamay,masothe):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and MST='{masothe}' and Trang_thai_yeu_cau=N'Từ chối'"       
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng bị từ chối: {e}")
+        return 0
+
+def lay_danhsach_ungvien(id_yeucautuyendung):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from Yeu_cau_tuyen_dung_chi_tiet where id_yctd='{id_yeucautuyendung}'"       
+        result = cursor.execute(query).fetchall()
+        conn.close()
+        return list(result)
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng bị từ chối: {e}")
+        return []
+
+def lay_phongban_theo_idyctd(id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select Bo_phan from Yeu_cau_tuyen_dung where id='{id}'"       
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy phòng ban theo id yêu cầu tuyển dụng chi tiết: {e}")
+        return ""
+    
+def them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path:str):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        linkcv = save_path.replace("\\","/").split("HRM/")[1]
+        query = f"""
+            insert into Yeu_cau_tuyen_dung_chi_tiet (ID_YCTD,Phong_ban,Ho_ten,Gioi_tinh,Tuoi,Kinh_nghiem,CV)
+            values ('{id_yeucautuyendung}','{phongban}',N'{hoten}',N'{gioitinh}','{tuoi}','{namkinhnghiem}',N'{linkcv}')    
+            """      
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        flash(f"Lỗi thêm ứng viên tuển dụng: {e}")
+        return False

@@ -3655,3 +3655,234 @@ def delete_phanquyenthuky():
     except Exception as e:
         print(e)
         return {"message": "Xóa thất bại"}
+
+@app.route("/thaydoi_ngaypv1_yctd", methods=["POST"])
+@login_required
+def thaydoi_ngaypv1_yctd():
+    try:
+        id = request.form.get("id")
+        ngay = request.form.get("ngaypv1")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_1='{ngay}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_ketquapv1_yctd", methods=["POST"])
+@login_required
+def thaydoi_ketquapv1_yctd():
+    try:
+        id = request.form.get("id")
+        ketqua = request.form.get("ketquapv1")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_1='{ketqua}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/upload_danhgia_uvtd_pv1", methods=["POST"])
+@login_required
+def upload_danhgia_uvtd_pv1():
+    try:
+        id = request.form.get("id")
+        id_yctd = request.form.get("id_yctd")
+        file = request.files.get("file")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        save_path = os.path.join(FOLDER_DGPV,f"dgpvl1_{timestamp}.pdf")
+        file.save(save_path)
+        link = save_path.replace("\\","/").split("HRM/")[1]
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_1=N'{link}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    
+@app.route("/thaydoi_ngaypv2_yctd", methods=["POST"])
+@login_required
+def thaydoi_ngaypv2_yctd():
+    try:
+        id = request.form.get("id")
+        ngay = request.form.get("ngaypv2")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_2='{ngay}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_ketquapv2_yctd", methods=["POST"])
+@login_required
+def thaydoi_ketquapv2_yctd():
+    try:
+        id = request.form.get("id")
+        ketqua = request.form.get("ketquapv2")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_2='{ketqua}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/upload_danhgia_uvtd_pv2", methods=["POST"])
+@login_required
+def upload_danhgia_uvtd_pv2():
+    try:
+        id = request.form.get("id")
+        id_yctd = request.form.get("id_yctd")
+        file = request.files.get("file")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        save_path = os.path.join(FOLDER_DGPV,f"dgpvl2_{timestamp}.pdf")
+        file.save(save_path)
+        link = save_path.replace("\\","/").split("HRM/")[1]
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_2=N'{link}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    
+@app.route("/thaydoi_ngaypv3_yctd", methods=["POST"])
+@login_required
+def thaydoi_ngaypv3_yctd():
+    try:
+        id = request.form.get("id")
+        ngay = request.form.get("ngaypv2")
+        print(ngay)
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_3='{ngay}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_ketquapv3_yctd", methods=["POST"])
+@login_required
+def thaydoi_ketquapv3_yctd():
+    try:
+        id = request.form.get("id")
+        ketqua = request.form.get("ketquapv3")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_3='{ketqua}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/upload_danhgia_uvtd_pv3", methods=["POST"])
+@login_required
+def upload_danhgia_uvtd_pv3():
+    try:
+        id = request.form.get("id")
+        id_yctd = request.form.get("id_yctd")
+        file = request.files.get("file")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        save_path = os.path.join(FOLDER_DGPV,f"dgpvl3_{timestamp}.pdf")
+        file.save(save_path)
+        link = save_path.replace("\\","/").split("HRM/")[1]
+        print(link)
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_3=N'{link}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_trangthai_uvtd", methods=["POST"])
+@login_required
+def thaydoi_trangthai_uvtd():
+    try:
+        id = request.form.get("id")
+        trangthai = request.form.get("trangthai")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+
+@app.route("/thaydoi_ghichu_uvtd", methods=["POST"])
+@login_required
+def thaydoi_ghichu_uvtd():
+    try:
+        id = request.form.get("id")
+        ghichu = request.form.get("ghichu")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ghi_chu=N'{ghichu}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/xoa_uvtd", methods=["POST"])
+@login_required
+def xoa_uvtd():
+    try:
+        id = request.form.get("id")
+        ghichu = request.form.get("ghichu")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
