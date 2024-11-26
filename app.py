@@ -4764,9 +4764,22 @@ def lay_soluong_loichamcong(nhamay,masothe):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""select count(*) from Danh_sach_loi_the_3 
-                    where MST='{masothe}' 
-                    and Nha_may= '{nhamay}'"""       
+        query = f"""SELECT 
+                        COUNT(*) as row_count 
+                    FROM 
+                        (
+                            SELECT DISTINCT Nha_may, Chuyen_to, MST
+                            FROM Phan_quyen_thu_ky
+                        ) as distinct_pqt 
+                    INNER JOIN 
+                        Danh_sach_loi_the_3
+                    ON
+                        Danh_sach_loi_the_3.Nha_may = distinct_pqt.Nha_may 
+                        AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
+                    WHERE 
+                        Danh_sach_loi_the_3.Trang_thai IS NULL 
+                        AND distinct_pqt.MST = '{masothe}'
+                        AND distinct_pqt.Nha_may='{nhamay}'"""       
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
