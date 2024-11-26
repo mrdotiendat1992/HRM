@@ -88,6 +88,7 @@
                 <th>Phòng ban</th>
                 <th>Ngày nộp đơn</th>
                 <th>Ngày nghỉ dự kiến</th>
+                <th>Ngày nghỉ thực tế</th>
                 <th>Ghi chú</th>
                 <th>Trạng thái</th>
                 <th></th>
@@ -103,6 +104,7 @@
                 <td>{{row[6]}}</td>
                 <td class="ngay-nopdon">{{row[7]}}</td>
                 <td class="ngay-nghi">{{row[8]}}</td>
+                <td class="ngay">{{row[11]}}</td>
                 {% if row[9] %}
                     <td>{{row[9]}}</td>
                 {% else %}
@@ -278,11 +280,19 @@
             rows.forEach(row => {
                 const dateCell = row.querySelector('.ngay-nghi');
                 const dateValue = new Date(reverse_date(dateCell.textContent));
-                console.log(dateValue)
                 if (dateValue >= currentDate && dateValue <= futureDate) {
                     row.classList.add('highlight');
                 } else if (dateValue < currentDate) {
                     row.classList.add('bg-info');
+                }
+            });
+
+            ngay_elements = document.querySelectorAll('.ngay');
+            ngay_elements.forEach(ngay_element => {
+                if (ngay_element.textContent == "None") {
+                    ngay_element.textContent = "";
+                } else {
+                    ngay_element.textContent = changeFormatDate(ngay_element.textContent);
                 }
             });
         });
