@@ -2460,7 +2460,7 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
-        SELECT Cho_nghi_viec.*, Danh_sach_CBCNV.Trang_thai_lam_viec, Danh_sach_CBCNV.Ngay_nghi
+        SELECT Cho_nghi_viec.*, Danh_sach_CBCNV.Trang_thai_lam_viec, Danh_sach_CBCNV.Ngay_nghi, Danh_sach_CBCNV.Ghi_chu
         FROM Cho_nghi_viec
         LEFT JOIN Danh_sach_CBCNV
         ON Cho_nghi_viec.MST = Danh_sach_CBCNV.MST 

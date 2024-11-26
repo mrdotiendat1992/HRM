@@ -110,7 +110,13 @@
                 {% else %}
                     <td></td>
                 {% endif %}
-                <td>{{row[10]}}</td>
+                <td>
+                    {% if row[10] == "Đang làm việc" %}
+                    {{ row[10] }}
+                    {% else %}
+                    {{row[12]}}
+                    {% endif %}
+                </td>
                 <form method="post" action="/rutdonxinnghiviec">
                     <input type="text" name="id" value="{{row[0]}}" hidden>
                     <td><input class="btn-danger btn-sm" type="submit" value="Rút đơn"></input></td>
