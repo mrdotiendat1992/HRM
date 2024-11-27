@@ -1903,18 +1903,21 @@ def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Nha_may = '{nhamay}' "
         if phongban:
-            query += f"and Bo_phan='{phongban}'"
+            query += f" and Bo_phan='{phongban}'"
         if trangthaiyeucau:
-            query += f"and Trang_thai_yeu_cau=N'{trangthaiyeucau}'"
+            if trangthaiyeucau == "Chưa phê duyệt":
+                query += f" and Trang_thai_yeu_cau like N'Chưa%'"
+            elif trangthaiyeucau == "Phê duyệt":
+                query += f" and Trang_thai_yeu_cau like N'Phê%'"
+            else:
+                query += f" and Trang_thai_yeu_cau like N'Từ%'"
         if trangthaithuchien:
-            query += f"and Trang_thai_thuc_hien=N'{trangthaithuchien}'"
+            query += f" and Trang_thai_thuc_hien=N'{trangthaithuchien}'"
         if mst:
-            query += f"and MST='{mst}'"
+            query += f" and MST='{mst}'"
+        print(query)
         rows = cursor.execute(query).fetchall()
-        result =[]
-        for row in rows:
-            result.append(row)
-        return result 
+        return [x for x in rows]
     except Exception as e:
         print(e)
         return []
@@ -4779,11 +4782,16 @@ def lay_soluong_loichamcong(nhamay,masothe):
         flash(f"Lỗi lấy số lượng lỗi chấm công tổng: {e}")
         return 0
 
-def lay_soluong_yeucautuyendung_chopheduyet(nhamay):
+def lay_soluong_yeucautuyendung_chopheduyet(nhamay, phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and Trang_thai_yeu_cau=N'Chưa phê duyệt'"      
+        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG 
+                where Nha_may= '{nhamay}' 
+                and Trang_thai_yeu_cau=N'Chưa phê duyệt'
+                and Ngay_dong_yeu_cau is NULL"""     
+        if phongban:
+            query += f" and Bo_phan='{phongban}'" 
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
@@ -4791,11 +4799,16 @@ def lay_soluong_yeucautuyendung_chopheduyet(nhamay):
         flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng chờ phê duyệt: {e}")
         return 0
 
-def lay_soluong_yeucautuyendung_dapheduyet(nhamay,masothe):
+def lay_soluong_yeucautuyendung_dapheduyet(nhamay,phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and MST='{masothe}' and Trang_thai_yeu_cau=N'Phê duyệt'"    
+        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG 
+            where Nha_may= '{nhamay}' 
+            and Trang_thai_yeu_cau=N'Phê duyệt'
+            and Ngay_dong_yeu_cau is NULL"""  
+        if phongban:
+            query += f" and Bo_phan='{phongban}'" 
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
@@ -4803,11 +4816,16 @@ def lay_soluong_yeucautuyendung_dapheduyet(nhamay,masothe):
         flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng đã phê duyệt: {e}")
         return 0
 
-def lay_soluong_yeucautuyendung_bituchoi(nhamay,masothe):
+def lay_soluong_yeucautuyendung_bituchoi(nhamay,phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select count(*) from YEU_CAU_TUYEN_DUNG where Nha_may= '{nhamay}' and MST='{masothe}' and Trang_thai_yeu_cau=N'Từ chối'"       
+        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG 
+            where Nha_may= '{nhamay}'
+            and Trang_thai_yeu_cau=N'Từ chối'
+            and Ngay_dong_yeu_cau is NULL"""  
+        if phongban:
+            query += f" and Bo_phan='{phongban}'"     
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result

@@ -3612,7 +3612,7 @@ def add_phanquyenthuky():
             query = f"INSERT INTO Phan_quyen_thu_ky VALUES ('{current_user.macongty}', {data.get("mst", "")}, '{data.get("chuyen", "")}', {data.get("mst_ql", "")})"
             print(query)
             cur.execute(query)
-            conn.commit()
+            cur.commit()
             conn.close()
 
         return {"message": "Thêm thành công"}
@@ -3631,7 +3631,7 @@ def update_phanquyenthuky():
             query = f"UPDATE Phan_quyen_thu_ky SET MST = '{data.get("mst", "")}', Chuyen_to = '{data.get("chuyen", "")}', MST_QL = '{data.get("mst_ql", "")}' WHERE ID = {data.get("id", "")}"
             print(query)
             cur.execute(query)
-            conn.commit()
+            cur.commit()
             conn.close()
 
         return {"message": "Sửa thành công"}
@@ -3649,7 +3649,7 @@ def delete_phanquyenthuky():
             cur = conn.cursor()
             query = f"DELETE FROM Phan_quyen_thu_ky WHERE ID = {id}"
             cur.execute(query)
-            conn.commit()
+            cur.commit()
             conn.close()
 
         return {"message": "Xóa thành công"}
@@ -3668,7 +3668,7 @@ def thaydoi_ngaypv1_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_1='{ngay}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3686,7 +3686,7 @@ def thaydoi_ketquapv1_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_1='{ketqua}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3708,7 +3708,7 @@ def upload_danhgia_uvtd_pv1():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_1=N'{link}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3726,7 +3726,7 @@ def thaydoi_ngaypv2_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_2='{ngay}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3744,7 +3744,7 @@ def thaydoi_ketquapv2_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_2='{ketqua}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3766,7 +3766,7 @@ def upload_danhgia_uvtd_pv2():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_2=N'{link}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3785,7 +3785,7 @@ def thaydoi_ngaypv3_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ngay_PV_lan_3='{ngay}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3803,7 +3803,7 @@ def thaydoi_ketquapv3_yctd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ket_qua_PV_lan_3='{ketqua}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3826,7 +3826,7 @@ def upload_danhgia_uvtd_pv3():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET File_danh_gia_RV_lan_3=N'{link}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3844,7 +3844,7 @@ def thaydoi_trangthai_uvtd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3863,7 +3863,7 @@ def thaydoi_ghichu_uvtd():
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ghi_chu=N'{ghichu}' WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3881,7 +3881,7 @@ def xoa_uvtd():
         cur = conn.cursor()
         query = f"DELETE Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
@@ -3901,7 +3901,48 @@ def xoa_tuyendung():
         cur = conn.cursor()
         query = f"DELETE Yeu_cau_tuyen_dung WHERE ID = {id}"
         cur.execute(query)
-        conn.commit()
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+
+@app.route("/mo_yeucautuyendung", methods=["POST"])
+@login_required
+def mo_yeucautuyendung():
+    try:
+        id = request.form.get("id")
+        mst= request.form.get("mst")
+        phongban = request.form.get("phongban")
+        trangthaiyeucau= request.form.get("trangthaiyeucau")
+        trangthaithuchien = request.form.get("trangthaithuchien")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung SET Ngay_dong_yeu_cau = NULL WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+
+@app.route("/dong_yeucautuyendung", methods=["POST"])
+@login_required
+def dong_yeucautuyendung():
+    try:
+        id = request.form.get("id")
+        mst= request.form.get("mst")
+        phongban = request.form.get("phongban")
+        trangthaiyeucau= request.form.get("trangthaiyeucau")
+        trangthaithuchien = request.form.get("trangthaithuchien")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung SET Ngay_dong_yeu_cau = GETDATE() WHERE ID = {id}"
+        print(query)
+        cur.execute(query)
+        cur.commit()
         conn.close()
         return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
     except Exception as e:

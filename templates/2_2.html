@@ -331,6 +331,7 @@
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
                             <div>{{row[10]}}</div>
+                            {% if not row[18] %}
                             <form action="/gd_pheduyet_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 <button type="submit" class="btn btn-primary btn-sm"><i class="fa fa-check" aria-hidden="true"></i></button>
@@ -339,6 +340,7 @@
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-times" aria-hidden="true"></i></button>
                             </form>
+                            {% endif %}
                         </div>
                     </td>
                     {% else %}
@@ -347,6 +349,7 @@
                     {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa"%}
                         {% if row[10] == "Phê duyệt" %}
                         <td>
+                            {% if not row[18] %}
                             <form action="/td_capnhat_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 <select name="trangthai" class="form-control" onchange="form.submit()" >
@@ -359,6 +362,7 @@
                                     {% endfor %}
                                 </select>
                             </form>
+                            {% endif%}
                         </td>
                         {% else %}
                         <td>{{row[11]}}</td>
@@ -368,6 +372,7 @@
                     {% endif %}
                     {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <td>
+                            {% if not row[18] %}
                             <form action="/td_capnhat_ghichu_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
                                 {% if row[12] %}
@@ -376,6 +381,7 @@
                                 <input type="text" name="ghichu" class="form-control" onchange="form.submit()">
                                 {% endif %}
                             </form>
+                            {% endif %}
                         </td>
                     {% else %}
                         {% if row[12] %}
@@ -385,22 +391,44 @@
                         {% endif %}
                     {% endif %}
                     <td>
-                        {% if current_user.hoten == row[14] %}
+                        {% if current_user.hoten == row[14] or current_user.phanquyen == "sa" %}
                         <form action="/xoa_tuyendung" method="POST">
                             <input type="hidden" name="id" value="{{row[0]}}">
-                            <input type="hidden" name="phongban" value="request.args.get('phongban')">
-                            <input type="hidden" name="trangthaiyeucau" value="request.args.get('trangthaiyeucau')">
-                            <input type="hidden" name="trangthaithuchien" value="request.args.get('trangthaithuchien')">
-                            <input type="hidden" name="mst" value="request.args.get('mst')">
+                            <input type="hidden" name="phongban" value="{{request.args.get('phongban','')}}">
+                            <input type="hidden" name="trangthaiyeucau" value="{{request.args.get('trangthaiyeucau','')}}">
+                            <input type="hidden" name="trangthaithuchien" value="{{request.args.get('trangthaithuchien','')}}">
+                            <input type="hidden" name="mst" value="{{request.args.get('mst','')}}">
                             <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button>
                         </form>
                         {% endif %}
                     </td>
                     {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
-                    {% if row[17] %}
-                    <td><button class="btn btn-primary" ><i class="fa fa-lock" aria-hidden="true"></i></button></td>
+                    {% if row[18] %}
+                    <td>
+                        <form action="/mo_yeucautuyendung" method="POST">
+                            <input type="hidden" name="id" value="{{row[0]}}">
+                            <input type="hidden" name="phongban" value="{{request.args.get('phongban','')}}">
+                            <input type="hidden" name="trangthaiyeucau" value="{{request.args.get('trangthaiyeucau','')}}">
+                            <input type="hidden" name="trangthaithuchien" value="{{request.args.get('trangthaithuchien','')}}">
+                            <input type="hidden" name="mst" value="{{request.args.get('mst','')}}">
+                            <button class="btn btn-danger" type="submit">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
                     {% else %}
-                    <td><button class="btn btn-primary" ><i class="fa fa-lock-open" aria-hidden="true"></i></button></td>
+                    <td>
+                        <form action="/dong_yeucautuyendung" method="POST">
+                            <input type="hidden" name="id" value="{{row[0]}}">
+                            <input type="hidden" name="phongban" value="{{request.args.get('phongban','')}}">
+                            <input type="hidden" name="trangthaiyeucau" value="{{request.args.get('trangthaiyeucau','')}}">
+                            <input type="hidden" name="trangthaithuchien" value="{{request.args.get('trangthaithuchien','')}}">
+                            <input type="hidden" name="mst" value="{{request.args.get('mst','')}}">
+                            <button class="btn btn-success" type="submit">
+                                <i class="fa fa-unlock" aria-hidden="true"></i>
+                            </button>
+                        </form>
+                    </td>
                     {% endif %}
                     {% endif %}
                 </tr>
@@ -482,15 +510,15 @@
                     list_bacluong.forEach(element => {
                         
                         var option_bacluong = document.createElement("option")
-                        option_bacluong.value = element[0] + "," + element[1]
-                        option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                        option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
+                        option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1]) + " )"
                         bacluongtu.appendChild(option_bacluong);
                     });
                     list_bacluong.forEach(element => {
                         
                         var option_bacluong = document.createElement("option")
-                        option_bacluong.value = element[0] + "," + element[1]
-                        option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                        option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
+                        option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1])  + " )"
                         bacluongden.appendChild(option_bacluong);
                     });
 
@@ -506,6 +534,10 @@
         link = document.getElementById("pdf-frame").src
         window.open(link, '_blank');
     });
+
+    function them_cham_vao_so(so) {
+        return so.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
 
     function changeJdVitri() {
         var vitri = document.getElementById("jd_vitri").value;
@@ -523,6 +555,7 @@
                 console.log(error);
             });
     }
+
     function changeFormatDate(date){
         if(date == 'None') return "";
         try{

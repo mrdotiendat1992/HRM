@@ -112,24 +112,50 @@ def run_before_every_request():
                                 }
 
             if current_user.phanquyen=='gd':
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty)
+                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
                 if soluong_yeucautuyendung_chopheduyet > 0:
                     g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
                     g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
                 else:
                     g.notice["Tuyển dụng chờ phê duyệt"] = 0
 
-            if current_user.phanquyen=='tbp' or current_user.phanquyen=='sa':
-                soluong_yeucautuyendung_dapheduyet = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.masothe)
-                if soluong_yeucautuyendung_dapheduyet > 0:
-                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet
+            if current_user.phanquyen=='tbp':
+                soluong_yeucautuyendung_chopheduyet_tbp = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_chopheduyet_tbp > 0:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet_tbp
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet_tbp
+                else:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
+                soluong_yeucautuyendung_dapheduyet_tbp = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_dapheduyet_tbp > 0:
+                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet_tbp
+                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet_tbp
                 else:
                     g.notice["Tuyển dụng được duyệt"] = 0
-                soluong_yeucautuyendung_bituchoi = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.masothe)
-                if soluong_yeucautuyendung_bituchoi > 0:
-                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi   
-                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
+                soluong_yeucautuyendung_bituchoi_tbp = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_bituchoi_tbp > 0:
+                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi_tbp   
+                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi_tbp
+                else:
+                    g.notice["Tuyển dụng bị từ chối"] = 0
+            
+            if current_user.phanquyen=='td' or current_user.phanquyen=='sa':
+                soluong_yeucautuyendung_chopheduyet_td = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
+                if soluong_yeucautuyendung_chopheduyet_td > 0:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet_td
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet_td
+                else:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
+                soluong_yeucautuyendung_dapheduyet_td = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,None)
+                if soluong_yeucautuyendung_dapheduyet_td > 0:
+                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet_td
+                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet_td
+                else:
+                    g.notice["Tuyển dụng được duyệt"] = 0
+                soluong_yeucautuyendung_bituchoi_td = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,None)
+                if soluong_yeucautuyendung_bituchoi_td > 0:
+                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi_td   
+                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi_td
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
         # print(g.notice)
@@ -2550,7 +2576,7 @@ def muc7_1_17():
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
         danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
-        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX)
 
         sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
