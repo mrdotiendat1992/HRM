@@ -288,6 +288,39 @@
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+        const input = document.querySelector('input[name="chucdanh"]');
+        const suggestions = document.createElement('ul');
+        suggestions.className = 'list-group';
+        input.parentNode.appendChild(suggestions);
+
+        input.addEventListener('input', () => {
+            const query = input.value;
+            if (query.length > 0) {
+                suggestions.style.display = 'block';
+                axios({
+                    method: 'post',
+                    url: '/timcacchucdanh?tutimkiem=' + query
+                })
+                    .then(function (response) {
+                        suggestions.innerHTML = '';
+                        response.data.forEach(element => {
+                            const suggestion = document.createElement('li');
+                            suggestion.className = 'list-group-item';
+                            suggestion.textContent = element;
+                            suggestion.addEventListener('click', () => {
+                                input.value = suggestion.textContent;
+                                suggestions.innerHTML = '';
+                            });
+                            suggestions.appendChild(suggestion);
+                        });
+                    })
+                    .catch(function (error) {
+                        console.log(error);
+                    });
+                } else {
+                    suggestions.innerHTML = '';
+                }
+            });
     });
 </script>
 {% endblock content %}

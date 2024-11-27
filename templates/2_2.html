@@ -25,7 +25,7 @@
         overflow: hidden;
 
     }
-    td, label, p, input, h5 {
+    label, p, input, h5 , b {
         color: #4e73df;
         font-weight: bold;
     }
@@ -56,10 +56,12 @@
     <div class="filter">
         <form method="GET">
             <div class="row">
-                <div class="col-md-3">
+                <div class="col">
+                    <label style="font-size:15px; color: #4e73df; font-weight: bold;">Phòng ban</label>
                     <input type="text" name="phongban" class="form-control" placeholder="Phòng ban" value="{{request.args.get('phongban','')}}">
                 </div>
-                <div class="col-md-3">
+                <div class="col">
+                    <label style="font-size:15px; color: #4e73df; font-weight: bold;">Trạng thái yêu cầu</label>
                     {% if request.args.get('trangthaiyeucau') == "Chưa phê duyệt" %}
                     <select name="trangthaiyeucau" class="form-control">
                         <option value="">Tất cả</option>
@@ -90,7 +92,8 @@
                     </select>
                     {% endif %}
                 </div>
-                <div class="col-md-3">
+                <div class="col">
+                    <label style="font-size:15px; color: #4e73df; font-weight: bold;">Trạng thái thực hiện</label>
                     {% if request.args.get('trangthaithuchien') == "Chưa tuyển" %}
                     <select name="trangthaithuchien" class="form-control">
                         <option value="">Tất cả</option>
@@ -147,8 +150,12 @@
                     </select>
                     {% endif %}
                 </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-primary">Tìm kếm</button>
+                <div class="col">
+                    <label style="font-size:15px; color: #4e73df; font-weight: bold;">Mã số thẻ người tạo</label>
+                    <input name="mst" type="text" class="form-control" placeholder="Người tạo" value="{{request.args.get('mst','')}}">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-primary" style="margin-top: 27px;"><i class="fas fa-search" ></i></button>
                 </div>
             </div>
         </form>
@@ -189,6 +196,7 @@
                                             {% endfor %}
                                         </select>
                                         <input type="text" id="jd_vitrien" name="jd_vitrien" hidden>
+                                        <br>
                                         <input class="form-control" type="file" id="file" name="file" accept="application/pdf">                                    
                                     </div>
                                 </div>
@@ -205,11 +213,11 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+        <div class="modal fade bd-example-modal-lg" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="requestModalLabel">Yêu cầu tuyển dụng</h5>
+                        <h5 class="modal-title" id="requestModalLabel">Yêu cầu tuyển dụng ( {{current_user.phongban}} )</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -218,45 +226,49 @@
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col">
                                     <div class="form-group">
-                                        <p>Bộ phận: {{current_user.phongban}}</p>
-                                        <label for="vitri">Vị trí</label>
-                                        <select id="vitri" name="vitri" onchange="changeVitri()" class="form-control">
-                                            <option value="" readonly>Chọn vị trí</option>
-                                            {% for vt in cacvitri %}
-                                            <option value='{{ vt }}'>{{ vt }}</option>
-                                            {% endfor %}
-                                        </select>
+                                        <label for="vitri">Vị trí:</label>
+                                        <input id="vitri" name="vitri" class="form-control">
+                                        <div style="display:flex; gap:5px;">
+                                            <label for="capbac">Cấp bậc:</label>
+                                            <input type="text" style="width: 80px;border: none;" id="capbac" name="capbac" readonly>
+                                            <input type="checkbox" id="vitricheck">
+                                        </div>
                                         <input type="text" id="vitrien" name="vitrien" hidden>
-                                        <input type="text" id="capbac" name="capbac" readonly placeholder="Cấp bậc">
-                                        <b>Từ:</b> <select type="text" id="bacluongtu" name="bacluongtu" ></select>
-                                        <b>Đến:</b> <select type="text" id="bacluongden" name="bacluongden"></select>
-                                        <input type="text" id="soluong" name="soluong" placeholder="Số lượng">                                   
+                                        <b>Từ:</b> <select type="text" id="bacluongtu" name="bacluongtu" class="form-control"></select>
+                                        <b>Đến:</b> <select type="text" id="bacluongden" name="bacluongden" class="form-control"></select>
+                                        <div style="display:flex; gap:5px;">
+                                            <label for="soluong">Số lượng:</label>
+                                            <input style="width: 50px;" type="number" id="soluong" name="soluong" min="1" class="form-control">                                   
+                                        </div>
                                         <label for="thoigiandukien">Thời gian dự kiến</label>
-                                        <input type="date" id="thoigiandukien" name="thoigiandukien" >
+                                        <input type="date" id="thoigiandukien" name="thoigiandukien" class="form-control">
                                         <label for="phanloai">Phân loại</label>
-                                        <select id="phanloai" name="phanloai">   
+                                        <select id="phanloai" name="phanloai" class="form-control">   
                                             <option value="Tuyển mới">Tuyển mới</option>
                                             <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
                                             <option value="Thay thế thai sản">Thay thế thai sản</option>
                                             <option value="Ngắn hạn">Ngắn hạn</option>
                                         </select>
-                                        
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                                <div class="col" style="height: 300px; overflow-y: scroll;">
+                                    <label>Danh sách vị trí</label>
+                                    <ul id="danhsach_vitri" class="list-group"><ul>
+                                </div>
+                                <div class="col">
                                     <label for="mota">Mô tả công việc</label>
                                     <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer;"></i>                                
                                     <div id="pdf-preview">
-                                        <iframe id="pdf-frame" style="width: 200px; height: 260px; background-color: transparent;" frameborder="0"></iframe>
+                                        <iframe id="pdf-frame" style="height: 300px; background-color: transparent;" frameborder="0"></iframe>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <p id="thongbao" style="color:red;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
+                        <p id="thongbao" style="color:red;max-width: 400px;text-align: left;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
                         <input type="submit" class="btn btn-primary" id="themyctd" value="Gửi yêu cầu" disabled></input>
                     </form>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
@@ -284,11 +296,21 @@
                     <th>Trạng thái yêu cầu</th>
                     <th>Trạng thái thực hiện</th>
                     <th>Ghi chú</th>
+                    <th></th>
+                    {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                    <th></th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
                 {% for row in danhsach %}
-                <tr>
+                {% if row[10] == "Chưa phê duyệt" %}
+                <tr class="bg-warning">
+                {% elif row[10] == "Từ chối" %}
+                <tr class="bg-secondary">   
+                {% else %}
+                <tr class="bg-info">
+                {% endif %}
                     <td>
                         <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}"><i class="fa-eye fas fa-fw view-details"></i></a>
                     </td>
@@ -305,7 +327,7 @@
                         </form>
                     <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
-                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
+                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
                             <div>{{row[10]}}</div>
@@ -348,7 +370,11 @@
                         <td>
                             <form action="/td_capnhat_ghichu_tuyendung" method="POST">
                                 <input type="hidden" name="id" value="{{row[0]}}">
+                                {% if row[12] %}
                                 <input type="text" name="ghichu" class="form-control" onchange="form.submit()" value="{{row[12]}}">
+                                {% else %}
+                                <input type="text" name="ghichu" class="form-control" onchange="form.submit()">
+                                {% endif %}
                             </form>
                         </td>
                     {% else %}
@@ -357,92 +383,130 @@
                         {% else %}
                         <td></td>
                         {% endif %}
-                    {% endif %} 
+                    {% endif %}
+                    <td>
+                        {% if current_user.hoten == row[14] %}
+                        <form action="/xoa_tuyendung" method="POST">
+                            <input type="hidden" name="id" value="{{row[0]}}">
+                            <input type="hidden" name="phongban" value="request.args.get('phongban')">
+                            <input type="hidden" name="trangthaiyeucau" value="request.args.get('trangthaiyeucau')">
+                            <input type="hidden" name="trangthaithuchien" value="request.args.get('trangthaithuchien')">
+                            <input type="hidden" name="mst" value="request.args.get('mst')">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                        </form>
+                        {% endif %}
+                    </td>
+                    {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                    {% if row[17] %}
+                    <td><button class="btn btn-primary" ><i class="fa fa-lock" aria-hidden="true"></i></button></td>
+                    {% else %}
+                    <td><button class="btn btn-primary" ><i class="fa fa-lock-open" aria-hidden="true"></i></button></td>
+                    {% endif %}
+                    {% endif %}
                 </tr>
-                
                 {% endfor %}
             </tbody>
         </table>
     </div>
 </div>
 <script>
+    document.getElementById("vitri").addEventListener("change", function() {
+        const vitri = document.getElementById("vitri").value;
+        const danhsachvitri = document.getElementById("danhsach_vitri");
+        
+        axios({
+            method: 'post',
+            url: '/timcacchucdanh?tutimkiem=' + vitri
+        })
+            .then(function (response) {
+                var data = response.data
+                console.log(data)
+                danhsachvitri.innerHTML = ""; // Clear existing options
+                data.forEach(function(item) {
+                    var li_element = document.createElement("li");
+                    li_element.textContent = item;
+                    li_element.className = "list-group-item";
+                    li_element.addEventListener("click", function() {
+                        document.getElementById("vitri").value = item;
+                        danhsachvitri.innerHTML = "";
+                    });
+                    danhsachvitri.appendChild(li_element);
+                });
+            })
+            .catch(function (error) {
+                console.log(error);               
+            })
+        });
+
+    const vitricheck = document.getElementById("vitricheck");
+    vitricheck.addEventListener("change", function() {
+        if (vitricheck.checked) {
+            var vitri = document.getElementById("vitri").value;
+            var thongbao = document.getElementById("thongbao");
+            var nutgui_yctd = document.getElementById("themyctd");
+            axios({
+                method: 'post',
+                url: '/lay_thongtin_vitri?vitri=' + vitri
+            })
+                .then(function (response) {
+                    var data = response.data["data"]
+                    document.getElementById("capbac").value = data["Grade_code"];
+                    document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                    var pdfFrame = document.getElementById("pdf-frame");
+                    var pdfPath = "static/uploads/mau/jd/" + data["Detail_job_title_EN"] + ".pdf";
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('HEAD', pdfPath, true);
+                    xhr.onload = function() {
+                        if (xhr.status === 200) {
+                            pdfFrame.src = pdfPath;
+                            thongbao.innerHTML = ""
+                            nutgui_yctd.disabled = false
+                        } else {
+                            pdfFrame.src = "";
+                            thongbao.innerHTML = "Vị trí chưa có JD, vui lòng tải lên"
+                            nutgui_yctd.disabled = true
+                        }
+                    };
+                    xhr.onerror = function() {
+                        pdfFrame.src = "";
+                        thongbao.innerHTML = "Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào"
+                        nutgui_yctd.disabled = true
+                    };
+                    xhr.send();
+
+                    var bacluongtu = document.getElementById("bacluongtu")
+                    var bacluongden = document.getElementById("bacluongden")
+                    bacluongden.innerHTML = ""
+                    bacluongtu.innerHTML = ""
+                    var list_bacluong = data["Bac_luong"]
+                    list_bacluong.forEach(element => {
+                        
+                        var option_bacluong = document.createElement("option")
+                        option_bacluong.value = element[0] + "," + element[1]
+                        option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                        bacluongtu.appendChild(option_bacluong);
+                    });
+                    list_bacluong.forEach(element => {
+                        
+                        var option_bacluong = document.createElement("option")
+                        option_bacluong.value = element[0] + "," + element[1]
+                        option_bacluong.text = element[0] + " ( " + element[1] + " )"
+                        bacluongden.appendChild(option_bacluong);
+                    });
+
+
+                    })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            }
+    })
+
     document.getElementById("search-icon").addEventListener("click", function() {
         link = document.getElementById("pdf-frame").src
         window.open(link, '_blank');
     });
 
-    function themchamvaoso(so) {
-        
-    }
-
-    function changeVitri() {
-        var vitri = document.getElementById("vitri").value;
-        var thongbao = document.getElementById("thongbao");
-        var nutgui_yctd = document.getElementById("themyctd");
-        console.log(vitri)
-        axios({
-            method: 'post',
-            url: '/lay_thongtin_vitri?vitri=' + vitri
-        })
-            .then(function (response) {
-                var data = response.data["data"]
-                console.log(data)
-                document.getElementById("capbac").value = data["Grade_code"];
-                document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                var pdfFrame = document.getElementById("pdf-frame");
-                var pdfPath = "static/uploads/mau/jd/" + data["Detail_job_title_EN"] + ".pdf";
-
-                // Check if the PDF file exists before setting the src
-                var xhr = new XMLHttpRequest();
-                xhr.open('HEAD', pdfPath, true);
-                xhr.onload = function() {
-                    if (xhr.status === 200) {
-                        pdfFrame.src = pdfPath;
-                        thongbao.innerHTML = ""
-                        nutgui_yctd.disabled = false
-                    } else {
-                        alert("Không tìm thấy mô tả công việc");
-                        pdfFrame.src = ""; // Optionally clear the iframe
-                        thongbao.innerHTML = "Vị trí chưa có JD, vui lòng tải lên"
-                        nutgui_yctd.disabled = true
-                    }
-                };
-                xhr.onerror = function() {
-                    alert("Không tìm thấy mô tả công việc");
-                    pdfFrame.src = ""; // Optionally clear the iframe
-                    thongbao.innerHTML = "Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào"
-                    nutgui_yctd.disabled = true
-                };
-                xhr.send();
-
-                var bacluongtu = document.getElementById("bacluongtu")
-                var bacluongden = document.getElementById("bacluongden")
-                bacluongden.innerHTML = ""
-                bacluongtu.innerHTML = ""
-                var list_bacluong = data["Bac_luong"]
-                list_bacluong.forEach(element => {
-                    
-                    var option_bacluong = document.createElement("option")
-                    option_bacluong.value = element[0] + "," + element[1]
-                    option_bacluong.text = element[0] + " ( " + element[1] + " )"
-                    bacluongtu.appendChild(option_bacluong);
-                });
-                list_bacluong.forEach(element => {
-                    
-                    var option_bacluong = document.createElement("option")
-                    option_bacluong.value = element[0] + "," + element[1]
-                    option_bacluong.text = element[0] + " ( " + element[1] + " )"
-                    bacluongden.appendChild(option_bacluong);
-                });
-
-
-                })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-            
-    
     function changeJdVitri() {
         var vitri = document.getElementById("jd_vitri").value;
         console.log(vitri)
@@ -479,9 +543,5 @@
                 }
             });
         })
-
-
-    
-
 </script>
 {% endblock content %}

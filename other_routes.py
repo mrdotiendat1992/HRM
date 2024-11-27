@@ -3887,3 +3887,23 @@ def xoa_uvtd():
     except Exception as e:
         flash(e)
         return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/xoa_tuyendung", methods=["POST"])
+@login_required
+def xoa_tuyendung():
+    try:
+        id = request.form.get("id")
+        mst= request.form.get("mst")
+        phongban = request.form.get("phongban")
+        trangthaiyeucau= request.form.get("trangthaiyeucau")
+        trangthaithuchien = request.form.get("trangthaithuchien")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE Yeu_cau_tuyen_dung WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")

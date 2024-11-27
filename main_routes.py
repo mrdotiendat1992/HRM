@@ -34,7 +34,7 @@ def run_before_every_request():
             if lathuky:
                 cac_chuyen_thuky_quanly = lay_danhsach_chuyen_thuky_quanly(current_user.macongty,current_user.masothe)
                 # print(cac_chuyen_thuky_quanly)
-                thuky_soluong_loithe = lay_soluong_diemdanhbu_thuky_cankiemtra(current_user.macongty,current_user.masothe)
+                thuky_soluong_loithe = lay_soluong_loithe_thuky_canxuly(current_user.macongty,current_user.masothe)
                 thuky_soluong_diemdanhbu = lay_soluong_diemdanhbu_thuky_cankiemtra(current_user.macongty,current_user.masothe)
                 thuky_soluong_xinnghiphep = lay_soluong_xinnghiphep_thuky_cankiemtra(current_user.macongty,current_user.masothe)
                 thuky_soluong_xinnghikhongluong = lay_soluong_xinnghikhongluong_thuky_cankiemtra(current_user.macongty,current_user.masothe)
@@ -132,6 +132,7 @@ def run_before_every_request():
                     g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
+        # print(g.notice)
     except Exception as e:  
         flash(f"Lỗi cập nhật thông tin lỗi chấm công: {e}")
         f12 = trang_thai_function_12()    
@@ -428,7 +429,8 @@ def dangkytuyendung():
         phongban = request.args.get("phongban")
         trangthaiyeucau = request.args.get("trangthaiyeucau")
         trangthaithuchien = request.args.get("trangthaithuchien")
-        danhsach = laydanhsachyeucautuyendung(current_user.macongty,phongban,trangthaiyeucau,trangthaithuchien)
+        mst = request.args.get("mst")
+        danhsach = laydanhsachyeucautuyendung(current_user.macongty,phongban,trangthaiyeucau,trangthaithuchien,mst)
         cactrangthaithuchien = ["Chưa tuyển","Đã đăng tuyển","Chờ phỏng vấn","Đã tuyển"]
         cacvitri = lay_cac_vitri_trong_phong(current_user.phongban)
         return render_template("2_2.html", 

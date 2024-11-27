@@ -1897,7 +1897,7 @@ def laycahientai(mst):
         print(e)
         return None
 
-def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien):
+def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien,mst):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1908,7 +1908,8 @@ def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien
             query += f"and Trang_thai_yeu_cau=N'{trangthaiyeucau}'"
         if trangthaithuchien:
             query += f"and Trang_thai_thuc_hien=N'{trangthaithuchien}'"
-        print(query)
+        if mst:
+            query += f"and MST='{mst}'"
         rows = cursor.execute(query).fetchall()
         result =[]
         for row in rows:
@@ -1923,9 +1924,10 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, kh
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
-        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY)
+        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY,Ngay_tao_yeu_cau)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}')"""
+        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,
+        '{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}',GETDATE())"""
         cursor.execute(query)
         conn.commit()
         return True
@@ -2588,7 +2590,7 @@ def timkiemchucdanh(tutimkiem):
         conn.close()
         return list(x[0] for x in result)
     except Exception as e:
-        print(f"Loi khi tim kiem cac chuc danh: {e} !!!")
+        flash(f"Lỗi tìm kiếm chức danh theo từ tìm kiếm: {e} !!!")
         return []
     
 def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
@@ -3821,7 +3823,10 @@ def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Yeu_cau_tuyen_dung set Trang_thai_yeu_cau=N'{trangthaimoi}' where ID={id}"
+        if trangthaimoi == "Phê duyệt":
+            query = f"UPDATE Yeu_cau_tuyen_dung set Trang_thai_yeu_cau=N'{trangthaimoi}',Ngay_phe_duyet=getdate() where ID={id}"
+        else:
+            query = f"UPDATE Yeu_cau_tuyen_dung set Trang_thai_yeu_cau=N'{trangthaimoi}' where ID={id}"
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -4764,22 +4769,9 @@ def lay_soluong_loichamcong(nhamay,masothe):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""SELECT 
-                        COUNT(*) as row_count 
-                    FROM 
-                        (
-                            SELECT DISTINCT Nha_may, Chuyen_to, MST
-                            FROM Phan_quyen_thu_ky
-                        ) as distinct_pqt 
-                    INNER JOIN 
-                        Danh_sach_loi_the_3
-                    ON
-                        Danh_sach_loi_the_3.Nha_may = distinct_pqt.Nha_may 
-                        AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
-                    WHERE 
-                        Danh_sach_loi_the_3.Trang_thai IS NULL 
-                        AND distinct_pqt.MST = '{masothe}'
-                        AND distinct_pqt.Nha_may='{nhamay}'"""       
+        query = f"""select count(*) from Danh_sach_loi_the_3 
+                    where MST='{masothe}' 
+                    and Nha_may= '{nhamay}'"""       
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result

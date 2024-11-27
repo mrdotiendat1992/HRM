@@ -58,13 +58,18 @@
                                 <div class="form-group">
                                     <input type="number" name="id" hidden value={{request.args.get('id','')}}>
                                     <input type="text" name="phongban" hidden value={{ phongban }}>
+                                    <label for="hoten">Họ tên</label>
                                     <input type="text" class="form-control" name="hoten" placeholder="Họ tên" required>
+                                    <label for="gioitinh">Giới tính</label>
                                     <select type="text" class="form-control" name="gioitinh" required>
                                         <option value="Nam">Nam</option>
                                         <option value="Nữ">Nữ</option>
                                     </select>
-                                    <input type="number" class="form-control" name="tuoi" placeholder="Tuổi" required>
-                                    <input type="number" class="form-control" name="namkinhnghiem" placeholder="Năm kinh nghiệm" required>
+                                    <label for="tuoi">Tuổi</label>
+                                    <input type="number" class="form-control" name="tuoi" placeholder="Tuổi" min="18" step="1" required>
+                                    <label for="namkinhnghiem">Năm kinh nghiệm</label>   
+                                    <input type="number" class="form-control" name="namkinhnghiem" min="0.5" placeholder="Năm kinh nghiệm" step="0.5" required>
+                                    <label for="linkcv">Tải lên CV:</label>
                                     <input type="file" class="form-control" name="linkcv" required>
                                 </div>
                             </div>
