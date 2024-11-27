@@ -500,7 +500,7 @@
                                         {% endif %}     
                                     {% endif %}
                                     {% if notice["Tuyển dụng chờ phê duyệt"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?trangthaiyeucau=Chưa phê duyệt&phongban={{current_user.phongban}}&mst={{current_user.masothe}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?trangthaiyeucau=Chưa phê duyệt&phongban={{current_user.phongban}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -512,7 +512,7 @@
                                     </a>
                                     {% endif %}  
                                     {% if notice["Tuyển dụng được duyệt"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?trangthaiyeucau=Phê+duyệt&phongban={{current_user.phongban}}&mst={{current_user.masothe}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?trangthaiyeucau=Phê duyệt&phongban={{current_user.phongban}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -524,7 +524,7 @@
                                     </a>
                                     {% endif %}
                                     {% if notice["Tuyển dụng bị từ chối"] %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban=?trangthaiyeucau=Từ chối&phongban={{current_user.phongban}}&mst={{current_user.masothe}}">
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban=?trangthaiyeucau=Từ chối&phongban={{current_user.phongban}}">
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
