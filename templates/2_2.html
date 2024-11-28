@@ -185,6 +185,7 @@
                     <div class="modal-body">
                         <div class="container">
                             <div class="row">
+                                {% if not current_user.phanquyen == "td" and not current_user.phanquyen == "sa" %}
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <p>Bộ phận: {{current_user.phongban}}</p>
@@ -200,6 +201,32 @@
                                         <input class="form-control" type="file" id="file" name="file" accept="application/pdf">                                    
                                     </div>
                                 </div>
+                                {% else %}
+                                <div class="col-sm-6">
+                                    <div class="form-group">
+                                        <div style="display:flex; gap:5px;">
+                                            <label for="jd_vitri">Vị trí:</label>
+                                            <textarea style="border: none; height: 60px; width: 200px; 
+                                            overflow-wrap: break-word; white-space: normal; resize: none;" 
+                                            id="jd_vitri" name="jd_vitri" readonly></textarea>
+                                        </div> 
+                                        <input type="text" id="jd_vitrien" name="jd_vitrien" hidden>
+                                        <br>
+                                        <input class="form-control" type="file" id="file" name="file" accept="application/pdf">                                    
+                                    </div>
+                                </div>
+                                <div class="col-sm-6" style="height: 300px; overflow-y: scroll;">
+                                    <div class="form-group">
+                                        <div style="display:flex; gap:5px;">
+                                            <input id="jd_timvitri" name="jd_timvitri" class="form-control" placeholder="Tìm vị trí">
+                                            <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer; margin-top: 5px;"></i>
+                                        </div>
+                                        <br>
+                                        <label for="jd_danhsach_vitri">Danh sách vị trí</label>
+                                        <ul id="jd_danhsach_vitri" class="list-group"><ul>
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -207,7 +234,6 @@
                         <input type="submit" class="btn btn-primary" value="Tải lên"></input>
                     </form>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                        
                     </div>
                 
                 </div>
@@ -228,24 +254,30 @@
                             <div class="row">
                                 <div class="col">
                                     <div class="form-group">
-                                        <label for="vitri">Vị trí:</label>
-                                        <input id="vitri" name="vitri" class="form-control">
+                                        <div style="display:flex; gap:5px;">
+                                            <label for="vitri">Vị trí:</label>
+                                            <textarea style="border: none; height: 60px; width: 200px; overflow-wrap: break-word; white-space: normal; resize: none;" id="vitri" name="vitri" readonly required></textarea>
+                                        </div>                                                                              
                                         <div style="display:flex; gap:5px;">
                                             <label for="capbac">Cấp bậc:</label>
-                                            <input type="text" style="width: 80px;border: none;" id="capbac" name="capbac" readonly>
-                                            <input type="checkbox" id="vitricheck">
+                                            <input type="text" style="border: none;width: 100px;" id="capbac" name="capbac" readonly>
                                         </div>
                                         <input type="text" id="vitrien" name="vitrien" hidden>
-                                        <b>Từ:</b> <select type="text" id="bacluongtu" name="bacluongtu" class="form-control"></select>
-                                        <b>Đến:</b> <select type="text" id="bacluongden" name="bacluongden" class="form-control"></select>
+                                        <label for="bacluong">Bậc lương:</label>
+                                        <div style="display:flex; gap:5px;">
+                                            <b>Từ:</b> <select type="text" id="bacluongtu" name="bacluongtu" class="form-control" required></select>
+                                        </div>
+                                        <div style="display:flex; gap:5px;">
+                                            <b>Đến:</b> <select type="text" id="bacluongden" name="bacluongden" class="form-control" required></select>
+                                        </div>
                                         <div style="display:flex; gap:5px;">
                                             <label for="soluong">Số lượng:</label>
-                                            <input style="width: 50px;" type="number" id="soluong" name="soluong" min="1" class="form-control">                                   
+                                            <input style="width: 50px;" type="number" id="soluong" name="soluong" min="1" class="form-control" required>                                   
                                         </div>
                                         <label for="thoigiandukien">Thời gian dự kiến</label>
-                                        <input type="date" id="thoigiandukien" name="thoigiandukien" class="form-control">
+                                        <input type="date" id="thoigiandukien" name="thoigiandukien" class="form-control" required>
                                         <label for="phanloai">Phân loại</label>
-                                        <select id="phanloai" name="phanloai" class="form-control">   
+                                        <select id="phanloai" name="phanloai" class="form-control" required>   
                                             <option value="Tuyển mới">Tuyển mới</option>
                                             <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
                                             <option value="Thay thế thai sản">Thay thế thai sản</option>
@@ -253,22 +285,29 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col" style="height: 300px; overflow-y: scroll;">
-                                    <label>Danh sách vị trí</label>
-                                    <ul id="danhsach_vitri" class="list-group"><ul>
-                                </div>
                                 <div class="col">
-                                    <label for="mota">Mô tả công việc</label>
-                                    <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer;"></i>                                
-                                    <div id="pdf-preview">
-                                        <iframe id="pdf-frame" style="height: 300px; background-color: transparent;" frameborder="0"></iframe>
+                                    <div style="display:flex; gap:5px;">
+                                        <input id="timvitri" name="timvitri" class="form-control" placeholder="Tìm vị trí">
+                                        <i class="fa fa-search" aria-hidden="true" id="search-icon" style="cursor: pointer; margin-top: 5px;"></i>
+                                    </div>
+                                    <br>
+                                    <label>Danh sách vị trí</label>
+                                    <ul id="danhsach_vitri" class="list-group" style="height: 300px; overflow-y: scroll;"><ul>
+                                </div>
+                                <div class="col-3">
+                                    <div style="display:flex; gap:5px;">
+                                        <label for="mota">Mô tả công việc</label>
+                                        <i class="fa fa-search" aria-hidden="true" onclick="mojd" style="cursor: pointer; margin-top: 5px;"></i>                            
+                                    </div>
+                                        <div id="pdf-preview"  style="width:180px; height: 400px; overflow: hidden;">
+                                        <iframe id="pdf-frame" frameborder="0" src="" style="width: 100%; height: 100%; overflow: hidden;"></iframe>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <p id="thongbao" style="color:red;max-width: 400px;text-align: left;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
+                        <p id="thongbao" style="color:red;max-width: 500px;text-align: left;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
                         <input type="submit" class="btn btn-primary" id="themyctd" value="Gửi yêu cầu" disabled></input>
                     </form>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
@@ -438,8 +477,14 @@
     </div>
 </div>
 <script>
-    document.getElementById("vitri").addEventListener("change", function() {
-        const vitri = document.getElementById("vitri").value;
+    function mojd () {
+        link = document.getElementById("pdf-frame").src
+        console.log(link)
+        window.open(link, '_blank');
+    };
+
+    document.getElementById("timvitri").addEventListener("change", function() {
+        const vitri = document.getElementById("timvitri").value;
         const danhsachvitri = document.getElementById("danhsach_vitri");
         
         axios({
@@ -448,7 +493,6 @@
         })
             .then(function (response) {
                 var data = response.data
-                console.log(data)
                 danhsachvitri.innerHTML = ""; // Clear existing options
                 data.forEach(function(item) {
                     var li_element = document.createElement("li");
@@ -457,6 +501,64 @@
                     li_element.addEventListener("click", function() {
                         document.getElementById("vitri").value = item;
                         danhsachvitri.innerHTML = "";
+                        var vitrimoi = document.getElementById("vitri").value;
+                        var thongbao = document.getElementById("thongbao");
+                        var nutgui_yctd = document.getElementById("themyctd");
+                        axios({
+                            method: 'post',
+                            url: '/lay_thongtin_vitri?vitri=' + vitrimoi
+                        })
+                            .then(function (response) {
+                                var data = response.data["data"]
+                                document.getElementById("capbac").value = data["Grade_code"];
+                                document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                                var pdfFrame = document.getElementById("pdf-frame");
+                                var pdfPath = "static/uploads/mau/jd/" + data["Detail_job_title_EN"] + ".pdf";
+                                var xhr = new XMLHttpRequest();
+                                xhr.open('HEAD', pdfPath, true);
+                                xhr.onload = function() {
+                                    if (xhr.status === 200) {
+                                        pdfFrame.src = pdfPath;
+                                        thongbao.innerHTML = "JD được lưu ở: " + pdfPath
+                                        nutgui_yctd.disabled = false
+                                    } else {
+                                        pdfFrame.src = "";
+                                        thongbao.innerHTML = "Vị trí chưa có JD, vui lòng tải lên"
+                                        nutgui_yctd.disabled = true
+                                    }
+                                };
+                                xhr.onerror = function() {
+                                    pdfFrame.src = "";
+                                    thongbao.innerHTML = "Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào"
+                                    nutgui_yctd.disabled = true
+                                };
+                                xhr.send();
+
+                                var bacluongtu = document.getElementById("bacluongtu")
+                                var bacluongden = document.getElementById("bacluongden")
+                                bacluongden.innerHTML = ""
+                                bacluongtu.innerHTML = ""
+                                var list_bacluong = data["Bac_luong"]
+                                list_bacluong.forEach(element => {
+                                    
+                                    var option_bacluong = document.createElement("option")
+                                    option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
+                                    option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1]) + " )"
+                                    bacluongtu.appendChild(option_bacluong);
+                                });
+                                list_bacluong.forEach(element => {
+                                    
+                                    var option_bacluong = document.createElement("option")
+                                    option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
+                                    option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1])  + " )"
+                                    bacluongden.appendChild(option_bacluong);
+                                });
+
+
+                                })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     });
                     danhsachvitri.appendChild(li_element);
                 });
@@ -466,94 +568,48 @@
             })
         });
 
-    const vitricheck = document.getElementById("vitricheck");
-    vitricheck.addEventListener("change", function() {
-        if (vitricheck.checked) {
-            var vitri = document.getElementById("vitri").value;
-            var thongbao = document.getElementById("thongbao");
-            var nutgui_yctd = document.getElementById("themyctd");
-            axios({
-                method: 'post',
-                url: '/lay_thongtin_vitri?vitri=' + vitri
-            })
-                .then(function (response) {
-                    var data = response.data["data"]
-                    document.getElementById("capbac").value = data["Grade_code"];
-                    document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                    var pdfFrame = document.getElementById("pdf-frame");
-                    var pdfPath = "static/uploads/mau/jd/" + data["Detail_job_title_EN"] + ".pdf";
-                    var xhr = new XMLHttpRequest();
-                    xhr.open('HEAD', pdfPath, true);
-                    xhr.onload = function() {
-                        if (xhr.status === 200) {
-                            pdfFrame.src = pdfPath;
-                            thongbao.innerHTML = ""
-                            nutgui_yctd.disabled = false
-                        } else {
-                            pdfFrame.src = "";
-                            thongbao.innerHTML = "Vị trí chưa có JD, vui lòng tải lên"
-                            nutgui_yctd.disabled = true
-                        }
-                    };
-                    xhr.onerror = function() {
-                        pdfFrame.src = "";
-                        thongbao.innerHTML = "Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào"
-                        nutgui_yctd.disabled = true
-                    };
-                    xhr.send();
-
-                    var bacluongtu = document.getElementById("bacluongtu")
-                    var bacluongden = document.getElementById("bacluongden")
-                    bacluongden.innerHTML = ""
-                    bacluongtu.innerHTML = ""
-                    var list_bacluong = data["Bac_luong"]
-                    list_bacluong.forEach(element => {
-                        
-                        var option_bacluong = document.createElement("option")
-                        option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
-                        option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1]) + " )"
-                        bacluongtu.appendChild(option_bacluong);
+    
+    document.getElementById("jd_timvitri").addEventListener("change", function() {
+        const vitri = document.getElementById("jd_timvitri").value;
+        const danhsachvitri = document.getElementById("jd_danhsach_vitri");
+        
+        axios({
+            method: 'post',
+            url: '/timcacchucdanh?tutimkiem=' + vitri
+        })
+            .then(function (response) {
+                var data = response.data
+                danhsachvitri.innerHTML = ""; // Clear existing options
+                data.forEach(function(item) {
+                    var li_element = document.createElement("li");
+                    li_element.textContent = item;
+                    li_element.className = "list-group-item";
+                    li_element.addEventListener("click", function() {
+                        document.getElementById("jd_vitri").value = item;
+                        danhsachvitri.innerHTML = "";
+                        axios({
+                            method: 'post',
+                            url: '/lay_thongtin_vitri?vitri=' + item
+                        })
+                            .then(function (response) {
+                                var data = response.data["data"]
+                                document.getElementById("jd_vitrien").value = data["Detail_job_title_EN"];
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     });
-                    list_bacluong.forEach(element => {
-                        
-                        var option_bacluong = document.createElement("option")
-                        option_bacluong.value = element[0] + "," + them_cham_vao_so(element[1]) 
-                        option_bacluong.text = element[0] + " ( " + them_cham_vao_so(element[1])  + " )"
-                        bacluongden.appendChild(option_bacluong);
-                    });
-
-
-                    })
-                .catch(function (error) {
-                    console.log(error);
+                    danhsachvitri.appendChild(li_element);
                 });
-            }
-    })
-
-    document.getElementById("search-icon").addEventListener("click", function() {
-        link = document.getElementById("pdf-frame").src
-        window.open(link, '_blank');
+            })
+            .catch(function (error) {
+                console.log(error);
+            })
+    
     });
 
     function them_cham_vao_so(so) {
         return so.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    }
-
-    function changeJdVitri() {
-        var vitri = document.getElementById("jd_vitri").value;
-        console.log(vitri)
-        axios({
-            method: 'post',
-            url: '/lay_thongtin_vitri?vitri=' + vitri
-        })
-            .then(function (response) {
-                var data = response.data["data"]
-                console.log(data)
-                document.getElementById("jd_vitrien").value = data["Detail_job_title_EN"];
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
     }
 
     function changeFormatDate(date){

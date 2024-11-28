@@ -25,9 +25,12 @@
         overflow: hidden;
 
     }
-    td, label, p, input, h5 {
+    label, p, input, h5 {
         color: #4e73df;
         font-weight: bold;
+    }
+    td {
+        color: white;
     }
 
 </style>
@@ -116,12 +119,14 @@
             </thead>
             <tbody>
                 {% for row in danhsach %}
-                {% if row[7] == "pass" %}
+                {% if row[15]=="Qua phỏng vấn" %}
                 <tr class="bg-success">
-                {% elif row[7] == "failed" %}
-                <tr class="bg-secondary">
-                {% else %}
+                {% elif row[15]=="Trượt phỏng vấn" %}
+                <tr class="bg-danger">
+                {% elif row[15]=="Đang phỏng vấn" %}
                 <tr class="bg-info">
+                {% else %}
+                <tr class="bg-secondary">
                 {% endif %}
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
@@ -407,7 +412,7 @@
                         <form action="/thaydoi_trangthai_uvtd" method="POST">
                             <input type="hidden" name="id" value={{row[0]}}>
                             <input type="hidden" name="id_yctd" value={{row[17]}}>
-                            {% if not row[15] or row[15]=='None' %}
+                            {% if not row[15] or row[15]=="Chưa phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option selected>Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
@@ -434,6 +439,14 @@
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn">Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn" selected>Trượt phỏng vấn</option>
+                            </select>
+                            {% else %}
+                            <select name="trangthai" onchange="form.submit()">
+                                <option value=""></option>
+                                <option value="Chưa phỏng vấn">Chưa phỏng vấn</option>
+                                <option value="Đang phỏng vấn">Đang phỏng vấn</option>
+                                <option value="Qua phỏng vấn">Qua phỏng vấn</option>
+                                <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
                             </select>
                             {% endif %}
                         </form>
