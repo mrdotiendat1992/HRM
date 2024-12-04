@@ -42,6 +42,9 @@
         <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#UVModal">
             Thêm ứng viên
         </button>
+        <button type="button" class="btn btn-primary btn-sm" title="Ngân hàng CV" data-toggle="modal" data-target="#CVModal">
+            Ngân hàng CV
+        </button>
     </div>
     {% if current_user.phongban == "td" or current_user.phanquyen == "sa" %}
     <div class="modal fade" id="UVModal" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
@@ -70,17 +73,81 @@
                                     </select>
                                     <label for="tuoi">Tuổi</label>
                                     <input type="number" class="form-control" name="tuoi" placeholder="Tuổi" min="18" step="1" required>
-                                    <label for="namkinhnghiem">Năm kinh nghiệm</label>   
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label for="kenhtuyendung">Kênh tuyển dụng</label>
+                                    <select type="text" class="form-control" name="kenhtuyendung" required>
+                                        <option value="Người quen giới thiệu">Người quen giới thiệu</option>
+                                        <option value="Facebook">Facebook</option>
+                                        <option value="LinkedIn">LinkedIn</option>
+                                        <option value="Headhunter">Headhunter</option>
+                                        <option value="Banner">Banner</option>
+                                    </select>
+                                    <label for="namkinhnghiem">Số năm kinh nghiệm</label>   
                                     <input type="number" class="form-control" name="namkinhnghiem" min="0.5" placeholder="Năm kinh nghiệm" step="0.5" required>
                                     <label for="linkcv">Tải lên CV:</label>
                                     <input type="file" class="form-control" name="linkcv" required>
+                                    
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Tải lên"></input>
+                    <input type="submit" class="btn btn-primary" value="Thêm ứng viên"></input>
+                    </form>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="CVModal" tabindex="-1" role="dialog" aria-labelledby="CVModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CVModalLabel">Ứng viên mới</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <table class="table table-bordered table-hover table-sm table-striped ">
+                                <thead>
+                                    <tr class="bg-primary">
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Họ tên</th>
+                                        <th scope="col">Giới tính</th>
+                                        <th scope="col">Tuổi</th>
+                                        <th scope="col">Kênh tuyển dụng</th>
+                                        <th scope="col">Số năm kinh nghiệm</th>
+                                        <th scope="col">CV</th>
+                                        <th scope="col">Trạng thái</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for row in danhsach_ungvien_tiemnang %}
+                                    <tr class="bg-info">
+                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>{{ row[1] }}</td>
+                                        <td>{{ row[2] }}</td>
+                                        <td>{{ row[3] }}</td>
+                                        <td>{{ row[19] }}</td>
+                                        <td>{{ row[4] }}</td>
+                                        <td><a href="{{ row[5] }}" target="_blank"><i class="fa fa-lg fa-search" aria-hidden="true" style="cursor: pointer;"></i></a></td>
+                                        <td>{{ row[15] }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Thêm ứng viên"></input>
                     </form>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
                 </div>
@@ -88,6 +155,17 @@
         </div>
     </div>
     {% endif %}
+    <br>
+    <h3><b>{{ vitri_tuyendung }}</b></h3>
+    <br>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+        <h5> Tổng: {{ so_ungvien_tong }} |</h5>
+        <h5> Chờ phỏng vấn: {{ so_ungvien_chophongvan }} </h5>
+        <h5> Đang phỏng vấn: {{ so_ungvien_dangphongvan }} </h5>
+        <h5> Đã phỏng vấn: {{ so_ungvien_quaphongvan }} </h5>
+        <h5> Đã nhận việc {{ so_ungvien_danhanviec }} </h5>
+        <h5> Không nhận việc: {{ so_ungvien_khongnhanviec}} </h5>
+    </div>
     <br>
     <div class="content">
         <table class="table table-bordered table-hover table-sm">
@@ -97,6 +175,7 @@
                     <th rowspan="2" style="vertical-align:middle;">Giới tính</th>
                     <th rowspan="2" style="vertical-align:middle;">Tuổi</th>
                     <th rowspan="2" style="vertical-align:middle;">Số năm kinh nghiệm</th>
+                    <th rowspan="2" style="vertical-align:middle;">Kênh tuyển dụng</th>
                     <th rowspan="2" style="vertical-align:middle;">CV</th>
                     <th colspan="3">Phỏng vấn lần 1</th>
                     <th colspan="3">Phỏng vấn lần 2</th>
@@ -120,11 +199,15 @@
             <tbody>
                 {% for row in danhsach %}
                 {% if row[15]=="Qua phỏng vấn" %}
-                <tr class="bg-success">
+                <tr class="bg-warning">
                 {% elif row[15]=="Trượt phỏng vấn" %}
                 <tr class="bg-danger">
                 {% elif row[15]=="Đang phỏng vấn" %}
                 <tr class="bg-info">
+                {% elif row[15]=="Đã nhận việc" %}
+                <tr class="bg-success">
+                {% elif row[15]=="Đang phỏng vấn" %}
+                <tr class="bg-primary">
                 {% else %}
                 <tr class="bg-secondary">
                 {% endif %}
@@ -132,6 +215,7 @@
                     <td>{{ row[2] }}</td>
                     <td>{{ row[3] }}</td>
                     <td>{{ row[4] }}</td>
+                    <td>{{ row[19] }}</td>
                     <td>
                         {% if row[5] %}
                             <i class="fa fa-lg fa-search" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[5] }}')"></i>
@@ -185,12 +269,12 @@
                     </td>
                     <td>
                         {% if row[8] %}
-                        <button class="btn btn-danger">
-                            <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[8] }}')"></td>
-                        </button>
+                            <button class="btn btn-danger">
+                                <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[8] }}')"></td>
+                            </button>
                         {% else %}
                             {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
-                            <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal1">
+                            <button type="button" class="btn btn-primary btn-sm" title="Tải đánh giá ứng viên lần 1" data-toggle="modal" data-target="#KQUVModal1">
                                 <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
                             </button>
                             <div class="modal fade" id="KQUVModal1" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
@@ -280,7 +364,7 @@
                         </button>
                         {% else %}
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
-                        <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal2">
+                        <button type="button" class="btn btn-primary btn-sm" title="Tải đánh giá ứng viên lần 2" data-toggle="modal" data-target="#KQUVModal2">
                             <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
                         </button>
                         <div class="modal fade" id="KQUVModal2" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
@@ -370,7 +454,7 @@
                         </button>
                         {% else %}
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
-                        <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#KQUVModal3">
+                        <button type="button" class="btn btn-primary btn-sm" title="Tải đánh giá ứng viên lần 3" data-toggle="modal" data-target="#KQUVModal3">
                             <i class="fa fa-upload" aria-hidden="true" style="cursor: pointer;"></i>
                         </button>
                         <div class="modal fade" id="KQUVModal3" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
@@ -418,6 +502,8 @@
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn">Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc">Đã nhận việc</option>
+                                <option value="Không nhận việc">Không nhận việc</option>
                             </select>
                             {% elif row[15]=="Đang phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
@@ -425,6 +511,8 @@
                                 <option value="Đang phỏng vấn" selected>Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn">Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc">Đã nhận việc</option>
+                                <option value="Không nhận việc">Không nhận việc</option>
                             </select>
                             {% elif row[15]=="Qua phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
@@ -432,6 +520,8 @@
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn" selected>Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc">Đã nhận việc</option>
+                                <option value="Không nhận việc">Không nhận việc</option>
                             </select>
                             {% elif row[15]=="Trượt phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
@@ -439,14 +529,28 @@
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn">Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn" selected>Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc">Đã nhận việc</option>
+                                <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% else %}
+                            {% elif row[15]=="Đã nhận việc" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option value=""></option>
                                 <option value="Chưa phỏng vấn">Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
                                 <option value="Qua phỏng vấn">Qua phỏng vấn</option>
                                 <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc" selected>Đã nhận việc</option>
+                                <option value="Không nhận việc">Không nhận việc</option>
+                            </select>
+                            {% elif row[15]=="Không nhận việc" %}
+                            <select name="trangthai" onchange="form.submit()">
+                                <option value=""></option>
+                                <option value="Chưa phỏng vấn">Chưa phỏng vấn</option>
+                                <option value="Đang phỏng vấn">Đang phỏng vấn</option>
+                                <option value="Qua phỏng vấn">Qua phỏng vấn</option>
+                                <option value="Trượt phỏng vấn">Trượt phỏng vấn</option>
+                                <option value="Đã nhận việc">Đã nhận việc</option>
+                                <option value="Không nhận việc" selected>Không nhận việc</option>
                             </select>
                             {% endif %}
                         </form>

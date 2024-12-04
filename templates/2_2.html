@@ -25,7 +25,7 @@
         overflow: hidden;
 
     }
-    label, p, input, h5 , b {
+    label, p, input, h5 , b, textarea {
         color: #4e73df;
         font-weight: bold;
     }
@@ -256,7 +256,7 @@
                                     <div class="form-group">
                                         <div style="display:flex; gap:5px;">
                                             <label for="vitri">Vị trí:</label>
-                                            <textarea style="border: none; height: 60px; width: 200px; overflow-wrap: break-word; white-space: normal; resize: none;" id="vitri" name="vitri" readonly required></textarea>
+                                            <textarea style="border: none; height: 40px; width: 200px; overflow-wrap: break-word; white-space: normal; resize: none;" id="vitri" name="vitri" readonly required></textarea>
                                         </div>                                                                              
                                         <div style="display:flex; gap:5px;">
                                             <label for="capbac">Cấp bậc:</label>
@@ -283,6 +283,11 @@
                                             <option value="Thay thế thai sản">Thay thế thai sản</option>
                                             <option value="Ngắn hạn">Ngắn hạn</option>
                                         </select>
+                                        <br>
+                                        <div style="display:flex; gap:5px;">
+                                            <label for="trong_budget">Trong budget</label>
+                                            <input type="checkbox" id="trong_budget" name="trong_budget">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col">
@@ -328,7 +333,10 @@
                     <th>Cấp bậc</th>
                     <th>Bậc lương</th>
                     <th>Khoảng lương</th>
-                    <th>Số lượng</th>
+                    <th>Trong budget</th>
+                    <th>Kiểu lao động</th>
+                    <th>Số lượng yêu cầu</th>
+                    <th>Số lượng đã tuyển</th>
                     <th>JD</th>
                     <th>Thời gian dự kiến</th>
                     <th>Phân loại</th>
@@ -351,14 +359,17 @@
                 <tr class="bg-info">
                 {% endif %}
                     <td>
-                        <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}"><i class="fa-eye fas fa-fw view-details"></i></a>
+                        <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}&vitri={{row[2]}}">Chi tiết</a>
                     </td>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
+                    <td>{{row[20]}}</td>
+                    <td>{{row[21]}}</td>
                     <td>{{row[6]}}</td>
+                    <td>{{row[19]}}</td>
                     <td>
                         <form action="/download_JD" method="POST">
                             <input type="hidden" name="filename" value="{{row[7]}}">
@@ -366,7 +377,7 @@
                         </form>
                     <td class="ngay">{{row[8]}}</td>
                     <td>{{row[9]}}</td>
-                    {% if row[10] == "Chưa phê duyệt" and (current_user.phanquyen == "gd" or current_user.phanquyen == "sa" )%}
+                    {% if row[10] == "Chưa phê duyệt" and ((current_user.phanquyen == "gd" and row["20"]=="Ngoài") or current_user.phanquyen == "sa" or (current_user.masothe == 9514 and row["20"]=="Trong")) %}
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
                             <div>{{row[10]}}</div>

@@ -470,6 +470,10 @@ def dangkytuyendung():
         try:
             bophan = current_user.phongban
             vitri = request.form.get("vitri")
+            if "công nhân" in vitri.lower():
+                kieulaodong = "Công nhân"
+            else:
+                kieulaodong = "Nhân viên"
             vitrien = request.form.get("vitrien")
             capbac = request.form.get("capbac")
             bacluongtu = request.form.get("bacluongtu")
@@ -480,7 +484,13 @@ def dangkytuyendung():
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
             khoangluong = f"{bacluongtu.split(",")[1]} => {bacluongden.split(",")[1]}"
-            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,khoangluong,capbac,bacluong):
+            budget = request.form.get("trong_budget")
+            if budget:
+                trongbudget = "Trong"
+            else:
+                trongbudget = "Ngoài"
+            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,
+                                      thoigiandukien,phanloai,khoangluong,capbac,bacluong,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
                 if them_thongbao_co_yeucautuyendung(current_user.masothe,current_user.hoten):
                     flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
@@ -499,12 +509,39 @@ def dangkytuyendung():
 def tuyendungchitiet():
     if request.method == "GET":
         id_yeucautuyendung = request.args.get("id")
+        vitri_tuyendung = request.args.get("vitri")
         danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
+        danhsach_ungvien_tiemnang = lay_danhsach_ungvien_tiemnang(vitri_tuyendung)
+        so_ungvien_tong = len(danhsach)
+        so_ungvien_chophongvan = 0
+        so_ungvien_dangphongvan = 0
+        so_ungvien_quaphongvan = 0
+        so_ungvien_danhanviec = 0
+        so_ungvien_khongnhanviec = 0
+        for ungvien in danhsach:
+            if not ungvien[15]:
+                so_ungvien_chophongvan += 1
+            elif ungvien[15] == "Đang phỏng vấn":
+                so_ungvien_dangphongvan += 1
+            elif ungvien[15] == "Qua phỏng vấn":
+                so_ungvien_quaphongvan += 1
+            elif ungvien[15] == "Đã nhận việc":
+                so_ungvien_danhanviec += 1
+            elif ungvien[15] == "Không nhận việc":
+                so_ungvien_khongnhanviec += 1
         phongban = lay_phongban_theo_idyctd(id_yeucautuyendung)
         return render_template("2_2_1.html", 
                                page="2.2.1 Danh sách ứng viên tuyển dụng",
+                               vitri_tuyendung=vitri_tuyendung,
                                danhsach=danhsach,
-                               phongban=phongban
+                               phongban=phongban,
+                               so_ungvien_tong=so_ungvien_tong,
+                               so_ungvien_chophongvan=so_ungvien_chophongvan,
+                               so_ungvien_dangphongvan=so_ungvien_dangphongvan,
+                               so_ungvien_quaphongvan=so_ungvien_quaphongvan,
+                               so_ungvien_danhanviec=so_ungvien_danhanviec,
+                               so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
+                               danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang
                                ) 
     else:
         id_yeucautuyendung = request.form.get("id")
@@ -517,9 +554,11 @@ def tuyendungchitiet():
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         save_path = os.path.join(FOLDER_CV,f"cv_{timestamp}.pdf")
         linkcv.save(save_path)
-        if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path):
+        kenhtuyendung = request.form.get("kenhtuyendung")
+        if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
             flash("Thêm ứng viên thành công")
         return redirect(f"muc2_2_1?id={id_yeucautuyendung}")
+    
 @app.route("/muc3_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -543,6 +582,7 @@ def nhapthongtinlaodongmoi():
                                 cacto=cacto,
                                 cacca=cacca,
                                 macongty=macongty)
+    
     elif request.method == "POST":
         try:
             anh = f"N'{request.form.get("anh")}'"

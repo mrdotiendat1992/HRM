@@ -3840,12 +3840,7 @@ def thaydoi_trangthai_uvtd():
         id = request.form.get("id")
         trangthai = request.form.get("trangthai")
         id_yctd = request.form.get("id_yctd")
-        conn = pyodbc.connect(url_database_pyodbc)
-        cur = conn.cursor()
-        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
-        cur.execute(query)
-        cur.commit()
-        conn.close()
+        capnhat_trangthai_ungvien_chitiet(id,trangthai,id_yctd)
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
         flash(e)
@@ -3875,17 +3870,14 @@ def thaydoi_ghichu_uvtd():
 def xoa_uvtd():
     try:
         id = request.form.get("id")
-        ghichu = request.form.get("ghichu")
         id_yctd = request.form.get("id_yctd")
-        conn = pyodbc.connect(url_database_pyodbc)
-        cur = conn.cursor()
-        query = f"DELETE Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
-        cur.execute(query)
-        cur.commit()
-        conn.close()
+        if xoa_tuyendung_chitiet(id,id_yctd):
+            flash(f"Xóa ứng viên tuyển dụng chi tiết thành công")
+        else:
+            flash(f"Xóa ứng viên tuyển dụng chi tiết thất bại")
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(f"Xóa ứng viên tuyển dụng chi tiết thất bại {e}")
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/xoa_tuyendung", methods=["POST"])

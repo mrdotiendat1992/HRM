@@ -1922,15 +1922,23 @@ def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien
         print(e)
         return []
     
-def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, khoangluong,capbac,bacluong):
+def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, khoangluong,capbac,bacluong,kieulaodong,trongbudget):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
-        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY,Ngay_tao_yeu_cau)
+        query = f"""
+        INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
+        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,
+        Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,
+        Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY,
+        Ngay_tao_yeu_cau,Phan_loai_vi_tri,Phan_loai_budget, So_luong_da_tuyen)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}','{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',N'Chưa tuyển',NULL,
-        '{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}',GETDATE())"""
+        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}',
+        '{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',
+        N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}',
+        GETDATE(),N'{kieulaodong}',N'{trongbudget}',0)
+        """
+        print(query)
         cursor.execute(query)
         conn.commit()
         return True
@@ -4845,6 +4853,20 @@ def lay_danhsach_ungvien(id_yeucautuyendung):
         flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng bị từ chối: {e}")
         return []
 
+def lay_danhsach_ungvien_tiemnang(vitri):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select * from Yeu_cau_tuyen_dung_chi_tiet 
+        join Yeu_cau_tuyen_dung on Yeu_cau_tuyen_dung.id=Yeu_cau_tuyen_dung_chi_tiet.id_yctd
+        where Yeu_cau_tuyen_dung.Vi_tri = N'{vitri}' and Yeu_cau_tuyen_dung_chi_tiet.Trang_thai != N'Đã nhận việc'"""       
+        result = cursor.execute(query).fetchall()
+        conn.close()
+        return list(result)
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng bị từ chối: {e}")
+        return []
+
 def lay_phongban_theo_idyctd(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -4857,19 +4879,77 @@ def lay_phongban_theo_idyctd(id):
         flash(f"Lỗi lấy phòng ban theo id yêu cầu tuyển dụng chi tiết: {e}")
         return ""
     
-def them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path:str):
+def them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         linkcv = save_path.replace("\\","/").split("HRM/")[1]
         query = f"""
-            insert into Yeu_cau_tuyen_dung_chi_tiet (ID_YCTD,Phong_ban,Ho_ten,Gioi_tinh,Tuoi,Kinh_nghiem,CV)
-            values ('{id_yeucautuyendung}','{phongban}',N'{hoten}',N'{gioitinh}','{tuoi}','{namkinhnghiem}',N'{linkcv}')    
+            insert into Yeu_cau_tuyen_dung_chi_tiet (ID_YCTD,Phong_ban,Ho_ten,Gioi_tinh,Tuoi,Kinh_nghiem,CV,Kenh_tuyen_dung)
+            values ('{id_yeucautuyendung}','{phongban}',N'{hoten}',N'{gioitinh}','{tuoi}','{namkinhnghiem}',N'{linkcv}',N'{kenhtuyendung}')    
             """      
         cursor.execute(query)
         cursor.commit()
+        query1 = f"SELECT Phan_loai_vi_tri FROM Yeu_cau_tuyen_dung WHERE ID='{id_yeucautuyendung}'"
+        kieulaodong = cursor.execute(query1).fetchone()[0]
+        if kieulaodong == "Công nhân":
+            query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen = So_luong_da_tuyen + 1 where id='{id_yeucautuyendung}'"
+            cursor.execute(query2)
+            cursor.commit()
         conn.close()
         return True
     except Exception as e:
         flash(f"Lỗi thêm ứng viên tuển dụng: {e}")
+        return False
+
+def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        if trangthai != "Đã nhận việc":
+            query = f"select Trang_thai from Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
+            trangthaicu  = cur.execute(query).fetchone()[0]
+            if trangthaicu == "Đã nhận việc":
+                query1 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen-1 WHERE ID = {id_yctd}"
+                cur.execute(query1)
+                cur.commit()
+        else:
+            query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen+1 WHERE ID = {id_yctd}"
+            # print(query2)
+            cur.execute(query2)
+            cur.commit()
+        query3 = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
+        # print(query3)
+        cur.execute(query3)
+        cur.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        flash(f"Lỗi thay đổi trạng thái ứng viên tuyển dụng: {e}")
+        return False
+
+def xoa_tuyendung_chitiet(id,id_yeucautuyendung):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
+        query1 = f"SELECT Phan_loai_vi_tri FROM Yeu_cau_tuyen_dung WHERE ID='{id_yeucautuyendung}'"
+        kieulaodong = cur.execute(query1).fetchone()[0]
+        if kieulaodong == "Công nhân":
+            query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen = So_luong_da_tuyen - 1 where id='{id_yeucautuyendung}'"
+            cur.execute(query2)
+            cur.commit()
+        else:
+            query3 = f"SELECT Trang_thai FROM Yeu_cau_tuyen_dung_chi_tiet WHERE ID='{id}'"
+            trangthai_thuchien = cur.execute(query3).fetchone()[0]
+            if trangthai_thuchien == "Đã nhận việc":
+                query4 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen = So_luong_da_tuyen - 1 where id='{id_yeucautuyendung}'"
+                cur.execute(query4)
+                cur.commit()
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        flash(f"Lỗi xóa ứng viên tuyển dụng: {e}")
         return False

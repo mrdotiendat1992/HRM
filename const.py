@@ -3,6 +3,8 @@ from config import url_database_pyodbc
 
 url_database_pyodbc = url_database_pyodbc
 
+MST_TPNS = 9514
+
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat/nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat/xuat')
 FOLDER_BIENBAN = os.path.join(os.path.dirname(__file__), r'nhapxuat/bienban')
