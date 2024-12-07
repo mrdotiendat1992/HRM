@@ -3940,3 +3940,143 @@ def dong_yeucautuyendung():
     except Exception as e:
         flash(e)
         return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+
+@app.route("/nghibukiemxuong", methods=["GET"])
+@login_required
+def nghibukiemxuong():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+
+        mst = request.args.get("mst")
+        bo_phan = request.args.get("bo_phan")
+        ngay = request.args.get("ngay")
+
+        filters = {
+            "mst": mst,
+            "bo_phan": bo_phan,
+            "ngay": ngay
+        }
+
+        query = f"select * from NGHI_BU_KIEM_XUONG where nha_may='{current_user.macongty}'"
+        query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
+        if query_condition:
+            query += f" and {query_condition}"
+        
+        danhsach = cur.execute(query).fetchall()
+        cur.commit()
+        conn.close()
+
+        page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 20
+        total = len(danhsach)
+        start = (page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+
+        formatted_rows = []
+        for row in paginated_rows:
+            formatted_row = list(row)
+            original_date = row[4]
+            if original_date:
+                formatted_row[4] = datetime.strptime(original_date, '%Y-%m-%d').strftime('%d/%m/%Y')
+            formatted_rows.append(tuple(formatted_row))
+
+        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template("nghibukiemxuong.html", danhsach=formatted_rows, pagination=pagination)
+    except Exception as e:
+        print(e)
+        return render_template("nghibukiemxuong.html", danhsach=[])
+
+@app.route("/update_nghibukiemxuong", methods=["POST"])
+@login_required
+def update_nghibukiemxuong():
+    try:
+        data = request.json
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE NGHI_BU_KIEM_XUONG SET MST = '{data.get("mst", "")}', HO_TEN = N'{data.get("ho_ten", "")}', BO_PHAN = '{data.get("bo_phan", "")}', NGAY = '{data.get("ngay", "")}' WHERE ID = {data.get("id", "")}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+
+        return {"message": "Sửa thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Sửa thất bại"}
+
+@app.route("/delete_nghibukiemxuong", methods=["DELETE"])
+@login_required
+def delete_nghibukiemxuong():
+    try:
+        id = request.args.get("id")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM NGHI_BU_KIEM_XUONG WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+
+        return {"message": "Xóa thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Xóa thất bại"}
+
+@app.route("/tai_sample_nghibukiemxuong", methods=["POST"])
+def tai_sample_nghibukiemxuong():
+    headers = ["MST", "HO_TEN", "BO_PHAN", "NGAY"]
+    
+    df = pd.DataFrame(columns=headers)
+    output = BytesIO()
+    
+    with pd.ExcelWriter(output, engine='openpyxl') as writer:
+        df.to_excel(writer, index=False)
+
+    output.seek(0)
+    workbook = openpyxl.load_workbook(output)
+    sheet = workbook.active
+
+    header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+    header_font = Font(bold=True, color="FFFFFF")
+
+    for cell in sheet[1]:
+        cell.fill = header_fill
+        cell.font = header_font
+
+    output = BytesIO()
+    workbook.save(output)
+    output.seek(0)
+
+    time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+    
+    response = make_response(output.read())
+    response.headers['Content-Disposition'] = f'attachment; filename=bukiemxuong_{time_stamp}.xlsx'
+    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    return response  
+
+@app.route("/tailen_nghibukiemxuong", methods=["POST"])
+def tailen_nghibukiemxuong():
+    file = request.files.get("file")
+    if file:
+        try:
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            
+            df = pd.read_excel(file)
+            df["NHA_MAY"] = current_user.macongty
+            
+            insert_query = """
+                INSERT INTO NGHI_BU_KIEM_XUONG (NHA_MAY, MST, HO_TEN, BO_PHAN, NGAY)
+                VALUES (?, ?, ?, ?, ?)
+            """
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "BO_PHAN", "NGAY"]].values.tolist()
+            print(data_to_insert)
+            cursor.executemany(insert_query, data_to_insert)
+
+            conn.commit() 
+            conn.close()    
+        except Exception as e:
+            print(e)
+                
+    return redirect("/nghibukiemxuong")

@@ -1,0 +1,166 @@
+{% extends "12.html" %}
+
+{% block style %}
+    .action {
+        display: flex;
+        gap: 10px
+    }
+
+    .action input {
+        width: max-content;
+    }
+
+    th, td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        font-size: 11px;
+        vertical-align: middle;
+        height: 40px;
+    }
+
+    th {
+        text-align: center;
+        color: white;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none
+    }
+{% endblock style %}
+
+{% block content %}
+    <div class="container-fluid" id="main_window">
+        <div class="d-flex">
+            <form class="action" method="POST" action="/tailen_nghibukiemxuong" enctype="multipart/form-data">
+                <input class="form-control" type="file" name="file" id="formFile">
+                <input type="submit" value="Tải lên" class="btn btn-success"/>
+            </form>
+            <form action="/tai_sample_nghibukiemxuong" method="POST">
+                <input type="submit" value="Tải mẫu" class="btn btn-primary mx-2"/>
+            </form>
+        </div>
+        <div class="d-flex justify-content-between mt-3">
+            <form class="action">
+                <input class="form-control" type="text" placeholder="Mã số thẻ" name="mst" value="{{ request.args.get('mst', '') }}"/>
+                <input class="form-control" type="text" placeholder="Bộ phận" name="bo_phan" value="{{ request.args.get('bo_phan', '') }}"/>
+                <input class="form-control" type="date" placeholder="Ngày" name="ngay" value="{{ request.args.get('ngay', '') }}"/>
+                <input class="btn btn-success" type="submit" name="action" value="Tìm kiếm" />
+                <input class="btn btn-danger" type="submit" name="action" value="Xóa tìm kiếm" />
+            </form>
+        </div>
+        <div class="mt-3">
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="bg-primary">
+                    <tr>
+                        <th style="width: 30%">MST</th>
+                        <th style="width: 30%">Họ tên</th>
+                        <th style="width: 30%">Bộ phận</th>
+                        <th style="width: 30%">Ngày</th>
+                        <th style="width: 10%"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in danhsach %}
+                        <tr>
+                            <td class="text-center edit" type="text" name="mst">{{row[1]}}</td>
+                            <td class="text-center edit" type="text" name="ho_ten">{{row[2]}}</td>
+                            <td class="text-center edit" type="text" name="bo_phan">{{row[3]}}</td>
+                            <td class="text-center edit" type="date" name="ngay">{{row[4]}}</td>
+                            <td>
+                                <div class="d-flex justify-content-center">
+                                    <svg onclick="handleEdit(this)" class="me-2 pointer" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg>
+                                    <svg onclick="handleSaveEdit(this, {{row[5]}})" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0ee143" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check hide me-2 pointer"><path d="M20 6 9 17l-5-5"/></svg>
+                                    <svg onclick="handleDelete(this, {{row[5]}})" class="pointer" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#e10e0e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-trash-2"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+                                <div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination d-flex justify-content-center">{{ pagination.links }}</div>
+        </div>
+    </div>
+
+    <script>
+        function convertDateValueFormat(dateStr) {
+            const [day, month, year] = dateStr.split("/");
+        
+            return `${year}-${month}-${day}`;
+        }
+
+        function convertVNDateFormat(dateStr) {
+            const [year, month, day] = dateStr.split("-");
+        
+            return `${day}/${month}/${year}`;
+        }
+
+
+        function handleEdit(element) {
+            const tr = element.closest("tr")
+            const editElements = tr.querySelectorAll(".edit")
+            editElements.forEach(editElement => {
+                const value = editElement.getAttribute("type") === "date" ? convertDateValueFormat(editElement.innerText) : editElement.innerText
+                console.log(value)
+                editElement.innerHTML = `<input type="${editElement.getAttribute("type")}" class="form-control" name=${editElement.getAttribute("name")} value="${value}"/>`
+            })
+            element.classList.add("hide")
+            element.nextElementSibling.classList.remove("hide")
+        }
+
+        function handleSaveEdit(element, id) {
+            const tr = element.closest("tr")
+            const editElements = tr.querySelectorAll("input")
+            const values = {
+                id: id,
+                mst: editElements[0]?.value,
+                ho_ten: editElements[1]?.value,
+                bo_phan: editElements[2]?.value,
+                ngay: editElements[3]?.value
+            }
+
+            fetch("/update_nghibukiemxuong", {
+                method: "POST",
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(values)
+            })
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Something went wrong!');
+            })
+            .then(() => {
+                editElements.forEach(editElement => {
+                    editElement.closest(".edit").innerHTML = editElement.getAttribute("type") === "date" ? convertVNDateFormat(editElement.value) : editElement.value
+                })
+                element.classList.add("hide")
+                element.previousElementSibling.classList.remove("hide")
+            })
+        }
+
+        function handleDelete(element, id) {
+            fetch(`/delete_nghibukiemxuong?id=${id}`, {method: "DELETE"})
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Something went wrong!');
+                })
+                .then(() => {
+                    const tr = element.closest("tr")
+                    tr.remove()
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        }
+    </script>
+{% endblock content%}
