@@ -9,7 +9,7 @@ from openpyxl.utils.dataframe import dataframe_to_rows
 from openpyxl.utils import get_column_letter
 import pandas as pd
 from pandas import DataFrame, ExcelWriter,to_numeric,to_datetime, to_timedelta
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time as dt_time
 import os
 from werkzeug.utils import secure_filename
 import re

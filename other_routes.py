@@ -1,5 +1,4 @@
 from main_routes import *
-
 #############################################
 #                "OTHER ENDPOINT"           #
 #############################################
@@ -3949,16 +3948,14 @@ def nghibukiemxuong():
         cur = conn.cursor()
 
         mst = request.args.get("mst")
-        bo_phan = request.args.get("bo_phan")
         ngay = request.args.get("ngay")
 
         filters = {
             "mst": mst,
-            "bo_phan": bo_phan,
             "ngay": ngay
         }
 
-        query = f"select * from NGHI_BU_KIEM_XUONG where nha_may='{current_user.macongty}'"
+        query = f"select * from CHAM_CONG_TAY where nha_may='{current_user.macongty}'"
         query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
         if query_condition:
             query += f" and {query_condition}"
@@ -3971,15 +3968,17 @@ def nghibukiemxuong():
         per_page = 20
         total = len(danhsach)
         start = (page - 1) * per_page
-        end = start + per_page
+        end = start + per_page 
         paginated_rows = danhsach[start:end]
 
         formatted_rows = []
         for row in paginated_rows:
             formatted_row = list(row)
-            original_date = row[4]
-            if original_date:
-                formatted_row[4] = datetime.strptime(original_date, '%Y-%m-%d').strftime('%d/%m/%Y')
+            for index, data in enumerate(formatted_row):
+                formatted_row[index] = data if data is not None else ""
+            formatted_row[3] = datetime.strptime(formatted_row[3], '%Y-%m-%d').strftime('%d/%m/%Y') if formatted_row[3] else ""
+            formatted_row[5] = formatted_row[5][:5] if formatted_row[5] else ""
+            formatted_row[6] = formatted_row[6][:5] if formatted_row[6] else ""
             formatted_rows.append(tuple(formatted_row))
 
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
@@ -3989,23 +3988,6 @@ def nghibukiemxuong():
         print(e)
         return render_template("nghibukiemxuong.html", danhsach=[])
 
-@app.route("/update_nghibukiemxuong", methods=["POST"])
-@login_required
-def update_nghibukiemxuong():
-    try:
-        data = request.json
-        conn = pyodbc.connect(url_database_pyodbc)
-        cur = conn.cursor()
-        query = f"UPDATE NGHI_BU_KIEM_XUONG SET MST = '{data.get("mst", "")}', HO_TEN = N'{data.get("ho_ten", "")}', BO_PHAN = '{data.get("bo_phan", "")}', NGAY = '{data.get("ngay", "")}' WHERE ID = {data.get("id", "")}"
-        cur.execute(query)
-        cur.commit()
-        conn.close()
-
-        return {"message": "Sửa thành công"}
-    except Exception as e:
-        print(e)
-        return {"message": "Sửa thất bại"}
-
 @app.route("/delete_nghibukiemxuong", methods=["DELETE"])
 @login_required
 def delete_nghibukiemxuong():
@@ -4013,7 +3995,7 @@ def delete_nghibukiemxuong():
         id = request.args.get("id")
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        query = f"DELETE FROM NGHI_BU_KIEM_XUONG WHERE ID = {id}"
+        query = f"DELETE FROM CHAM_CONG_TAY WHERE ID = {id}"
         cur.execute(query)
         cur.commit()
         conn.close()
@@ -4025,7 +4007,7 @@ def delete_nghibukiemxuong():
 
 @app.route("/tai_sample_nghibukiemxuong", methods=["POST"])
 def tai_sample_nghibukiemxuong():
-    headers = ["MST", "HO_TEN", "BO_PHAN", "NGAY"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_150", "PHUT_TANG_CA_DEM", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -4044,6 +4026,18 @@ def tai_sample_nghibukiemxuong():
         cell.fill = header_fill
         cell.font = header_font
 
+    for column in sheet.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(cell.value)
+            except:
+                pass
+        adjusted_width = (max_length + 6)
+        sheet.column_dimensions[column_letter].width = adjusted_width
+
     output = BytesIO()
     workbook.save(output)
     output.seek(0)
@@ -4054,6 +4048,14 @@ def tai_sample_nghibukiemxuong():
     response.headers['Content-Disposition'] = f'attachment; filename=bukiemxuong_{time_stamp}.xlsx'
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
+
+def normalize_row(row):
+    return [
+        item.strftime('%Y-%m-%d %H:%M:%S') if isinstance(item, pd.Timestamp) else
+        item.strftime('%H:%M:%S') if isinstance(item, dt_time) else
+        None if pd.isna(item) else item
+        for item in row
+    ]
 
 @app.route("/tailen_nghibukiemxuong", methods=["POST"])
 def tailen_nghibukiemxuong():
@@ -4067,12 +4069,12 @@ def tailen_nghibukiemxuong():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO NGHI_BU_KIEM_XUONG (NHA_MAY, MST, HO_TEN, BO_PHAN, NGAY)
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO CHAM_CONG_TAY (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_HC, PHUT_TANG_CA_100, PHUT_TANG_CA_150, PHUT_TANG_CA_DEM, PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "BO_PHAN", "NGAY"]].values.tolist()
-            print(data_to_insert)
-            cursor.executemany(insert_query, data_to_insert)
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_150", "PHUT_TANG_CA_DEM", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
+            normalized_data_rows = [normalize_row(row) for row in data_to_insert]
+            cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 
             conn.close()    
