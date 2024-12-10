@@ -27,15 +27,24 @@
     #chuyen, #bophan {
         width: 70px;
     }
+    #title {
+        display: flex;
+        justify-content: space-between;
+    }
 
 {% endblock style %}
     
 {% block content %}
 <div class="scroll">
     <br>
-    
-        <h1>Danh sách chấm công sáng {{ ngay.strftime('%d-%m-%Y') }}</h1>
-        
+        <div id="title">
+            <h1>Danh sách chấm công sáng {{ ngay.strftime('%d-%m-%Y') }}</h1>
+            {% if 'HR' in current_user.phongban and (current_user.masothe==2833 or current_user.masothe==2176) %}
+            <form action="/capnhat_dulieu_chamcong" method="POST">
+                <button type="submit" class="btn btn-outline-primary btn-sm">Cập nhật dữ liệu chấm công</button>
+            </form>
+            {% endif %}
+        </div>
         <div class="form">
             <h3>Tổng {{count}}</h3>
             <a href="/chamcong_sang_web"><button class="btn btn-warning btn-sm">Tất cả</button></a>

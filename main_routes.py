@@ -367,10 +367,12 @@ def home():
 @roles_required('hr','tnc','sa','gd','td','tbp')
 def danhsachdangkytuyendung():
     if request.method == "GET":
+        hoten = request.args.get("hoten")
+        vitri = request.args.get("vitri")
         sdt = request.args.get("sdt")
         cccd = request.args.get("cccd")
         ngaygui = request.args.get("ngaygui")
-        rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui)
+        rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui,hoten,vitri)
         count=len(rows)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -492,7 +494,7 @@ def dangkytuyendung():
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,
                                       thoigiandukien,phanloai,khoangluong,capbac,bacluong,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                if them_thongbao_co_yeucautuyendung(current_user.masothe,current_user.hoten):
+                if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
                     flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
                 else:
                     flash("Thêm thông báo có yêu cầu tuyển dụng mới thất bại !!!")
@@ -509,9 +511,13 @@ def dangkytuyendung():
 def tuyendungchitiet():
     if request.method == "GET":
         id_yeucautuyendung = request.args.get("id")
-        vitri_tuyendung = request.args.get("vitri")
+        thongtin_tuyendung = lay_thongtin_yeucautuyendung(id_yeucautuyendung)
+        print(thongtin_tuyendung)
+        vitri_tuyendung = thongtin_tuyendung[0]
+        phongban = thongtin_tuyendung[1]
         danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
         danhsach_ungvien_tiemnang = lay_danhsach_ungvien_tiemnang(vitri_tuyendung)
+        danhsach_congnhan_ungtuyen = lay_danhsach_congnhan_ungtuyen(vitri_tuyendung)
         so_ungvien_tong = len(danhsach)
         so_ungvien_chophongvan = 0
         so_ungvien_dangphongvan = 0
@@ -541,7 +547,8 @@ def tuyendungchitiet():
                                so_ungvien_quaphongvan=so_ungvien_quaphongvan,
                                so_ungvien_danhanviec=so_ungvien_danhanviec,
                                so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
-                               danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang
+                               danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang,
+                               danhsach_congnhan_ungtuyen=danhsach_congnhan_ungtuyen
                                ) 
     else:
         id_yeucautuyendung = request.form.get("id")

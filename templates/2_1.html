@@ -90,10 +90,16 @@
     <div class="content">
         <div style="display: fixed; align-items: center;">
             <form method="GET" action="/muc2_1" style="display: inline;">
-                <input id="sdt" name="sdt" type="text" onchange="this.form.submit()" placeholder="Số điện thoại" value={{request.args.get('sdt','')}}>
-                <input id="cccd" name="cccd" type="text" onchange="this.form.submit()" placeholder="CCCD" value={{request.args.get('cccd','')}}>
+                <label for="hoten">Họ tên</label>
+                <input class="form-control-sm" id="hoten" name="hoten" type="text" onchange="this.form.submit()" placeholder="Họ tên" value='{{request.args.get("hoten","")}}'>
+                <label for="vitri">Vị trí</label>
+                <input class="form-control-sm" id="vitri" name="vitri" type="text" onchange="this.form.submit()" placeholder="Vị trí" value='{{request.args.get("vitri","")}}'>
+                <label for="sdt">Số điện thoại</label>
+                <input class="form-control-sm" id="sdt" name="sdt" type="text" onchange="this.form.submit()" placeholder="Số điện thoại" value={{request.args.get('sdt','')}}>
+                <label for="cccd">CCCD</label>
+                <input class="form-control-sm" id="cccd" name="cccd" type="text" onchange="this.form.submit()" placeholder="CCCD" value={{request.args.get('cccd','')}}>
                 <label for="ngaygui">Ngày ứng tuyển</label>
-                <input id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
+                <input class="form-control-sm" id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
                 <input class="btn btn-primary btn-sm" style="width: 80px;" onclick="window.location.href='/muc2_1'" value="Tất cả">
             </form>
         </div>
