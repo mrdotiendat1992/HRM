@@ -37,11 +37,11 @@
 {% block content %}
     <div class="container-fluid" id="main_window">
         <div class="d-flex">
-            <form class="action" method="POST" action="/tailen_nghibukiemxuong" enctype="multipart/form-data">
+            <form class="action" method="POST" action="/tailen_chamcongtay" enctype="multipart/form-data">
                 <input class="form-control" type="file" name="file" id="formFile">
                 <input type="submit" value="Tải lên" class="btn btn-success"/>
             </form>
-            <form action="/tai_sample_nghibukiemxuong" method="POST">
+            <form action="/tai_sample_chamcongtay" method="POST">
                 <input type="submit" value="Tải mẫu" class="btn btn-primary mx-2"/>
             </form>
         </div>
@@ -108,7 +108,7 @@
 
     <script>
         function handleDelete(element, id) {
-            fetch(`/delete_nghibukiemxuong?id=${id}`, {method: "DELETE"})
+            fetch(`/delete_chamcongtay?id=${id}`, {method: "DELETE"})
                 .then((response) => {
                     if (response.ok) {
                         return response.json();

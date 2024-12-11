@@ -3940,9 +3940,9 @@ def dong_yeucautuyendung():
         flash(e)
         return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
 
-@app.route("/nghibukiemxuong", methods=["GET"])
+@app.route("/chamcongtay", methods=["GET"])
 @login_required
-def nghibukiemxuong():
+def chamcongtay():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
@@ -3983,14 +3983,14 @@ def nghibukiemxuong():
 
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
 
-        return render_template("nghibukiemxuong.html", danhsach=formatted_rows, pagination=pagination)
+        return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination)
     except Exception as e:
         print(e)
-        return render_template("nghibukiemxuong.html", danhsach=[])
+        return render_template("chamcongtay.html", danhsach=[])
 
-@app.route("/delete_nghibukiemxuong", methods=["DELETE"])
+@app.route("/delete_chamcongtay", methods=["DELETE"])
 @login_required
-def delete_nghibukiemxuong():
+def delete_chamcongtay():
     try:
         id = request.args.get("id")
         conn = pyodbc.connect(url_database_pyodbc)
@@ -4005,8 +4005,8 @@ def delete_nghibukiemxuong():
         print(e)
         return {"message": "Xóa thất bại"}
 
-@app.route("/tai_sample_nghibukiemxuong", methods=["POST"])
-def tai_sample_nghibukiemxuong():
+@app.route("/tai_sample_chamcongtay", methods=["POST"])
+def tai_sample_chamcongtay():
     headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_150", "PHUT_TANG_CA_DEM", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
     
     df = pd.DataFrame(columns=headers)
@@ -4045,7 +4045,7 @@ def tai_sample_nghibukiemxuong():
     time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
     
     response = make_response(output.read())
-    response.headers['Content-Disposition'] = f'attachment; filename=bukiemxuong_{time_stamp}.xlsx'
+    response.headers['Content-Disposition'] = f'attachment; filename=chamcongtay_{time_stamp}.xlsx'
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
 
@@ -4057,8 +4057,8 @@ def normalize_row(row):
         for item in row
     ]
 
-@app.route("/tailen_nghibukiemxuong", methods=["POST"])
-def tailen_nghibukiemxuong():
+@app.route("/tailen_chamcongtay", methods=["POST"])
+def tailen_chamcongtay():
     file = request.files.get("file")
     if file:
         try:
@@ -4081,4 +4081,4 @@ def tailen_nghibukiemxuong():
         except Exception as e:
             print(e)
                 
-    return redirect("/nghibukiemxuong")
+    return redirect("/chamcongtay")
