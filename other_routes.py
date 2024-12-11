@@ -4082,3 +4082,44 @@ def tailen_chamcongtay():
             print(e)
                 
     return redirect("/chamcongtay")
+
+@app.route("/capnhat_dulieu_chamcong", methods=["POST"])
+def capnhat_dulieu_chamcong():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        cursor.execute("Exec Dong_bo_CheckInOut")
+        cursor.commit()
+        conn.close()
+        return redirect("/chamcong_sang_web")
+    except Exception as e:
+        flash(f"Lỗi cập nhật dữ liệu chấm công {e}") 
+        return redirect("/chamcong_sang_web")
+
+@app.route("/them_congnhan_vao_yctd", methods=["POST"])
+def them_congnhan_vao_yctd():
+    try:
+        id = request.form.get("id")
+        id_yctd = request.form.get("id_yctd")
+    
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select Ho_ten,Kenh_tuyen_dung from Dang_ky_thong_tin where ID = '{id}'"
+        print(query)
+        data = cursor.execute(query).fetchone()
+        print(data)
+        query1 = f"select Bo_phan from Yeu_cau_tuyen_dung where ID = '{id_yctd}'"
+        print(query1)
+        phongban = cursor.execute(query1).fetchone()[0]
+        query2 = f"""insert into Yeu_cau_tuyen_dung_chi_tiet (Ho_ten,Kenh_tuyen_dung,Trang_thai,ID_YCTD, Phong_ban)
+                    values (N'{data[0]}',N'{data[1]}',N'Chưa phỏng vấn','{id_yctd}','{phongban}')
+                """
+        print(query2)
+        cursor.execute(query2)
+        cursor.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(f"Lỗi thêm công nhân vào yêu cầu tuyển dụng chi tiết {e}") 
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+

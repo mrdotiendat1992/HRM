@@ -32,7 +32,13 @@
     td {
         color: white;
     }
-
+    .table-responsive {
+        max-height: 400px; /* Đặt chiều cao tối đa */
+        overflow-y: auto; /* Thêm thanh cuộn dọc nếu cần */
+    }
+    #nameInput {
+        margin-right:20px;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -40,10 +46,13 @@
     <div>
         <a class="btn btn-outline-danger" href="/muc2_2">Quay lại</a>
         <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#UVModal">
-            Thêm ứng viên
+            Thêm ứng viên mới
         </button>
         <button type="button" class="btn btn-primary btn-sm" title="Ngân hàng CV" data-toggle="modal" data-target="#CVModal">
-            Ngân hàng CV
+            Ngân hàng nhân viên
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" title="Ngân hàng ứng viên" data-toggle="modal" data-target="#CNModal">
+            Ngân hàng công nhân
         </button>
     </div>
     {% if current_user.phongban == "td" or current_user.phanquyen == "sa" %}
@@ -118,20 +127,24 @@
                             <table class="table table-bordered table-hover table-sm table-striped ">
                                 <thead>
                                     <tr class="bg-primary">
-                                        <th scope="col">STT</th>
-                                        <th scope="col">Họ tên</th>
-                                        <th scope="col">Giới tính</th>
-                                        <th scope="col">Tuổi</th>
-                                        <th scope="col">Kênh tuyển dụng</th>
-                                        <th scope="col">Số năm kinh nghiệm</th>
-                                        <th scope="col">CV</th>
-                                        <th scope="col">Trạng thái</th>
+                                        <th>Thêm</th>
+                                        <th>Họ tên</th>
+                                        <th>Giới tính</th>
+                                        <th>Tuổi</th>
+                                        <th>Kênh tuyển dụng</th>
+                                        <th>Số năm kinh nghiệm</th>
+                                        <th>CV</th>
+                                        <th>Trạng thái</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {% for row in danhsach_ungvien_tiemnang %}
                                     <tr class="bg-info">
-                                        <th scope="row">{{ loop.index }}</th>
+                                        <td>
+                                            <button class="btn btn-danger">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[2] }}</td>
                                         <td>{{ row[3] }}</td>
@@ -147,13 +160,73 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Thêm ứng viên"></input>
-                    </form>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
                 </div>
             </div>
         </div>
     </div>
+    <div class="modal fade" id="CNModal" tabindex="-1" role="dialog" aria-labelledby="CNModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="CNModalLabel">Danh sách ứng viên công nhân</h5>
+
+                    <input type="text" id="nameInput" style="margin-left: 50px;" onkeyup="timkiem_theoten()" placeholder="Tìm kiếm" title="Họ tên">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="table-responsive"> <!-- Thêm lớp này -->
+                                <table class="table table-bordered table-hover table-sm table-striped" id="bang_congnhan">
+                                    <thead>
+                                        <tr class="bg-primary">
+                                            <th>Thêm</th>
+                                            <th>Họ tên</th>
+                                            <th>Số điện thoại</th>
+                                            <th>CCCD</th>
+                                            <th>Kênh tuyển dụng</th>
+                                            <th>Dân tộc</th>
+                                            <th>Trạng thái</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for row in danhsach_congnhan_ungtuyen %}
+                                        <tr class="bg-info">
+                                            <td>
+                                                <form action="/them_congnhan_vao_yctd" method="POST">
+                                                    <input type="hidden" name="id" value={{row[39]}}>
+                                                    <input type="hidden" name="id_yctd" value={{request.args.get('id')}}>
+                                                    <input type="hidden" name="vitri" value={{request.args.get('vitri')}}>
+                                                    <input type="hidden" name="phongban" value={{request.args.get('bophan')}}>
+                                                    <button class="btn btn-danger" type="submit"> 
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+                                                </form>
+                                            </td>
+                                            <td style="width: 100px important;">{{ row[2] }}</td>
+                                            <td>{{ row[3] }}</td>
+                                            <td>{{ row[4] }}</td>
+                                            <td>{{ row[17] }}</td>
+                                            <td>{{ row[5] }}</td>
+                                            <td>{{ row[33] }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     {% endif %}
     <br>
     <h3><b>{{ vitri_tuyendung }}</b></h3>
@@ -621,5 +694,24 @@
         });
 
     })
+
+    function timkiem_theoten() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("nameInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("bang_congnhan");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[1];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
 </script>
 {% endblock content %}

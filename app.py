@@ -1123,20 +1123,23 @@ def layhcname(jobtitle,line):
         print(e)
         return []
 
-def laydanhsachdangkytuyendung(sdt=None, cccd=None, ngaygui=None):
+def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Dang_ky_thong_tin_OK WHERE Nha_may = '{current_user.macongty}'"
         if sdt:
-            query += f"AND Sdt LIKE '{sdt}'"
+            query += f"AND Sdt LIKE '%{sdt}%'"
         if cccd:
-            query += f"AND CCCD LIKE '{cccd}'"
+            query += f"AND CCCD LIKE '%{cccd}%'"
         if ngaygui:
             query += f"AND Ngay_gui_thong_tin =  '{ngaygui}'"
-            
+        if hoten:
+            query += f"AND Ho_ten LIKE N'%{hoten}%'"
+        if vitri:
+            query += f"AND Vi_tri_ung_tuyen LIKE N'%{vitri}%'"  
         query+= " ORDER BY Ngay_gui_thong_tin DESC"
-        
+        print(query)
         rows =  cursor.execute(query).fetchall()
         conn.close()
         result = []
@@ -3987,11 +3990,11 @@ def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         print(f"Loi them dong di lam chu nhat: ({e})")
         return False
     
-def them_thongbao_co_yeucautuyendung(masothe,hoten):
+def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
     
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
-    query = f"insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values ('{current_user.macongty}','{masothe}',N'{hoten}',GETDATE())"
+    query = f"insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values ('{current_user.macongty}','{current_user.masothe}',N'{current_user.hoten}','{current_user.phongban}',N'{vitri}','{soluong}',N'{trongbudget}',GETDATE())"
     try:  
         cursor = cursor.execute(query)
         conn.commit()
@@ -4004,31 +4007,43 @@ def them_yeucau_tuyendung_duoc_pheduyet(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY,Bo_phan,Vi_tri,So_luong,Phan_loai_budget from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        print(data)
         mst = data[0]
         hoten = data[1]
         nhamay = data[2]
+        phongban = data[3]
+        vitri = data[4]
+        soluong = data[5]
+        phanloai_budget = data[6]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
-        query = f"insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
-        
+        print(email)
+        query = f"insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"
+        print(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        return {"ketqua":False, "lido":e, "query":query}
+        return False
     
 def them_yeucau_tuyendung_bi_tuchoi(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY,Bo_phan,Vi_tri,So_luong,Phan_loai_budget from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        print(data)
         mst = data[0]
         hoten = data[1]
         nhamay = data[2]
+        phongban = data[3]
+        vitri = data[4]
+        soluong = data[5]
+        phanloai_budget = data[6]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
-        query = f"insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI values ('{nhamay}','{mst}',N'{hoten}','{email}',GETDATE())"
-        
+        print(email)
+        query = f"insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI values ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"
+        print(query)
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -4859,13 +4874,31 @@ def lay_danhsach_ungvien_tiemnang(vitri):
         cursor = conn.cursor()
         query = f"""select * from Yeu_cau_tuyen_dung_chi_tiet 
         join Yeu_cau_tuyen_dung on Yeu_cau_tuyen_dung.id=Yeu_cau_tuyen_dung_chi_tiet.id_yctd
-        where Yeu_cau_tuyen_dung.Vi_tri = N'{vitri}' and Yeu_cau_tuyen_dung_chi_tiet.Trang_thai != N'Đã nhận việc'"""       
+        where Yeu_cau_tuyen_dung.Vi_tri = N'{vitri}' and Yeu_cau_tuyen_dung_chi_tiet.Trang_thai != N'Đã nhận việc'"""   
+        print(query)    
+        result = cursor.execute(query).fetchall()
+        conn.close()
+        return list(result)
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng ứng viên tiềm năng: {e}")
+        
+def lay_danhsach_congnhan_ungtuyen(vitri_tuyendung):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+                    select * from Dang_ky_thong_tin 
+                    where Vi_tri_ung_tuyen LIKE N'%Công nhân%'
+                    or Vi_tri_ung_tuyen LIKE N'%công nhân%'
+                    order by ID desc
+                """
+        # print(query)
         result = cursor.execute(query).fetchall()
         conn.close()
         return list(result)
     except Exception as e:
         flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng bị từ chối: {e}")
-        return []
+
 
 def lay_phongban_theo_idyctd(id):
     try:
@@ -4885,17 +4918,13 @@ def them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkin
         cursor = conn.cursor()
         linkcv = save_path.replace("\\","/").split("HRM/")[1]
         query = f"""
-            insert into Yeu_cau_tuyen_dung_chi_tiet (ID_YCTD,Phong_ban,Ho_ten,Gioi_tinh,Tuoi,Kinh_nghiem,CV,Kenh_tuyen_dung)
-            values ('{id_yeucautuyendung}','{phongban}',N'{hoten}',N'{gioitinh}','{tuoi}','{namkinhnghiem}',N'{linkcv}',N'{kenhtuyendung}')    
+            insert into Yeu_cau_tuyen_dung_chi_tiet (ID_YCTD,Phong_ban,Ho_ten,Gioi_tinh,Tuoi,Kinh_nghiem,CV,Kenh_tuyen_dung,Trang_thai)
+            values ('{id_yeucautuyendung}','{phongban}',N'{hoten}',N'{gioitinh}','{tuoi}','{namkinhnghiem}',N'{linkcv}',N'{kenhtuyendung}',N'Chưa phỏng vấn')    
             """      
         cursor.execute(query)
         cursor.commit()
         query1 = f"SELECT Phan_loai_vi_tri FROM Yeu_cau_tuyen_dung WHERE ID='{id_yeucautuyendung}'"
         kieulaodong = cursor.execute(query1).fetchone()[0]
-        if kieulaodong == "Công nhân":
-            query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen = So_luong_da_tuyen + 1 where id='{id_yeucautuyendung}'"
-            cursor.execute(query2)
-            cursor.commit()
         conn.close()
         return True
     except Exception as e:
@@ -4915,11 +4944,11 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
                 cur.commit()
         else:
             query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen+1 WHERE ID = {id_yctd}"
-            # print(query2)
+            print(query2)
             cur.execute(query2)
             cur.commit()
         query3 = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
-        # print(query3)
+        print(query3)
         cur.execute(query3)
         cur.commit()
         conn.close()
@@ -4953,3 +4982,16 @@ def xoa_tuyendung_chitiet(id,id_yeucautuyendung):
     except Exception as e:
         flash(f"Lỗi xóa ứng viên tuyển dụng: {e}")
         return False
+
+def lay_thongtin_yeucautuyendung(id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT Vi_tri, Bo_phan FROM Yeu_cau_tuyen_dung WHERE ID='{id}'"
+        print(query)
+        result = cur.execute(query).fetchone()
+        conn.close()
+        return list(result)
+    except Exception as e:
+        flash(f"Lỗi lấy thông tin yeu cau tuyen dung: {e}")
+        return []

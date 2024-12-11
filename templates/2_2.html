@@ -328,6 +328,7 @@
             <thead>
                 <tr class="bg-primary">
                     <th></th>
+                    <th>Trạng thái yêu cầu</th>
                     <th>Bộ phận</th>
                     <th>Vị trí</th>
                     <th>Cấp bậc</th>
@@ -340,7 +341,6 @@
                     <th>JD</th>
                     <th>Thời gian dự kiến</th>
                     <th>Phân loại</th>
-                    <th>Trạng thái yêu cầu</th>
                     <th>Trạng thái thực hiện</th>
                     <th>Ghi chú</th>
                     <th></th>
@@ -359,24 +359,8 @@
                 <tr class="bg-info">
                 {% endif %}
                     <td>
-                        <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}&vitri={{row[2]}}">Chi tiết</a>
+                        <a class="btn btn-primary btn-sm" href="/muc2_2_1?id={{row[0]}}&vitri={{row[2]}}&bophan={{row[1]}}">Chi tiết</a>
                     </td>
-                    <td>{{row[1]}}</td>
-                    <td>{{row[2]}}</td>
-                    <td>{{row[3]}}</td>
-                    <td>{{row[4]}}</td>
-                    <td>{{row[5]}}</td>
-                    <td>{{row[20]}}</td>
-                    <td>{{row[21]}}</td>
-                    <td>{{row[6]}}</td>
-                    <td>{{row[19]}}</td>
-                    <td>
-                        <form action="/download_JD" method="POST">
-                            <input type="hidden" name="filename" value="{{row[7]}}">
-                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
-                        </form>
-                    <td class="ngay">{{row[8]}}</td>
-                    <td>{{row[9]}}</td>
                     {% if row[10] == "Chưa phê duyệt" and ((current_user.phanquyen == "gd" and row["20"]=="Ngoài") or current_user.phanquyen == "sa" or (current_user.masothe == 9514 and row["20"]=="Trong")) %}
                     <td>
                         <div style="display:flex;gap:5px;justify-content: space-around;">
@@ -396,6 +380,22 @@
                     {% else %}
                     <td>{{row[10]}}</td>
                     {% endif %}
+                    <td>{{row[1]}}</td>
+                    <td>{{row[2]}}</td>
+                    <td>{{row[3]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td>{{row[5]}}</td>
+                    <td>{{row[20]}}</td>
+                    <td>{{row[21]}}</td>
+                    <td>{{row[6]}}</td>
+                    <td>{{row[19]}}</td>
+                    <td>
+                        <form action="/download_JD" method="POST">
+                            <input type="hidden" name="filename" value="{{row[7]}}">
+                            <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-download" aria-hidden="true"></i></button>
+                        </form>
+                    <td class="ngay">{{row[8]}}</td>
+                    <td>{{row[9]}}</td>
                     {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa"%}
                         {% if row[10] == "Phê duyệt" %}
                         <td>
