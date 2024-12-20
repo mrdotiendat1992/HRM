@@ -892,7 +892,7 @@ def laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghi
         if chuyen:
             query += f" AND Line = N'{chuyen}'"
         query += " ORDER BY CAST(mst AS INT) ASC"
-        app.logger.info(query)
+        # app.logger.info(query)
         users = cursor.execute(query).fetchall()
         conn.close()
         # Không thiển thị danh sách nếu chưa lọc, tránh tình trạng load quá lâu
@@ -1900,44 +1900,33 @@ def laycahientai(mst):
         print(e)
         return None
 
-def laydanhsachyeucautuyendung(nhamay,phongban,trangthaiyeucau,trangthaithuchien,mst):
+def laydanhsachyeucautuyendung(phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Nha_may = '{nhamay}' "
+        query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Nha_may = '{current_user.macongty}' "
         if phongban:
             query += f" and Bo_phan='{phongban}'"
-        if trangthaiyeucau:
-            if trangthaiyeucau == "Chưa phê duyệt":
-                query += f" and Trang_thai_yeu_cau like N'Chưa%'"
-            elif trangthaiyeucau == "Phê duyệt":
-                query += f" and Trang_thai_yeu_cau like N'Phê%'"
-            else:
-                query += f" and Trang_thai_yeu_cau like N'Từ%'"
-        if trangthaithuchien:
-            query += f" and Trang_thai_thuc_hien=N'{trangthaithuchien}'"
-        if mst:
-            query += f" and MST='{mst}'"
-        print(query)
+        # print(query)
         rows = cursor.execute(query).fetchall()
-        return [x for x in rows]
+        return [list(x) for x in rows]
     except Exception as e:
         print(e)
         return []
     
-def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai, khoangluong,capbac,bacluong,kieulaodong,trongbudget):
+def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
         INSERT INTO HR.dbo.Yeu_cau_tuyen_dung 
-        (Bo_phan,Vi_tri,Grade_code,Bac_luong,Khoang_luong,So_luong,JD,
+        (Bo_phan,Vi_tri,Grade_code,So_luong,JD,
         Thoi_gian_du_kien,Phan_loai,Trang_thai_yeu_cau,
         Trang_thai_thuc_hien,Ghi_chu,MST,HO_TEN,NHA_MAY,
         Ngay_tao_yeu_cau,Phan_loai_vi_tri,Phan_loai_budget, So_luong_da_tuyen)
         VALUES
-        ('{bophan}',N'{vitri}','{capbac}',N'{bacluong}',N'{khoangluong}','{soluong}',N'{mota}',
-        '{thoigiandukien}',N'{phanloai}',N'Chưa phê duyệt',
+        ('{bophan}',N'{vitri}','{capbac}','{soluong}',N'{mota}',
+        '{thoigiandukien}',N'{phanloai}',N'Chưa kiểm tra',
         N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}',
         GETDATE(),N'{kieulaodong}',N'{trongbudget}',0)
         """
@@ -3761,13 +3750,18 @@ def get_thongtin_vitri(vitri):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri}' "
+        query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri.strip()}' "
+        # print(query)
         data = cursor.execute(query).fetchone()
+        # print(data)
         query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}' and Nha_may='{current_user.macongty}'"
+        # print(query1)
         data1 = cursor.execute(query1).fetchall()
+        # print(data1)
         cacbacluong = []
-        for x in data1:
-            cacbacluong.append([x[0],x[1]])
+        if data1:
+            for x in data1:
+                cacbacluong.append([x[0],x[1]])
         return {'Detail_job_title_EN':data[0],'Grade_code':data[1],'Bac_luong': cacbacluong}
     except Exception as e:
         print(f"Loi lay thong tin vi tri: {e}")
@@ -4995,3 +4989,18 @@ def lay_thongtin_yeucautuyendung(id):
     except Exception as e:
         flash(f"Lỗi lấy thông tin yeu cau tuyen dung: {e}")
         return []
+
+def kiemtra_danhsach_thuki():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT COUNT(*) FROM DANH_SACH_THU_KY_BP WHERE MST='{current_user.masothe}' AND NHA_MAY='{current_user.macongty}'"
+        # print(query)
+        result = cur.execute(query).fetchone()[0]
+        conn.close()
+        if result > 0:
+            return True
+        return False
+    except Exception as e:
+        flash(f"Lỗi kiểm tra danh sách thư kí: {e}")
+        return False

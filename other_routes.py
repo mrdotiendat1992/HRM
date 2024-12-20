@@ -2594,9 +2594,7 @@ def lay_thongtin_vitri():
         vitri = request.args.get("vitri")
         return jsonify({"data": get_thongtin_vitri(vitri)})
     except Exception as e:
-        print(e)
-        flash(f"Lấy thông tin vị trí thất bại ({e})!!!")
-        return jsonify({"data": []})
+        return jsonify({"data": [],"error":e})
 
 
 @app.route("/tailenjd", methods=["POST"])
@@ -2604,16 +2602,22 @@ def tailenjd():
     if request.method == "POST":
         try:
             file = request.files.get("file")
+            print(file)
             if file:
-                # print(file)
-                vitri_en = request.form.get("jd_vitrien")
-                # print(vitri_en)
+                vitri_en = request.form.get("jd_vitri_en_chon")
+                print(vitri_en)
+                if not vitri_en:
+                    raise ValueError("Vị trí EN không được để trống.")
+                
+                # Đường dẫn tới file
                 path = os.path.join(FOLDER_JD, f"{vitri_en}.pdf")
-                # print(path)
+                print(path)
+                
+                # Lưu file, ghi đè nếu đã tồn tại
                 file.save(path)
             return redirect("/muc2_2")
         except Exception as e:
-            print(e)
+            print(f"Lỗi: {e}")
             return redirect("/muc2_2")
 
 @app.route("/bangcong_thang_web", methods=["GET","POST"])
@@ -2785,42 +2789,41 @@ def bangcongtrangoai_web():
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_trangoai_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_trangoai_{timestamp}.xlsx"), as_attachment=True)
     
-@app.route("/gd_pheduyet_tuyendung", methods=["POST"])
-@login_required
+@app.route("/gd_pheduyet_yctd", methods=["POST"])
 def gd_pheduyet_tuyendung():
     if request.method == "POST":
         try:
             id = request.form.get("id")
-            mst_tbp = request.form.get("mst_tbp")
-            ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Phê duyệt")
-            if ketqua["ketqua"]:
-                flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
-                if them_yeucau_tuyendung_duoc_pheduyet(id):
-                    flash("Gửi email tuyển dụng được phê duyệt thành công !!!")
-                else:
-                    flash("Gửi email tuyển dụng được phê duyệt thất bại !!!")
-            else:
-                flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_yeu_cau = N'Phê duyệt',
+                        Ngay_phe_duyet =GETDATE()
+                        where ID = '{id}'"""
+            print(query)
+            cursor.execute(query)
+            cursor.commit()
+            conn.close()
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
             return redirect("/muc2_2")
         
-@app.route("/gd_tuchoi_tuyendung", methods=["POST"])
-@login_required
+@app.route("/gd_tuchoi_yctd", methods=["POST"])
 def gd_tuchoi_tuyendung():
     if request.method == "POST":
         try:
             id = request.form.get("id")
-            ketqua = capnhat_trangthai_yeucau_tuyendung(id,"Từ chối")
-            if ketqua["ketqua"]:
-                flash("Cập nhật trạng thái yêu cầu tuyển dụng thành công !!!")
-                if them_yeucau_tuyendung_bi_tuchoi(id):
-                    flash("Gửi email tuyển dụng bị từ chối thành công !!!")
-                else:
-                    flash("Gửi email tuyển dụng bị từ chối thất bại !!!")
-            else:
-                flash(f"Cập nhật trạng thái yêu cầu tuyển dụng thất bại ({ketqua["lido"]})!!!")
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_yeu_cau = N'Từ chối',
+                        Ngay_phe_duyet =GETDATE()
+                        where ID = '{id}'"""
+            print(query)
+            cursor.execute(query)
+            cursor.commit()
+            conn.close()
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
@@ -3884,20 +3887,16 @@ def xoa_uvtd():
 def xoa_tuyendung():
     try:
         id = request.form.get("id")
-        mst= request.form.get("mst")
-        phongban = request.form.get("phongban")
-        trangthaiyeucau= request.form.get("trangthaiyeucau")
-        trangthaithuchien = request.form.get("trangthaithuchien")
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"DELETE Yeu_cau_tuyen_dung WHERE ID = {id}"
         cur.execute(query)
         cur.commit()
         conn.close()
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
     except Exception as e:
         flash(e)
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
 
 @app.route("/mo_yeucautuyendung", methods=["POST"])
 @login_required
@@ -4123,3 +4122,143 @@ def them_congnhan_vao_yctd():
         flash(f"Lỗi thêm công nhân vào yêu cầu tuyển dụng chi tiết {e}") 
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
+@app.route("/chuyen_trang_thai_yctd", methods=["POST"])
+def chuyen_trang_thai_yctd():
+    try:
+        data = request.get_json()
+        id = data['id']
+        trangthaimoi = data['trangthai']
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        if trangthaimoi == "Chưa kiểm tra":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_yeu_cau = N'{trangthaimoi}',
+                        Trang_thai_thuc_hien = N'Chưa tuyển',
+                        Ngay_phe_duyet = NULL
+                        where ID = '{id}'"""
+        elif trangthaimoi == "Chưa phê duyệt":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_yeu_cau = N'{trangthaimoi}',
+                        Trang_thai_thuc_hien = N'Chưa tuyển',
+                        Ngay_phe_duyet = NULL
+                        where ID = '{id}'"""
+        elif trangthaimoi == "Phê duyệt":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_yeu_cau = N'{trangthaimoi}',
+                        Trang_thai_thuc_hien = N'Chưa tuyển',
+                        Ngay_phe_duyet = GETDATE()
+                        where ID = '{id}'"""
+        elif trangthaimoi == "Đã đăng tuyển":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_thuc_hien = N'{trangthaimoi}'
+                        where ID = '{id}'"""
+        elif trangthaimoi == "Đang phỏng vấn":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_thuc_hien = N'{trangthaimoi}'
+                        where ID = '{id}'"""
+        elif trangthaimoi == "Đã tuyển xong":
+            query = f"""update Yeu_cau_tuyen_dung 
+                        set Trang_thai_thuc_hien = N'{trangthaimoi}'
+                        where ID = '{id}'"""
+        else:
+            print(id, trangthaimoi)
+            return jsonify({"result":"OK"})
+        print(query)
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return jsonify({"result":"OK"})
+    except Exception as e:
+        return jsonify({"result":"Fail", "error":str(e)})
+
+@app.route("/tbp_kiemtra_yctd", methods=["POST"])
+def tbp_kiemtra_yctd():
+    try:
+        id = request.form.get("id")
+        capbac = request.form.get("capbac")
+        khoangluongtu = request.form.get("khoangluongtu")
+        # print(khoangluongtu)
+        khoangluongden = request.form.get("khoangluongden")
+        # print(khoangluongden)
+        khoangluongtu_data = khoangluongtu.split(",")
+        khoangluongden_data = khoangluongden.split(",")
+        # print(khoangluongtu_data,khoangluongden_data)
+        bacluong = f"{khoangluongtu_data[0]} => {khoangluongden_data[0]}"
+        khoangluong = f"{khoangluongtu_data[1]} => {khoangluongden_data[1]}"
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"update Yeu_cau_tuyen_dung set Bac_luong = '{bacluong}', Khoang_luong = '{khoangluong}', Grade_code= '{capbac}', Trang_thai_yeu_cau=N'Chưa phê duyệt' where ID = '{id}'" 
+        print(query)
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return redirect("/muc2_2")
+    except Exception as e:
+        flash(f"Lỗi trưởng bộ phận kiểm tra yêu cầu tuyển dụng: {e}")
+        return redirect("/muc2_2")
+
+@app.route("/tbp_tuchoi_yctd", methods=["POST"])
+def tbp_tuchoi_yctd():
+    try:
+        id = request.form.get("id")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"update Yeu_cau_tuyen_dung set Trang_thai_yeu_cau=N'Từ chối' where ID = '{id}'" 
+        print(query)
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return redirect("/muc2_2")
+    except Exception as e:
+        flash(f"Lỗi trưởng bộ phận kiểm tra yêu cầu tuyển dụng: {e}")
+        return redirect("/muc2_2")
+
+@app.route("/thaydoi_thongtin_yctd", methods=["POST"])
+def thaydoi_thongtin_yctd():
+    try:
+        id = request.form.get("id")
+        ngayyeucau = request.form.get("ngayyeucau")
+        ngaydenhan = request.form.get("ngaydenhan")
+        budget = request.form.get("budget")
+        soluong = request.form.get("soluong")
+        lydo = request.form.get("lydo")
+        khoangluongtu = request.form.get("khoangluongtu")
+        khoangluongden = request.form.get("khoangluongden")
+        khoangluongtu_data = khoangluongtu.split(",")
+        khoangluongden_data = khoangluongden.split(",")
+        # print(khoangluongtu_data,khoangluongden_data)
+        bacluong = f"{khoangluongtu_data[0]} => {khoangluongden_data[0]}"
+        khoangluong = f"{khoangluongtu_data[1]} => {khoangluongden_data[1]}"    
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""update Yeu_cau_tuyen_dung 
+                set Trang_thai_yeu_cau=N'Chưa phê duyệt',
+                Trang_thai_thuc_hien=N'Chưa tuyển',
+                Ngay_tao_yeu_cau = '{ngayyeucau}',
+                Thoi_gian_du_kien = '{ngaydenhan}',
+                Phan_loai_budget = '{budget}',
+                So_luong = '{soluong}',
+                Phan_loai = N'{lydo}',
+                Bac_luong = '{bacluong}', 
+                Khoang_luong = '{khoangluong}'
+                where ID = '{id}'""" 
+        print(query)
+        cursor.execute(query)
+        cursor.commit()
+        conn.close()
+        return redirect("/muc2_2")
+    except Exception as e:
+        flash(f"Lỗi thay đổi thông tin yêu cầu tuyển dụng: {e}")
+        return redirect("/muc2_2")
+
+@app.route("/kiemtra_tontai_jd", methods=["POST"])
+def kiemtra_tontai_jd():
+    vitri = request.args.get("vitri")
+    print(vitri)
+    path = os.path.join(FOLDER_JD, f"{vitri}.pdf")
+    print(path)
+    if os.path.exists(path):
+        return jsonify({"data":True})
+    else:
+        return jsonify({"data":False})
+    

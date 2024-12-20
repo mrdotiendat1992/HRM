@@ -451,21 +451,20 @@ def danhsachdangkytuyendung():
 
 @app.route("/muc2_2", methods=["GET","POST"])
 @login_required
-@roles_required('tbp','gd','sa','td')
 def dangkytuyendung():
     if request.method == "GET":
+        lathuki = kiemtra_danhsach_thuki()
+        print(f"Thu ki: {lathuki}")
+        print(current_user.phanquyen not in ['tbp','gd','sa','td'])
+        if (current_user.phanquyen not in ['tbp','gd','sa','td']) and not lathuki:
+            return redirect("/unauthorized")
         phongban = request.args.get("phongban")
-        trangthaiyeucau = request.args.get("trangthaiyeucau")
-        trangthaithuchien = request.args.get("trangthaithuchien")
-        mst = request.args.get("mst")
-        danhsach = laydanhsachyeucautuyendung(current_user.macongty,phongban,trangthaiyeucau,trangthaithuchien,mst)
-        cactrangthaithuchien = ["Chưa tuyển","Đã đăng tuyển","Chờ phỏng vấn","Đã tuyển"]
-        cacvitri = lay_cac_vitri_trong_phong(current_user.phongban)
+        danhsach = laydanhsachyeucautuyendung(phongban)
+        
         return render_template("2_2.html", 
-                               page="2.2 Yêu cầu tuyển dụng",
-                               danhsach=danhsach,
-                               cacvitri = cacvitri,
-                               cactrangthaithuchien=cactrangthaithuchien
+                               page= "2.2 Yêu cầu tuyển dụng",
+                               danhsach = danhsach,
+                               lathuki = lathuki
                                )
     
     elif request.method == "POST":
@@ -478,26 +477,22 @@ def dangkytuyendung():
                 kieulaodong = "Nhân viên"
             vitrien = request.form.get("vitrien")
             capbac = request.form.get("capbac")
-            bacluongtu = request.form.get("bacluongtu")
-            bacluongden = request.form.get("bacluongden")
-            bacluong = f"{bacluongtu.split(",")[0]} => {bacluongden.split(",")[0]}"
             soluong = request.form.get("soluong")
             mota = os.path.join(FOLDER_JD, f"{vitrien}.pdf")
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
-            khoangluong = f"{bacluongtu.split(",")[1]} => {bacluongden.split(",")[1]}"
             budget = request.form.get("trong_budget")
             if budget:
                 trongbudget = "Trong"
             else:
                 trongbudget = "Ngoài"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,
-                                      thoigiandukien,phanloai,khoangluong,capbac,bacluong,kieulaodong,trongbudget):
+                                      thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
-                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
-                else:
-                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thất bại !!!")
+                # if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
+                #     flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
+                # else:
+                #     flash("Thêm thông báo có yêu cầu tuyển dụng mới thất bại !!!")
                 
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
