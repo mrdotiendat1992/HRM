@@ -3903,30 +3903,22 @@ def xoa_tuyendung():
 def mo_yeucautuyendung():
     try:
         id = request.form.get("id")
-        mst= request.form.get("mst")
-        phongban = request.form.get("phongban")
-        trangthaiyeucau= request.form.get("trangthaiyeucau")
-        trangthaithuchien = request.form.get("trangthaithuchien")
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung SET Ngay_dong_yeu_cau = NULL WHERE ID = {id}"
         cur.execute(query)
         cur.commit()
         conn.close()
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
     except Exception as e:
         flash(e)
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
 
 @app.route("/dong_yeucautuyendung", methods=["POST"])
 @login_required
 def dong_yeucautuyendung():
     try:
         id = request.form.get("id")
-        mst= request.form.get("mst")
-        phongban = request.form.get("phongban")
-        trangthaiyeucau= request.form.get("trangthaiyeucau")
-        trangthaithuchien = request.form.get("trangthaithuchien")
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"UPDATE Yeu_cau_tuyen_dung SET Ngay_dong_yeu_cau = GETDATE() WHERE ID = {id}"
@@ -3934,10 +3926,10 @@ def dong_yeucautuyendung():
         cur.execute(query)
         cur.commit()
         conn.close()
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
     except Exception as e:
         flash(e)
-        return redirect(f"/muc2_2?phongban={phongban}&trangthaiyeucau={trangthaiyeucau}&trangthaithuchien={trangthaithuchien}&mst={mst}")
+        return redirect(f"/muc2_2")
 
 @app.route("/chamcongtay", methods=["GET"])
 @login_required

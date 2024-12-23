@@ -112,26 +112,28 @@ def run_before_every_request():
                                 }
 
             if current_user.phanquyen=='gd':
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
+                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty, None)
                 if soluong_yeucautuyendung_chopheduyet > 0:
                     g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
                     g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
                 else:
                     g.notice["Tuyển dụng chờ phê duyệt"] = 0
 
-            if current_user.phanquyen=='tbp':
-                soluong_yeucautuyendung_chopheduyet_tbp = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_chopheduyet_tbp > 0:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet_tbp
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet_tbp
+            elif current_user.phanquyen=='tbp':
+                soluong_yeucautuyendung_chokiemtra_tbp = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_chokiemtra_tbp > 0:
+                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra_tbp
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra_tbp
                 else:
                     g.notice["Tuyển dụng chờ phê duyệt"] = 0
+
                 soluong_yeucautuyendung_dapheduyet_tbp = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.phongban)
                 if soluong_yeucautuyendung_dapheduyet_tbp > 0:
                     g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet_tbp
                     g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet_tbp
                 else:
                     g.notice["Tuyển dụng được duyệt"] = 0
+
                 soluong_yeucautuyendung_bituchoi_tbp = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.phongban)
                 if soluong_yeucautuyendung_bituchoi_tbp > 0:
                     g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi_tbp   
@@ -139,28 +141,66 @@ def run_before_every_request():
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
             
-            if current_user.phanquyen=='td' or current_user.phanquyen=='sa':
-                soluong_yeucautuyendung_chopheduyet_td = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
-                if soluong_yeucautuyendung_chopheduyet_td > 0:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet_td
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet_td
+            elif current_user.phanquyen=='td' or current_user.phanquyen=='sa':
+                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_chokiemtra > 0:
+                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra
                 else:
                     g.notice["Tuyển dụng chờ phê duyệt"] = 0
-                soluong_yeucautuyendung_dapheduyet_td = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,None)
-                if soluong_yeucautuyendung_dapheduyet_td > 0:
-                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet_td
-                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet_td
+
+                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,None)
+                if soluong_yeucautuyendung_chopheduyet > 0:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
+                else:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
+
+                soluong_yeucautuyendung_dapheduyet = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,None)
+                if soluong_yeucautuyendung_dapheduyet > 0:
+                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet
+                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet
                 else:
                     g.notice["Tuyển dụng được duyệt"] = 0
-                soluong_yeucautuyendung_bituchoi_td = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,None)
-                if soluong_yeucautuyendung_bituchoi_td > 0:
-                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi_td   
-                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi_td
+
+                soluong_yeucautuyendung_bituchoi = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,None)
+                if soluong_yeucautuyendung_bituchoi > 0:
+                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi  
+                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
+                else:
+                    g.notice["Tuyển dụng bị từ chối"] = 0
+
+            elif la_thuky(current_user.macongty,current_user.masothe) == True:
+                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_chokiemtra > 0:
+                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra
+                else:
+                    g.notice["Tuyển dụng chờ kiểm tra"] = 0
+
+                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_chopheduyet > 0:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
+                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
+                else:
+                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
+
+                soluong_yeucautuyendung_dapheduyet = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_dapheduyet > 0:
+                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet
+                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet
+                else:
+                    g.notice["Tuyển dụng được duyệt"] = 0
+
+                soluong_yeucautuyendung_bituchoi = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.phongban)
+                if soluong_yeucautuyendung_bituchoi > 0:
+                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi   
+                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
         # print(g.notice)
     except Exception as e:  
-        flash(f"Lỗi cập nhật thông tin lỗi chấm công: {e}")
+        flash(f"Lỗi cập nhật thông tin chuông: {e}")
         f12 = trang_thai_function_12()    
         g.notice={"f12":f12,"db":url_database_pyodbc }
     
@@ -175,7 +215,7 @@ def unauthorized():
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('blank.html'), 404
- 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -454,8 +494,8 @@ def danhsachdangkytuyendung():
 def dangkytuyendung():
     if request.method == "GET":
         lathuki = kiemtra_danhsach_thuki()
-        print(f"Thu ki: {lathuki}")
-        print(current_user.phanquyen not in ['tbp','gd','sa','td'])
+        # print(f"Thu ki: {lathuki}")
+        # print(current_user.phanquyen not in ['tbp','gd','sa','td'])
         if (current_user.phanquyen not in ['tbp','gd','sa','td']) and not lathuki:
             return redirect("/unauthorized")
         phongban = request.args.get("phongban")
@@ -507,7 +547,6 @@ def tuyendungchitiet():
     if request.method == "GET":
         id_yeucautuyendung = request.args.get("id")
         thongtin_tuyendung = lay_thongtin_yeucautuyendung(id_yeucautuyendung)
-        print(thongtin_tuyendung)
         vitri_tuyendung = thongtin_tuyendung[0]
         phongban = thongtin_tuyendung[1]
         danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
@@ -674,7 +713,7 @@ def nhapthongtinlaodongmoi():
             else:
                 flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
-            print(f"Them lao dong moi that bai: {e} !!!")
+            flash(f"Them lao dong moi that bai: {e} !!!")
         finally:
             return redirect("/muc3_1")
         
@@ -1086,10 +1125,10 @@ def inhopdonglaodong():
             sectioncode = request.form.get("sectioncode")
             sectiondescription = request.form.get("sectiondescription")
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
-                print("Thêm hợp đồng thành công !!!")
+                flash("Thêm hợp đồng thành công !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:
-                print("Thêm hợp đồng thất bại")
+                flash("Thêm hợp đồng thất bại")
             return redirect("/muc3_3")
     except:
         return redirect("/muc3_3")
@@ -1191,7 +1230,7 @@ def danhsachsaphethanhopdong():
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
@@ -1215,15 +1254,14 @@ def nhapkpi():
                     for x in row.items():
                         values.append(str(x[1]).replace("'","") if x[1] else "")
                     if not insert_kpidata(current_user.masothe,current_user.macongty,values):
-                        print("Upload new KPI failed: Cannot insert data !!!")
+                        flash("Upload new KPI failed: Cannot insert data !!!")
                         return redirect("/muc5_1_1")
                 guimailthongbaodaguikpi(current_user.macongty,current_user.masothe,current_user.hoten)
-                print("Upload new KPI successfully !!!")
+                flash("Upload new KPI successfully !!!")
             else:
-                print("Upload new KPI failed: Cannot found data !!!")
+                flash("Upload new KPI failed: Cannot found data !!!")
         except Exception as e:
-            print(f"Upload new KPI failed {e} !!!")
-            print("Upload new KPI failed !!!")
+            flash(f"Upload new KPI failed {e} !!!")
         return redirect("/muc5_1_1")
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
@@ -1641,7 +1679,7 @@ def khaibaochamcong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), as_attachment=True)
             
 @app.route("/muc7_1_2", methods=["GET","POST"]) # Danh sách lỗi chấm công
@@ -1785,7 +1823,7 @@ def xinnghikhongluong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sách xin nghỉ khác
@@ -2608,7 +2646,7 @@ def muc7_1_17():
                                     pagination=pagination,
                                     count=total)
         except Exception as e:
-            print(e)
+            flash(f"Lỗi tải trang: {e}")
             return render_template("7_1_17.html",
                                     danhsach=[])
     else:
@@ -2792,7 +2830,7 @@ def xulykiluat():
             else:
                 flash("Thêm biên bản kỷ luật thất bại !!!")
         except Exception as e:
-            print(f"Thêm biên bản kỷ luật thất bại {e}!!!")
+            flash(f"Thêm biên bản kỷ luật thất bại {e}!!!")
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -2837,9 +2875,9 @@ def nhandonnghiviec():
         ngaynghi = request.form.get("form_ngaydukiennghi")
         ghichu = request.form.get("form_ghichu")
         if themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
-            print("Thêm đơn xin nghỉ thành công !!!")
+            flash("Thêm đơn xin nghỉ thành công !!!")
         else:
-            print("Thêm đơn xin nghỉ thất bại !!!")
+            flash("Thêm đơn xin nghỉ thất bại !!!")
         return redirect(f"/muc10_2?mst={mst}")
     
 @app.route("/muc10_3", methods=["GET","POST"])
@@ -2879,7 +2917,7 @@ def inchamduthopdong():
 
                 return redirect("/muc10_3")
         except Exception as e:
-            print(e)
+            flash(f"Lỗi tải trang: {e}")
             return redirect("/muc10_3") 
         
 @app.route("/muc12", methods=["GET","POST"])
@@ -2891,7 +2929,7 @@ def khong_kiem_xuong():
         else:
             return "OK"
     except Exception as e:
-        print(e)
+        flash(f"Lỗi tải trang: {e}")
         return "NOT OK"
 
 @app.route("/admin", methods=["GET"])

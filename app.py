@@ -4803,12 +4803,31 @@ def lay_soluong_yeucautuyendung_chopheduyet(nhamay, phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG 
+        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG
                 where Nha_may= '{nhamay}' 
                 and Trang_thai_yeu_cau=N'Chưa phê duyệt'
-                and Ngay_dong_yeu_cau is NULL"""     
+                and Ngay_dong_yeu_cau is NULL """   
         if phongban:
             query += f" and Bo_phan='{phongban}'" 
+        print(query) 
+        result = cursor.execute(query).fetchone()[0]
+        conn.close()
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng chờ phê duyệt: {e}")
+        return 0
+    
+def lay_soluong_yeucautuyendung_chokiemtra(nhamay, phongban):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""select count(*) from YEU_CAU_TUYEN_DUNG
+                where Nha_may= '{nhamay}' 
+                and Trang_thai_yeu_cau=N'Chưa kiểm tra'
+                and Ngay_dong_yeu_cau is NULL """     
+        if phongban:
+            query += f" and Bo_phan='{phongban}'" 
+        # print(query)
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
@@ -4833,14 +4852,14 @@ def lay_soluong_yeucautuyendung_dapheduyet(nhamay,phongban):
         flash(f"Lỗi lấy số lượng yêu cầu tuyển dụng đã phê duyệt: {e}")
         return 0
 
-def lay_soluong_yeucautuyendung_bituchoi(nhamay,phongban):
+def lay_soluong_yeucautuyendung_bituchoi(nhamay, phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""select count(*) from YEU_CAU_TUYEN_DUNG 
             where Nha_may= '{nhamay}'
-            and Trang_thai_yeu_cau=N'Từ chối'
-            and Ngay_dong_yeu_cau is NULL"""  
+            and Trang_thai_yeu_cau = N'Từ chối'
+            and Ngay_dong_yeu_cau is NULL """  
         if phongban:
             query += f" and Bo_phan='{phongban}'"     
         result = cursor.execute(query).fetchone()[0]

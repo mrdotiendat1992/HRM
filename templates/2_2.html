@@ -167,7 +167,7 @@
                                                     <label for="thoigiandukien">Thời gian dự kiến</label>
                                                     <input type="date" id="thoigiandukien" name="thoigiandukien" class="form-control" required>
                                                     <label for="phanloai">Phân loại</label>
-                                                    <select id="phanloai" name="phanloai" class="form-control" required>   
+                                                    <select  name="phanloai" class="form-control" required>   
                                                         <option value="Tuyển mới">Tuyển mới</option>
                                                         <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
                                                         <option value="Thay thế thai sản">Thay thế thai sản</option>
@@ -237,7 +237,7 @@
                                     <li class="list-group-item" data-id="{{ item[0] }}">
                                         <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" 
                                             aria-expanded="false" aria-controls="collapse{{ item[0]}}" onclick="timbacluong('{{item[2]}}',{{item[0]}})">
-                                            <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                            <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                         </button>
                                         <div class="collapse" id="collapse{{ item[0]}}">
                                             <div class="card card-body ">
@@ -266,11 +266,13 @@
                                                     </div>
                                                 </div>
                                                 <br>
+                                                {% if not lathuki %}
                                                 <div class="row">
                                                     <div class="col">
                                                         <strong>Khoảng lương:</strong>
                                                     </div>
                                                 </div>
+                                                
                                                 <form action="/tbp_kiemtra_yctd" method="POST"> 
                                                 <div class="row">
                                                     {% if (current_user.phongban==item[1] and current_user.phanquyen=="tbp") or (current_user.phanquyen=="sa") %}
@@ -292,6 +294,7 @@
                                                         <select name="khoangluongden"id="khoangluongden{{item[0]}}" disabled></select>
                                                     </div>
                                                     {% endif %}
+                                                    {% endif %}
                                                 </div>
 
                                                 <div class="card-footer" style="display: flex; justify-content: space-between;">
@@ -311,7 +314,7 @@
                                                         {% if (current_user.phongban==item[1] and current_user.phanquyen=="tbp") or (current_user.phanquyen=="sa") %}
                                                         <input type="hidden" name="id" value="{{item[0]}}">
                                                         <button class="btn btn-outline-danger float-right">
-                                                            <i class="fa fa-times" aria-hidden="true" title="Từ chối yêu cầu"></i>
+                                                            <i class="fa fa-times" aria-hidden="true" title="Đã kiểm tra yêu cầu"></i>
                                                         </button>
                                                         {% else %}
                                                         <button class="btn btn-outline-danger float-right" disabled>
@@ -321,7 +324,11 @@
                                                     </form>
                                                     <form action="/xoa_tuyendung" method="POST">
                                                         <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                        {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                         <button class="btn btn-outline-secondary float-left">
+                                                        {% else %}
+                                                        <button class="btn btn-outline-secondary float-left" disabled>    
+                                                        {% endif %}
                                                             <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                         </button>
                                                     </form>                                                    
@@ -341,13 +348,21 @@
                                             <h3 class="card-title">Chờ phê duyệt</h3>
                                         </div>
                                         <div class="card card-body">
+                                            {% if not lathuki %}
                                             <ul class="list-group draggable" id="Chưa phê duyệt">
+                                            {% else %}
+                                            <ul class="list-group" id="Chưa phê duyệt">
+                                            {% endif %}
                                                 {% for item in danhsach %}
                                                 {% if item[10] == "Chưa phê duyệt" %}
+                                                {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" %}
+                                                <li class="list-group-item draggable" data-id="{{ item[0] }}">
+                                                {% else %}
                                                 <li class="list-group-item" data-id="{{ item[0] }}">
+                                                {% endif %}
                                                     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" 
                                                         aria-expanded="false" aria-controls="collapse{{ item[0]}}" onclick="timbacluong('{{item[2]}}',{{item[0]}})">
-                                                        <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                     </button>
                                                     <div class="collapse" id="collapse{{ item[0]}}">
                                                         <div class="card card-body ">
@@ -374,12 +389,14 @@
                                                             <div>
                                                                 <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[9]}}" disabled></div>
                                                             </div>
+                                                            {% if not lathuki %}
                                                             <div>
                                                                 <div><strong>Bậc lương: </strong></div>
                                                                 <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
                                                                 <div><strong>Khoảng lương: </strong></div>
                                                                 <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
                                                             </div>
+                                                            {% endif %}
                                                             <br>
                                                             <div class="card-footer" style="display: flex; justify-content: space-between;">
                                                                 <form action="/gd_pheduyet_yctd" method="POST">
@@ -405,7 +422,11 @@
                                                                 </form>
                                                                 <form action="/xoa_tuyendung" method="POST">
                                                                     <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                    {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                                     <button class="btn btn-outline-secondary float-left">
+                                                                    {% else %}
+                                                                    <button class="btn btn-outline-secondary float-left" disabled>  
+                                                                    {% endif %}
                                                                         <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                     </button>
                                                                 </form>
@@ -424,12 +445,20 @@
                                                     <h3 class="card-title">Đã phê duyệt</h3>
                                                 </div>
                                                 <div class="card card-body">
+                                                    {% if not lathuki %}
                                                     <ul class="list-group draggable" id="Phê duyệt">
+                                                    {% else %}
+                                                    <ul class="list-group" id="Phê duyệt">
+                                                    {% endif %}
                                                         {% for item in danhsach %}
                                                         {% if item[10] == "Phê duyệt" and item[11] == "Chưa tuyển" %}
+                                                        {% if current_user.phanquyen == "sa" or current_user.phanquyen == "td" or current_user.phanquyen == "gd" %}
+                                                        <li class="list-group-item draggable" data-id="{{ item[0] }}">
+                                                        {% else %}
                                                         <li class="list-group-item" data-id="{{ item[0] }}">
+                                                        {% endif %}
                                                             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                                <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                             </button>
                                                             <div class="collapse" id="collapse{{ item[0]}}">
                                                                 <div class="card card-body">
@@ -463,7 +492,7 @@
                                                                         <strong>Lý do: </strong>
                                                                     </div>
                                                                     <div>
-                                                                        <select id="phanloai" name="lydo" class="form-control sua_yctd_{{item[0]}}"  disabled>   
+                                                                        <select  name="lydo" class="form-control sua_yctd_{{item[0]}}"  disabled>   
                                                                             {% if item[9]== "Tuyển mới"%}
                                                                             <option value="Tuyển mới" selected>Tuyển mới</option>
                                                                             {% else %}
@@ -486,6 +515,7 @@
                                                                             {% endif %}
                                                                         </select>
                                                                     </div>
+                                                                    {% if not lathuki %}
                                                                     <div class="sua_yctd_{{item[0]}}_on_off" hidden>
                                                                         <div hidden>
                                                                             <input class="form-control" id="capbac{{item[0]}}">
@@ -508,6 +538,7 @@
                                                                         <div><strong>Khoảng lương: </strong></div>
                                                                         <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
                                                                     </div>
+                                                                    {% endif %}
                                                                 </div>
                                                                 <div class="card-footer" style="display: flex; justify-content: space-between;">
                                                                     <button type="submit" hidden class="btn btn-outline-danger float-right sua_yctd_{{item[0]}}_on_off">
@@ -517,12 +548,20 @@
                                                                     <button hidden class="btn btn-outline-success float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
                                                                         <i class="fa fa-lg fa-times" aria-hidden="true"></i>
                                                                     </button>
+                                                                    {% if not item[18] and ((current_user.phanquyen=="sa") or (current_user.phongban==item[1])) %}
                                                                     <button class="btn btn-outline-primary float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                    {% else %}
+                                                                    <button class="btn btn-outline-primary float-right" disabled>
+                                                                    {% endif %}
                                                                         <i class="fa fa-lg fa-paint-brush" aria-hidden="true"></i>
                                                                     </button>
                                                                     <form action="/xoa_tuyendung" method="POST">
                                                                         <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                        {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                                         <button class="btn btn-outline-secondary float-left">
+                                                                        {% else %}
+                                                                        <button class="btn btn-outline-secondary float-left" disabled>  
+                                                                        {% endif %}
                                                                             <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                         </button>
                                                                     </form>
@@ -541,55 +580,122 @@
                                                             <h3 class="card-title">Đã đăng tuyển</h3>
                                                         </div>
                                                         <div class="card card-body">
+                                                            {% if not lathuki %}
                                                             <ul class="list-group draggable" id="Đã đăng tuyển">
+                                                            {% else %}
+                                                            <ul class="list-group" id="Đã đăng tuyển">   
+                                                            {% endif %}
                                                                 {% for item in danhsach %}
                                                                 {% if item[11] == "Đã đăng tuyển" %}
+                                                                {% if current_user.phanquyen == "sa" or current_user.phanquyen == "td" %}
+                                                                <li class="list-group-item draggable" data-id="{{ item[0] }}">
+                                                                {% else %}
                                                                 <li class="list-group-item" data-id="{{ item[0] }}">
+                                                                {% endif %}
                                                                     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                        <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                                     </button>
                                                                     <div class="collapse" id="collapse{{ item[0]}}">
-                                                                        <div class="card card-body">  
+                                                                        <div class="card card-body">
+                                                                            <form action="/thaydoi_thongtin_yctd" method="POST">
                                                                             <div><strong>Ngày yêu cầu: </strong></div>
-                                                                        <div><input class="form-control" type="date" value={{item[16]}} disabled></div>
-                                                                        <div><strong>Ngày đến hạn: </strong></div>
-                                                                        <div><input class="form-control" type="date" value={{item[8]}} disabled></div>
-                                                                        <div><strong>Budget: </strong></div>
-                                                                        <div>
-                                                                            <input name="budget" class="form-control" value={{item[20]}} disabled>
+                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="ngayyeucau" type="date" value={{item[16]}} disabled></div>
+                                                                            <div><strong>Ngày đến hạn: </strong></div>
+                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="ngaydenhan" type="date" value={{item[8]}} disabled></div>
+                                                                            <div><strong>Budget: </strong></div>
+                                                                            <div>
+                                                                                <select name="budget" class="form-control sua_yctd_{{item[0]}}" disabled>
+                                                                                    {% if item[20]=="Trong" %}
+                                                                                    <option value="Trong" selected>Trong</option>
+                                                                                    <option value="Ngoài">Ngoài</option>
+                                                                                    {% else %}
+                                                                                    <option value="Trong">Trong</option>
+                                                                                    <option value="Ngoài" selected>Ngoài</option>
+                                                                                    {% endif %}
+                                                                                </select>
+                                                                                </div>
+                                                                            <div><strong>Số lượng cần: </strong></div>
+                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="soluong" type="number"  value={{item[6]}} disabled></div>
+                                                                            <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
+                                                                            <div>
+                                                                                <strong>JD: </strong>
+                                                                                <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
+                                                                                    Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
+                                                                                </a>
+                                                                            </div>
+                                                                            <div>
+                                                                                <strong>Lý do: </strong>
+                                                                            </div>
+                                                                            <div>
+                                                                                <select  name="lydo" class="form-control sua_yctd_{{item[0]}}"  disabled>   
+                                                                                    {% if item[9]== "Tuyển mới"%}
+                                                                                    <option value="Tuyển mới" selected>Tuyển mới</option>
+                                                                                    {% else %}
+                                                                                    <option value="Tuyển mới">Tuyển mới</option>
+                                                                                    {% endif %}
+                                                                                    {% if item[9]== "Thay thế nghỉ việc"%}
+                                                                                    <option value="Thay thế nghỉ việc" selected>Thay thế nghỉ việc</option>
+                                                                                    {% else %}
+                                                                                    <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
+                                                                                    {% endif %}
+                                                                                    {% if item[9]== "Thay thế thai sản"%}
+                                                                                    <option value="Thay thế thai sản" selected>Thay thế thai sản</option>
+                                                                                    {% else %}
+                                                                                    <option value="Thay thế thai sản">Thay thế thai sản</option>
+                                                                                    {% endif %}
+                                                                                    {% if item[9]== "Ngắn hạn"%}
+                                                                                    <option value="Ngắn hạn" selected>Ngắn hạn</option>
+                                                                                    {% else %}
+                                                                                    <option value="Ngắn hạn">Ngắn hạn</option>
+                                                                                    {% endif %}
+                                                                                </select>
+                                                                            </div>
+                                                                            {% if not lathuki %}
+                                                                            <div class="sua_yctd_{{item[0]}}_on_off" hidden>
+                                                                                <div hidden>
+                                                                                    <input class="form-control" id="capbac{{item[0]}}">
+                                                                                    <input class="form-control" name="id" value="{{item[0]}}">
+                                                                                </div>
+                                                                                <div><strong>Khoảng lương</strong></div>
+                                                                                <div>
+                                                                                    <label for="khoangluongtu"><strong>Từ</strong></label>
+                                                                                    <select name="khoangluongtu" id="khoangluongtu{{item[0]}}"></select>
+                                                                                </div>
+                                                                                <div>
+                                                                                    <label for="khoangluongden"><strong>Đến</strong></label>
+                                                                                    <select name="khoangluongden"id="khoangluongden{{item[0]}}"></select>
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="sua_yctd_{{item[0]}}_on_off">
+                                                                                
+                                                                                <div><strong>Bậc lương: </strong></div>
+                                                                                <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
+                                                                                <div><strong>Khoảng lương: </strong></div>
+                                                                                <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
+                                                                            </div>
+                                                                            {% endif %}
                                                                         </div>
-                                                                        <div><strong>Số lượng cần: </strong></div>
-                                                                        <div><input class="form-control sua_yctd_{{item[0]}}" type="number"  value={{item[6]}} disabled></div>
-                                                                        <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
-                                                                        <div>
-                                                                            <strong>JD: </strong>
-                                                                            <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
-                                                                                Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
-                                                                            </a>
-                                                                        </div>
-                                                                        <div>
-                                                                            <strong>Lý do: </strong>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[9]}}" disabled></div>
-                                                                        </div>
-                                                                        <div>
-                                                                            <div><strong>Bậc lương: </strong></div>
-                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
-                                                                            <div><strong>Khoảng lương: </strong></div>
-                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
-                                                                        </div>
-                                                                        <br>
                                                                         <div class="card-footer" style="display: flex; justify-content: space-between;">
+                                                                            <button type="submit" hidden class="btn btn-outline-danger float-right sua_yctd_{{item[0]}}_on_off">
+                                                                                <i class="fa fa-lg fa-check" aria-hidden="true"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                            <button hidden class="btn btn-outline-success float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                                <i class="fa fa-lg fa-times" aria-hidden="true"></i>
+                                                                            </button>
+                                                                            {% if not item[18] and ((current_user.phanquyen=="sa") or (current_user.phongban==item[1])) %}
+                                                                            <button class="btn btn-outline-primary float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                            {% else %}
+                                                                            <button class="btn btn-outline-primary float-right" disabled>
+                                                                            {% endif %}
+                                                                                <i class="fa fa-lg fa-paint-brush" aria-hidden="true"></i>
+                                                                            </button>
                                                                             <form action="/xoa_tuyendung" method="POST">
                                                                                 <input type="hidden" name="id" value="{{item[0]}}"> 
                                                                                 <button class="btn btn-outline-secondary float-left">
                                                                                     <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                                 </button>
                                                                             </form>
-                                                                            <a class="btn btn-outline-primary float-right" href="/muc2_2_1?id={{item[0]}}" target="_blank">
-                                                                                <i class="fa fa-lg fa-info-circle" aria-hidden="true" title="Chi tiết yêu cầu" data-id="{{ item[0]}}"></i>
-                                                                            </a>
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -605,55 +711,126 @@
                                                                     <h3 class="card-title">Đang phỏng vấn</h3>
                                                                 </div>
                                                                 <div class="card card-body">
+                                                                    {% if not lathuki %}
                                                                     <ul class="list-group draggable" id="Đang phỏng vấn">
+                                                                    {% else %}
+                                                                    <ul class="list-group" id="Đang phỏng vấn">
+                                                                    {% endif %}
                                                                         {% for item in danhsach %}
                                                                         {% if item[11] == "Đang phỏng vấn" %}
+                                                                        {% if current_user.phanquyen == "sa" or current_user.phanquyen == "td" %}
+                                                                        <li class="list-group-item draggable" data-id="{{ item[0] }}">
+                                                                        {% else %}
                                                                         <li class="list-group-item" data-id="{{ item[0] }}">
+                                                                        {% endif %}
                                                                             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                                <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                                                <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                                             </button>
                                                                             <div class="collapse" id="collapse{{ item[0]}}">
-                                                                                <div class="card card-body">  
+                                                                                <div class="card card-body">
+                                                                                    <form action="/thaydoi_thongtin_yctd" method="POST">
                                                                                     <div><strong>Ngày yêu cầu: </strong></div>
-                                                                                <div><input class="form-control" type="date" value={{item[16]}} disabled></div>
-                                                                                <div><strong>Ngày đến hạn: </strong></div>
-                                                                                <div><input class="form-control" type="date" value={{item[8]}} disabled></div>
-                                                                                <div><strong>Budget: </strong></div>
-                                                                                <div>
-                                                                                    <input name="budget" class="form-control" value={{item[20]}} disabled>
+                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}" name="ngayyeucau" type="date" value={{item[16]}} disabled></div>
+                                                                                    <div><strong>Ngày đến hạn: </strong></div>
+                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}" name="ngaydenhan" type="date" value={{item[8]}} disabled></div>
+                                                                                    <div><strong>Budget: </strong></div>
+                                                                                    <div>
+                                                                                        <select name="budget" class="form-control sua_yctd_{{item[0]}}" disabled>
+                                                                                            {% if item[20]=="Trong" %}
+                                                                                            <option value="Trong" selected>Trong</option>
+                                                                                            <option value="Ngoài">Ngoài</option>
+                                                                                            {% else %}
+                                                                                            <option value="Trong">Trong</option>
+                                                                                            <option value="Ngoài" selected>Ngoài</option>
+                                                                                            {% endif %}
+                                                                                        </select>
+                                                                                        </div>
+                                                                                    <div><strong>Số lượng cần: </strong></div>
+                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}" name="soluong" type="number"  value={{item[6]}} disabled></div>
+                                                                                    <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
+                                                                                    <div>
+                                                                                        <strong>JD: </strong>
+                                                                                        <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
+                                                                                            Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
+                                                                                        </a>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <strong>Lý do: </strong>
+                                                                                    </div>
+                                                                                    <div>
+                                                                                        <select  name="lydo" class="form-control sua_yctd_{{item[0]}}"  disabled>   
+                                                                                            {% if item[9]== "Tuyển mới"%}
+                                                                                            <option value="Tuyển mới" selected>Tuyển mới</option>
+                                                                                            {% else %}
+                                                                                            <option value="Tuyển mới">Tuyển mới</option>
+                                                                                            {% endif %}
+                                                                                            {% if item[9]== "Thay thế nghỉ việc"%}
+                                                                                            <option value="Thay thế nghỉ việc" selected>Thay thế nghỉ việc</option>
+                                                                                            {% else %}
+                                                                                            <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
+                                                                                            {% endif %}
+                                                                                            {% if item[9]== "Thay thế thai sản"%}
+                                                                                            <option value="Thay thế thai sản" selected>Thay thế thai sản</option>
+                                                                                            {% else %}
+                                                                                            <option value="Thay thế thai sản">Thay thế thai sản</option>
+                                                                                            {% endif %}
+                                                                                            {% if item[9]== "Ngắn hạn"%}
+                                                                                            <option value="Ngắn hạn" selected>Ngắn hạn</option>
+                                                                                            {% else %}
+                                                                                            <option value="Ngắn hạn">Ngắn hạn</option>
+                                                                                            {% endif %}
+                                                                                        </select>
+                                                                                    </div>
+                                                                                    {% if not lathuki %}
+                                                                                    <div class="sua_yctd_{{item[0]}}_on_off" hidden>
+                                                                                        <div hidden>
+                                                                                            <input class="form-control" id="capbac{{item[0]}}">
+                                                                                            <input class="form-control" name="id" value="{{item[0]}}">
+                                                                                        </div>
+                                                                                        <div><strong>Khoảng lương</strong></div>
+                                                                                        <div>
+                                                                                            <label for="khoangluongtu"><strong>Từ</strong></label>
+                                                                                            <select name="khoangluongtu" id="khoangluongtu{{item[0]}}"></select>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            <label for="khoangluongden"><strong>Đến</strong></label>
+                                                                                            <select name="khoangluongden"id="khoangluongden{{item[0]}}"></select>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="sua_yctd_{{item[0]}}_on_off">
+                                                                                        
+                                                                                        <div><strong>Bậc lương: </strong></div>
+                                                                                        <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
+                                                                                        <div><strong>Khoảng lương: </strong></div>
+                                                                                        <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
+                                                                                    </div>
+                                                                                    {% endif %}
                                                                                 </div>
-                                                                                <div><strong>Số lượng cần: </strong></div>
-                                                                                <div><input class="form-control sua_yctd_{{item[0]}}" type="number"  value={{item[6]}} disabled></div>
-                                                                                <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
-                                                                                <div>
-                                                                                    <strong>JD: </strong>
-                                                                                    <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
-                                                                                        Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
-                                                                                    </a>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <strong>Lý do: </strong>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[9]}}" disabled></div>
-                                                                                </div>
-                                                                                <div>
-                                                                                    <div><strong>Bậc lương: </strong></div>
-                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
-                                                                                    <div><strong>Khoảng lương: </strong></div>
-                                                                                    <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
-                                                                                </div>
-                                                                                <br>
                                                                                 <div class="card-footer" style="display: flex; justify-content: space-between;">
+                                                                                    <button type="submit" hidden class="btn btn-outline-danger float-right sua_yctd_{{item[0]}}_on_off">
+                                                                                        <i class="fa fa-lg fa-check" aria-hidden="true"></i>
+                                                                                    </button>
+                                                                                </form>
+                                                                                    <button hidden class="btn btn-outline-success float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                                        <i class="fa fa-lg fa-times" aria-hidden="true"></i>
+                                                                                    </button>
+                                                                                    {% if not item[18] and ((current_user.phanquyen=="sa") or (current_user.phongban==item[1])) %}
+                                                                                    <button class="btn btn-outline-primary float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                                    {% else %}
+                                                                                    <button class="btn btn-outline-primary float-right" disabled>
+                                                                                    {% endif %}
+                                                                                        <i class="fa fa-lg fa-paint-brush" aria-hidden="true"></i>
+                                                                                    </button>
                                                                                     <form action="/xoa_tuyendung" method="POST">
                                                                                         <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                                        {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                                                         <button class="btn btn-outline-secondary float-left">
+                                                                                        {% else %}
+                                                                                        <button class="btn btn-outline-secondary float-left" disabled>  
+                                                                                        {% endif %}
                                                                                             <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                                         </button>
                                                                                     </form>
-                                                                                    <a class="btn btn-outline-primary float-right" href="/muc2_2_1?id={{item[0]}}" target="_blank">
-                                                                                        <i class="fa fa-lg fa-info-circle" aria-hidden="true" title="Chi tiết yêu cầu" data-id="{{ item[0]}}"></i>
-                                                                                    </a>
                                                                                 </div>
                                                                             </div>
                                                                         </li>
@@ -669,55 +846,154 @@
                                                                             <h3 class="card-title">Đã tuyển xong</h3>
                                                                         </div>
                                                                         <div class="card card-body">
+                                                                            {% if not lathuki %}
                                                                             <ul class="list-group draggable" id="Đã tuyển xong">
+                                                                            {% else %}
+                                                                            <ul class="list-group" id="Đã tuyển xong">
+                                                                            {% endif %}
                                                                                 {% for item in danhsach %}
                                                                                 {% if item[11] == "Đã tuyển xong" %}
-                                                                                <li class="list-group-item" data-id="{{ item[0] }}">
+                                                                                {% if item[18] %}
+                                                                                <li class="list-group-item">
+                                                                                {% else %}
+                                                                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "td" %}
+                                                                                    <li class="list-group-item draggable" data-id="{{ item[0] }}">
+                                                                                    {% else %}
+                                                                                    <li class="list-group-item" data-id="{{ item[0] }}">
+                                                                                    {% endif %}
+                                                                                {% endif %}
                                                                                     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                                        <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                                                     </button>
                                                                                     <div class="collapse" id="collapse{{ item[0]}}">
-                                                                                        <div class="card card-body">  
+                                                                                        <div class="card card-body">
+                                                                                            <form action="/thaydoi_thongtin_yctd" method="POST">
                                                                                             <div><strong>Ngày yêu cầu: </strong></div>
-                                                                                        <div><input class="form-control" type="date" value={{item[16]}} disabled></div>
-                                                                                        <div><strong>Ngày đến hạn: </strong></div>
-                                                                                        <div><input class="form-control" type="date" value={{item[8]}} disabled></div>
-                                                                                        <div><strong>Budget: </strong></div>
-                                                                                        <div>
-                                                                                            <input name="budget" class="form-control" value={{item[20]}} disabled>
+                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="ngayyeucau" type="date" value={{item[16]}} disabled></div>
+                                                                                            <div><strong>Ngày đến hạn: </strong></div>
+                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="ngaydenhan" type="date" value={{item[8]}} disabled></div>
+                                                                                            <div><strong>Budget: </strong></div>
+                                                                                            <div>
+                                                                                                <select name="budget" class="form-control sua_yctd_{{item[0]}}" disabled>
+                                                                                                    {% if item[20]=="Trong" %}
+                                                                                                    <option value="Trong" selected>Trong</option>
+                                                                                                    <option value="Ngoài">Ngoài</option>
+                                                                                                    {% else %}
+                                                                                                    <option value="Trong">Trong</option>
+                                                                                                    <option value="Ngoài" selected>Ngoài</option>
+                                                                                                    {% endif %}
+                                                                                                </select>
+                                                                                                </div>
+                                                                                            <div><strong>Số lượng cần: </strong></div>
+                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}" name="soluong" type="number"  value={{item[6]}} disabled></div>
+                                                                                            <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
+                                                                                            <div>
+                                                                                                <strong>JD: </strong>
+                                                                                                <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
+                                                                                                    Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
+                                                                                                </a>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <strong>Lý do: </strong>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                <select  name="lydo" class="form-control sua_yctd_{{item[0]}}"  disabled>   
+                                                                                                    {% if item[9]== "Tuyển mới"%}
+                                                                                                    <option value="Tuyển mới" selected>Tuyển mới</option>
+                                                                                                    {% else %}
+                                                                                                    <option value="Tuyển mới">Tuyển mới</option>
+                                                                                                    {% endif %}
+                                                                                                    {% if item[9]== "Thay thế nghỉ việc"%}
+                                                                                                    <option value="Thay thế nghỉ việc" selected>Thay thế nghỉ việc</option>
+                                                                                                    {% else %}
+                                                                                                    <option value="Thay thế nghỉ việc">Thay thế nghỉ việc</option>
+                                                                                                    {% endif %}
+                                                                                                    {% if item[9]== "Thay thế thai sản"%}
+                                                                                                    <option value="Thay thế thai sản" selected>Thay thế thai sản</option>
+                                                                                                    {% else %}
+                                                                                                    <option value="Thay thế thai sản">Thay thế thai sản</option>
+                                                                                                    {% endif %}
+                                                                                                    {% if item[9]== "Ngắn hạn"%}
+                                                                                                    <option value="Ngắn hạn" selected>Ngắn hạn</option>
+                                                                                                    {% else %}
+                                                                                                    <option value="Ngắn hạn">Ngắn hạn</option>
+                                                                                                    {% endif %}
+                                                                                                </select>
+                                                                                            </div>
+                                                                                            {% if not lathuki %}
+                                                                                            <div class="sua_yctd_{{item[0]}}_on_off" hidden>
+                                                                                                <div hidden>
+                                                                                                    <input class="form-control" id="capbac{{item[0]}}">
+                                                                                                    <input class="form-control" name="id" value="{{item[0]}}">
+                                                                                                </div>
+                                                                                                <div><strong>Khoảng lương</strong></div>
+                                                                                                <div>
+                                                                                                    <label for="khoangluongtu"><strong>Từ</strong></label>
+                                                                                                    <select name="khoangluongtu" id="khoangluongtu{{item[0]}}"></select>
+                                                                                                </div>
+                                                                                                <div>
+                                                                                                    <label for="khoangluongden"><strong>Đến</strong></label>
+                                                                                                    <select name="khoangluongden"id="khoangluongden{{item[0]}}"></select>
+                                                                                                </div>
+                                                                                            </div>
+                                                                                            <div class="sua_yctd_{{item[0]}}_on_off">
+                                                                                                
+                                                                                                <div><strong>Bậc lương: </strong></div>
+                                                                                                <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
+                                                                                                <div><strong>Khoảng lương: </strong></div>
+                                                                                                <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
+                                                                                            </div>
+                                                                                            {% endif %}
                                                                                         </div>
-                                                                                        <div><strong>Số lượng cần: </strong></div>
-                                                                                        <div><input class="form-control sua_yctd_{{item[0]}}" type="number"  value={{item[6]}} disabled></div>
-                                                                                        <div><strong>Đã tuyển: {{item[19]}} <a href="muc2_2_1?id={{item[0]}}" target="_blank">Chi tiết</a></strong></div>
-                                                                                        <div>
-                                                                                            <strong>JD: </strong>
-                                                                                            <a href="{{ item[7].split('HRM')[1] }}" target="_blank">
-                                                                                                Xem <i class="fa fa-sm fa-eye" aria-hidden="true"></i>
-                                                                                            </a>
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <strong>Lý do: </strong>
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[9]}}" disabled></div>
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            <div><strong>Bậc lương: </strong></div>
-                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
-                                                                                            <div><strong>Khoảng lương: </strong></div>
-                                                                                            <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
-                                                                                        </div>
-                                                                                        <br>
                                                                                         <div class="card-footer" style="display: flex; justify-content: space-between;">
+                                                                                            <button type="submit" hidden class="btn btn-outline-danger float-right sua_yctd_{{item[0]}}_on_off">
+                                                                                                <i class="fa fa-lg fa-check" aria-hidden="true"></i>
+                                                                                            </button>
+                                                                                        </form>
+                                                                                            <button hidden class="btn btn-outline-success float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                                                <i class="fa fa-lg fa-times" aria-hidden="true"></i>
+                                                                                            </button>
+                                                                                            {% if not item[18] and ((current_user.phanquyen=="sa") or (current_user.phongban==item[1])) %}
+                                                                                            <button class="btn btn-outline-primary float-right sua_yctd_{{item[0]}}_on_off" onclick="mo_sua_yctd('{{item[2]}}',{{item[0]}})">
+                                                                                            {% else %}
+                                                                                            <button class="btn btn-outline-primary float-right" disabled>
+                                                                                            {% endif %}
+                                                                                                <i class="fa fa-lg fa-paint-brush" aria-hidden="true"></i>
+                                                                                            </button>
+                                                                                            
+                                                                                            {% if not item[18] %}
+                                                                                            <form action="/dong_yeucautuyendung" method="POST">
+                                                                                                <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                                                {% if (current_user.phanquyen=="sa") or (current_user.phanquyen=="td") %}
+                                                                                                <button class="btn btn-outline-info float-left">
+                                                                                                {% else %}
+                                                                                                <button class="btn btn-outline-info float-left" disabled>
+                                                                                                {% endif %}
+                                                                                                    <i class="fa fa-lock" aria-hidden="true" title="Khóa yêu cầu"></i>
+                                                                                                </button>
+                                                                                            </form>
+                                                                                            {% else %}
+                                                                                            <form action="/mo_yeucautuyendung" method="POST">
+                                                                                                <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                                                {% if (current_user.phanquyen=="sa") or (current_user.phanquyen=="td") %}
+                                                                                                <button class="btn btn-outline-info float-left">
+                                                                                                {% else %}
+                                                                                                <button class="btn btn-outline-info float-left" disabled>
+                                                                                                {% endif %}
+                                                                                                    <i class="fa fa-unlock" aria-hidden="true" title="Khóa yêu cầu"></i>
+                                                                                                </button>
+                                                                                            </form>
+                                                                                            {% endif %}
                                                                                             <form action="/xoa_tuyendung" method="POST">
                                                                                                 <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                                                {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                                                                 <button class="btn btn-outline-secondary float-left">
+                                                                                                {% else %}
+                                                                                                <button class="btn btn-outline-secondary float-left" disabled>  
+                                                                                                {% endif %}
                                                                                                     <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                                                 </button>
                                                                                             </form>
-                                                                                            <a class="btn btn-outline-primary float-right" href="/muc2_2_1?id={{item[0]}}" target="_blank">
-                                                                                                <i class="fa fa-lg fa-info-circle" aria-hidden="true" title="Chi tiết yêu cầu" data-id="{{ item[0]}}"></i>
-                                                                                            </a>
                                                                                         </div>
                                                                                     </div>
                                                                                 </li>
@@ -738,7 +1014,7 @@
                                                                                         {% if item[10] == "Từ chối" %}
                                                                                         <li class="list-group-item" data-id="{{ item[0] }}">
                                                                                             <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                                                <span class="badge badge-light">{{item[0]}}</span> {{item[2]}} 
+                                                                                                <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
                                                                                             </button>
                                                                                             <div class="collapse" id="collapse{{ item[0]}}">
                                                                                                 <div class="card card-body">  
@@ -765,23 +1041,26 @@
                                                                                                 <div>
                                                                                                     <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[9]}}" disabled></div>
                                                                                                 </div>
+                                                                                                {% if not lathuki %}
                                                                                                 <div>
                                                                                                     <div><strong>Bậc lương: </strong></div>
                                                                                                     <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[4]}}" disabled></div>
                                                                                                     <div><strong>Khoảng lương: </strong></div>
                                                                                                     <div><input class="form-control sua_yctd_{{item[0]}}"  type="text" value="{{item[5]}}" disabled></div>
                                                                                                 </div>
+                                                                                                {% endif %}
                                                                                                 <br>
                                                                                                 <div class="card-footer" style="display: flex; justify-content: space-between;">
                                                                                                     <form action="/xoa_tuyendung" method="POST">
                                                                                                         <input type="hidden" name="id" value="{{item[0]}}"> 
+                                                                                                        {% if (current_user.phanquyen=="sa") or (current_user.phongban==item[1]) %}
                                                                                                         <button class="btn btn-outline-secondary float-left">
+                                                                                                        {% else %}
+                                                                                                        <button class="btn btn-outline-secondary float-left" disabled>  
+                                                                                                        {% endif %}
                                                                                                             <i class="fa fa-trash" aria-hidden="true" title="Xóa yêu cầu"></i>
                                                                                                         </button>
                                                                                                     </form>
-                                                                                                    <a class="btn btn-outline-primary float-right" href="/muc2_2_1?id={{item[0]}}" target="_blank">
-                                                                                                        <i class="fa fa-lg fa-info-circle" aria-hidden="true" title="Chi tiết yêu cầu" data-id="{{ item[0]}}"></i>
-                                                                                                    </a>
                                                                                                 </div>
                                                                                             </div>
                                                                                         </li>
@@ -971,7 +1250,11 @@
                                                                                         const toColumn = evt.to.id;
                                                                                         const item = evt.item;
                                                                                         const itemId = item.dataset.id;
-                                                                                        if (window.confirm("Bạn muốn chuyển yêu cầu tuyển dụng với id " + itemId + " sang trạng thái " + toColumn + " ?")) {
+                                                                                        if (!item.classList.contains('draggable')) {
+                                                                                            alert("Bạn không thể đổi trạng thái yêu cầu tuyển dụng này !!!");
+                                                                                            window.location.reload();
+                                                                                        }
+                                                                                        else if (window.confirm("Bạn muốn chuyển yêu cầu tuyển dụng với id " + itemId + " sang trạng thái " + toColumn + " ?")) {
                                                                                             axios({
                                                                                                 method: 'post',
                                                                                                 url: '/chuyen_trang_thai_yctd',
