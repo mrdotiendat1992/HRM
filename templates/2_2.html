@@ -46,53 +46,30 @@
     .form-control {
         width:200px;
     }
-    .file-upload {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    
-    .file-upload input[type="file"] {
-    display: none;
-    }
-    
-    .file-upload label {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    }
-    
-    .file-upload label:hover {
-    background-color: #0056b3;
-    }
-    
-    .file-upload span {
-    font-size: 14px;
-    color: #666;
-    }
 
+    .bang_jd {
+        height: 350px;
+        overflow-y: scroll;
+    }
 </style>
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
     <div id="filter">
         <form method="GET">
-            <div class="row">
-                <div class="col-6">
-                    <div class="input-group mb-2 mr-sm-2">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text">Phòng ban</div>
-                        </div>
-                        <input type="text" class="form-control" name="phongban" id="phongban" onchange="form.submit()" placeholder="Nhập phòng ban yêu cầu tuyển dụng">
+        <div class="row">
+            <div class="col-6">
+                <div class="input-group mb-2 mr-sm-2">
+                    <div class="input-group-prepend">
+                        <div class="input-group-text">Phòng ban</div>
                     </div>
+                    <input type="text" class="form-control" name="phongban" id="phongban" onchange="form.submit()" placeholder="Nhập phòng ban yêu cầu tuyển dụng">
                 </div>
+            </div>
             </form>
             <div class="col-6">
                 <button type="button" class="btn btn-outline-danger btn-sm" title="Tải lên JD" data-toggle="modal" data-target="#JDModal">
-                    <b>DANH SÁCH JD</b>
+                    <b><i class="fa fa-lg fa-file"></i> DANH SÁCH JD</b>
                 </button>
             </div>
             <div class="modal fade" id="JDModal" tabindex="-1" role="dialog" aria-labelledby="JDModal" aria-hidden="true">
@@ -111,59 +88,48 @@
                                         <div class="input-group-prepend">
                                             <div class="input-group-text">Vị trí</div>
                                         </div>
-                                        <input type="text" class="form-control" name="vitri" id="vitri" placeholder="Nhập vị trí yêu cầu tuyển dụng">
+                                        <input type="text" class="form-control" id="vitri_cantim" placeholder="Nhập vị trí yêu cầu tuyển dụng">
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col">
-                                        <table class="table table-bordered table-hover table-sm">
-                                            <thead>
+                                        <table class="table table-bordered table-hover table-sm table-striped table-responsive bang_jd"> 
+                                            <thead class="table-dark text-center">
                                                 <tr>
-                                                    <th>Đã tải lên JD</th>
-                                                    <th></th>
-                                                </th>
+                                                    <th colspan="2">Đã tải lên JD</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                                 {% for vitri in danhsach_vitri_cacongty %}
                                                     {% if danhsach_vitri_cacongty[vitri]["JD"] %}
-                                                    <tr data-vitri="{{vitri}}">
+                                                    <tr class="list_jd" id="{{vitri}}">
                                                         <td>{{vitri}}</td>
                                                         <td>
                                                             <a class="btn btn-outline-primary" href="static/uploads/mau/jd/{{ danhsach_vitri_cacongty[vitri]["EN"] }}.pdf" target="_blank">
                                                                 <i class="fa fa-search"></i>
                                                             </a>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}">
+                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#changeJDModal{{loop.index}}">
                                                                 <i class="fa fa-upload"></i>
                                                             </a>
-                                                            <div class="modal fade" id="uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
+                                                            <div class="modal fade" id="changeJDModal{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="changeJDModal" aria-hidden="true">
                                                                 <div class="modal-dialog modal-lg" role="document">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
-                                                                            <h5 class="modal-title" id="uploadJDModalLabel">Tải lên JD</h5>
+                                                                            <h5 class="modal-title" id="changeJDModalLabel">{{vitri}} - {{ danhsach_vitri_cacongty[vitri]["EN"] }}</h5>
                                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                 <span aria-hidden="true">&times;</span>
                                                                             </button>
                                                                         </div>
-                                                                        <form method="POST" enctype="multipart/form-data">
-                                                                            <div class="modal-body">
-                                                                                <div class="container">
-                                                                                    <div class="row">
-                                                                                        <div class="col">
-                                                                                            <div class="file-upload">
-                                                                                                <input name="vitri" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
-                                                                                                <input type="file" name="file" id="file" accept=".pdf">
-                                                                                                <label for="file">Chọn file</label>
-                                                                                                <span id="filename"></span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
+                                                                        <div class="modal-body">
+                                                                            <form action="tailenjd" method="POST" enctype="multipart/form-data">
+                                                                                <input name="jd_vitri_en_chon" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
+                                                                                <input type="file" name="file" accept=".pdf" required>
                                                                                 <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                                                                            </div>
-                                                                        </form>
+                                                                            </form>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -175,51 +141,40 @@
                                         </table>
                                     </div>
                                     <div class="col">
-                                        <table class="table table-bordered table-hover table-sm">
-                                            <thead>
-                                                <tr class="bg-primary">
-                                                    <th>Chưa tải lên JD</th>
-                                                    <th></th>
-                                                </th>
+                                        <table class="table table-bordered table-hover table-sm table-striped table-responsive bang_jd">
+                                            <thead class="table-dark text-center">
+                                                <tr>
+                                                    <th colspan="2">Chưa tải lên JD</th>
+                                                </tr>
                                             </thead>
                                             <tbody>
                                                 {% for vitri in danhsach_vitri_cacongty %}
                                                     {% if not danhsach_vitri_cacongty[vitri]["JD"] %}
-                                                    <tr>
+                                                    <tr class="list_jd" id="{{vitri}}">
                                                         <td>{{vitri}}</td>
                                                         <td>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}">
+                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{loop.index}}">
                                                                 <i class="fa fa-upload"></i>
                                                             </a>
-                                                            <div class="modal fade" id="uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
+                                                            <div class="modal fade" id="uploadJDModal{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
                                                                 <div class="modal-dialog modal-lg" role="document">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
-                                                                            <h5 class="modal-title" id="uploadJDModalLabel">Tải lên JD</h5>
+                                                                            <h5 class="modal-title" id="uploadJDModalLabel">{{vitri}} - {{ danhsach_vitri_cacongty[vitri]["EN"] }}</h5>
                                                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                 <span aria-hidden="true">&times;</span>
                                                                             </button>
                                                                         </div>
-                                                                        <form method="POST" enctype="multipart/form-data">
-                                                                            <div class="modal-body">
-                                                                                <div class="container">
-                                                                                    <div class="row">
-                                                                                        <div class="col">
-                                                                                            <div class="file-upload">
-                                                                                                <input name="vitri" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
-                                                                                                <input type="file" name="file" id="file" accept=".pdf">
-                                                                                                <label for="file">Chọn file</label>
-                                                                                                <span id="filename"></span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
+                                                                        <div class="modal-body">
+                                                                            <form action="tailenjd" method="POST" enctype="multipart/form-data">
+                                                                                <input name="jd_vitri_en_chon" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
+                                                                                <input type="file" name="file" accept=".pdf" required>
                                                                                 <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                                                                            </div>
-                                                                        </form>
+                                                                            </form>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -234,7 +189,6 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <input type="submit" class="btn btn-primary" value="Tải lên"></input>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
                         </div>
                     </div>
@@ -301,7 +255,7 @@
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <p id="thongbao" style="color:red;max-width: 500px;text-align: left;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
+                                        <p id="thongbao" style="color:red;max-width: 500px; text-align: left;">Mời bạn chọn vị trí cần tuyển dụng, nếu chưa có vui lòng liên hệ HR để thêm vào</p>
                                         <input type="submit" class="btn btn-primary" id="themyctd" value="Gửi yêu cầu" disabled></input>
                                     </form>
                                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
@@ -358,7 +312,7 @@
                                                         <div>{{item[19]}}</div>
                                                         <div>
                                                             <a class="btn btn-outline-danger" href="{{ item[7].split('HRM')[1] }}" target="_blank">
-                                                                <i class="fa falg fa-file" aria-hidden="true"></i>
+                                                                <i class="fa fa-lg fa-file" aria-hidden="true"></i>
                                                             </a>
                                                         </div>
                                                         <div>{{item[9]}}</div>
@@ -1237,81 +1191,7 @@
                                                                             });
                                                                         });
                                                                         
-                                                                        document.getElementById("jd_timvitri").addEventListener("change", function () {
-                                                                            const vitri = document.getElementById("jd_timvitri").value.trim(); // Loại bỏ khoảng trắng
-                                                                            const danhsachvitri = document.getElementById("jd_danhsach_vitri");
-                                                                            const jd_thongbao = document.getElementById("jd_thongbao");
                                                                         
-                                                                            // Nếu `vitri` là chuỗi rỗng, xóa nội dung và dừng xử lý
-                                                                            if (vitri === "") {
-                                                                                danhsachvitri.innerHTML = "";
-                                                                                jd_thongbao.innerHTML = "";
-                                                                                document.getElementById("jd_vitri_chon").value = "";
-                                                                                document.getElementById("jd_vitri_en_chon").value = "";
-                                                                                return;
-                                                                            }
-                                                                        
-                                                                            // Gửi yêu cầu tới API tìm kiếm
-                                                                            axios({
-                                                                                method: "post",
-                                                                                url: "/timcacchucdanh?tutimkiem=" + encodeURIComponent(vitri),
-                                                                            })
-                                                                                .then(function (response) {
-                                                                                    var data = response.data;
-                                                                                    danhsachvitri.innerHTML = ""; // Xóa danh sách hiện tại
-                                                                                    data.forEach(function (item) {
-                                                                                        var li_element = document.createElement("li");
-                                                                                        li_element.textContent = item;
-                                                                                        li_element.className = "list-group-item";
-                                                                                        li_element.addEventListener("click", function () {
-                                                                                            document.getElementById("jd_vitri_chon").value = item;
-                                                                                            danhsachvitri.innerHTML = "";
-                                                                        
-                                                                                            // Gửi yêu cầu lấy thông tin vị trí
-                                                                                            axios({
-                                                                                                method: "post",
-                                                                                                url: "/lay_thongtin_vitri?vitri=" + encodeURIComponent(item),
-                                                                                            })
-                                                                                                .then(function (response) {
-                                                                                                    var data = response.data["data"];
-                                                                                                    var vitri_en = data["Detail_job_title_EN"];
-                                                                                                    document.getElementById("jd_vitri_en_chon").value = vitri_en;
-                                                                        
-                                                                                                    // Gửi yêu cầu kiểm tra JD tồn tại
-                                                                                                    axios({
-                                                                                                        method: "post",
-                                                                                                        url: "/kiemtra_tontai_jd?vitri=" + encodeURIComponent(vitri_en),
-                                                                                                    })
-                                                                                                        .then(function (response) {
-                                                                                                            var tontai_jd = response.data["data"];
-                                                                                                            if (tontai_jd === true) {
-                                                                                                                jd_thongbao.innerHTML =
-                                                                                                                    "Vị trí đã có JD, bạn có thể cập nhật JD mới bằng cách tải file lên, hoặc ";
-                                                                                                                var link_jd = "/static/uploads/mau/jd/" + vitri_en + ".pdf";
-                                                                                                                const linkjd = document.createElement("a");
-                                                                                                                linkjd.href = link_jd;
-                                                                                                                linkjd.target = "_blank";
-                                                                                                                linkjd.textContent = " Xem JD đã tải.";
-                                                                                                                jd_thongbao.appendChild(linkjd);
-                                                                                                            } else {
-                                                                                                                jd_thongbao.innerHTML = "Vị trí chưa có JD, tải file lên để thêm mới?";
-                                                                                                            }
-                                                                                                        })
-                                                                                                        .catch(function (error) {
-                                                                                                            console.log(error);
-                                                                                                        });
-                                                                                                })
-                                                                                                .catch(function (error) {
-                                                                                                    console.log(error);
-                                                                                                });
-                                                                                        });
-                                                                                        danhsachvitri.appendChild(li_element);
-                                                                                    });
-                                                                                })
-                                                                                .catch(function (error) {
-                                                                                    console.log(error);
-                                                                                });
-                                                                        });
                                                                         
                                                                         function them_cham_vao_so(so) {
                                                                             return so.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -1426,15 +1306,19 @@
                                                                             timbacluong(vitri, id);
                                                                         }
 
-                                                                        const fileInput = document.getElementById('fileInput');
-                                                                        const fileName = document.getElementById('fileName');
+                                                                        var vitri_cantim = document.getElementById("vitri_cantim");
 
-                                                                        fileInput.addEventListener('change', function () {
-                                                                        if (fileInput.files.length > 0) {
-                                                                            fileName.textContent = fileInput.files[0].name;
-                                                                        } else {
-                                                                            fileName.textContent = 'Không có tệp nào được chọn';
-                                                                        }
+                                                                        vitri_cantim.addEventListener("change", function(event) {
+                                                                            var vitri = vitri_cantim.value;
+                                                                            const list_jd = document.querySelectorAll('.list_jd');
+                                                                            list_jd.forEach(element => {
+                                                                                // Nếu id của element không chứa vitri thì ẩn element đó đi
+                                                                                if (!element.id.includes(vitri)) {
+                                                                                    element.hidden = true;
+                                                                                } else {
+                                                                                    element.hidden = false;
+                                                                                }
+                                                                            });
                                                                         });
                                                                         </script>
                                                                         {% endblock content %}

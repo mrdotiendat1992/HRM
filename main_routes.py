@@ -141,15 +141,15 @@ def run_before_every_request():
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
             
-            elif current_user.phanquyen=='td' or current_user.phanquyen=='sa':
-                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
+            elif (current_user.phanquyen=='td' or current_user.phanquyen=='sa'):
+                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,None)
                 if soluong_yeucautuyendung_chokiemtra > 0:
                     g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
                     g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra
                 else:
                     g.notice["Tuyển dụng chờ phê duyệt"] = 0
 
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,None)
+                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
                 if soluong_yeucautuyendung_chopheduyet > 0:
                     g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
                     g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
