@@ -1507,27 +1507,27 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  DISTINCT Diem_danh_bu.*
+            SELECT  DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
             FROM 
-                Diem_danh_bu 
+                Diem_danh_bu as bu
             INNER JOIN 
                 Phan_quyen_thu_ky
             ON
-                Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                bu.Nha_may= Phan_quyen_thu_ky.Nha_may and bu.Line=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                Diem_danh_bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and Diem_danh_bu.Nha_may = '{current_user.macongty}' """
+                bu.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and bu.Nha_may = '{current_user.macongty}' """
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT Diem_danh_bu.*
+                SELECT DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
                 FROM 
-                    Diem_danh_bu 
+                    Diem_danh_bu as bu
                 INNER JOIN 
                     Phan_quyen_thu_ky
                 ON
-                    Diem_danh_bu.Nha_may= Phan_quyen_thu_ky.Nha_may and Diem_danh_bu.Line=Phan_quyen_thu_ky.Chuyen_to
+                    bu.Nha_may= Phan_quyen_thu_ky.Nha_may and bu.Line=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    Diem_danh_bu.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}' and Diem_danh_bu.Nha_may = '{current_user.macongty}'"""
+                    bu.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}' and bu.Nha_may = '{current_user.macongty}'"""
             else:
                 query = f"SELECT * FROM HR.dbo.Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "   
                 if mst:
@@ -1562,27 +1562,27 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT DS_Xin_nghi_phep.* 	
+            SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai 
             FROM 
-                DS_Xin_nghi_phep 
+                DS_Xin_nghi_phep as np
             INNER JOIN 
                 Phan_quyen_thu_ky
             ON
-                DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                np.Nha_may= Phan_quyen_thu_ky.Nha_may and np.Chuyen=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                DS_Xin_nghi_phep.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
+                np.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT DS_Xin_nghi_phep.* 
+                SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai
                 FROM 
-                    DS_Xin_nghi_phep 
+                    DS_Xin_nghi_phep as np
                 INNER JOIN 
                     Phan_quyen_thu_ky
                 ON
-                    DS_Xin_nghi_phep.Nha_may= Phan_quyen_thu_ky.Nha_may and DS_Xin_nghi_phep.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                    np.Nha_may= Phan_quyen_thu_ky.Nha_may and np.Chuyen=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    DS_Xin_nghi_phep.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
+                    np.Trang_thai=N'Đã kiểm tra' and MST_QL='{mstquanly}' and Phan_quyen_thu_ky.Nha_may='{current_user.macongty}'"""
             else:            
                 query = f"SELECT * FROM HR.dbo.DS_Xin_nghi_phep WHERE Nha_may = '{current_user.macongty}' "
                 if mst:
@@ -1615,27 +1615,27 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT Xin_nghi_khong_luong.*
+            SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
             FROM 
-                Xin_nghi_khong_luong 
+                Xin_nghi_khong_luong as kl
             INNER JOIN 
                 Phan_quyen_thu_ky
             ON
-                Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                kl.Nha_may= Phan_quyen_thu_ky.Nha_may and kl.Chuyen=Phan_quyen_thu_ky.Chuyen_to
             WHERE 
-                Xin_nghi_khong_luong.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
+                kl.Trang_thai=N'Chờ kiểm tra' and Phan_quyen_thu_ky.MST='{mstthuky}'"""
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT Xin_nghi_khong_luong.*
+                SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
                 FROM 
-                    Xin_nghi_khong_luong 
+                    Xin_nghi_khong_luong as kl
                 INNER JOIN 
                     Phan_quyen_thu_ky
                 ON
-                    Xin_nghi_khong_luong.Nha_may= Phan_quyen_thu_ky.Nha_may and Xin_nghi_khong_luong.Chuyen=Phan_quyen_thu_ky.Chuyen_to
+                    kl.Nha_may= Phan_quyen_thu_ky.Nha_may and kl.Chuyen=Phan_quyen_thu_ky.Chuyen_to
                 WHERE 
-                    Xin_nghi_khong_luong.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}'"""
+                    kl.Trang_thai=N'Đã kiểm tra' and Phan_quyen_thu_ky.MST_QL='{mstquanly}'"""
             else:
                 
                 query = f"SELECT * FROM HR.dbo.Xin_nghi_khong_luong WHERE Nha_may = '{current_user.macongty}' "
@@ -1656,7 +1656,6 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 query += " ORDER BY Ngay_xin_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
-        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
