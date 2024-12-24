@@ -170,7 +170,7 @@ def run_before_every_request():
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
 
-            elif la_thuky(current_user.macongty,current_user.masothe) == True:
+            elif kiemtra_danhsach_thuki(current_user.macongty,current_user.masothe) == True:
                 soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
                 if soluong_yeucautuyendung_chokiemtra > 0:
                     g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
@@ -494,17 +494,17 @@ def danhsachdangkytuyendung():
 def dangkytuyendung():
     if request.method == "GET":
         lathuki = kiemtra_danhsach_thuki()
-        # print(f"Thu ki: {lathuki}")
-        # print(current_user.phanquyen not in ['tbp','gd','sa','td'])
         if (current_user.phanquyen not in ['tbp','gd','sa','td']) and not lathuki:
             return redirect("/unauthorized")
         phongban = request.args.get("phongban")
         danhsach = laydanhsachyeucautuyendung(phongban)
-        
+        danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
+        # print(danhsach_vitri_cacongty)
         return render_template("2_2.html", 
                                page= "2.2 Yêu cầu tuyển dụng",
                                danhsach = danhsach,
-                               lathuki = lathuki
+                               lathuki = lathuki,
+                               danhsach_vitri_cacongty=danhsach_vitri_cacongty
                                )
     
     elif request.method == "POST":
