@@ -105,136 +105,37 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            <div class="container">
-                                <div class="row">
+                            <div class="row">
+                                <div class="col">
                                     <div class="input-group mb-2 mr-sm-2">
                                         <div class="input-group-prepend">
-                                            <div class="input-group-text">Vị trí</div>
+                                            <div class="input-group-text">  
+                                                <strong> Vị trí </strong>
+                                            </div>
                                         </div>
-                                        <input type="text" class="form-control" name="vitri" id="vitri" placeholder="Nhập vị trí yêu cầu tuyển dụng">
+                                        <input type="text" class="form-control" placeholder="Nhập vị trí tuyển dụng" id="jd_timvitri">
                                     </div>
+                                    <ul id="jd_danhsach_vitri" class="list-group" style="height: 200px; overflow-y: scroll;"><ul>
                                 </div>
-                                <div class="row">
-                                    <div class="col">
-                                        <table class="table table-bordered table-hover table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Đã tải lên JD</th>
-                                                    <th></th>
-                                                </th>
-                                            </thead>
-                                            <tbody>
-                                                {% for vitri in danhsach_vitri_cacongty %}
-                                                    {% if danhsach_vitri_cacongty[vitri]["JD"] %}
-                                                    <tr data-vitri="{{vitri}}">
-                                                        <td>{{vitri}}</td>
-                                                        <td>
-                                                            <a class="btn btn-outline-primary" href="static/uploads/mau/jd/{{ danhsach_vitri_cacongty[vitri]["EN"] }}.pdf" target="_blank">
-                                                                <i class="fa fa-search"></i>
-                                                            </a>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}">
-                                                                <i class="fa fa-upload"></i>
-                                                            </a>
-                                                            <div class="modal fade" id="uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
-                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="uploadJDModalLabel">Tải lên JD</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form method="POST" enctype="multipart/form-data">
-                                                                            <div class="modal-body">
-                                                                                <div class="container">
-                                                                                    <div class="row">
-                                                                                        <div class="col">
-                                                                                            <div class="file-upload">
-                                                                                                <input name="vitri" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
-                                                                                                <input type="file" name="file" id="file" accept=".pdf">
-                                                                                                <label for="file">Chọn file</label>
-                                                                                                <span id="filename"></span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col">
-                                        <table class="table table-bordered table-hover table-sm">
-                                            <thead>
-                                                <tr class="bg-primary">
-                                                    <th>Chưa tải lên JD</th>
-                                                    <th></th>
-                                                </th>
-                                            </thead>
-                                            <tbody>
-                                                {% for vitri in danhsach_vitri_cacongty %}
-                                                    {% if not danhsach_vitri_cacongty[vitri]["JD"] %}
-                                                    <tr>
-                                                        <td>{{vitri}}</td>
-                                                        <td>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}">
-                                                                <i class="fa fa-upload"></i>
-                                                            </a>
-                                                            <div class="modal fade" id="uploadJDModal{{ danhsach_vitri_cacongty[vitri]["EN"] }}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
-                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="uploadJDModalLabel">Tải lên JD</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <form method="POST" enctype="multipart/form-data">
-                                                                            <div class="modal-body">
-                                                                                <div class="container">
-                                                                                    <div class="row">
-                                                                                        <div class="col">
-                                                                                            <div class="file-upload">
-                                                                                                <input name="vitri" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
-                                                                                                <input type="file" name="file" id="file" accept=".pdf">
-                                                                                                <label for="file">Chọn file</label>
-                                                                                                <span id="filename"></span>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="modal-footer">
-                                                                                <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                                                                            </div>
-                                                                        </form>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                <div class="col">
+                                    <div><input id="jd_vitri_chon" readonly class="form-control" placeholder="Vị trí"></div>
+                                    <br>
+                                    <form method="POST" action="/tailenjd" enctype="multipart/form-data">
+                                    <div><input id="jd_vitri_en_chon" name="jd_vitri_en_chon" class="form-control" placeholder="Position"></div>
+                                    <br>
+                                    <div id="jd_thongbao" style="color:red;"></div>
+                                    <br>
+                                    <div class="file-upload">
+                                        <input type="file" id="fileInput" name="file" accept=".pdf" required/>
+                                        <label for="fileInput">Chọn tệp</label>
+                                        <span id="fileName">Không có tệp nào được chọn</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <input type="submit" class="btn btn-primary" value="Tải lên"></input>
+                            </form>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
                         </div>
                     </div>
