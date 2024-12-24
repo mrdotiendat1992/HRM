@@ -147,9 +147,15 @@
                                     </div>
                                 {%endif%}
                                 {% if 'HRD' in current_user.phongban %}
-                                <div>
-                                    <a class="btn btn-primary btn-sm" href="/chamcongtay">Chấm công tay</a>
-                                </div>  
+                                <div class="dropdown">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                        Chấm công tay
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="/chamcongtay">Chấm công tay</a></li>
+                                        <li><a class="dropdown-item" href="/chamcongtaycn">Chấm công tay chủ nhật</a></li>
+                                    </ul>
+                                </div>
                                 {%endif%}                              
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
