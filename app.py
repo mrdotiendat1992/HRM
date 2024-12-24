@@ -5023,3 +5023,23 @@ def kiemtra_danhsach_thuki():
     except Exception as e:
         flash(f"Lỗi kiểm tra danh sách thư kí: {e}")
         return False
+
+def lay_danhsach_vitri_theo_hcname(macongty):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT Detail_job_title_VN, Detail_job_title_EN FROM HC_Name WHERE Factory='{macongty}'"
+        # print(query)
+        rows = cur.execute(query).fetchall()
+        conn.close()
+        result = {}
+        for row in rows:
+            result[row[0]] = {"EN": row[1], "JD": False}
+        for vitri in result:
+            path = os.path.join(FOLDER_JD, f"{result[vitri]["EN"]}.pdf")
+            if os.path.exists(path):
+                result[vitri]["JD"] = True
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy danh sách vị trí: {e}")
+        return {}
