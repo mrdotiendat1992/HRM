@@ -170,7 +170,7 @@ def run_before_every_request():
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
 
-            elif kiemtra_danhsach_thuki(current_user.macongty,current_user.masothe) == True:
+            elif kiemtra_danhsach_thuki() == True:
                 soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
                 if soluong_yeucautuyendung_chokiemtra > 0:
                     g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
