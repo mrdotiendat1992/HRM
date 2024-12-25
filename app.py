@@ -1507,7 +1507,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
+            SELECT  DISTINCT bu.*
             FROM 
                 Diem_danh_bu as bu
             INNER JOIN 
@@ -1519,7 +1519,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
+                SELECT DISTINCT bu.*
                 FROM 
                     Diem_danh_bu as bu
                 INNER JOIN 
@@ -1562,7 +1562,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai 
+            SELECT DISTINCT np.*
             FROM 
                 DS_Xin_nghi_phep as np
             INNER JOIN 
@@ -1574,7 +1574,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai
+                SELECT DISTINCT np.*
                 FROM 
                     DS_Xin_nghi_phep as np
                 INNER JOIN 
@@ -1615,7 +1615,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
+            SELECT DISTINCT kl.*
             FROM 
                 Xin_nghi_khong_luong as kl
             INNER JOIN 
@@ -1627,7 +1627,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
+                SELECT DISTINCT kl.*
                 FROM 
                     Xin_nghi_khong_luong as kl
                 INNER JOIN 
