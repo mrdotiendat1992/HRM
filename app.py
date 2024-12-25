@@ -4808,7 +4808,7 @@ def lay_soluong_yeucautuyendung_chopheduyet(nhamay, phongban):
                 and Ngay_dong_yeu_cau is NULL """   
         if phongban:
             query += f" and Bo_phan='{phongban}'" 
-        print(query) 
+        # print(query) 
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
