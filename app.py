@@ -3755,7 +3755,6 @@ def get_thongtin_vitri(vitri):
         data = cursor.execute(query).fetchone()
         # flash(data)
         query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}' and Nha_may='{current_user.macongty}'"
-        # flash(query1)
         data1 = cursor.execute(query1).fetchall()
         # flash(data1)
         cacbacluong = []
@@ -3988,17 +3987,29 @@ def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
     
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
-    email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{current_user.macongty}' and MST='{current_user.masothe}'").fetchone()[0]
+    query1 = f"""select Email_TBP from YEU_CAU_TUYEN_DUNG
+                join DANH_SACH_THU_KY_BP
+                on YEU_CAU_TUYEN_DUNG.Bo_phan=DANH_SACH_THU_KY_BP.PHONG_BAN
+                and YEU_CAU_TUYEN_DUNG.Bo_phan='{current_user.phongban}'"""
+    print(query1)
+    try:  
+        email = cursor.execute(query1).fetchone()[0]
+        print(email) 
+    except Exception as e:
+        print(e)
+        email = ""     
     query = f"""insert into YEU_CAU_TUYEN_DUNG_CHO_KIEM_TRA 
                 values ('{current_user.macongty}','{current_user.masothe}',
                 N'{current_user.hoten}','{current_user.phongban}','{email}',N'{vitri}',
                 '{soluong}',N'{trongbudget}',GETDATE())"""
+    print(query)
     try:  
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return {"ketqua":True}
     except Exception as e:
+        flash()
         return {"ketqua":False, "lido":e, "query":query}
 
 def them_yeucau_tuyendung_cho_pheduyet(id):
@@ -4987,18 +4998,46 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
         cur = conn.cursor()
         if trangthai != "Đã nhận việc":
             query = f"select Trang_thai from Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
+            print(query)
             trangthaicu  = cur.execute(query).fetchone()[0]
+            print(trangthaicu)
             if trangthaicu == "Đã nhận việc":
-                query1 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen-1 WHERE ID = {id_yctd}"
+                query_ngay_dong_yeu_cau = f"select Ngay_dong_yeu_Cau from Yeu_cau_tuyen_dung WHERE ID = {id_yctd}"
+                ngay_dong_yeu_cau = cur.execute(query_ngay_dong_yeu_cau).fetchone()
+                if ngay_dong_yeu_cau:
+                    query1 = f"""UPDATE Yeu_cau_tuyen_dung 
+                                SET So_luong_da_tuyen=So_luong_da_tuyen-1,
+                                Ngay_dong_yeu_Cau = NULL
+                                WHERE ID = {id_yctd}"""
+                else:
+                    query1 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen-1 WHERE ID = {id_yctd}"
+                print(query1)
                 cur.execute(query1)
                 cur.commit()
         else:
-            query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen+1 WHERE ID = {id_yctd}"
-            flash(query2)
+            query_kiemtra_khoa_yctd = f"""
+                        SELECT *
+                        FROM Yeu_cau_tuyen_dung
+                        WHERE so_luong = so_luong_da_tuyen + 1
+                        AND ID = '{id_yctd}'
+                                                    """
+            print(query_kiemtra_khoa_yctd)
+            cothe_khoa_yctd = cur.execute(query_kiemtra_khoa_yctd).fetchone()
+            print(cothe_khoa_yctd)
+            if cothe_khoa_yctd:           
+                query2 = f"""UPDATE Yeu_cau_tuyen_dung 
+                            SET So_luong_da_tuyen=So_luong_da_tuyen+1,
+                            Ngay_dong_yeu_Cau = GETDATE()
+                            WHERE ID = {id_yctd}"""
+            else:
+                query2 = f"""UPDATE Yeu_cau_tuyen_dung 
+                            SET So_luong_da_tuyen=So_luong_da_tuyen+1
+                            WHERE ID = {id_yctd}"""
+            print(query2)
             cur.execute(query2)
             cur.commit()
         query3 = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
-        flash(query3)
+        print(query3)
         cur.execute(query3)
         cur.commit()
         conn.close()

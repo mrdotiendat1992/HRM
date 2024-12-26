@@ -500,7 +500,11 @@
                                         {% endif %}     
                                     {% endif %}
                                     {% if notice["Tuyển dụng chờ kiểm tra"] %}
+                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or current_user.phanquyen == "td" %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
+                                    {% else %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban={{current_user.phongban}}">
+                                    {% endif %}
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -512,7 +516,11 @@
                                     </a>
                                     {% endif %} 
                                     {% if notice["Tuyển dụng chờ phê duyệt"] %}
+                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or current_user.phanquyen == "td" %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
+                                    {% else %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban={{current_user.phongban}}">
+                                    {% endif %}
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -524,7 +532,11 @@
                                     </a>
                                     {% endif %}  
                                     {% if notice["Tuyển dụng được duyệt"] %}
+                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or current_user.phanquyen == "td" %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
+                                    {% else %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban={{current_user.phongban}}">
+                                    {% endif %}
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>
@@ -536,7 +548,11 @@
                                     </a>
                                     {% endif %}
                                     {% if notice["Tuyển dụng bị từ chối"] %}
+                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or current_user.phanquyen == "td" %}
+                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
+                                    {% else %}
                                     <a class="dropdown-item d-flex align-items-center" href="/muc2_2?phongban={{current_user.phongban}}">
+                                    {% endif %}
                                         <div class="mr-3">
                                             <div class="icon-circle bg-danger">
                                                 <i class="fas fa-file-alt text-white"></i>

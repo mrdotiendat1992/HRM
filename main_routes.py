@@ -522,17 +522,10 @@ def dangkytuyendung():
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
             budget = request.form.get("trong_budget")
-            if budget:
-                trongbudget = "Trong"
-            else:
-                trongbudget = "Ngoài"
+            trongbudget = "Trong" if budget else"Ngoài"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget)["ketqua"]:
-                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
-                else:
-                    flash(f"Thêm thông báo có yêu cầu tuyển dụng mới thất bại. {e}")
-                
+                print(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         except Exception as e:

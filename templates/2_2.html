@@ -258,7 +258,7 @@
                                                 <div class="col-3">
                                                     <div style="display:flex; gap:5px;">
                                                         <label for="mota">Mô tả công việc</label>
-                                                        <i class="fa fa-search" aria-hidden="true" style="cursor: pointer; margin-top: 5px;"></i>                            
+                                                        <i class="fa fa-search" aria-hidden="true" onclick="mojd" style="cursor: pointer; margin-top: 5px;"></i>                            
                                                     </div>
                                                     <div id="pdf-preview"  style="width:180px; height: 400px; overflow: hidden;">
                                                         <iframe id="pdf-frame" frameborder="0" src="" style="width: 100%; height: 100%; overflow: hidden;"></iframe>
@@ -929,7 +929,11 @@
                                                                                     {% endif %}
                                                                                 {% endif %}
                                                                                     <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapse{{ item[0]}}" aria-expanded="false" aria-controls="collapse{{ item[0]}}">
-                                                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  
+                                                                                        {% if item[18] %}
+                                                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  <span class="badge badge-light"><i class="fa fa-sm fa-lock"></i></span>
+                                                                                        {% else %}
+                                                                                        <span class="badge badge-warning">{{item[0]}}</span> <span class="badge badge-light">{{item[1]}}</span> {{item[2]}}  <span class="badge badge-light"><i class="fa fa-sm fa-unlock"></i></span>
+                                                                                        {% endif %}
                                                                                     </button>
                                                                                     <div class="collapse" id="collapse{{ item[0]}}">
                                                                                         <div class="card card-body">
