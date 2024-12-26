@@ -526,13 +526,12 @@ def dangkytuyendung():
                 trongbudget = "Trong"
             else:
                 trongbudget = "Ngoài"
-            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,
-                                      thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
+            if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                # if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
-                #     flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
-                # else:
-                #     flash("Thêm thông báo có yêu cầu tuyển dụng mới thất bại !!!")
+                if them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget)["ketqua"]:
+                    flash("Thêm thông báo có yêu cầu tuyển dụng mới thành công !!!")
+                else:
+                    flash(f"Thêm thông báo có yêu cầu tuyển dụng mới thất bại. {e}")
                 
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")

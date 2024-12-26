@@ -64,11 +64,11 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         cursor.execute(query)
         conn.commit()
         conn.close()
-        print("Đổi mật khẩu thành công !!!")
+        flash("Đổi mật khẩu thành công !!!")
         return True        
     except Exception as e:
-        print(f"Doi mat khau that bai {e} !!!")
-        print(e)
+        flash(f"Doi mat khau that bai {e} !!!")
+        flash(e)
         return False
 
 def checkformatmst(mst):
@@ -89,7 +89,7 @@ def laydanhsachsaphethanhopdong():
         conn.close()
         return rows
     except Exception as e:
-        print(f"Lay danh sach sap het han hop dong that bai: {e}")
+        flash(f"Lay danh sach sap het han hop dong that bai: {e}")
         return []
 
 def laycatheochuyen(chuyen):
@@ -108,7 +108,7 @@ def laycatheochuyen(chuyen):
         else:
             return row[0]
     except Exception as e:
-        print(f"Loi kiem tra ca theo chuyen {e} !!!")
+        flash(f"Loi kiem tra ca theo chuyen {e} !!!")
         if current_user.macongty=="NT2":
             return "A4-01"
         else:
@@ -191,7 +191,7 @@ def laydanhsachca(mst):
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            flash(e)
             return
     
 def dichuyennghiviec(mst,
@@ -348,7 +348,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
                 else:
                     try:
@@ -377,7 +377,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
             elif macongty == "NT2":
                 try:
@@ -408,7 +408,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    flash(e)
                     return None
         elif loaihopdong == "Hợp đồng có thời hạn 28 ngày":
             if macongty == "NT1":
@@ -436,7 +436,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
                 else:
                     try:
@@ -462,7 +462,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
             elif macongty == "NT2":
                 try:
@@ -489,7 +489,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    flash(e)
                     return None
         elif loaihopdong == "Hợp đồng có thời hạn 1 năm":
             if macongty == "NT1":
@@ -518,7 +518,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
                 else:
                     try:
@@ -545,7 +545,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None
             elif macongty == "NT2":
                 try:
@@ -572,7 +572,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    flash(e)
                     return None
         elif loaihopdong == "Hợp đồng vô thời hạn":
             if macongty == "NT1":
@@ -596,7 +596,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         workbook.save(filepath)
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None   
                 else:
                     try:
@@ -624,7 +624,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         
                         return filepath
                     except Exception as e:
-                        print(e)
+                        flash(e)
                         return None  
             if macongty == "NT2":
                 try:
@@ -650,10 +650,10 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    print(e)
+                    flash(e)
                     return None  
     except Exception as e:
-        print(e)
+        flash(e)
         return None
     
 def inchamduthd(mst,
@@ -689,7 +689,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            print(e)
+            flash(e)
             return None
     elif current_user.macongty == "NT2":
         try:
@@ -715,7 +715,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            print(e)
+            flash(e)
             return None
    
 def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
@@ -756,7 +756,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         conn.close()
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
                      
 def laydanhsachlinetheovitri(vitri):
@@ -772,7 +772,7 @@ def laydanhsachlinetheovitri(vitri):
             result.append(row[0])
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def lay_user(user):
@@ -930,7 +930,7 @@ def laycacphongban():
             result.append(x[0])
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laycacto():
@@ -943,7 +943,7 @@ def laycacto():
         conn.close()
         return [x[0] for x in cacto]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laycachccategory():
@@ -956,7 +956,7 @@ def laycachccategory():
         conn.close()
         return [x[0] for x in cachccategory]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laydanhsachtheomst(mst):
@@ -972,7 +972,7 @@ def laydanhsachtheomst(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laydanhsachtheothechamcong(mst):
@@ -988,7 +988,7 @@ def laydanhsachtheothechamcong(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachusercacongty(macongty):
@@ -1004,7 +1004,7 @@ def laydanhsachusercacongty(macongty):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laydanhsachusertheophongban(phongban):
@@ -1020,7 +1020,7 @@ def laydanhsachusertheophongban(phongban):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laydanhsachusertheogioitinh(gioitinh):
@@ -1036,7 +1036,7 @@ def laydanhsachusertheogioitinh(gioitinh):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachusertheoline(line):
@@ -1052,7 +1052,7 @@ def laydanhsachusertheoline(line):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachusertheostatus(status):
@@ -1068,7 +1068,7 @@ def laydanhsachusertheostatus(status):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laycactrangthai():
@@ -1081,7 +1081,7 @@ def laycactrangthai():
         conn.close()
         return [x[0] for x in cactrangtha]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laycacvitri():
@@ -1094,7 +1094,7 @@ def laycacvitri():
         conn.close()
         return [x[0] for x in cacvitri]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laycacca():
@@ -1107,7 +1107,7 @@ def laycacca():
         conn.close()
         return [x[0] for x in cacca]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def layhcname(jobtitle,line):
@@ -1120,7 +1120,7 @@ def layhcname(jobtitle,line):
         conn.close()
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
@@ -1139,7 +1139,7 @@ def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
         if vitri:
             query += f"AND Vi_tri_ung_tuyen LIKE N'%{vitri}%'"  
         query+= " ORDER BY Ngay_gui_thong_tin DESC"
-        print(query)
+        
         rows =  cursor.execute(query).fetchall()
         conn.close()
         result = []
@@ -1189,7 +1189,7 @@ def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
             })
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
@@ -1314,7 +1314,7 @@ def xoanhanvien(MST):
         conn.close()
         return f"{MST} đã xoá thành công"
     except Exception as e:
-        print(e)
+        flash(e)
         return f"{MST} đã xoá thất bại"
     
 def laymasothemoi():
@@ -1329,7 +1329,7 @@ def laymasothemoi():
             return result[0]
         return 0
     except Exception as e:
-        print(e)
+        flash(e)
         return 0
 
 def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=None):
@@ -1386,7 +1386,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
             })
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachchuyen():
@@ -1399,7 +1399,7 @@ def laydanhsachchuyen():
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            flash(e)
             return []
 
 def laydanhsachbophan():
@@ -1412,7 +1412,7 @@ def laydanhsachbophan():
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            flash(e)
             return []
 
 def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1438,7 +1438,7 @@ def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denng
         conn.close()
         return rows
     except Exception as e:
-            print(e)
+            flash(e)
             return []
 
 def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1459,7 +1459,7 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
-        # print(query)
+        # 
         rows = cursor.execute(query).fetchall()
         conn.close()
         result = []
@@ -1467,7 +1467,7 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
             result.append(row)
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1490,7 +1490,7 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
-        # print(query)
+        # 
         rows = cursor.execute(query).fetchall()
         conn.close()
         result = []
@@ -1498,7 +1498,7 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
             result.append(row)
         return result
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None,mstquanly=None,mstthuky=None):
@@ -1507,7 +1507,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
+            SELECT  DISTINCT bu.*
             FROM 
                 Diem_danh_bu as bu
             INNER JOIN 
@@ -1519,7 +1519,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
+                SELECT DISTINCT bu.*
                 FROM 
                     Diem_danh_bu as bu
                 INNER JOIN 
@@ -1553,7 +1553,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai,mstquanly,mstthuky):
@@ -1562,7 +1562,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai 
+            SELECT DISTINCT np.* 
             FROM 
                 DS_Xin_nghi_phep as np
             INNER JOIN 
@@ -1574,7 +1574,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai
+                SELECT DISTINCT np.*
                 FROM 
                     DS_Xin_nghi_phep as np
                 INNER JOIN 
@@ -1601,12 +1601,12 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
         ##
-        print(query)
+        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky):
@@ -1615,7 +1615,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
+            SELECT DISTINCT kl.*
             FROM 
                 Xin_nghi_khong_luong as kl
             INNER JOIN 
@@ -1627,7 +1627,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
+                SELECT DISTINCT kl.*
                 FROM 
                     Xin_nghi_khong_luong as kl
                 INNER JOIN 
@@ -1660,7 +1660,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def thuky_duoc_phanquyen(mst,chuyen):
@@ -1675,7 +1675,7 @@ def thuky_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def quanly_duoc_phanquyen(mst,chuyen):
@@ -1692,7 +1692,7 @@ def quanly_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def kiemtrathuki(mst,chuyen):
@@ -1710,7 +1710,7 @@ def kiemtrathuki(mst,chuyen):
         else:
             return False
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def capnhat_xinnghiphep(mst,ngay):
@@ -1723,7 +1723,7 @@ def capnhat_xinnghiphep(mst,ngay):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     try:
@@ -1738,7 +1738,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         conn.close()
         return False
         
@@ -1769,7 +1769,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-        print(e)  
+        flash(e)  
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1786,7 +1786,7 @@ def laydanhsachphepton(mst=None):
         result = []
         return rows 
     except Exception as e:
-        print(e)   
+        flash(e)   
         return [] 
     
 def laydanhsachkyluat():
@@ -1800,7 +1800,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-        print(e)  
+        flash(e)  
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1813,7 +1813,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def chuadangkycalamviec(mst):
     try:
@@ -1825,7 +1825,7 @@ def chuadangkycalamviec(mst):
         if row[0]==0:
             return True
     except Exception as e:
-        print(f"Kiem tra da dang ky ca lam viec chua loi: {e} !!!")
+        flash(f"Kiem tra da dang ky ca lam viec chua loi: {e} !!!")
         return False
         
 def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
@@ -1837,7 +1837,7 @@ def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         if pd.notna(ngayketthuc):
-            print("Co ngay ket thuc")
+            flash("Co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngayvecamacdinh = ngayketthuc + timedelta(days=1)
             if ngaybatdau <= ngayketthuc:
@@ -1859,12 +1859,12 @@ def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
                 cursor.execute(query)
                 conn.commit()
                 conn.close()
-                print("Đổi ca thành công", "success")
+                flash("Đổi ca thành công", "success")
                 return True
             else:
-                print("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
+                flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
         else:
-            print("Khong co ngay ket thuc")
+            flash("Khong co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngaymoc = datetime(2054,12,31)
             query = f"""
@@ -1878,10 +1878,10 @@ def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             cursor.execute(query)
             conn.commit()
             conn.close()
-            print("Đổi ca thành công", "success")
+            flash("Đổi ca thành công", "success")
             return True
     except Exception as e:
-        print(e)   
+        flash(e)   
         return False 
         
 def laycahientai(mst):
@@ -1896,7 +1896,7 @@ def laycahientai(mst):
             return row[-2]
         return None
     except Exception as e:
-        print(e)
+        flash(e)
         return None
 
 def laydanhsachyeucautuyendung(phongban):
@@ -1907,11 +1907,11 @@ def laydanhsachyeucautuyendung(phongban):
         if phongban:
             query += f" and Bo_phan='{phongban}'"
         query += " ORDER BY ID desc"
-        # print(query)
+        # 
         rows = cursor.execute(query).fetchall()
         return [list(x) for x in rows]
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
@@ -1930,12 +1930,12 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,cap
         N'Chưa tuyển',NULL,'{current_user.masothe}',N'{current_user.hoten}','{current_user.macongty}',
         GETDATE(),N'{kieulaodong}',N'{trongbudget}',0)
         """
-        print(query)
+        
         cursor.execute(query)
         conn.commit()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly):
@@ -1989,7 +1989,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
                     else:
                         query += f" AND Giay_to=N'{nhangiayto}'" 
                 query += " ORDER BY Ngay_nghi DESC, MST ASC"
-        print(query)
+        
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows 
@@ -2007,7 +2007,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
 #         conn.close()
 #         return True
 #     except Exception as e:
-#         print(e)
+#         flash(e)
 #         return False
 
 # def themdulieuchamcong2ngay():
@@ -2029,7 +2029,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
 #         conn1.close()
 #         return True
 #     except Exception as e:
-#         print(e)
+#         flash(e)
 #         return False
     
 def thuky_dakiemtra_diemdanhbu(id):
@@ -2042,7 +2042,7 @@ def thuky_dakiemtra_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def thuky_tuchoi_diemdanhbu(id):
     try:
@@ -2053,7 +2053,7 @@ def thuky_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def quanly_pheduyet_diemdanhbu(id):
     try:
@@ -2065,7 +2065,7 @@ def quanly_pheduyet_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def quanly_tuchoi_diemdanhbu(id):
     try:
@@ -2076,7 +2076,7 @@ def quanly_tuchoi_diemdanhbu(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def thuky_dakiemtra_xinnghiphep(id):
     try:
@@ -2088,7 +2088,7 @@ def thuky_dakiemtra_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def thuky_tuchoi_xinnghiphep(id):
     try:
@@ -2099,7 +2099,7 @@ def thuky_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def quanly_pheduyet_xinnghiphep(id):
     try:
@@ -2111,7 +2111,7 @@ def quanly_pheduyet_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def quanly_tuchoi_xinnghiphep(id):
     try:
@@ -2122,7 +2122,7 @@ def quanly_tuchoi_xinnghiphep(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         
 def thuky_dakiemtra_xinnghikhongluong(id):
     try:
@@ -2134,7 +2134,7 @@ def thuky_dakiemtra_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def thuky_tuchoi_xinnghikhongluong(id):
     try:
@@ -2145,7 +2145,7 @@ def thuky_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def quanly_pheduyet_xinnghikhongluong(id):
     try:
@@ -2157,7 +2157,7 @@ def quanly_pheduyet_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def quanly_tuchoi_xinnghikhongluong(id):
     try:
@@ -2169,7 +2169,7 @@ def quanly_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def thuky_dakiemtra_xinnghikhac(id):
     try:
@@ -2181,7 +2181,7 @@ def thuky_dakiemtra_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def thuky_tuchoi_xinnghikhac(id):
     try:
@@ -2192,7 +2192,7 @@ def thuky_tuchoi_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def quanly_pheduyet_xinnghikhac(id):
     try:
@@ -2204,7 +2204,7 @@ def quanly_pheduyet_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
     
 def quanly_tuchoi_xinnghikhac(id):
     try:
@@ -2215,7 +2215,7 @@ def quanly_tuchoi_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
 
 def nhansu_nhangiayto_xinnghikhac(id):
     try:
@@ -2226,7 +2226,7 @@ def nhansu_nhangiayto_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         
 def nhansu_khongnhangiayto_xinnghikhac(id):
     try:
@@ -2237,7 +2237,7 @@ def nhansu_khongnhangiayto_xinnghikhac(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         
 def laydanhsachcahientai(mst,chuyen, phongban):
     try:
@@ -2270,12 +2270,12 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        # print(query)
+        # 
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def laydanhsachkpichuaduyet(mst,macongty):
@@ -2294,7 +2294,7 @@ def laydanhsachkpichuaduyet(mst,macongty):
             return []
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []  
    
 def laydanhsachkpidaduyet(mst,macongty):
@@ -2311,7 +2311,7 @@ def laydanhsachkpidaduyet(mst,macongty):
         conn.close()
         return rows
     except Exception as e:
-        print
+        flash
         return []
       
 def roles_required(*roles):
@@ -2335,7 +2335,7 @@ def delete_kpidata(masothe,macongty):
         conn.close()
         return True    
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def insert_kpidata(masothe:str,macongty:str,values:list):
@@ -2362,7 +2362,7 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def guimailthongbaodaguikpi(nhamay,mst,hoten):
@@ -2375,7 +2375,7 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
@@ -2388,7 +2388,7 @@ def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
@@ -2401,7 +2401,7 @@ def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
         conn.commit()
         conn.close()
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def laydanhsachquanly(macongty):
@@ -2419,7 +2419,7 @@ def laydanhsachquanly(macongty):
             result.append({"mst":row[0],"hoten":row[1]})
         return result        
     except Exception as e:
-        print(e)
+        flash(e)
         return []
     
 def pheduyetkpi(masothe,macongty):
@@ -2432,7 +2432,7 @@ def pheduyetkpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def tuchoikpi(masothe,macongty):
@@ -2445,7 +2445,7 @@ def tuchoikpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def layemailquanly(macongty,masothe):
@@ -2457,7 +2457,7 @@ def layemailquanly(macongty,masothe):
         conn.close()
         return row[0]
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphethan):
@@ -2494,7 +2494,7 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
@@ -2511,7 +2511,7 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
     
 def rutdonnghiviec(id):
@@ -2524,7 +2524,7 @@ def rutdonnghiviec(id):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def laydanhsach_hopdong_theomst(mst):
@@ -2556,7 +2556,7 @@ def laydanhsach_hopdong_theomst(mst):
             "Ngày hết hạn hợp đồng": row[18]
         } for row in rows]
     except Exception as e:
-        print(e)
+        flash(e)
         return []  
 
 def capnhat_stk(mst, stk, macongty):
@@ -2569,7 +2569,7 @@ def capnhat_stk(mst, stk, macongty):
         conn.close()
         return True
     except Exception as e:
-        print(f"Cap nhat so tai khoan loi {e}")
+        flash(f"Cap nhat so tai khoan loi {e}")
         return False 
     
 def lay_thongtin_hopdong_theo_id(id):
@@ -2620,7 +2620,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        print(f"Loi khi them hop dong co ngay ket thuc: {e} !!!\nQuery:{query}")
+        flash(f"Loi khi them hop dong co ngay ket thuc: {e} !!!\nQuery:{query}")
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
@@ -2789,7 +2789,7 @@ def lay_chuyen_va_capbac(macongty, mst):
         else:
             return None
     except Exception as e:
-        print(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
+        flash(f"Loi khi kiem tra co phai to truong khong: {e} !!!")
         return None
     
 def capnhat_ghichu_lsct(mst,ngaythuchien,phanloai,ghichumoi):
@@ -2808,7 +2808,7 @@ def capnhat_ghichu_lsct(mst,ngaythuchien,phanloai,ghichumoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def capnhat_ngaythuchien_lsct(mst,ngaythuchienmoi,phanloai,chuyencu,chuyenmoi):
@@ -2828,7 +2828,7 @@ def capnhat_ngaythuchien_lsct(mst,ngaythuchienmoi,phanloai,chuyencu,chuyenmoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def sua_dangky_ca(id,camoi):
@@ -2842,7 +2842,7 @@ def sua_dangky_ca(id,camoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False   
 
 
@@ -2857,7 +2857,7 @@ def suadoi_ngaybatdau_ca_dangky_ca(id,ngaybatdau_camoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False   
     
 def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
@@ -2871,7 +2871,7 @@ def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False  
     
 def lay_chuyen_theo_mst(mst):
@@ -2887,7 +2887,7 @@ def lay_chuyen_theo_mst(mst):
         else:
             return None
     except Exception as e:
-        print(e)
+        flash(e)
         return None 
     
 def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
@@ -2907,7 +2907,7 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
         if ngay:
             query += f" and Ngay_dang_ky = '{ngay}'"
         query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        # print(query)
+        # 
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
@@ -2930,7 +2930,7 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
             "Giờ ra": row[15][:5] if row[15] else "",
             "HR phê duyệt": row[16] if row[16] else ""     
             } for row in rows]
-        # print(result)
+        # flash(result)
         conn.close()
         return result
     except Exception as e:
@@ -2959,7 +2959,7 @@ def danhsach_tangca_quakhu(mst,chuyen,ngay,pheduyet):
                     FROM Dang_ky_tang_ca_qua_khu 
                     )"""
         query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        # print(query)
+        # 
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
@@ -2982,7 +2982,7 @@ def danhsach_tangca_quakhu(mst,chuyen,ngay,pheduyet):
             "Giờ ra": row[15][:5] if row[15] else "",
             "HR phê duyệt": row[16] if row[16] else ""     
             } for row in rows]
-        # print(result)
+        # flash(result)
         conn.close()
         return result
     except Exception as e:
@@ -3008,7 +3008,7 @@ def laychuyen_quanly(masothe,macongty):
             cursor = cursor.execute(query)
             rows = cursor.fetchall()
             result = [row[0] for row in rows]
-            # print(result)
+            # flash(result)
             conn.close()
         return result
     except:
@@ -3057,7 +3057,7 @@ def nhansu_pheduyet_tangca(id, type):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"UPDATE Dang_ky_tang_ca SET HR='OK' WHERE ID='{id}'" if type == 1 else f"UPDATE Dang_ky_tang_ca SET HR=NULL WHERE ID='{id}'"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
@@ -3167,7 +3167,7 @@ def them_dangky_tangca(cursor, conn, nhamay, mst, hoten, chucdanh, chuyen,
         conn.commit()
         return True
     except Exception as e:
-        print(f"Loi them dang ky tang ca: {e}")
+        flash(f"Loi them dang ky tang ca: {e}")
         return False
     
 def lay_bangcong_thucte(thang,nam,mst,bophan,chuyen):
@@ -3190,7 +3190,7 @@ def lay_bangcong_thucte(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang cong tong thuc te: {e}")
+        flash(f"Loi lay bang cong tong thuc te: {e}")
         return []
 
 def lay_bangcong_kx(thang,nam,mst,bophan,chuyen):
@@ -3213,7 +3213,7 @@ def lay_bangcong_kx(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang cong tong thuc te: {e}")
+        flash(f"Loi lay bang cong tong thuc te: {e}")
         return []
  
 def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
@@ -3236,7 +3236,7 @@ def lay_tangcachedo_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca che do: {e}")
+        flash(f"Loi lay bang tang ca che do: {e}")
         return []
     
 def lay_tangcachedo(thang,nam,mst,bophan,chuyen):
@@ -3259,7 +3259,7 @@ def lay_tangcachedo(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca che do: {e}")
+        flash(f"Loi lay bang tang ca che do: {e}")
         return []
 
 def lay_tangcangay(thang,nam,mst,bophan,chuyen):
@@ -3282,7 +3282,7 @@ def lay_tangcangay(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca ngay: {e}")
+        flash(f"Loi lay bang tang ca ngay: {e}")
         return []
        
 def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
@@ -3305,7 +3305,7 @@ def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca ngay: {e}")
+        flash(f"Loi lay bang tang ca ngay: {e}")
         return []
    
 def lay_tangcadem(thang,nam,mst,bophan,chuyen):
@@ -3328,7 +3328,7 @@ def lay_tangcadem(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca chu nhat: {e}")
+        flash(f"Loi lay bang tang ca chu nhat: {e}")
         return []
     
 def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
@@ -3351,7 +3351,7 @@ def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca chu nhat: {e}")
+        flash(f"Loi lay bang tang ca chu nhat: {e}")
         return []
 
 def lay_tangcangayle(thang,nam,mst,bophan,chuyen):
@@ -3374,7 +3374,7 @@ def lay_tangcangayle(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca ngay le: {e}")
+        flash(f"Loi lay bang tang ca ngay le: {e}")
         return []
 
 def lay_tangcangayle_web(thang,nam,mst,bophan,chuyen):
@@ -3397,7 +3397,7 @@ def lay_tangcangayle_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca ngay le: {e}")
+        flash(f"Loi lay bang tang ca ngay le: {e}")
         return []
 
 def lay_tangcachunhat(thang,nam,mst,bophan,chuyen):
@@ -3420,7 +3420,7 @@ def lay_tangcachunhat(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca dem: {e}")
+        flash(f"Loi lay bang tang ca dem: {e}")
         return []
        
 def lay_tangcachunhat_web(thang,nam,mst,bophan,chuyen):
@@ -3443,7 +3443,7 @@ def lay_tangcachunhat_web(thang,nam,mst,bophan,chuyen):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay bang tang ca dem: {e}")
+        flash(f"Loi lay bang tang ca dem: {e}")
         return []
     
 def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
@@ -3463,7 +3463,7 @@ def lay_dulieu_chamcong_web(mst,chuyen, bophan,ngay):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cham cong goc: {e}")
+        flash(f"Loi lay cham cong goc: {e}")
         return []
     
 def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
@@ -3490,7 +3490,7 @@ def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cham cong goc: {e}")
+        flash(f"Loi lay cham cong goc: {e}")
         return []
     
 def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
@@ -3517,7 +3517,7 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cham cong goc: {e}")
+        flash(f"Loi lay cham cong goc: {e}")
         return []
 
 def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
@@ -3545,7 +3545,7 @@ def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,dennga
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cham cong goc: {e}")
+        flash(f"Loi lay cham cong goc: {e}")
         return []
     
 def kiemtra_masothe(masothe):
@@ -3556,7 +3556,7 @@ def kiemtra_masothe(masothe):
         result = cursor.execute(query).fetchone()
         return True if result[0] > 0 else False
     except Exception as e:
-        print(f"Loi kiem tra ma so the hop le: {e}")
+        flash(f"Loi kiem tra ma so the hop le: {e}")
         return False
 
 def chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
@@ -3565,15 +3565,15 @@ def chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
         cursor = conn.cursor()
         query = f"select Count(*) from HC_name where Detail_job_title_VN=N'{chucdanhmoi}' and Line='{chuyenmoi}'"
         result = cursor.execute(query).fetchone()
-        print(result)
+        flash(result)
         return True if result[0] > 0 else False
     except Exception as e:
-        print(f"Loi kiem tra hc name: {e}")
+        flash(f"Loi kiem tra hc name: {e}")
         return False
 
 def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen):
     masothe_hople = kiemtra_masothe(masothe)
-    print(masothe_hople)
+    flash(masothe_hople)
     if not masothe_hople:
         return {"ketqua":False,
                     "dong":dong,
@@ -3600,7 +3600,7 @@ def laylichsucongviec(mst,chuyen,bophan):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay lich su cong viec: {e}")
+        flash(f"Loi lay lich su cong viec: {e}")
         return []
     
 def hr_pheduyet_tangca(id,hrpheduyet):
@@ -3616,7 +3616,7 @@ def hr_pheduyet_tangca(id,hrpheduyet):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi hr phe duyet tang ca ({e})")
+        flash(f"Loi hr phe duyet tang ca ({e})")
         return False 
     
 def lay_cacca_theobang():
@@ -3627,7 +3627,7 @@ def lay_cacca_theobang():
         data = cursor.execute(query).fetchall()
         return [x for x in data]
     except Exception as e:
-        print(f"Loi lay cac ca: {e}")
+        flash(f"Loi lay cac ca: {e}")
         return []
 
 def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
@@ -3640,7 +3640,7 @@ def sua_ngaybatdau_lichsu_congviec(id,ngaybatdau):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat ngay bat dau lich su cong viec: {e}")
+        flash(f"Loi cap nhat ngay bat dau lich su cong viec: {e}")
         return False
     
 def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
@@ -3653,7 +3653,7 @@ def sua_ngayketthuc_lichsu_congviec(id,ngayketthuc):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat ngay ket thuc lich su cong viec: {e}")
+        flash(f"Loi cap nhat ngay ket thuc lich su cong viec: {e}")
         return False
 
 def sua_chuyen_lichsu_congviec(id,chuyen):
@@ -3666,7 +3666,7 @@ def sua_chuyen_lichsu_congviec(id,chuyen):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat chuyen lich su cong viec: {e}")
+        flash(f"Loi cap nhat chuyen lich su cong viec: {e}")
         return False
     
 def sua_bophan_lichsu_congviec(id,bophan):
@@ -3679,7 +3679,7 @@ def sua_bophan_lichsu_congviec(id,bophan):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat bo phan lich su cong viec: {e}")
+        flash(f"Loi cap nhat bo phan lich su cong viec: {e}")
         return False
     
 def sua_chucdanh_lichsu_congviec(id,chucdanh):
@@ -3692,7 +3692,7 @@ def sua_chucdanh_lichsu_congviec(id,chucdanh):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat chuc danh lich su cong viec: {e}")
+        flash(f"Loi cap nhat chuc danh lich su cong viec: {e}")
         return False
     
 def sua_hccategory_lichsu_congviec(id,hccategory):
@@ -3705,7 +3705,7 @@ def sua_hccategory_lichsu_congviec(id,hccategory):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat HC_CATEGORY lich su cong viec: {e}")
+        flash(f"Loi cap nhat HC_CATEGORY lich su cong viec: {e}")
         return False
     
 def sua_capbac_lichsu_congviec(id,capbac):
@@ -3718,7 +3718,7 @@ def sua_capbac_lichsu_congviec(id,capbac):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi cap nhat cap bac lich su cong viec: {e}")
+        flash(f"Loi cap nhat cap bac lich su cong viec: {e}")
         return False
     
 def themtaikhoanmoi(masothe,hoten,department,gradecode):
@@ -3743,7 +3743,7 @@ def lay_sodienthoai_theo_mst(mst):
         data = cursor.execute(query).fetchone()
         return data[0]
     except Exception as e:
-        print(f"Loi lay so dien thoai: {e}")
+        flash(f"Loi lay so dien thoai: {e}")
         return 0
     
 def get_thongtin_vitri(vitri):
@@ -3751,20 +3751,20 @@ def get_thongtin_vitri(vitri):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT Detail_job_title_EN,Grade_code FROM HC_Name WHERE Factory = '{current_user.macongty}' AND Detail_job_title_VN=N'{vitri.strip()}' "
-        # print(query)
+        # 
         data = cursor.execute(query).fetchone()
-        # print(data)
+        # flash(data)
         query1 = f"SELECT Bac_luong,Luong_co_ban FROM Luong_co_ban Where Grade_code = '{data[1]}' and Nha_may='{current_user.macongty}'"
-        # print(query1)
+        # flash(query1)
         data1 = cursor.execute(query1).fetchall()
-        # print(data1)
+        # flash(data1)
         cacbacluong = []
         if data1:
             for x in data1:
                 cacbacluong.append([x[0],x[1]])
         return {'Detail_job_title_EN':data[0],'Grade_code':data[1],'Bac_luong': cacbacluong}
     except Exception as e:
-        print(f"Loi lay thong tin vi tri: {e}")
+        flash(f"Loi lay thong tin vi tri: {e}")
         return {'Detail_job_title_EN':"",'Grade_code':"",'Bac_luong': []}
     
 def lay_cac_vitri_trong_phong(phongban):
@@ -3776,7 +3776,7 @@ def lay_cac_vitri_trong_phong(phongban):
         data = cursor.execute(query).fetchall()
         return [x[0] for x in data ]
     except Exception as e:
-        print(f"Loi lay cac vi tri: {e}")
+        flash(f"Loi lay cac vi tri: {e}")
         return []
 
 def lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam):
@@ -3797,10 +3797,10 @@ def lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
-        # print(len(rows))
+        # flash(len(rows))
         return [x for x in rows]
     except Exception as e:
-        print(f"Loi lay bang cong thang: {e}")
+        flash(f"Loi lay bang cong thang: {e}")
         return []
     
 def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
@@ -3821,10 +3821,10 @@ def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
-        # print(len(rows))
+        # flash(len(rows))
         return [x for x in rows]
     except Exception as e:
-        print(f"Loi lay bang cong thang: {e}")
+        flash(f"Loi lay bang cong thang: {e}")
         return []
     
 def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
@@ -3840,7 +3840,7 @@ def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        print(f"Loi cap nhat trang thai tuyen dung: {e}")
+        flash(f"Loi cap nhat trang thai tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
     
 def capnhat_trangthai_tuyendung(id,trangthaimoi):
@@ -3853,7 +3853,7 @@ def capnhat_trangthai_tuyendung(id,trangthaimoi):
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
+        flash(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
     
 def capnhat_ghichu_tuyendung(id,ghichu):
@@ -3866,7 +3866,7 @@ def capnhat_ghichu_tuyendung(id,ghichu):
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        print(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
+        flash(f"Loi cap nhat trang thai thuc hien tuyen dung: {e}")
         return {"ketqua":True,"lido":e}
     
 def lay_danhsach_dangky_ngayle(mst, chuyen, bophan, ngay):
@@ -3886,7 +3886,7 @@ def lay_danhsach_dangky_ngayle(mst, chuyen, bophan, ngay):
         rows =  cursor.execute(query).fetchall()
         return [x for x in rows]
     except Exception as e:
-        print(f"Loi lay bang dang ky ngay le: {e}")
+        flash(f"Loi lay bang dang ky ngay le: {e}")
         return []
     
 def lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay):
@@ -3907,7 +3907,7 @@ def lay_danhsach_dangky_chunhat(mst, chuyen, bophan, ngay):
         rows =  cursor.execute(query).fetchall()
         return [x for x in rows]
     except Exception as e:
-        print(f"Loi lay bang dang ky Chu nhat: {e}")
+        flash(f"Loi lay bang dang ky Chu nhat: {e}")
         return []
     
 def hr_pheduyet_dilam_ngayle(id,hrpheduyet:str,congkhai):
@@ -3930,7 +3930,7 @@ def hr_pheduyet_dilam_ngayle(id,hrpheduyet:str,congkhai):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi hr phe duyet di lam ngay le: ({e})")
+        flash(f"Loi hr phe duyet di lam ngay le: ({e})")
         return False
     
 def hr_pheduyet_dilam_chunhat(id,hrpheduyet:str,congkhai):
@@ -3947,13 +3947,13 @@ def hr_pheduyet_dilam_chunhat(id,hrpheduyet:str,congkhai):
         else:
             query += f" CONG_KHAI=NULL "
         query += f"WHERE ID='{id}'"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi hr phe duyet di lam chu nhat: ({e})")
+        flash(f"Loi hr phe duyet di lam chu nhat: ({e})")
         return False
     
 def them_dangky_dilam_ngayle(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
@@ -3967,7 +3967,7 @@ def them_dangky_dilam_ngayle(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi them dong di lam ngay le: ({e})")
+        flash(f"Loi them dong di lam ngay le: ({e})")
         return False
 
 def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
@@ -3975,20 +3975,24 @@ def them_dangky_dilam_chunhat(nhamay,mst,hoten,chuyen,bophan,vitri,ngay):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"insert into DANG_KY_LAM_VIEC_CHU_NHAT values ('{nhamay}','{mst}',N'{hoten}','{chuyen}','{bophan}',N'{vitri}','{ngay}',NULL,NULL)"
-        print(query)
+        
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi them dong di lam chu nhat: ({e})")
+        flash(f"Loi them dong di lam chu nhat: ({e})")
         return False
     
 def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
     
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
-    query = f"insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values ('{current_user.macongty}','{current_user.masothe}',N'{current_user.hoten}','{current_user.phongban}',N'{vitri}','{soluong}',N'{trongbudget}',GETDATE())"
+    email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{current_user.macongty}' and MST='{current_user.masothe}'").fetchone()[0]
+    query = f"""insert into YEU_CAU_TUYEN_DUNG_CHO_KIEM_TRA 
+                values ('{current_user.macongty}','{current_user.masothe}',
+                N'{current_user.hoten}','{current_user.phongban}','{email}',N'{vitri}',
+                '{soluong}',N'{trongbudget}',GETDATE())"""
     try:  
         cursor = cursor.execute(query)
         conn.commit()
@@ -3996,13 +4000,38 @@ def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
         return {"ketqua":True}
     except Exception as e:
         return {"ketqua":False, "lido":e, "query":query}
-    
+
+def them_yeucau_tuyendung_cho_pheduyet(id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        data = cursor.execute(f"select MST,HO_TEN,NHA_MAY,Bo_phan,Vi_tri,So_luong,Phan_loai_budget,Phan_loai_vi_tri from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
+        # flash(data)
+        mst = data[0]
+        hoten = data[1]
+        nhamay = data[2]
+        phongban = data[3]
+        vitri = data[4]
+        soluong = data[5]
+        phanloai_budget = data[6]
+        phanloai_vitri = data[7]
+        query = f"""insert into YEU_CAU_TUYEN_DUNG_CHO_PHE_DUYET values 
+                    ('{nhamay}','{mst}',N'{hoten}','{phongban}',
+                    N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE(),N'{phanloai_vitri}')"""
+        print(query)
+        cursor = cursor.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        flash(e)
+        return False
+
 def them_yeucau_tuyendung_duoc_pheduyet(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         data = cursor.execute(f"select MST,HO_TEN,NHA_MAY,Bo_phan,Vi_tri,So_luong,Phan_loai_budget from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
-        print(data)
         mst = data[0]
         hoten = data[1]
         nhamay = data[2]
@@ -4011,14 +4040,16 @@ def them_yeucau_tuyendung_duoc_pheduyet(id):
         soluong = data[5]
         phanloai_budget = data[6]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
-        print(email)
-        query = f"insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"
-        print(query)
+        query = f"""insert into YEU_CAU_TUYEN_DUNG_DA_PHE_DUYET values 
+                    ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',
+                    N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"""
+        # 
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
+        flash(e)
         return False
     
 def them_yeucau_tuyendung_bi_tuchoi(id):
@@ -4026,7 +4057,7 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         data = cursor.execute(f"select MST,HO_TEN,NHA_MAY,Bo_phan,Vi_tri,So_luong,Phan_loai_budget from YEU_CAU_TUYEN_DUNG where ID='{id}'").fetchone()
-        print(data)
+        # flash(data)
         mst = data[0]
         hoten = data[1]
         nhamay = data[2]
@@ -4035,15 +4066,17 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
         soluong = data[5]
         phanloai_budget = data[6]
         email = cursor.execute(f"select Email from KPI_DS_Email where Nha_may='{nhamay}' and MST='{mst}'").fetchone()[0]
-        print(email)
-        query = f"insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI values ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"
-        print(query)
+        # flash(email)
+        query = f"""insert into YEU_CAU_TUYEN_DUNG_BI_TU_CHOI 
+                values ('{nhamay}','{mst}',N'{hoten}','{email}','{phongban}',
+                N'{vitri}','{soluong}',N'{phanloai_budget}',GETDATE())"""
+        # 
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return True
     except Exception as e:
-        print(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
+        flash(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
         return False
 
 def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
@@ -4064,7 +4097,7 @@ def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
-        # print(len(rows))
+        # flash(len(rows))
         return [x for x in rows]
     except Exception as e:
         flash(f"Loi lay bang cong thang: {e}")
@@ -4210,9 +4243,9 @@ def lay_dulieu_tongcong(mst):
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"select distinct NAM from BANG_TONG_CONG_CA_THANG where MST='{mst}' and NHA_MAY='{current_user.macongty}'"
-        print(query)
+        
         rows = cur.execute(query).fetchall()
-        print(rows)
+        flash(rows)
         for row in rows:
             data[int(row[0])]=[0,0,0,0,0,0,0,0,0,0,0,0]
 
@@ -4227,7 +4260,7 @@ def lay_dulieu_tongcong(mst):
             data[year] = [float(value) if isinstance(value, Decimal) else value for value in data[year]]
         return data
     except Exception as e:
-        print(e)
+        flash(e)
         return data
     
 def lay_phanquyen_hientai(macongty,masothe):
@@ -4238,7 +4271,7 @@ def lay_phanquyen_hientai(macongty,masothe):
         result = cur.execute(query).fetchone()
         return result[0] if result else ""
     except Exception as e:
-        print(e)
+        flash(e)
         return ""
     
 def suadoi_phanquyen(macongty,masothe,phanquyen):
@@ -4251,7 +4284,7 @@ def suadoi_phanquyen(macongty,masothe,phanquyen):
         conn.close()
         return True
     except Exception as e:
-        print(e)
+        flash(e)
         return False
 
 def laydanhsach_phanquyenthuky(filters):
@@ -4267,7 +4300,7 @@ def laydanhsach_phanquyenthuky(filters):
         conn.close()
         return rows
     except Exception as e:
-        print(e)
+        flash(e)
         return []
 
 
@@ -4809,7 +4842,7 @@ def lay_soluong_yeucautuyendung_chopheduyet(nhamay, phongban):
                 and Ngay_dong_yeu_cau is NULL """   
         if phongban:
             query += f" and Bo_phan='{phongban}'" 
-        # print(query) 
+        #  
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
@@ -4827,7 +4860,7 @@ def lay_soluong_yeucautuyendung_chokiemtra(nhamay, phongban):
                 and Ngay_dong_yeu_cau is NULL """     
         if phongban:
             query += f" and Bo_phan='{phongban}'" 
-        # print(query)
+        # 
         result = cursor.execute(query).fetchone()[0]
         conn.close()
         return result
@@ -4888,7 +4921,7 @@ def lay_danhsach_ungvien_tiemnang(vitri):
         query = f"""select * from Yeu_cau_tuyen_dung_chi_tiet 
         join Yeu_cau_tuyen_dung on Yeu_cau_tuyen_dung.id=Yeu_cau_tuyen_dung_chi_tiet.id_yctd
         where Yeu_cau_tuyen_dung.Vi_tri = N'{vitri}' and Yeu_cau_tuyen_dung_chi_tiet.Trang_thai != N'Đã nhận việc'"""   
-        print(query)    
+            
         result = cursor.execute(query).fetchall()
         conn.close()
         return list(result)
@@ -4909,7 +4942,7 @@ def lay_danhsach_ungvien_2_1():
                     );
 
                 """
-        # print(query)
+        # 
         result = cursor.execute(query).fetchall()
         conn.close()
         return list(result)
@@ -4961,11 +4994,11 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
                 cur.commit()
         else:
             query2 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen+1 WHERE ID = {id_yctd}"
-            print(query2)
+            flash(query2)
             cur.execute(query2)
             cur.commit()
         query3 = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
-        print(query3)
+        flash(query3)
         cur.execute(query3)
         cur.commit()
         conn.close()
@@ -5005,7 +5038,7 @@ def lay_thongtin_yeucautuyendung(id):
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"SELECT Vi_tri, Bo_phan FROM Yeu_cau_tuyen_dung WHERE ID='{id}'"
-        print(query)
+        
         result = cur.execute(query).fetchone()
         conn.close()
         return list(result)
@@ -5018,7 +5051,7 @@ def kiemtra_danhsach_thuki():
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"SELECT COUNT(*) FROM DANH_SACH_THU_KY_BP WHERE MST='{current_user.masothe}' AND NHA_MAY='{current_user.macongty}'"
-        # print(query)
+        # 
         result = cur.execute(query).fetchone()[0]
         conn.close()
         if result > 0:
@@ -5033,7 +5066,7 @@ def lay_danhsach_vitri_theo_hcname(macongty):
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"SELECT Detail_job_title_VN, Detail_job_title_EN FROM HC_Name WHERE Factory='{macongty}'"
-        # print(query)
+        # 
         rows = cur.execute(query).fetchall()
         conn.close()
         result = {}

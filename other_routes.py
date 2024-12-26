@@ -2800,10 +2800,11 @@ def gd_pheduyet_tuyendung():
                         set Trang_thai_yeu_cau = N'Phê duyệt',
                         Ngay_phe_duyet =GETDATE()
                         where ID = '{id}'"""
-            print(query)
+            # print(query)
             cursor.execute(query)
             cursor.commit()
             conn.close()
+            them_yeucau_tuyendung_duoc_pheduyet(id)
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
@@ -2820,10 +2821,11 @@ def gd_tuchoi_tuyendung():
                         set Trang_thai_yeu_cau = N'Từ chối',
                         Ngay_phe_duyet =GETDATE()
                         where ID = '{id}'"""
-            print(query)
+            # print(query)
             cursor.execute(query)
             cursor.commit()
             conn.close()
+            them_yeucau_tuyendung_bi_tuchoi(id)
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
@@ -4315,10 +4317,11 @@ def tbp_kiemtra_yctd():
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"update Yeu_cau_tuyen_dung set Bac_luong = '{bacluong}', Khoang_luong = '{khoangluong}', Grade_code= '{capbac}', Trang_thai_yeu_cau=N'Chưa phê duyệt' where ID = '{id}'" 
-        print(query)
+        # print(query)
         cursor.execute(query)
         cursor.commit()
         conn.close()
+        them_yeucau_tuyendung_cho_pheduyet(id)
         return redirect("/muc2_2")
     except Exception as e:
         flash(f"Lỗi trưởng bộ phận kiểm tra yêu cầu tuyển dụng: {e}")
@@ -4335,6 +4338,7 @@ def tbp_tuchoi_yctd():
         cursor.execute(query)
         cursor.commit()
         conn.close()
+        them_yeucau_tuyendung_bi_tuchoi(id)
         return redirect("/muc2_2")
     except Exception as e:
         flash(f"Lỗi trưởng bộ phận kiểm tra yêu cầu tuyển dụng: {e}")
@@ -4369,10 +4373,11 @@ def thaydoi_thongtin_yctd():
                 Bac_luong = '{bacluong}', 
                 Khoang_luong = '{khoangluong}'
                 where ID = '{id}'""" 
-        print(query)
+        # print(query)
         cursor.execute(query)
         cursor.commit()
         conn.close()
+        them_yeucau_tuyendung_cho_pheduyet(id)
         return redirect("/muc2_2")
     except Exception as e:
         flash(f"Lỗi thay đổi thông tin yêu cầu tuyển dụng: {e}")
