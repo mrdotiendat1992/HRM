@@ -43,80 +43,26 @@
 {% endblock style %}
 {% block content %}
 <div class="scroll-container">
+    
+    {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
     <div>
         <a class="btn btn-outline-danger" href="/muc2_2">Quay lại</a>
-        <button type="button" class="btn btn-primary btn-sm" title="Thêm ứng viên mới" data-toggle="modal" data-target="#UVModal">
-            Thêm ứng viên mới
+        <button type="button" class="btn btn-primary btn-sm" 
+            title="Danh sách ứng viên đã từng ứng tuyển cùng vị trí" 
+                data-toggle="modal" data-target="#CVModal">
+            Danh sách ứng viên cũ 
         </button>
-        <button type="button" class="btn btn-primary btn-sm" title="Ngân hàng CV" data-toggle="modal" data-target="#CVModal">
-            Ngân hàng nhân viên
+        <button type="button" class="btn btn-primary btn-sm" 
+            title="Danh sách ứng viên ở 2.1" data-toggle="modal" 
+                data-target="#CNModal">
+            Danh sách ứng viên mới
         </button>
-        <button type="button" class="btn btn-primary btn-sm" title="Ngân hàng ứng viên" data-toggle="modal" data-target="#CNModal">
-            Ngân hàng công nhân
-        </button>
-    </div>
-    {% if current_user.phongban == "td" or current_user.phanquyen == "sa" %}
-    <div class="modal fade" id="UVModal" tabindex="-1" role="dialog" aria-labelledby="UVModal" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="UVModalLabel">Ứng viên mới</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <form method="POST" enctype="multipart/form-data">
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <input type="number" name="id" hidden value={{request.args.get('id','')}}>
-                                    <input type="text" name="phongban" hidden value={{ phongban }}>
-                                    <label for="hoten">Họ tên</label>
-                                    <input type="text" class="form-control" name="hoten" placeholder="Họ tên" required>
-                                    <label for="gioitinh">Giới tính</label>
-                                    <select type="text" class="form-control" name="gioitinh" required>
-                                        <option value="Nam">Nam</option>
-                                        <option value="Nữ">Nữ</option>
-                                    </select>
-                                    <label for="tuoi">Tuổi</label>
-                                    <input type="number" class="form-control" name="tuoi" placeholder="Tuổi" min="18" step="1" required>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="form-group">
-                                    <label for="kenhtuyendung">Kênh tuyển dụng</label>
-                                    <select type="text" class="form-control" name="kenhtuyendung" required>
-                                        <option value="Người quen giới thiệu">Người quen giới thiệu</option>
-                                        <option value="Facebook">Facebook</option>
-                                        <option value="LinkedIn">LinkedIn</option>
-                                        <option value="Headhunter">Headhunter</option>
-                                        <option value="Banner">Banner</option>
-                                    </select>
-                                    <label for="namkinhnghiem">Số năm kinh nghiệm</label>   
-                                    <input type="number" class="form-control" name="namkinhnghiem" min="0.5" placeholder="Năm kinh nghiệm" step="0.5" required>
-                                    <label for="linkcv">Tải lên CV:</label>
-                                    <input type="file" class="form-control" name="linkcv" required>
-                                    
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <input type="submit" class="btn btn-primary" value="Thêm ứng viên"></input>
-                    </form>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="modal fade" id="CVModal" tabindex="-1" role="dialog" aria-labelledby="CVModal" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="CVModalLabel">Ứng viên mới</h5>
+                    <h5 class="modal-title" id="CVModalLabel">Danh sách ứng viên ứng tuyển cùng vị trí</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -129,6 +75,7 @@
                                     <tr class="bg-primary">
                                         <th>Thêm</th>
                                         <th>Họ tên</th>
+                                        <th>CCCD</th>
                                         <th>Giới tính</th>
                                         <th>Tuổi</th>
                                         <th>Kênh tuyển dụng</th>
@@ -142,16 +89,17 @@
                                     <tr class="bg-info">
                                         <td>
                                             <button class="btn btn-danger">
-                                                <i class="fa fa-plus"></i>
+                                                <i class="fa fa-sm fa-plus"></i>
                                             </button>
                                         </td>
                                         <td>{{ row[1] }}</td>
                                         <td>{{ row[2] }}</td>
                                         <td>{{ row[3] }}</td>
-                                        <td>{{ row[19] }}</td>
                                         <td>{{ row[4] }}</td>
-                                        <td><a href="{{ row[5] }}" target="_blank"><i class="fa fa-lg fa-search" aria-hidden="true" style="cursor: pointer;"></i></a></td>
-                                        <td>{{ row[15] }}</td>
+                                        <td>{{ row[20] }}</td>
+                                        <td>{{ row[5] }}</td>
+                                        <td><a href="{{ row[6] }}" target="_blank"><i class="fa fa-lg fa-search" aria-hidden="true" style="cursor: pointer;"></i></a></td>
+                                        <td>{{ row[16] }}</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -169,7 +117,7 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="CNModalLabel">Danh sách ứng viên công nhân</h5>
+                    <h5 class="modal-title" id="CNModalLabel">Danh sách ứng viên từ 2.1</h5>
 
                     <input type="text" id="nameInput" style="margin-left: 50px;" onkeyup="timkiem_theoten()" placeholder="Tìm kiếm" title="Họ tên">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -179,12 +127,12 @@
                 <div class="modal-body">
                     <div class="container">
                         <div class="row">
-                            <div class="table-responsive"> <!-- Thêm lớp này -->
+                            <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-sm table-striped" id="bang_congnhan">
                                     <thead>
                                         <tr class="bg-primary">
                                             <th>Thêm</th>
-                                            <th>Họ tên</th>
+                                            <th class="hoten">Họ tên</th>
                                             <th>Số điện thoại</th>
                                             <th>CCCD</th>
                                             <th>Kênh tuyển dụng</th>
@@ -206,7 +154,7 @@
                                                     </button>
                                                 </form>
                                             </td>
-                                            <td style="width: 100px important;">{{ row[2] }}</td>
+                                            <td class="hoten">{{ row[2] }}</td>
                                             <td>{{ row[3] }}</td>
                                             <td>{{ row[4] }}</td>
                                             <td>{{ row[17] }}</td>
@@ -245,6 +193,7 @@
             <thead>
                 <tr class="bg-primary">
                     <th rowspan="2" style="vertical-align:middle;">Họ tên</th>
+                    <th rowspan="2" style="vertical-align:middle;">CCCD</th>
                     <th rowspan="2" style="vertical-align:middle;">Giới tính</th>
                     <th rowspan="2" style="vertical-align:middle;">Tuổi</th>
                     <th rowspan="2" style="vertical-align:middle;">Số năm kinh nghiệm</th>
@@ -284,26 +233,195 @@
                 {% else %}
                 <tr class="bg-secondary">
                 {% endif %}
-                    <td>{{ row[1] }}</td>
-                    <td>{{ row[2] }}</td>
-                    <td>{{ row[3] }}</td>
-                    <td>{{ row[4] }}</td>
-                    <td>{{ row[19] }}</td>
                     <td>
-                        {% if row[5] %}
-                            <i class="fa fa-lg fa-search" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[5] }}')"></i>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_ten_yctd" method="POST">
+                            <input type="text" name="hoten" value="{{ row[1] }}" onchange="this.form.submit()">
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[1] %}
+                                <input type="text" value={{ row[1] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_cccd_yctd" method="POST">
+                            {% if not row[2] %}
+                            <input type="text" name="cccd" value="" onchange="this.form.submit()">
+                            {% else %}
+                            <input type="text" name="cccd" value="{{ row[2] }}" onchange="this.form.submit()">
+                            {% endif %}
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[2] %}
+                                <input type="text" value={{ row[2] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_gioitinh_yctd" method="POST">
+                            {% if not row[3] %}
+                            <input type="text" name="gioitinh" value="" onchange="this.form.submit()">
+                            {% else %}
+                            <input type="text" name="gioitinh" value="{{ row[3] }}" onchange="this.form.submit()">
+                            {% endif %}
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[3] %}
+                                <input type="text" value={{ row[3] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_tuoi_yctd" method="POST">
+                            {% if not row[4] %}
+                            <input type="number" name="tuoi" value="" onchange="this.form.submit()">
+                            {% else %}
+                            <input type="number" name="tuoi" value="{{ row[4] }}" onchange="this.form.submit()">
+                            {% endif %}
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[4] %}
+                                <input type="text" value={{ row[4] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_kinhnghiem_yctd" method="POST">
+                            {% if not row[5] %}
+                            <input type="number" name="kinhnghiem" value="" onchange="this.form.submit()" step="0.5">
+                            {% else %}
+                            <input type="number" name="kinhnghiem" value="{{ row[5] }}" onchange="this.form.submit()" step="0.5">
+                            {% endif %}
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[5] %}
+                                <input type="text" value={{ row[5] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        <form action="/thaydoi_kenhtuyendung_yctd" method="POST">
+                            {% if not row[20] %}
+                            <input type="text" name="kenhtuyendung" value="" onchange="this.form.submit()">
+                            {% else %}
+                            <input type="text" name="kenhtuyendung" value="{{ row[20] }}" onchange="this.form.submit()" step="0.5">
+                            {% endif %}
+                            <input type="hidden" name="id" value={{ row[0] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
+                        </form>
+                        {% else %}
+                            {% if row[20] %}
+                                <input type="text" value={{ row[20] }} readonly>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
+                        {% if row[6] %}
+                            <a class="btn btn-sm btn-primary" href="{{ row[6] }}" target="_blank">
+                                <i class="fa fa-sm fa-search" aria-hidden="true" style="cursor: pointer;" > Xem</i>
+                            </a> 
+                        
+                            <button class="btn btn-sm btn-danger" title="Tải CV" data-toggle="modal" data-target="#CVModal{{ row[0] }}">
+                                <i class="fa fa-sm fa-clone" aria-hidden="true" style="cursor: pointer;" > Cập nhật</i>
+                            </button> 
+                            
+                            <div class="modal fade" id="CVModal{{ row[0] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">File CV</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="/thaydoi_cv_yctd" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group mb-3">
+                                                            <input type="file" class="form-control" name="file" required>
+                                                            <input type="hidden" name="id" value={{row[0]}}>
+                                                            <input type="hidden" name="id_yctd" value={{row[18]}}>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <button class="btn btn-sm btn-primary" title="Tải CV" data-toggle="modal" data-target="#CVModal{{ row[0] }}">
+                                <i class="fa fa-lg fa-upload" aria-hidden="true" style="cursor: pointer;" > Tải lên</i>
+                            </button> 
+                            <div class="modal fade" id="CVModal{{ row[0] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">File CV</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form method="POST" action="/thaydoi_cv_yctd" enctype="multipart/form-data">
+                                        <div class="modal-body">
+                                            <div class="container">
+                                                <div class="row">
+                                                    <div class="col-sm-6">
+                                                        <div class="form-group mb-3">
+                                                            <input type="file" class="form-control" name="file" required>
+                                                            <input type="hidden" name="id" value={{row[0]}}>
+                                                            <input type="hidden" name="id_yctd" value={{row[18]}}>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <input type="submit" class="btn btn-primary" value="Tải lên"></input>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        {% endif %}
                         {% endif %}
                     </td>
                     <td>
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv1_yctd" method="POST">
-                            <input type="date" name="ngaypv1" value="{{ row[6] }}" onchange="this.form.submit()">
+                            <input type="date" name="ngaypv1" value="{{ row[7] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
-                            <input type="hidden" name="id_yctd" value={{ row[17] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
                         </form>
                         {% else %}
                             {% if row[6] %}
-                                <input type="date" value={{ row[6] }} readonly>
+                                <input type="date" value={{ row[7] }} readonly>
                             {% endif %}
                         {% endif %}
                     </td>
@@ -311,39 +429,39 @@
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv1_yctd" method="POST">
                             <select name="ketquapv1" onchange="this.form.submit()"> 
-                                {% if row[7] == "pass" %}
+                                {% if row[8] == "pass" %}
                                 <option selected>✔️</option>
                                 <option value="failed">❌</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if row[7] == "failed" %}
+                                {% if row[8] == "failed" %}
                                 <option selected>❌</option>
                                 <option value="pass">✔️</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if not row[7] %}
+                                {% if not row[8] %}
                                 <option value="pass">✔️</option>
                                 <option value="failed">❌</option>
                                 <option selected>⏳</option>
                                 {% endif %}
                             </select>
                             <input type="hidden" name="id" value={{ row[0] }}>
-                            <input type="hidden" name="id_yctd" value={{ row[17] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
                         </form>
                         {% else %}
-                            {% if row[7] == "pass" %}
+                            {% if row[8] == "pass" %}
                             ✔️
-                            {% elif row[7] == "failed" %}
+                            {% elif row[8] == "failed" %}
                             ❌
-                            {% elif not row[7] %}
+                            {% elif not row[8] %}
                             ⏳
                             {% endif %}
                         {% endif %}
                     </td>
                     <td>
-                        {% if row[8] %}
+                        {% if row[9] %}
                             <button class="btn btn-danger">
-                                <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[8] }}')"></td>
+                                <i class="fa fa-sm fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[8] }}')"></td>
                             </button>
                         {% else %}
                             {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
@@ -367,7 +485,7 @@
                                                         <div class="form-group">
                                                             <input type="file" class="form-control" name="file" required>
                                                             <input type="hidden" name="id" value={{row[0]}}>
-                                                            <input type="hidden" name="id_yctd" value={{row[17]}}>
+                                                            <input type="hidden" name="id_yctd" value={{row[18]}}>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -387,13 +505,13 @@
                     <td>
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv2_yctd" method="POST">
-                            <input type="date" name="ngaypv2" value="{{ row[9] }}" onchange="this.form.submit()">
+                            <input type="date" name="ngaypv2" value="{{ row[10] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
                             <input type="hidden" name="id_yctd" value={{ row[17] }}>
                         </form>
                         {% else %}
-                            {% if row[9] %}
-                                <input type="date" value={{ row[9] }} readonly>
+                            {% if row[10] %}
+                                <input type="date" value={{ row[10] }} readonly>
                                 {% endif %}
                         {% endif %}
                     </td>
@@ -401,39 +519,39 @@
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv2_yctd" method="POST">
                             <select name="ketquapv2" onchange="this.form.submit()"> 
-                                {% if row[10] == "pass" %}
+                                {% if row[11] == "pass" %}
                                 <option selected>✔️</option>
                                 <option value="failed">❌</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if row[10] == "failed" %}
+                                {% if row[11] == "failed" %}
                                 <option selected>❌</option>
                                 <option value="pass">✔️</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if not row[10] %}
+                                {% if not row[11] %}
                                 <option value="pass">✔️</option>
                                 <option value="failed">❌</option>
                                 <option selected>⏳</option>
                                 {% endif %}
                             </select>
                             <input type="hidden" name="id" value={{ row[0] }}>
-                            <input type="hidden" name="id_yctd" value={{ row[17] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
                         </form>
                         {% else %}
-                            {% if row[10] == "pass" %}
+                            {% if row[11] == "pass" %}
                             ✔️
-                            {% elif row[10] == "failed" %}
+                            {% elif row[11] == "failed" %}
                             ❌
-                            {% elif not row[10] %}
+                            {% elif not row[11] %}
                             ⏳
                             {% endif %}
                         {% endif %}
                     </td>
                     <td>
-                        {% if row[11] %}
+                        {% if row[12] %}
                         <button class="btn btn-danger">
-                            <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[11] }}')"></td>
+                            <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[12] }}')"></td>
                         </button>
                         {% else %}
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
@@ -457,7 +575,7 @@
                                                     <div class="form-group">
                                                         <input type="file" class="form-control" name="file" required>
                                                         <input type="hidden" name="id" value={{row[0]}}>
-                                                        <input type="hidden" name="id_yctd" value={{row[17]}}>
+                                                        <input type="hidden" name="id_yctd" value={{row[18]}}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -477,13 +595,13 @@
                     <td>
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ngaypv3_yctd" method="POST">
-                            <input type="date" name="ngaypv1" value="{{ row[12] }}" onchange="this.form.submit()">
+                            <input type="date" name="ngaypv1" value="{{ row[13] }}" onchange="this.form.submit()">
                             <input type="hidden" name="id" value={{ row[0] }}>
-                            <input type="hidden" name="id_yctd" value={{ row[17] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
                         </form>
                         {% else %}
-                            {% if row[12] %}
-                                <input type="date" value={{ row[12] }} readonly>
+                            {% if row[13] %}
+                                <input type="date" value={{ row[13] }} readonly>
                                 {% endif %}
                         {% endif %}
                     </td>
@@ -491,39 +609,39 @@
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ketquapv3_yctd" method="POST">
                             <select name="ketquapv3" onchange="this.form.submit()"> 
-                                {% if row[13] == "pass" %}
+                                {% if row[14] == "pass" %}
                                 <option selected>✔️</option>
                                 <option value="failed">❌</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if row[13] == "failed" %}
+                                {% if row[14] == "failed" %}
                                 <option selected>❌</option>
                                 <option value="pass">✔️</option>
                                 <option value="">⏳</option>
                                 {% endif %}
-                                {% if not row[13] %}
+                                {% if not row[14] %}
                                 <option value="pass">✔️</option>
                                 <option value="failed">❌</option>
                                 <option selected>⏳</option>
                                 {% endif %}
                             </select>
                             <input type="hidden" name="id" value={{ row[0] }}>
-                            <input type="hidden" name="id_yctd" value={{ row[17] }}>
+                            <input type="hidden" name="id_yctd" value={{ row[18] }}>
                         </form>
                         {% else %}
-                        {% if row[13] == "pass" %}
+                        {% if row[14] == "pass" %}
                         ✔️
-                        {% elif row[13] == "failed" %}
+                        {% elif row[14] == "failed" %}
                         ❌
-                        {% elif not row[13] %}
+                        {% elif not row[14] %}
                         ⏳
                         {% endif %}
                         {% endif %}
                     </td>
                     <td>
-                        {% if row[14] %}
+                        {% if row[15] %}
                         <button class="btn btn-danger">
-                            <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[14] }}')"></td>
+                            <i class="fa fa-lg fa-file" aria-hidden="true" style="cursor: pointer;" onclick="openFile('{{ row[15] }}')"></td>
                         </button>
                         {% else %}
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
@@ -547,7 +665,7 @@
                                                     <div class="form-group">
                                                         <input type="file" class="form-control" name="file" required>
                                                         <input type="hidden" name="id" value={{row[0]}}>
-                                                        <input type="hidden" name="id_yctd" value={{row[17]}}>
+                                                        <input type="hidden" name="id_yctd" value={{row[18]}}>
                                                     </div>
                                                 </div>
                                             </div>
@@ -568,8 +686,8 @@
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_trangthai_uvtd" method="POST">
                             <input type="hidden" name="id" value={{row[0]}}>
-                            <input type="hidden" name="id_yctd" value={{row[17]}}>
-                            {% if not row[15] or row[15]=="Chưa phỏng vấn" %}
+                            <input type="hidden" name="id_yctd" value={{row[18]}}>
+                            {% if not row[16] or row[16]=="Chưa phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option selected>Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
@@ -578,7 +696,7 @@
                                 <option value="Đã nhận việc">Đã nhận việc</option>
                                 <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% elif row[15]=="Đang phỏng vấn" %}
+                            {% elif row[16]=="Đang phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option >Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn" selected>Đang phỏng vấn</option>
@@ -587,7 +705,7 @@
                                 <option value="Đã nhận việc">Đã nhận việc</option>
                                 <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% elif row[15]=="Qua phỏng vấn" %}
+                            {% elif row[16]=="Qua phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option >Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
@@ -596,7 +714,7 @@
                                 <option value="Đã nhận việc">Đã nhận việc</option>
                                 <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% elif row[15]=="Trượt phỏng vấn" %}
+                            {% elif row[16]=="Trượt phỏng vấn" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option >Chưa phỏng vấn</option>
                                 <option value="Đang phỏng vấn">Đang phỏng vấn</option>
@@ -605,7 +723,7 @@
                                 <option value="Đã nhận việc">Đã nhận việc</option>
                                 <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% elif row[15]=="Đã nhận việc" %}
+                            {% elif row[16]=="Đã nhận việc" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option value=""></option>
                                 <option value="Chưa phỏng vấn">Chưa phỏng vấn</option>
@@ -615,7 +733,7 @@
                                 <option value="Đã nhận việc" selected>Đã nhận việc</option>
                                 <option value="Không nhận việc">Không nhận việc</option>
                             </select>
-                            {% elif row[15]=="Không nhận việc" %}
+                            {% elif row[16]=="Không nhận việc" %}
                             <select name="trangthai" onchange="form.submit()">
                                 <option value=""></option>
                                 <option value="Chưa phỏng vấn">Chưa phỏng vấn</option>
@@ -628,22 +746,22 @@
                             {% endif %}
                         </form>
                         {% else %}
-                        {{ row[15] }}
+                        {{ row[16] }}
                         {% endif %}
                     </td>
                     <td>
                         {% if current_user.phanquyen == "td" or current_user.phanquyen == "sa" %}
                         <form action="/thaydoi_ghichu_uvtd" method="POST">
                             <input type="hidden" name="id" value={{row[0]}}>
-                            <input type="hidden" name="id_yctd" value={{row[17]}}>
-                            {% if row[16] %}
-                            <input type="text" name="ghichu" value="{{ row[16] }}" onchange="form.submit()">  
+                            <input type="hidden" name="id_yctd" value={{row[18]}}>
+                            {% if row[17] %}
+                            <input type="text" name="ghichu" value="{{ row[17] }}" onchange="form.submit()">  
                             {% else %}
                             <input type="text" name="ghichu" value="" onchange="form.submit()"> 
                             {% endif %}
                         </form>
                         {% else %}
-                        {{ row[16] }}
+                        {{ row[17] }}
                         {% endif %}
                     </td>  
                     <td>
@@ -651,7 +769,7 @@
                         <form action="/xoa_uvtd" method="POST">
                             <button class="btn btn-danger" type="submit"><i class="fa fa-lg fa-trash"></i></button>
                             <input type="hidden" name="id" value={{row[0]}}>
-                            <input type="hidden" name="id_yctd" value={{row[17]}}>
+                            <input type="hidden" name="id_yctd" value={{row[18]}}>
                         </form>
                         {% endif %}
                     </td>  

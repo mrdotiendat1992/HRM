@@ -2761,7 +2761,7 @@ def bangcongtrangoai_web():
         for row in danhsach:
             data = [y for y in row[:-3]]
             data[6] = datetime.strptime(data[6],"%Y-%m-%d")
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else None
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
@@ -3659,6 +3659,136 @@ def delete_phanquyenthuky():
         print(e)
         return {"message": "Xóa thất bại"}
 
+@app.route("/thaydoi_ten_yctd", methods=["POST"])
+@login_required
+def thaydoi_ten_yctd():
+    try:
+        id = request.form.get("id")
+        hoten = request.form.get("hoten")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Ho_ten=N'{hoten}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_cccd_yctd", methods=["POST"])
+@login_required
+def thaydoi_cccd_yctd():
+    try:
+        id = request.form.get("id")
+        cccd = request.form.get("cccd")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET CCCD='{cccd}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_gioitinh_yctd", methods=["POST"])
+@login_required
+def thaydoi_gioitinh_yctd():
+    try:
+        id = request.form.get("id")
+        gioitinh = request.form.get("gioitinh")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Gioi_tinh=N'{gioitinh}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_tuoi_yctd", methods=["POST"])
+@login_required
+def thaydoi_tuoi_yctd():
+    try:
+        id = request.form.get("id")
+        tuoi = request.form.get("tuoi")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Tuoi='{tuoi}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_kinhnghiem_yctd", methods=["POST"])
+@login_required
+def thaydoi_kinhnghiem_yctd():
+    try:
+        id = request.form.get("id")
+        kinhnghiem = request.form.get("kinhnghiem")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Kinh_nghiem='{kinhnghiem}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+
+@app.route("/thaydoi_kenhtuyendung_yctd", methods=["POST"])
+@login_required
+def thaydoi_kenhtuyendung_yctd():
+    try:
+        id = request.form.get("id")
+        kenhtuyendung = request.form.get("kenhtuyendung")
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Kenh_tuyen_dung=N'{kenhtuyendung}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    
+@app.route("/thaydoi_cv_yctd", methods=["POST"])
+@login_required
+def thaydoi_cv_yctd():
+    try:
+        id = request.form.get("id")
+        file_cv = request.files.get("file")
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        duongdan_luufile = os.path.join(FOLDER_CV,f"CV_{id}_"+timestamp+".pdf")
+        file_cv.save(duongdan_luufile)
+        file = duongdan_luufile.split("HRM")[1]
+        id_yctd = request.form.get("id_yctd")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET CV=N'{file}' WHERE ID = {id}"
+        cur.execute(query)
+        cur.commit()
+        conn.close()
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    except Exception as e:
+        flash(e)
+        return redirect(f"/muc2_2_1?id={id_yctd}")
+    
 @app.route("/thaydoi_ngaypv1_yctd", methods=["POST"])
 @login_required
 def thaydoi_ngaypv1_yctd():
@@ -4100,17 +4230,17 @@ def them_congnhan_vao_yctd():
     
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select Ho_ten,Kenh_tuyen_dung from Dang_ky_thong_tin where ID = '{id}'"
-        print(query)
+        query = f"select Ho_ten,Kenh_tuyen_dung,CCCD from Dang_ky_thong_tin where ID = '{id}'"
+        # print(query)
         data = cursor.execute(query).fetchone()
-        print(data)
+        # print(data)
         query1 = f"select Bo_phan from Yeu_cau_tuyen_dung where ID = '{id_yctd}'"
-        print(query1)
+        # print(query1)
         phongban = cursor.execute(query1).fetchone()[0]
-        query2 = f"""insert into Yeu_cau_tuyen_dung_chi_tiet (Ho_ten,Kenh_tuyen_dung,Trang_thai,ID_YCTD, Phong_ban)
-                    values (N'{data[0]}',N'{data[1]}',N'Chưa phỏng vấn','{id_yctd}','{phongban}')
+        query2 = f"""insert into Yeu_cau_tuyen_dung_chi_tiet (Ho_ten,Kenh_tuyen_dung,CCCD,Trang_thai,ID_YCTD, Phong_ban)
+                    values (N'{data[0]}',N'{data[1]}',N'{data[2]}',N'Chưa phỏng vấn','{id_yctd}','{phongban}')
                 """
-        print(query2)
+        # print(query2)
         cursor.execute(query2)
         cursor.commit()
         conn.close()

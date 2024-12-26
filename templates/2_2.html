@@ -48,8 +48,19 @@
     }
 
     .bang_jd {
+        width: 100%;
         height: 350px;
         overflow-y: scroll;
+        font-size: 12px;
+    }
+
+    table tr td {
+        width: 100%;
+    }
+
+    #nut_daco_jd {
+        display: flex;
+        gap: 5px;
     }
 </style>
 {% endblock style %}
@@ -92,7 +103,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col">
+                                    <div class="col cot_bang_jd">
                                         <table class="table table-bordered table-hover table-sm table-striped table-responsive bang_jd"> 
                                             <thead class="table-dark text-center">
                                                 <tr>
@@ -105,30 +116,32 @@
                                                     <tr class="list_jd" id="{{vitri}}">
                                                         <td>{{vitri}}</td>
                                                         <td>
-                                                            <a class="btn btn-outline-primary" href="static/uploads/mau/jd/{{ danhsach_vitri_cacongty[vitri]["EN"] }}.pdf" target="_blank">
-                                                                <i class="fa fa-search"></i>
-                                                            </a>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#changeJDModal{{loop.index}}">
-                                                                <i class="fa fa-upload"></i>
-                                                            </a>
-                                                            <div class="modal fade" id="changeJDModal{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="changeJDModal" aria-hidden="true">
-                                                                <div class="modal-dialog modal-lg" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="changeJDModalLabel">{{vitri}} - {{ danhsach_vitri_cacongty[vitri]["EN"] }}</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <span aria-hidden="true">&times;</span>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <form action="tailenjd" method="POST" enctype="multipart/form-data">
-                                                                                <input name="jd_vitri_en_chon" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
-                                                                                <input type="file" name="file" accept=".pdf" required>
-                                                                                <input type="submit" class="btn btn-primary" value="Tải lên"></input>
-                                                                            </form>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                                            <div id="nut_daco_jd">
+                                                                <a class="btn btn-outline-primary btn-sm" href="static/uploads/mau/jd/{{ danhsach_vitri_cacongty[vitri]["EN"] }}.pdf" target="_blank">
+                                                                    <i class="fa fa-sm fa-search"></i>
+                                                                </a>
+                                                                <a class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#changeJDModal{{loop.index}}">
+                                                                    <i class="fa fa-sm fa-clone"></i>
+                                                                </a>
+                                                                <div class="modal fade" id="changeJDModal{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="changeJDModal" aria-hidden="true">
+                                                                    <div class="modal-dialog" role="document">
+                                                                        <div class="modal-content">
+                                                                            <div class="modal-header">
+                                                                                <h5 class="modal-title" id="changeJDModalLabel">{{vitri}} - {{ danhsach_vitri_cacongty[vitri]["EN"] }}</h5>
+                                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                    <span aria-hidden="true">&times;</span>
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="modal-body">
+                                                                                <form action="tailenjd" method="POST" enctype="multipart/form-data">
+                                                                                    <input name="jd_vitri_en_chon" value="{{ danhsach_vitri_cacongty[vitri]["EN"] }}" hidden>
+                                                                                    <input type="file" name="file" accept=".pdf" required>
+                                                                                    <input type="submit" class="btn btn-primary" value="Cập nhật"></input>
+                                                                                </form>
+                                                                            </div>
+                                                                            <div class="modal-footer">
+                                                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                                                            </div>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -140,7 +153,7 @@
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="col">
+                                    <div class="col cot_bang_jd">
                                         <table class="table table-bordered table-hover table-sm table-striped table-responsive bang_jd">
                                             <thead class="table-dark text-center">
                                                 <tr>
@@ -153,11 +166,11 @@
                                                     <tr class="list_jd" id="{{vitri}}">
                                                         <td>{{vitri}}</td>
                                                         <td>
-                                                            <a class="btn btn-outline-danger" data-toggle="modal" data-target="#uploadJDModal{{loop.index}}">
-                                                                <i class="fa fa-upload"></i>
+                                                            <a class="btn btn-outline-danger btn-sm" data-toggle="modal" data-target="#uploadJDModal{{loop.index}}">
+                                                                <i class="fa fa-sm fa-upload"></i>
                                                             </a>
                                                             <div class="modal fade" id="uploadJDModal{{loop.index}}" tabindex="-1" role="dialog" aria-labelledby="uploadJDModal" aria-hidden="true">
-                                                                <div class="modal-dialog modal-lg" role="document">
+                                                                <div class="modal-dialog" role="document">
                                                                     <div class="modal-content">
                                                                         <div class="modal-header">
                                                                             <h5 class="modal-title" id="uploadJDModalLabel">{{vitri}} - {{ danhsach_vitri_cacongty[vitri]["EN"] }}</h5>
@@ -402,7 +415,7 @@
                                         </div>
                                         <div class="card card-body">
                                             {% if not lathuki %}
-                                            <ul class="list-group draggable" id="Chưa phê duyệt">
+                                            <ul class="list-group draggabled" id="Chưa phê duyệt">
                                             {% else %}
                                             <ul class="list-group" id="Chưa phê duyệt">
                                             {% endif %}
@@ -499,7 +512,7 @@
                                                 </div>
                                                 <div class="card card-body">
                                                     {% if not lathuki %}
-                                                    <ul class="list-group draggable" id="Phê duyệt">
+                                                    <ul class="list-group draggabled" id="Phê duyệt">
                                                     {% else %}
                                                     <ul class="list-group" id="Phê duyệt">
                                                     {% endif %}
@@ -634,7 +647,7 @@
                                                         </div>
                                                         <div class="card card-body">
                                                             {% if not lathuki %}
-                                                            <ul class="list-group draggable" id="Đã đăng tuyển">
+                                                            <ul class="list-group draggabled" id="Đã đăng tuyển">
                                                             {% else %}
                                                             <ul class="list-group" id="Đã đăng tuyển">   
                                                             {% endif %}
@@ -765,7 +778,7 @@
                                                                 </div>
                                                                 <div class="card card-body">
                                                                     {% if not lathuki %}
-                                                                    <ul class="list-group draggable" id="Đang phỏng vấn">
+                                                                    <ul class="list-group draggabled" id="Đang phỏng vấn">
                                                                     {% else %}
                                                                     <ul class="list-group" id="Đang phỏng vấn">
                                                                     {% endif %}
@@ -900,7 +913,7 @@
                                                                         </div>
                                                                         <div class="card card-body">
                                                                             {% if not lathuki %}
-                                                                            <ul class="list-group draggable" id="Đã tuyển xong">
+                                                                            <ul class="list-group draggabled" id="Đã tuyển xong">
                                                                             {% else %}
                                                                             <ul class="list-group" id="Đã tuyển xong">
                                                                             {% endif %}
@@ -1219,41 +1232,55 @@
                                                                                 }
                                                                             });
                                                                         
-                                                                            const lists = document.querySelectorAll('.draggable');
-                                                                        
+                                                                            const lists = document.querySelectorAll('.draggabled');
+
                                                                             lists.forEach(list => {
                                                                                 new Sortable(list, {
                                                                                     group: 'shared',
                                                                                     animation: 150,
                                                                                     onEnd: function(evt) {
-                                                                                        const toColumn = evt.to.id;
+                                                                                        const toColumn = evt.to.id;  // Lấy ID của cột đích
                                                                                         const item = evt.item;
                                                                                         const itemId = item.dataset.id;
+                                                                                        
+                                                                                        // Kiểm tra nếu cột đích không có ID hợp lệ
+                                                                                        if (!toColumn) {
+                                                                                            alert("Không thể xác định cột đích.");
+                                                                                            window.location.reload();
+                                                                                            return;
+                                                                                        }
+
+                                                                                        // Kiểm tra nếu item không có class 'draggable'
                                                                                         if (!item.classList.contains('draggable')) {
                                                                                             alert("Bạn không thể đổi trạng thái yêu cầu tuyển dụng này !!!");
                                                                                             window.location.reload();
+                                                                                            return;
                                                                                         }
-                                                                                        else if (window.confirm("Bạn muốn chuyển yêu cầu tuyển dụng với id " + itemId + " sang trạng thái " + toColumn + " ?")) {
+
+                                                                                        // Xác nhận chuyển trạng thái
+                                                                                        if (window.confirm("Bạn muốn chuyển yêu cầu tuyển dụng với id " + itemId + " sang trạng thái " + toColumn + " ?")) {
+                                                                                            // Gửi yêu cầu chuyển trạng thái
                                                                                             axios({
                                                                                                 method: 'post',
                                                                                                 url: '/chuyen_trang_thai_yctd',
                                                                                                 data: {
                                                                                                     id: itemId,
-                                                                                                    trangthai: toColumn
+                                                                                                    trangthai: toColumn  // Gửi ID của cột đích
                                                                                                 }
                                                                                             })
                                                                                             .then(function(response) {
-                                                                                                window.location.reload();
+                                                                                                window.location.reload();  // Tải lại trang sau khi thành công
                                                                                             })
                                                                                             .catch(function(error) {
                                                                                                 alert(error);
                                                                                             });
                                                                                         } else {
-                                                                                            window.location.reload();
+                                                                                            window.location.reload();  // Nếu người dùng không xác nhận, tải lại trang
                                                                                         }
                                                                                     },
                                                                                 });
                                                                             });
+
                                                                         });
                                                                         
                                                                         function timbacluong(vitri, id) {

@@ -1507,7 +1507,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT  DISTINCT bu.*
+            SELECT  DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
             FROM 
                 Diem_danh_bu as bu
             INNER JOIN 
@@ -1519,7 +1519,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT bu.*
+                SELECT DISTINCT bu.Nha_may, bu.MST, bu.Ho_ten, bu.Chuc_vu, bu.Line, bu.Bo_phan, bu.Loai_diem_danh, bu.Ngay_diem_danh, bu.Gio_diem_danh, bu.Ly_do, bu.Trang_thai
                 FROM 
                     Diem_danh_bu as bu
                 INNER JOIN 
@@ -1562,7 +1562,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT np.*
+            SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai 
             FROM 
                 DS_Xin_nghi_phep as np
             INNER JOIN 
@@ -1574,7 +1574,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT np.*
+                SELECT DISTINCT np.Nha_may, np.MST, np.Ho_ten, np.Chuc_vu, np.Chuyen, np.Bo_phan, np.Ngay_nghi_phep, np.Tong_so_phut, np.Phep_ton, np.Trang_thai
                 FROM 
                     DS_Xin_nghi_phep as np
                 INNER JOIN 
@@ -1615,7 +1615,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         cursor = conn.cursor()
         if mstthuky:
             query = f"""
-            SELECT DISTINCT kl.*
+            SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
             FROM 
                 Xin_nghi_khong_luong as kl
             INNER JOIN 
@@ -1627,7 +1627,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
         else:
             if mstquanly:
                 query = f"""
-                SELECT DISTINCT kl.*
+                SELECT DISTINCT kl.Nha_may, kl.MST, kl.Ho_ten, kl.Chuc_vu, kl.Chuyen, kl.Bo_phan, kl.Ngay_xin_phep, kl.So_phut, kl.Ly_do, kl.Trang_thai
                 FROM 
                     Xin_nghi_khong_luong as kl
                 INNER JOIN 
@@ -1906,6 +1906,7 @@ def laydanhsachyeucautuyendung(phongban):
         query = f"SELECT * FROM HR.dbo.Yeu_cau_tuyen_dung WHERE Nha_may = '{current_user.macongty}' "
         if phongban:
             query += f" and Bo_phan='{phongban}'"
+        query += " ORDER BY ID desc"
         # print(query)
         rows = cursor.execute(query).fetchall()
         return [list(x) for x in rows]
@@ -4894,15 +4895,19 @@ def lay_danhsach_ungvien_tiemnang(vitri):
     except Exception as e:
         flash(f"Lỗi lấy số lượng ứng viên tiềm năng: {e}")
         
-def lay_danhsach_congnhan_ungtuyen(vitri_tuyendung):
+def lay_danhsach_ungvien_2_1():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
-                    select * from Dang_ky_thong_tin 
-                    where Vi_tri_ung_tuyen LIKE N'%Công nhân%'
-                    or Vi_tri_ung_tuyen LIKE N'%công nhân%'
-                    order by ID desc
+                    SELECT *
+                    FROM Dang_ky_thong_tin
+                    WHERE CCCD NOT IN (
+                        SELECT CCCD 
+                        FROM Yeu_cau_tuyen_dung_chi_tiet
+                        WHERE CCCD IS NOT NULL
+                    );
+
                 """
         # print(query)
         result = cursor.execute(query).fetchall()

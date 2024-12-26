@@ -551,7 +551,7 @@ def tuyendungchitiet():
         phongban = thongtin_tuyendung[1]
         danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
         danhsach_ungvien_tiemnang = lay_danhsach_ungvien_tiemnang(vitri_tuyendung)
-        danhsach_congnhan_ungtuyen = lay_danhsach_congnhan_ungtuyen(vitri_tuyendung)
+        danhsach_ungvien_2_1 = lay_danhsach_ungvien_2_1()
         so_ungvien_tong = len(danhsach)
         so_ungvien_chophongvan = 0
         so_ungvien_dangphongvan = 0
@@ -559,15 +559,15 @@ def tuyendungchitiet():
         so_ungvien_danhanviec = 0
         so_ungvien_khongnhanviec = 0
         for ungvien in danhsach:
-            if not ungvien[15]:
+            if ungvien[16] == "Chưa phỏng vấn":
                 so_ungvien_chophongvan += 1
-            elif ungvien[15] == "Đang phỏng vấn":
+            elif ungvien[16] == "Đang phỏng vấn":
                 so_ungvien_dangphongvan += 1
-            elif ungvien[15] == "Qua phỏng vấn":
+            elif ungvien[16] == "Qua phỏng vấn":
                 so_ungvien_quaphongvan += 1
-            elif ungvien[15] == "Đã nhận việc":
+            elif ungvien[16] == "Đã nhận việc":
                 so_ungvien_danhanviec += 1
-            elif ungvien[15] == "Không nhận việc":
+            elif ungvien[16] == "Không nhận việc":
                 so_ungvien_khongnhanviec += 1
         phongban = lay_phongban_theo_idyctd(id_yeucautuyendung)
         return render_template("2_2_1.html", 
@@ -582,7 +582,7 @@ def tuyendungchitiet():
                                so_ungvien_danhanviec=so_ungvien_danhanviec,
                                so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
                                danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang,
-                               danhsach_congnhan_ungtuyen=danhsach_congnhan_ungtuyen
+                               danhsach_congnhan_ungtuyen=danhsach_ungvien_2_1
                                ) 
     else:
         id_yeucautuyendung = request.form.get("id")
