@@ -1702,7 +1702,6 @@ def capnhatdieuchuyentheofile():
                     ngay = row["Ngày"]
                     ghichu = row["Ghi chú"]
                     hople = kiemtra_thongtin_dieuchuyen(x,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen)
-                    print(hople)
                     if not hople["ketqua"]:
                         flash(f"Dòng {x} sai thông tin: {hople["lydo"]}")
                         return redirect("/muc6_2") 
@@ -1784,6 +1783,7 @@ def capnhatdieuchuyentheofile():
                                                 capbaccu,hccategorycu,ngay)
                     flash("Cập nhật điều chuyển bằng file thành công !!!")
             except Exception as e:
+                print(e)
                 flash(f"Cập nhật điều chuyển bằng file thất bại {e} !!!")
     return redirect("/muc6_2")
 
