@@ -1472,7 +1472,6 @@ def dieuchuyen():
 @login_required
 @roles_required('hr','sa','gd')
 def lichsudieuchuyen():
-    
     if request.method == "GET":
         mst = request.args.get("mst")
         hoten = request.args.get("hoten")
