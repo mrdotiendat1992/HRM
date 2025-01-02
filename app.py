@@ -1441,6 +1441,33 @@ def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denng
             flash(e)
             return []
 
+
+def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_tu_dong_chu_nhat WHERE Nha_may = '{current_user.macongty}'"
+        if mst: 
+            query += f" AND MST = '{mst}'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE N'%{phongban}%'"
+        if tungay:
+            query += f" AND '{tungay}' <= Ngay"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+            flash(e)
+            return []
+
 def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -1470,10 +1497,39 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
         flash(e)
         return []
 
+def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat WHERE Nha_may = '{current_user.macongty}'"
+        if mst: 
+            query += f" AND MST LIKE '%{mst}%'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE '%{phongban}%'"
+        if tungay:
+            query += f" AND '{tungay}' <= Ngay"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        # 
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        result = []
+        for row in rows:
+            result.append(row)
+        return result
+    except Exception as e:
+        flash(e)
+        return []
+
 def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
-        if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
-            return []
+        # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
+        #     return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}'"
@@ -1491,6 +1547,37 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
         # 
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        result = []
+        for row in rows:
+            result.append(row)
+        return result
+    except Exception as e:
+        flash(e)
+        return []
+
+def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
+        #     return []
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat_qua_khu WHERE Nha_may = '{current_user.macongty}'"
+        if mst: 
+            query += f" AND MST LIKE '%{mst}%'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE '%{phongban}%'"
+        if tungay:
+            query += f" AND '{tungay}' <= Ngay"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         result = []
@@ -3490,7 +3577,29 @@ def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        flash(f"Loi lay cham cong goc: {e}")
+        flash(f"Lỗi lấy bảng công chưa chốt thực tế: {e}")
+        return []
+
+def lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[Bang_cham_cong_tu_dong_chu_nhat_thuc_te] where Nha_may='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"      
+        query += " order by Ngay desc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        flash(f"Lỗi lấy bảng công chưa chốt chủ nhật thực tế: {e}")
         return []
     
 def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
@@ -3517,16 +3626,14 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        flash(f"Loi lay cham cong goc: {e}")
+        flash(f"Lỗi lấy bảng công chốt thực tế: {e}")
         return []
 
-def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
+def lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay):
     try:
-        if not masothe and not chuyen and not bophan and not phanloai and not ngay and not tungay and not denngay:
-            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[Bang_cham_cong_qua_khu_thuc_te] where Nha_may='{current_user.macongty}' "
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_CHU_NHAT_THUC_TE] where Nha_may='{current_user.macongty}' "
         if masothe:
             query += f" and MST = '{masothe}'"
         if chuyen:
@@ -3536,16 +3643,58 @@ def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,dennga
         if phanloai:
             query += f" and phan_loai = N'{phanloai}'"  
         if ngay:
-            query += f" and Ngay = '{ngay}'"   
-        if tungay:
-            query += f" and Ngay >= '{tungay}'"   
-        if denngay:
-            query += f" and Ngay <= '{denngay}'"       
+            query += f" and Ngay = '{ngay}'"     
         query += " order by Ngay desc"
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        flash(f"Loi lay cham cong goc: {e}")
+        flash(f"Lỗi lấy bảng công chốt chủ nhật thực tế: {e}")
+        return []
+
+def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
+    try:
+        if not masothe and not chuyen and not bophan and not phanloai and not ngay and not tungay and not denngay:
+            return []
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[Bang_cham_cong_qua_khu_chu_nhat_thuc_te] where Nha_may='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"      
+        query += " order by Ngay desc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        flash(f"Lỗi lấy bảng công qua khứ thực tế: {e}")
+        return []
+
+def lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,ngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[Bang_cham_cong_chu_nhat_qua_khu_thuc_te] where Nha_may='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"        
+        query += " order by Ngay desc"
+        data = cursor.execute(query)
+        return [x for x in data]
+    except Exception as e:
+        flash(f"Lỗi lấy bảng công chủ nhật quá khứ: {e}")
         return []
     
 def kiemtra_masothe(masothe):
@@ -4998,9 +5147,9 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
         cur = conn.cursor()
         if trangthai != "Đã nhận việc":
             query = f"select Trang_thai from Yeu_cau_tuyen_dung_chi_tiet WHERE ID = {id}"
-            print(query)
+            # print(query)
             trangthaicu  = cur.execute(query).fetchone()[0]
-            print(trangthaicu)
+            # print(trangthaicu)
             if trangthaicu == "Đã nhận việc":
                 query_ngay_dong_yeu_cau = f"select Ngay_dong_yeu_Cau from Yeu_cau_tuyen_dung WHERE ID = {id_yctd}"
                 ngay_dong_yeu_cau = cur.execute(query_ngay_dong_yeu_cau).fetchone()
@@ -5011,7 +5160,7 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
                                 WHERE ID = {id_yctd}"""
                 else:
                     query1 = f"UPDATE Yeu_cau_tuyen_dung SET So_luong_da_tuyen=So_luong_da_tuyen-1 WHERE ID = {id_yctd}"
-                print(query1)
+                # print(query1)
                 cur.execute(query1)
                 cur.commit()
         else:
@@ -5021,9 +5170,9 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
                         WHERE so_luong = so_luong_da_tuyen + 1
                         AND ID = '{id_yctd}'
                                                     """
-            print(query_kiemtra_khoa_yctd)
+            # print(query_kiemtra_khoa_yctd)
             cothe_khoa_yctd = cur.execute(query_kiemtra_khoa_yctd).fetchone()
-            print(cothe_khoa_yctd)
+            # print(cothe_khoa_yctd)
             if cothe_khoa_yctd:           
                 query2 = f"""UPDATE Yeu_cau_tuyen_dung 
                             SET So_luong_da_tuyen=So_luong_da_tuyen+1,
@@ -5033,11 +5182,11 @@ def capnhat_trangthai_ungvien_chitiet(id, trangthai, id_yctd):
                 query2 = f"""UPDATE Yeu_cau_tuyen_dung 
                             SET So_luong_da_tuyen=So_luong_da_tuyen+1
                             WHERE ID = {id_yctd}"""
-            print(query2)
+            # print(query2)
             cur.execute(query2)
             cur.commit()
         query3 = f"UPDATE Yeu_cau_tuyen_dung_chi_tiet SET Trang_thai=N'{trangthai}' WHERE ID = {id}"
-        print(query3)
+        # print(query3)
         cur.execute(query3)
         cur.commit()
         conn.close()
