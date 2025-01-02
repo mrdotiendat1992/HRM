@@ -427,7 +427,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['L21'] = ngaycapcccd
                         sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                         sheet['G28'] = chucdanh
-                        sheet['G38'] = f"{luongcoban} VNĐ/tháng"
+                        sheet['G38'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
                             sheet['G39'] = f"{phucap} VNĐ/tháng"
                         else:
@@ -509,7 +509,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['E22'] = sodienthoai
                         sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
                         sheet['G29'] = f"{chucdanh}"
-                        sheet['G39'] = f"{luongcoban} VNĐ/tháng"
+                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
                         if phucap > 0 :
                             sheet['G40'] = f"{phucap} VNĐ/tháng"
                         else:
@@ -591,7 +591,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['L21'] = ngaycapcccd
                         sheet['E22'] = sodienthoai
                         sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
-                        sheet['G39'] = f"{luongcoban} VNĐ/tháng"        
+                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"        
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
                         filepath = os.path.join(FOLDER_XUAT, f'NT2_HDVTH_T03_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
                         workbook.save(filepath)
