@@ -2535,7 +2535,7 @@ def bangcongchunhatchot_web():
         phanloai = request.form.get("phanloai")
         ngay = request.form.get("ngay")
         danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
-        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHOT)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
@@ -2555,30 +2555,21 @@ def bangcongchunhatchot_web():
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-1]]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data = list(row)
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
-        number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
         for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-            for col in ['H']:
+            for col in ['G']:
                 cell = sheet[f"{col}{row}"]
                 
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            # for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
-            #     cell = sheet[f"{col}{row}"]
-            #     if cell.value and int(cell.value) > 0: 
-            #         try:
-            #             cell.style = number_style
-            #         except ValueError:
-            #             pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            
+                    pass             
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chot_{timestamp}.xlsx"))
@@ -2689,7 +2680,7 @@ def bangcongchunhatquakhu_web():
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
         ngay = request.form.get("ngay")
-        danhsach = lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay)
+        danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
@@ -2710,8 +2701,8 @@ def bangcongchunhatquakhu_web():
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-1]]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data = [y for y in row]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
@@ -2719,20 +2710,13 @@ def bangcongchunhatquakhu_web():
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
         for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-            for col in ['H']:
+            for col in ['G']:
                 cell = sheet[f"{col}{row}"]
                 
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            # for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
-            #     cell = sheet[f"{col}{row}"]
-            #     if cell.value and int(cell.value) > 0:
-            #         try:
-            #             cell.style = number_style
-            #         except ValueError:
-            #             pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+                    pass  
             
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
