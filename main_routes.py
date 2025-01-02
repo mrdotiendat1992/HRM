@@ -699,7 +699,7 @@ def nhapthongtinlaodongmoi():
                 themtaikhoanmoi(
                     int(request.form.get("masothe")),
                     request.form.get("hoten"),
-                    request.form.get("department"),
+                    request.form.get("phongban"),
                     request.form.get("gradecode")
                 )              
             else:
