@@ -692,16 +692,16 @@ def nhapthongtinlaodongmoi():
                     request.form.get("masothe"),
                     ca,
                     ca,
-                    datetime.now().date().strftime("%Y-%m-%d"),  # This returns a datetime.date object
-                    datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  # Convert to datetime.date
+                    datetime.now().date().strftime("%Y-%m-%d"), 
+                    datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  
                 )
-                flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
-                themtaikhoanmoi(
-                    int(request.form.get("masothe")),
-                    request.form.get("hoten"),
-                    request.form.get("phongban"),
-                    request.form.get("gradecode")
-                )              
+                # flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
+                # themtaikhoanmoi(
+                #     int(request.form.get("masothe")),
+                #     request.form.get("hoten"),
+                #     request.form.get("phongban"),
+                #     request.form.get("gradecode")
+                # )              
             else:
                 flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
