@@ -3658,7 +3658,7 @@ def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,dennga
             return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select * from [HR].[dbo].[Bang_cham_cong_qua_khu_chu_nhat_thuc_te] where Nha_may='{current_user.macongty}' "
+        query = f"select * from [HR].[dbo].[Bang_cham_cong_qua_khu_thuc_te] where Nha_may='{current_user.macongty}' "
         if masothe:
             query += f" and MST = '{masothe}'"
         if chuyen:
