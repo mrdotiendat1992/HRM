@@ -67,8 +67,7 @@ def doimatkhautaikhoan(macongty,mst,matkhau):
         flash("Đổi mật khẩu thành công !!!")
         return True        
     except Exception as e:
-        flash(f"Doi mat khau that bai {e} !!!")
-        flash(e)
+        flash(f"Đổi mật khẩu thất bại {e} !!!")
         return False
 
 def checkformatmst(mst):
@@ -2399,7 +2398,6 @@ def laydanhsachkpidaduyet(mst,macongty):
         conn.close()
         return rows
     except Exception as e:
-        flash
         return []
       
 def roles_required(*roles):
@@ -3723,7 +3721,7 @@ def chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
 def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen):
     try:
         masothe_hople = kiemtra_masothe(masothe)
-        flash(masothe_hople)
+        # flash(masothe_hople)
         if not masothe_hople:
             return {"ketqua":False,
                         "dong":dong,
@@ -4155,14 +4153,14 @@ def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
                 values ('{current_user.macongty}','{current_user.masothe}',
                 N'{current_user.hoten}','{current_user.phongban}','{email}',N'{vitri}',
                 '{soluong}',N'{trongbudget}',GETDATE())"""
-    print(query)
+    # print(query)
     try:  
         cursor = cursor.execute(query)
         conn.commit()
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        flash()
+        flash(e)
         return {"ketqua":False, "lido":e, "query":query}
 
 def them_yeucau_tuyendung_cho_pheduyet(id):
@@ -4409,7 +4407,7 @@ def lay_dulieu_tongcong(mst):
         query = f"select distinct NAM from BANG_TONG_CONG_CA_THANG where MST='{mst}' and NHA_MAY='{current_user.macongty}'"
         
         rows = cur.execute(query).fetchall()
-        flash(rows)
+        # flash(rows)
         for row in rows:
             data[int(row[0])]=[0,0,0,0,0,0,0,0,0,0,0,0]
 
