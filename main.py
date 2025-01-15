@@ -4,7 +4,7 @@ if __name__ == "__main__":
     while True:
         try:
             print("PRODUCT")
-            serve(app, host="0.0.0.0", port=81, _quiet=True, threads=8)
+            serve(app, host="0.0.0.0", port=81, _quiet=True, threads=100)
         except subprocess.CalledProcessError as e:
             print(f"Flask gặp lỗi: {e}")
             print("Đang khởi động flask...")
