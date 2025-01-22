@@ -3621,7 +3621,7 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay desc"
-        ## 
+        # print(query)
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -3666,7 +3666,11 @@ def lay_bangcongchotquakhu_web(masothe,chuyen,bophan,phanloai,ngay,tungay,dennga
         if phanloai:
             query += f" and phan_loai = N'{phanloai}'"  
         if ngay:
-            query += f" and Ngay = '{ngay}'"      
+            query += f" and Ngay = '{ngay}'"  
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"    
         query += " order by Ngay desc"
         data = cursor.execute(query)
         return [x for x in data]
@@ -5263,7 +5267,7 @@ def lay_danhsach_vitri_theo_hcname(macongty):
         for row in rows:
             result[row[0]] = {"EN": row[1], "JD": False}
         for vitri in result:
-            path = os.path.join(FOLDER_JD, f"{result[vitri]["EN"]}.pdf")
+            path = os.path.join(FOLDER_JD, f"{result[vitri]['EN']}.pdf")
             if os.path.exists(path):
                 result[vitri]["JD"] = True
         return result
