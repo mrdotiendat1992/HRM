@@ -1071,12 +1071,12 @@ def capnhathopdongtheofilemau():
                     if ketquathemhd["ketqua"]:
                         flash(f"Them HD dòng số {x} ok")
                     else:
-                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquathemhd["lido"]}, query: {ketquathemhd["query"]}")
+                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquathemhd['lido']}, query: {ketquathemhd['lido']}")
                     ketquacapnhathd =  capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
                     if ketquacapnhathd["ketqua"]:
                         flash(f"Cap nhap HD dòng số {x} ok")
                     else:
-                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquacapnhathd["lido"]}, query: {ketquacapnhathd["query"]}")
+                        flash(f"Lỗi thêm HĐ dòng số {x}, lí do {ketquacapnhathd['lido']}, query: {ketquacapnhathd['lido']}")
                 except Exception as e:
                     flash(f"Lỗi dòng số {x}, lí do: {e}")
                 x += 1
@@ -1703,7 +1703,7 @@ def capnhatdieuchuyentheofile():
                     ghichu = row["Ghi chú"]
                     hople = kiemtra_thongtin_dieuchuyen(x,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen)
                     if not hople["ketqua"]:
-                        flash(f"Dòng {x} sai thông tin: {hople["lydo"]}")
+                        flash(f"Dòng {x} sai thông tin: {hople['lido']}")
                         return redirect("/muc6_2") 
                     else:
                         x += 1
@@ -3044,7 +3044,7 @@ def td_capnhat_tuyendung():
             if ketqua["ketqua"]:
                 flash("Cập nhật trạng thái thực hiện tuyển dụng thành công !!!")
             else:
-                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua["lido"]})!!!")
+                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua['lido']})!!!")
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
@@ -3061,7 +3061,7 @@ def td_capnhat_ghichu_tuyendung():
             if ketqua["ketqua"]:
                 flash("Cập nhật trạng thái thực hiện tuyển dụng thành công !!!")
             else:
-                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua["lido"]})!!!")
+                flash(f"Cập nhật trạng thái thực hiện tuyển dụng thất bại ({ketqua['lido']})!!!")
             return redirect("/muc2_2")
         except Exception as e:
             flash(f"Lỗi cập nhật trạng thái: {e}")
@@ -3664,7 +3664,7 @@ def capnhat_chuyenmoi_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Thay đổi lịch sử công tác dòng {id} chuyền thành {chuyenmoi} thành công")
         else:
-            flash(f"Thay đổi lịch sử công tác dòng {id} chuyền thành {chuyenmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Thay đổi lịch sử công tác dòng {id} chuyền thành {chuyenmoi} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_vitrimoi_lichsu_congtac", methods=["POST"])
@@ -3678,7 +3678,7 @@ def capnhat_vitrimoi_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Thay đổi lịch sử công tác dòng {id} vị trí thành {vitrimoi} thành công")
         else:
-            flash(f"Thay đổi lịch sử công tác dòng {id} vị trí thành {vitrimoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Thay đổi lịch sử công tác dòng {id} vị trí thành {vitrimoi} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_phanloaimoi_lichsu_congtac", methods=["POST"])
@@ -3692,7 +3692,7 @@ def capnhat_phanloaimoi_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Thay đổi lịch sử công tác dòng {id} phân loại thành {phanloaimoi} thành công")
         else:
-            flash(f"Thay đổi lịch sử công tác dòng {id} phân loại thành {phanloaimoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Thay đổi lịch sử công tác dòng {id} phân loại thành {phanloaimoi} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_ngaythuchienmoi_lichsu_congtac", methods=["POST"])
@@ -3706,7 +3706,7 @@ def capnhat_ngaythuchienmoi_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thành công")
         else:
-            flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Thay đổi lịch sử công tác dòng {id} ngày thực hiện thành {ngaythuchienmoi} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/capnhat_ghichumoi_lichsu_congtac", methods=["POST"])
@@ -3720,7 +3720,7 @@ def capnhat_ghichumoi_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Thay đổi lịch sử công tác dòng {id} ghi chú thành {ghichumoi} thành công")
         else:
-            flash(f"Thay đổi lịch sử công tác dòng {id} ghi chú thành {ghichumoi} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Thay đổi lịch sử công tác dòng {id} ghi chú thành {ghichumoi} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
     
 @app.route("/xoa_lichsu_congtac", methods=["POST"])
@@ -3733,7 +3733,7 @@ def xoa_lichsu_congtac():
         if ketqua["ketqua"]:
             flash(f"Xoá lịch sử công tác dòng {id} thành công")
         else:
-            flash(f"Xoá lịch sử công tác dòng {id} thất bại !!!\nLí do: {ketqua["lido"]}\nQuery: {ketqua["query"]}")
+            flash(f"Xoá lịch sử công tác dòng {id} thất bại !!!\nLí do: {ketqua['lido']}\nQuery: {ketqua['query']}")
         return redirect(f"/muc6_2?mst={mst_filter}")
 
 @app.route("/hr_pheduyet_hangloat_xinnghikhac", methods=["POST"])
