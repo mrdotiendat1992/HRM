@@ -3728,10 +3728,9 @@ def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuye
                         "lydo": "Mã số thẻ không hợp lệ !!!"}
         if loaidieuchuyen == "Chuyển vị trí":
             if not chucdanh_chuyen_hople(chucdanhmoi,chuyenmoi):
-                pass
-                # return {"ketqua":False,
-                #         "dong":dong,
-                #         "lydo": "Không tìm thấy thông tin chuyền, chức danh mới trong danh sách HC Name !!!"}
+                return {"ketqua":False,
+                        "dong":dong,
+                        "lydo": "Không tìm thấy thông tin chuyền, chức danh mới trong danh sách HC Name !!!"}
         return {"ketqua":True}
     except Exception as e:
         print(e)
