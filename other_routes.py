@@ -1301,6 +1301,9 @@ def taidanhsachdonxinnghiviec():
         column_letter = column[0].column_letter
         for cell in column:
             try:
+                # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                if cell.column_letter in ['F','G'] and cell.value is not None:
+                    cell.number_format = 'DD/MM/YYYY'
                 if len(str(cell.value)) > max_length:
                     max_length = len(cell.value)
             except:
