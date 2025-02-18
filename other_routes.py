@@ -1287,6 +1287,8 @@ def taidanhsachdonxinnghiviec():
         "Trạng thái làm việc": row[10]
     } for row in danhsach]
     df = DataFrame(data)
+    df["Ngày nộp đơn"] = to_datetime(df['Ngày nộp đơn'])
+    df["Ngày nghỉ dự kiến"] = to_datetime(df['Ngày nghỉ dự kiến'])
     output = BytesIO()
     with ExcelWriter(output, engine='openpyxl') as writer:
         df.to_excel(writer, index=False)
