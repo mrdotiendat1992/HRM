@@ -52,15 +52,15 @@
         </div>
         <div class="form-group">
             <label for="ngay">Ngày nộp đơn</label>
-            <input type="date" name="ngaynopdon" id="ngaynopdon" value={{request.args.get('ngaynopdon', '')}} onchange="this.form.submit()">
+            <input type="date" name="ngaynopdon" id="ngaynopdon" onchange="this.form.submit()" value={{request.args.get('ngaynopdon')}} >
             <label for="ngaynghi">Ngày nghỉ dự kiến</label>
-            <input type="date" name="ngaynghi" id="ngaynghi" value={{request.args.get('ngaynghi', '')}} onchange="this.form.submit()">
+            <input type="date" name="ngaynghi" id="ngaynghi" onchange="this.form.submit()" value={{request.args.get('ngaynghi')}} >
             <a class="btn btn-warning btn-sm" onclick="window.location.href='/muc10_2?sapdenhan=Co'">Sắp đến hạn</a>
             <a class="btn btn-primary btn-sm" onclick="window.location.href='/muc10_2'">Tất cả</a>
         </div>
     </form>
     
-    <div style="display: flex; align-items: center; space-between: around;">
+    <div style="display: flex; align-items: center; justify-content: space-between;">
         <p>Tổng: <b>{{count}}</b></p> 
         <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
         <div class="pagination">{{ pagination.links }}</div>
