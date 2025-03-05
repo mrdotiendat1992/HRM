@@ -2706,7 +2706,7 @@ def bangcongchunhatquakhu_web():
 
         for row in danhsach:
             data = [y for y in row]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            # data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
