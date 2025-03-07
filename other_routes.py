@@ -1505,6 +1505,7 @@ def chamcong_sang_web():
         data = [{
         "Mã số thẻ": row[1],
         "Họ tên": row[2],
+        "Chức danh": row[3],
         "Chuyền": row[4],
         "Phòng ban": row[5],
         "Ngày": row[6],
