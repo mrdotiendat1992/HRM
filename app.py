@@ -1474,7 +1474,7 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
@@ -1503,7 +1503,7 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
@@ -1565,7 +1565,7 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, t
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat_qua_khu WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
