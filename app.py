@@ -1534,7 +1534,7 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}'"
         if mst: 
-            query += f" AND MST LIKE '%{mst}%'"
+            query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
