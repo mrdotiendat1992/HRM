@@ -10,7 +10,7 @@
 
 ![Lỗi chấm công cá nhân](<imgs/Lỗi chấm công cá nhân.png>)
 
-## 3. Khu vực quản lý các lỗi chám công của bộ phận được phân công
+## 3. Khu vực quản lý các lỗi chấm công của bộ phận được phân công
 
 ![Lỗi chám công của bộ phận được phân công](<imgs/Quản lý lỗi chấm công.png>)
 
