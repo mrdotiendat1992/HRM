@@ -2645,11 +2645,11 @@ def laydanhsach_hopdong_theomst(mst):
         flash(e)
         return []  
 
-def capnhat_stk(mst, stk, macongty):
+def capnhat_stk(mst, stk, macongty, nganhang):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Danh_sach_CBCNV SET So_tai_khoan=N'{stk}' WHERE MST='{mst}' AND Factory='{macongty}'"
+        query = f"UPDATE Danh_sach_CBCNV SET So_tai_khoan=N'{stk}', Ngan_hang = N'{nganhang}' WHERE MST='{mst}' AND Factory='{macongty}'"
         cursor.execute(query)
         conn.commit()
         conn.close()

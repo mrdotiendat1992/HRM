@@ -967,8 +967,9 @@ def capnhatstk():
                 macongty = row['Mã công ty']
                 mst= row['Mã số nhân viên']
                 stk = row['Số tài khoản ngân hàng']
+                nganhang = row['Tên ngân hàng']
                 if macongty == current_user.macongty:   
-                    capnhat_stk(mst, stk, macongty)
+                    capnhat_stk(mst, stk, macongty, nganhang)
         except Exception as e:
             flash(f"Upload file error ({e}) !!!")
     else:
