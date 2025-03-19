@@ -68,6 +68,8 @@
                         <option value="Nghỉ thai sản">Nghỉ thai sản</option>
                         <option value="Nghỉ việc">Nghỉ việc</option>
                         <option value="Thai sản đi làm lại">Thai sản đi làm lại</option>
+                        <option value="Tạm hoãn hợp đồng">Tạm hoãn hợp đồng</option>
+                        <option value="Đi làm lại">Đi làm lại</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -456,6 +458,26 @@
             }
             else if (loaidieuchuyen=="Thai sản đi làm lại") {
                 if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " từ trạng thái nghỉ thai sản sang trạng thái Đang làm việc từ ngày " + ngaydieuchuyen + " ?")){
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
+                } 
+                else 
+                {   
+                    return false
+                }
+            }
+            else if (loaidieuchuyen=="Tạm hoãn hợp đồng") {
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " sang trạng thái Tạm hoãn hợp đồng từ ngày " + ngaydieuchuyen + " ?")){
+                    alert("Điều chuyển đã được ghi nhận !!!")
+                    return true
+                } 
+                else 
+                {   
+                    return false
+                }
+            }
+            else if (loaidieuchuyen=="Đi làm lại") {
+                if (window.confirm("Bạn muốn chuyển người có mã số thẻ là " + masothe + " từ trạng thái Tạm hoãn hợp đồng sang trạng thái Đang làm việc từ ngày " + ngaydieuchuyen + " ?")){
                     alert("Điều chuyển đã được ghi nhận !!!")
                     return true
                 } 

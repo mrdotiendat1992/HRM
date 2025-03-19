@@ -1407,12 +1407,13 @@ def dieuchuyen():
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Nghỉ thai sản":
                 try:
-                    ketqua = dichuyennghithaisan(mst,
+                    ketqua = dichuyennghi(mst,
                                 vitricu,
                                 chuyencu,
                                 gradecodecu,
                                 hccategorycu,
-                                ngaydieuchuyen
+                                ngaydieuchuyen,
+                                'Nghỉ thai sản'
                                 )
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
@@ -1423,30 +1424,55 @@ def dieuchuyen():
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
-                    ketqua = dichuyenthaisandilamlai(mst,
+                    ketqua = dichuyendilamlai(mst,
                                     vitricu,
                                     vitrimoi,
                                     chuyencu,
                                     chuyenmoi,
                                     gradecodecu,
                                     gradecodemoi,
-                                    sectioncodecu,
-                                    sectioncodemoi,
                                     hccategorycu,
                                     hccategorymoi,
-                                    departmentcu,
-                                    departmentmoi,
-                                    sectiondescriptioncu,
-                                    sectiondescriptionmoi,
-                                    employeetypecu,
-                                    employeetypemoi,
-                                    positioncodedescriptioncu,
-                                    positioncodedescriptionmoi,
-                                    positioncodecu,
-                                    positioncodemoi,
-                                    vitriencu,
-                                    vitrienmoi,
-                                    ngaydieuchuyen
+                                    ngaydieuchuyen,
+                                    'Thai sản đi làm lại'
+                            )
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                except Exception as e:
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
+            elif loaidieuchuyen=="Tạm hoãn hợp đồng":
+                try:
+                    ketqua = dichuyennghi(mst,
+                                vitricu,
+                                chuyencu,
+                                gradecodecu,
+                                hccategorycu,
+                                ngaydieuchuyen,
+                                'Tạm hoãn hợp đồng'
+                                )
+                    if ketqua["ketqua"]:
+                        flash("Điều chuyển thành công !!!")
+                    else:
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                except Exception as e:
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
+                return redirect(f"/muc6_1")
+            elif loaidieuchuyen=="Đi làm lại":
+                try:
+                    ketqua = dichuyendilamlai(mst,
+                                vitricu,
+                                vitrimoi,
+                                chuyencu,
+                                chuyenmoi,
+                                gradecodecu,
+                                gradecodemoi,
+                                hccategorycu,
+                                hccategorymoi,
+                                ngaydieuchuyen,
+                                'Đi làm lại'
                             )
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")

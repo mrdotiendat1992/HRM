@@ -1771,13 +1771,13 @@ def capnhatdieuchuyentheofile():
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
                         hccategorycu = thongtin_laodong["HC category"]
-                        dichuyennghithaisan(masothe,
+                        dichuyennghi(masothe,
                                             chucdanhcu,
                                             chuyencu,
                                             capbaccu,
                                             hccategorycu,
                                             ngay,
-                                            ghichu)
+                                            'Nghỉ thai sản')
                         
                     elif loaidieuchuyen == "Thai sản đi làm lại":
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
@@ -1785,7 +1785,30 @@ def capnhatdieuchuyentheofile():
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
                         hccategorycu = thongtin_laodong["HC category"]
-                        dichuyenthaisandilamlai(masothe,chucdanhcu,chuyencu,
+                        dichuyendilamlai(masothe,chucdanhcu,chuyencu,
+                                                capbaccu,hccategorycu,ngay)
+                    
+                    elif loaidieuchuyen == "Tạm hoãn hợp đồng":
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyennghi(masothe,
+                                            chucdanhcu,
+                                            chuyencu,
+                                            capbaccu,
+                                            hccategorycu,
+                                            ngay,
+                                            'Tạm hoãn hợp đồng')
+                        
+                    elif loaidieuchuyen == "Đi làm lại":
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyendilamlai(masothe,chucdanhcu,chuyencu,
                                                 capbaccu,hccategorycu,ngay)
                     flash("Cập nhật điều chuyển bằng file thành công !!!")
             except Exception as e:
