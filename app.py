@@ -4260,7 +4260,7 @@ def lay_soluong_danglamviec():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and Trang_thai_lam_viec=N'Đang làm việc' "
+        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and (Trang_thai_lam_viec=N'Đang làm việc' or Trang_thai_lam_viec=N'Tạm hoãn hợp đồng')"
         count = cursor.execute(query).fetchone()
         return count[0]
     except Exception as e:
