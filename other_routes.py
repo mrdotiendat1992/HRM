@@ -2907,7 +2907,8 @@ def bangcong_tong_web():
         sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-3]]
+            data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            print(data)
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
