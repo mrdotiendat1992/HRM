@@ -229,18 +229,19 @@ def dichuyennghiviec(mst,
                 "query":""
                 }
 
-def dichuyennghithaisan(mst,
+def dichuyennghi(mst,
                         vitricu,
                         chuyencu,
                         gradecodecu,
                         hccategorycu,
-                        ngaydieuchuyen
+                        ngaydieuchuyen,
+                        status
                             ):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
-            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'Nghỉ thai sản','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}',NULL,NULL,N'{status}','{ngaydieuchuyen}',NULL,'{gradecodecu}',NULL,'{hccategorycu}',NULL,GETDATE())
             """    
         try:
             cursor.execute(query)
@@ -260,36 +261,23 @@ def dichuyennghithaisan(mst,
                 "query":""
                 }
 
-def dichuyenthaisandilamlai(mst,
-                            vitricu,
-                            vitrimoi,
-                            chuyencu,
-                            chuyenmoi,
-                            gradecodecu,
-                            gradecodemoi,
-                            sectioncodecu,
-                            sectioncodemoi,
-                            hccategorycu,
-                            hccategorymoi,
-                            departmentcu,
-                            departmentmoi,
-                            sectiondescriptioncu,
-                            sectiondescriptionmoi,
-                            employeetypecu,
-                            employeetypemoi,
-                            positioncodedescriptioncu,
-                            positioncodedescriptionmoi,
-                            positioncodecu,
-                            positioncodemoi,
-                            vitriencu,
-                            vitrienmoi,
-                            ngaydieuchuyen
-                            ):
+def dichuyendilamlai(mst,
+                    vitricu,
+                    vitrimoi,
+                    chuyencu,
+                    chuyenmoi,
+                    gradecodecu,
+                    gradecodemoi,
+                    hccategorycu,
+                    hccategorymoi,
+                    ngaydieuchuyen,
+                    status
+                    ):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
-            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'Thai sản đi làm lại','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())
+            INSERT INTO HR.dbo.Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{status}','{ngaydieuchuyen}',NULL,'{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())
             """ 
         try:   
             cursor.execute(query)
@@ -2645,11 +2633,11 @@ def laydanhsach_hopdong_theomst(mst):
         flash(e)
         return []  
 
-def capnhat_stk(mst, stk, macongty):
+def capnhat_stk(mst, stk, macongty, nganhang):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Danh_sach_CBCNV SET So_tai_khoan=N'{stk}' WHERE MST='{mst}' AND Factory='{macongty}'"
+        query = f"UPDATE Danh_sach_CBCNV SET So_tai_khoan=N'{stk}', Ngan_hang = N'{nganhang}' WHERE MST='{mst}' AND Factory='{macongty}'"
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -4272,7 +4260,7 @@ def lay_soluong_danglamviec():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and Trang_thai_lam_viec=N'Đang làm việc' "
+        query = f"select count(*) from [HR].[dbo].[Danh_sach_CBCNV] where Factory='{current_user.macongty}' and (Trang_thai_lam_viec=N'Đang làm việc' or Trang_thai_lam_viec=N'Tạm hoãn hợp đồng')"
         count = cursor.execute(query).fetchone()
         return count[0]
     except Exception as e:

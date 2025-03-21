@@ -967,8 +967,9 @@ def capnhatstk():
                 macongty = row['Mã công ty']
                 mst= row['Mã số nhân viên']
                 stk = row['Số tài khoản ngân hàng']
+                nganhang = row['Tên ngân hàng']
                 if macongty == current_user.macongty:   
-                    capnhat_stk(mst, stk, macongty)
+                    capnhat_stk(mst, stk, macongty, nganhang)
         except Exception as e:
             flash(f"Upload file error ({e}) !!!")
     else:
@@ -1770,13 +1771,13 @@ def capnhatdieuchuyentheofile():
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
                         hccategorycu = thongtin_laodong["HC category"]
-                        dichuyennghithaisan(masothe,
+                        dichuyennghi(masothe,
                                             chucdanhcu,
                                             chuyencu,
                                             capbaccu,
                                             hccategorycu,
                                             ngay,
-                                            ghichu)
+                                            'Nghỉ thai sản')
                         
                     elif loaidieuchuyen == "Thai sản đi làm lại":
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
@@ -1784,7 +1785,30 @@ def capnhatdieuchuyentheofile():
                         chuyencu = thongtin_laodong["Line"]
                         capbaccu = thongtin_laodong["Gradecode"]
                         hccategorycu = thongtin_laodong["HC category"]
-                        dichuyenthaisandilamlai(masothe,chucdanhcu,chuyencu,
+                        dichuyendilamlai(masothe,chucdanhcu,chuyencu,
+                                                capbaccu,hccategorycu,ngay)
+                    
+                    elif loaidieuchuyen == "Tạm hoãn hợp đồng":
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyennghi(masothe,
+                                            chucdanhcu,
+                                            chuyencu,
+                                            capbaccu,
+                                            hccategorycu,
+                                            ngay,
+                                            'Tạm hoãn hợp đồng')
+                        
+                    elif loaidieuchuyen == "Đi làm lại":
+                        thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
+                        chucdanhcu = thongtin_laodong["Job title VN"]
+                        chuyencu = thongtin_laodong["Line"]
+                        capbaccu = thongtin_laodong["Gradecode"]
+                        hccategorycu = thongtin_laodong["HC category"]
+                        dichuyendilamlai(masothe,chucdanhcu,chuyencu,
                                                 capbaccu,hccategorycu,ngay)
                     flash("Cập nhật điều chuyển bằng file thành công !!!")
             except Exception as e:
@@ -2883,7 +2907,8 @@ def bangcong_tong_web():
         sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-3]]
+            data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            print(data)
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
