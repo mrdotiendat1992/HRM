@@ -295,7 +295,9 @@ def export_dsdktt():
     sdt = request.form.get("sdt")
     cccd = request.form.get("cccd")
     ngaygui = request.form.get("ngaygui")
-    rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui)   
+    hoten = request.form.get("hoten")
+    vitri = request.form.get("vitri")
+    rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui,hoten,vitri)   
     df = pd.DataFrame(rows)
     
     df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
