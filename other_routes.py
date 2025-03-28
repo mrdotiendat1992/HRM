@@ -4864,3 +4864,74 @@ def tailen_chamcongtaycn():
             flash(e)
                 
     return redirect("/chamcongtaycn")
+
+@app.route("/chotcong", methods=["GET","POST"])
+def chotcong():
+    if request.method == "POST":
+        return render_template("chotcong.html")
+    return render_template("chotcong.html")
+
+@app.route("/api/sua-not-cham-cong", methods=["POST"])
+def sua_not_cham_cong():
+    try:
+        data = request.get_json()
+        masothe = data.get("masothe")
+        ngay = data.get("ngay")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT * FROM Check_in_out WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}'"
+        row = cur.execute(query).fetchall()
+        conn.close()
+        data = []
+        if row:
+            for item in row:
+                data.append({
+                    "nha_may": item[0],
+                    "ma_the": item[1],
+                    "ngay_cham": item[2].strftime('%d/%m/%Y'),
+                    "gio_cham": item[3].strftime('%H:%M:%S'),
+                })
+            print(data)
+            return jsonify({"success": "True", "data": data})
+        else:
+            return jsonify({"success": "False"})
+    except Exception as e:
+        flash(e)
+        return jsonify({"success": "False"})
+
+@app.route('/api/sua-not-cham-cong/update', methods=['POST'])
+def update_cham_cong():
+    data = request.json
+    masothe = data.get("masothe")
+    ngay = data.get("ngaycham")
+    giochamcu = data.get("giocham_cu")
+    giochammoi = data.get("giocham_moi")
+    conn = pyodbc.connect(url_database_pyodbc)
+    cur = conn.cursor()
+    query = f"UPDATE Check_in_out SET GioCham = '{giochammoi}' WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
+    # print(query)
+    cur.execute(query)
+    conn.commit()
+    conn.close()
+    return jsonify({
+        'success': True,
+        'message': 'Sửa thành công'
+    })
+
+@app.route('/api/sua-not-cham-cong/delete', methods=['POST'])
+def delete_cham_cong():
+    data = request.json
+    masothe = data.get("masothe")
+    ngay = data.get("ngaycham")
+    giochamcu = data.get("giocham")
+    conn = pyodbc.connect(url_database_pyodbc)
+    cur = conn.cursor()
+    query = f"DELETE FROM Check_in_out WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
+    print(query)
+    cur.execute(query)
+    conn.commit()
+    conn.close()
+    return jsonify({
+        'success': True,
+        'message': 'Xóa thành công'
+    })
