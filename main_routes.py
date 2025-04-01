@@ -3077,7 +3077,6 @@ def phongvannghiviec():
 
 @app.route("/muc10_2", methods=["GET","POST"])
 @login_required
-@roles_required('hr','sa','gd')
 def nhandonnghiviec():
     if request.method == "GET":
         mst = request.args.get("mst")
