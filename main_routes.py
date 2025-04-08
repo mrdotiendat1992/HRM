@@ -2950,10 +2950,9 @@ def muc7_1_21():
         mst = request.args.get("mst")
         chuyen = request.args.get('chuyen')
         phongban = request.args.get("phongban")
-        tungay = request.args.get("tungay")
-        denngay = request.args.get("denngay")
+        ngay = request.args.get("ngay")
         phanloai = request.args.get("phanloai")
-        rows = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
+        rows = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,ngay,phanloai)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2972,10 +2971,9 @@ def muc7_1_21():
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
-        tungay = request.form.get("tungay")
-        denngay = request.form.get("denngay")
+        ngay = request.form.get("ngay")
         phanloai = request.form.get("phanloai")
-        danhsach = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
+        danhsach = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,ngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT_KX)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
