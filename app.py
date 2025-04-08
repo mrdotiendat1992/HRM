@@ -1430,21 +1430,19 @@ def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denng
             return []
 
 
-def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, ngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_tu_dong_chu_nhat WHERE Nha_may = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_tu_dong_chu_nhat WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
         if mst: 
             query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE N'%{phongban}%'"
-        if tungay:
-            query += f" AND '{tungay}' <= Ngay"
-        if denngay:
-            query += f" AND Ngay <= '{denngay}'"
+        if ngay:
+            query += f" AND Ngay = '{ngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
@@ -1485,21 +1483,19 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
         flash(e)
         return []
 
-def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, ngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat WHERE Nha_may = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_chu_nhat WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
         if mst: 
             query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if tungay:
-            query += f" AND '{tungay}' <= Ngay"
-        if denngay:
-            query += f" AND Ngay <= '{denngay}'"
+        if ngay:
+            query += f" AND Ngay = '{ngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
@@ -1514,23 +1510,21 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
         flash(e)
         return []
 
-def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, ngay=None, phanloai=None):
     try:
         # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
         #     return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}'"
+        query = f"SELECT * FROM HR.dbo.Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}' "
         if mst: 
             query += f" AND MST = '{mst}'"
         if chuyen: 
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if tungay:
-            query += f" AND '{tungay}' <= Ngay"
-        if denngay:
-            query += f" AND Ngay <= '{denngay}'"
+        if ngay:
+            query += f" AND Ngay = '{ngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
