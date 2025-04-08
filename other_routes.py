@@ -289,64 +289,162 @@ def export_dsxnp():
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
-    # Function to convert column letter to index
-    def column_letter_to_index(letter):
-        return openpyxl.utils.column_index_from_string(letter)
-    sdt = request.form.get("sdt")
-    cccd = request.form.get("cccd")
-    ngaygui = request.form.get("ngaygui")
-    hoten = request.form.get("hoten")
-    vitri = request.form.get("vitri")
-    rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui,hoten,vitri)   
-    df = pd.DataFrame(rows)
-    
-    df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
-    df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'])
-    df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'])
-    df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'])
-    df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'])
-    df["Ngày gửi"] = to_datetime(df['Ngày gửi'])
-    df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'])
-    df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'])
-    df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc']) 
-    
-    output = BytesIO()
-    with ExcelWriter(output, engine='openpyxl') as writer:
-        df.to_excel(writer, index=False)
-
-    # Điều chỉnh độ rộng cột
-    output.seek(0)
-    workbook = openpyxl.load_workbook(output)
-    date_format = NamedStyle()
-    sheet = workbook.active
-    # Create a date format for short date
-    date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
-    if "short_date" not in workbook.named_styles:
-        workbook.add_named_style(date_format)
-    for column in sheet.columns:
-        max_length = 0
-        column_letter = column[0].column_letter
-        for cell in column:
+    try:
+        sdt = request.form.get("sdt")
+        cccd = request.form.get("cccd")
+        ngaygui = request.form.get("ngaygui")
+        hoten = request.form.get("hoten")
+        vitri = request.form.get("vitri")
+        rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui,hoten,vitri)   
+        # print(rows)
+        for row in rows:
             try:
-                # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
-                if cell.column_letter in ['V','Y','AA','AC','AE','AG','AH','AJ','AK'] and cell.value is not None:
-                    cell.number_format = 'DD/MM/YYYY'
-                if len(str(cell.value)) > max_length:
-                    max_length = len(cell.value)
+                row["Ngày sinh con 1"] = datetime.strptime(row['Ngày sinh con 1'],"%Y-%m-%d") if row["Ngày sinh con 1"] != '' else row["Ngày sinh con 1"]
             except:
                 pass
-        adjusted_width = (max_length + 2)
-        sheet.column_dimensions[column_letter].width = adjusted_width
+            try:
+                row["Ngày sinh con 2"] = datetime.strptime(row['Ngày sinh con 2'],"%Y-%m-%d") if row["Ngày sinh con 2"] != '' else row["Ngày sinh con 2"]
+            except:
+                pass
+            try:
+                row["Ngày sinh con 3"] = datetime.strptime(row['Ngày sinh con 3'],"%Y-%m-%d") if row["Ngày sinh con 3"] != '' else row["Ngày sinh con 3"]
+            except:
+                pass
+            try:
+                row["Ngày sinh con 4"] = datetime.strptime(row['Ngày sinh con 4'],"%Y-%m-%d") if row["Ngày sinh con 4"] != '' else row["Ngày sinh con 4"]
+            except:
+                pass
+            try:
+                row["Ngày sinh con 5"] = datetime.strptime(row['Ngày sinh con 5'],"%Y-%m-%d") if row["Ngày sinh con 5"] != '' else row["Ngày sinh con 5"]
+            except:
+                pass
+            try:
+                row["Ngày gửi"] = datetime.strptime(row['Ngày gửi'],"%Y-%m-%d") if row["Ngày gửi"] != '' else row["Ngày gửi"]
+            except:
+                pass
+            try:
+                row["Ngày cập nhật"] = datetime.strptime(row['Ngày cập nhật'],"%Y-%m-%d") if row["Ngày cập nhật"] != '' else row["Ngày cập nhật"]
+            except:
+                pass
+            try:
+                row["Ngày hẹn đi làm"] = datetime.strptime(row['Ngày hẹn đi làm'],"%Y-%m-%d") if row["Ngày hẹn đi làm"] != '' else row["Ngày hẹn đi làm"]
+            except:
+                pass
+            try:
+                row["Ngày nhận việc"] = datetime.strptime(row['Ngày nhận việc'],"%Y-%m-%d") if row["Ngày nhận việc"] != '' else row["Ngày nhận việc"]
+            except:
+                pass
+        df = pd.DataFrame(rows)
+        try:
+            df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
+        except:
+            pass
+        try:
+            df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'])
+        except:
+            pass
+        try:
+            df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'])
+        except:
+            pass
+        try:
+            df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'])
+        except:
+            pass
+        try:
+            df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'])
+        except:
+            pass
+        try:
+            df["Ngày gửi"] = to_datetime(df['Ngày gửi'])
+        except:
+            pass
+        try:
+            df["Ngày cập nhật"] = to_datetime(df['Ngày cập nhật'])
+        except:
+            pass
+        try:
+            df["Ngày hẹn đi làm"] = to_datetime(df['Ngày hẹn đi làm'])
+        except:
+            pass
+        try:
+            df["Ngày nhận việc"] = to_datetime(df['Ngày nhận việc'])
+        except:
+            pass
+        output = BytesIO()
+        with ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
-    output = BytesIO()
-    workbook.save(output)
-    output.seek(0)
-    time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-    # Trả file về cho client
-    response = make_response(output.read())
-    response.headers['Content-Disposition'] = f'attachment; filename=danhsach_ungvien_{time_stamp}.xlsx'
-    response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    return response 
+        # Điều chỉnh độ rộng cột
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        date_format = NamedStyle()
+        sheet = workbook.active
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    if cell.column_letter in ['V','Y','AA','AC','AE','AG','AH','AJ','AK'] and cell.value is not None:
+                        cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
+
+        # Adjust column width and format the header row
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
+
+        # Style the header row
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
+
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # Create a date format for short date
+        date_format = NamedStyle(name="short_date", number_format="DD/MM/YYYY")
+        if "short_date" not in workbook.named_styles:
+            workbook.add_named_style(date_format)
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                try:
+                    # Apply the date format to column L (assuming 'Ngày thực hiện' is in column 'L')
+                    # if cell.column_letter in ['E','H','AB','AD','AF','AF','AJ','AO','AP','BG','BH','BJ','BL','BM','BM','BO','BP','BQ','BR'] and cell.value is not None:
+                    #     cell.number_format = 'DD/MM/YYYY'
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(cell.value)
+                except:
+                    pass
+            adjusted_width = (max_length + 2)
+            sheet.column_dimensions[column_letter].width = adjusted_width
+        output = BytesIO()
+        workbook.save(output)
+        output.seek(0)
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+        # Trả file về cho client
+        response = make_response(output.read())
+        response.headers['Content-Disposition'] = f'attachment; filename=danhsach_ungvien_{time_stamp}.xlsx'
+        response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        return response 
+    except Exception as e:
+        print(e)
+        return redirect("/muc2_1")
       
 @app.route("/check_hcname", methods=["POST"])
 def check_hcname():
@@ -4766,3 +4864,74 @@ def tailen_chamcongtaycn():
             flash(e)
                 
     return redirect("/chamcongtaycn")
+
+@app.route("/chotcong", methods=["GET","POST"])
+def chotcong():
+    if request.method == "POST":
+        return render_template("chotcong.html")
+    return render_template("chotcong.html")
+
+@app.route("/api/sua-not-cham-cong", methods=["POST"])
+def sua_not_cham_cong():
+    try:
+        data = request.get_json()
+        masothe = data.get("masothe")
+        ngay = data.get("ngay")
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT * FROM Check_in_out WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}'"
+        row = cur.execute(query).fetchall()
+        conn.close()
+        data = []
+        if row:
+            for item in row:
+                data.append({
+                    "nha_may": item[0],
+                    "ma_the": item[1],
+                    "ngay_cham": item[2].strftime('%d/%m/%Y'),
+                    "gio_cham": item[3].strftime('%H:%M:%S'),
+                })
+            print(data)
+            return jsonify({"success": "True", "data": data})
+        else:
+            return jsonify({"success": "False"})
+    except Exception as e:
+        flash(e)
+        return jsonify({"success": "False"})
+
+@app.route('/api/sua-not-cham-cong/update', methods=['POST'])
+def update_cham_cong():
+    data = request.json
+    masothe = data.get("masothe")
+    ngay = data.get("ngaycham")
+    giochamcu = data.get("giocham_cu")
+    giochammoi = data.get("giocham_moi")
+    conn = pyodbc.connect(url_database_pyodbc)
+    cur = conn.cursor()
+    query = f"UPDATE Check_in_out SET GioCham = '{giochammoi}' WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
+    # print(query)
+    cur.execute(query)
+    conn.commit()
+    conn.close()
+    return jsonify({
+        'success': True,
+        'message': 'Sửa thành công'
+    })
+
+@app.route('/api/sua-not-cham-cong/delete', methods=['POST'])
+def delete_cham_cong():
+    data = request.json
+    masothe = data.get("masothe")
+    ngay = data.get("ngaycham")
+    giochamcu = data.get("giocham")
+    conn = pyodbc.connect(url_database_pyodbc)
+    cur = conn.cursor()
+    query = f"DELETE FROM Check_in_out WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
+    print(query)
+    cur.execute(query)
+    conn.commit()
+    conn.close()
+    return jsonify({
+        'success': True,
+        'message': 'Xóa thành công'
+    })

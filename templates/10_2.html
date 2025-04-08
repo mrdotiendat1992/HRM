@@ -62,7 +62,9 @@
     
     <div style="display: flex; align-items: center; justify-content: space-between;">
         <p>Tổng: <b>{{count}}</b></p> 
+        {% if current_user.phanquyen == 'hr' %}
         <button class="btn btn-primary" title="Thêm đơn nghỉ việc" style="margin-left: 20px;"  data-toggle="modal" data-target="#myModal"><i class="fas fa-plus"></i></button>
+        {% endif %}
         <div class="pagination">{{ pagination.links }}</div>
         <h5>Chú thích:</h5>
         <span id="donsapdenhan">Sắp đến hạn</span>
@@ -117,10 +119,12 @@
                     {{row[12]}}
                     {% endif %}
                 </td>
+                {% if current_user.phanquyen == 'hr' %}
                 <form method="post" action="/rutdonxinnghiviec">
                     <input type="text" name="id" value="{{row[0]}}" hidden>
                     <td><input class="btn-danger btn-sm" type="submit" value="Rút đơn"></input></td>
                 </form>
+                {% endif %}
             </tr>
             {% endfor %}
         </tbody>
@@ -144,6 +148,7 @@
                                 </div>
                                 <hr />
                                 <div>
+                                    {% if current_user.phanquyen == 'hr' %}
                                     <form method="POST">
                                         <input type="text" id="form_manhanvien" name="form_manhanvien" hidden>
                                         <input type="text" id="form_macongty" name="form_macongty" value="{{current_user.macongty}}" readonly>
@@ -152,6 +157,7 @@
                                         <input type="text" id="form_chuyento" name="form_chuyento" readonly placeholder="Chuyền">
                                         <input type="text" id="form_bophan" name="form_bophan" readonly placeholder="Phòng ban">
                                         <input type="text" id="form_ngayvao" name="form_ngayvao" readonly placeholder="Ngày vào">
+                                    {% endif %}
                                 </div>
                                 <hr />
                                 <div class="col">
