@@ -1835,7 +1835,7 @@ def xinnghikhongluong():
                 "Phòng ban": row[5],
                 "Ngày xin phép": row[6],
                 "Tổng số phút": row[7],
-                "Lý do": row[8],
+                "Loại nghỉ": row[8],
                 "Trạng thái": row[9]
             })
         df = pd.DataFrame(data)
@@ -1885,14 +1885,15 @@ def danhsachxinnghikhac():
         data = [{
             "Nhà máy": row[0],
             "Mã số thẻ": row[1],
-            "Họ tên": row[8],
-            "Bộ phận": row[10],
-            "Chuyền": row[9],
-            "Ngày nghỉ": row[2],
-            "Tổng số phút": row[3],
-            "Loại nghỉ": row[4],
-            "Trạng thái": row[5],
-            "Nhận giấy tờ": row[6],            
+            "Họ tên": row[2],
+            "Chức danh": row[3],
+            "Chuyền": row[4],
+            "Bộ phận": row[5],
+            "Ngày nghỉ": row[6],
+            "Tổng số phút": row[7],
+            "Loại nghỉ": row[8],
+            "Trạng thái": row[9],
+            "Nhận giấy tờ": row[10],            
         } for row in danhsach] 
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
