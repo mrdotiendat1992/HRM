@@ -1822,6 +1822,7 @@ def xinnghikhongluong():
         ngay = request.form.get("ngaynghi")
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
+        mstthuky = request.form.get("mstthuky")
         danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
         data = []
         for row in danhsach:
