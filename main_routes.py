@@ -1823,7 +1823,7 @@ def xinnghikhongluong():
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
         mstthuky = request.form.get("mstthuky")
-        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
         data = []
         for row in danhsach:
             data.append({
