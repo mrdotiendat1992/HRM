@@ -1510,7 +1510,7 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, ngay=No
         flash(e)
         return []
 
-def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, ngay=None, phanloai=None):
+def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
         # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
         #     return []
@@ -1523,8 +1523,10 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, ngay=Non
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if ngay:
-            query += f" AND Ngay = '{ngay}'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay >= '{denngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
