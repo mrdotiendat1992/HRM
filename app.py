@@ -1523,10 +1523,13 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if tungay:
-            query += f" AND Ngay >= '{tungay}'"
-        if denngay:
-            query += f" AND Ngay >= '{denngay}'"
+        if not tungay and not denngay:
+            query = f"SELECT TOP (100) * FROM Bang_cham_cong_qua_khu WHERE Nha_may = '{current_user.macongty}'"
+        else:
+            if tungay:
+                query += f" AND Ngay >= '{tungay}'"
+            if denngay:
+                query += f" AND Ngay <= '{denngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
@@ -1554,10 +1557,12 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, n
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if ngay:
-            query += f" AND Ngay = '{ngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        if ngay:
+            query += f" AND Ngay = '{ngay}'"
+        else:
+            query = f"SELECT TOP (10) * FROM HR.dbo.Bang_cham_cong_chu_nhat_qua_khu WHERE Nha_may = '{current_user.macongty}'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
         # print(query)
         rows = cursor.execute(query).fetchall()
