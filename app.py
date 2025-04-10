@@ -897,7 +897,7 @@ def laydanhsachuserhientai():
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM HR.dbo.Danh_sach_CBCNV WHERE Factory = '{current_user.macongty}' ORDER BY CAST(mst AS INT) ASC"
-        app.logger.info(query)
+        # app.logger.info(query)
         users = cursor.execute(query).fetchall()
         conn.close()
         return [lay_user(user) for user in users]
