@@ -39,9 +39,15 @@
                 <hr/>
                 <p><i>Đang làm việc:</i> <b>{{ songuoi_danglamviec }}</b></p>
                 <p><i>Đang nghỉ thai sản:</i> <b>{{ songuoi_dangnghithaisan }}</b></p>
+                {% if "HR" in current_user.phongban or current_user.phanquyen == "sa" %}
                 <form action="/lay_danhsach_userhientai" method="POST">
                     <button type="submit" class="btn btn-success btn-sm">Tải danh sách hiện tại</button>
                 </form>
+                {% else %}
+                <form action="/lay_danhsach_userhientai" method="POST">
+                    <button type="submit" class="btn btn-success btn-sm" disabled>Tải danh sách hiện tại</button>
+                </form>
+                {% endif %}
                 <hr/>
                 <label>Tìm kiếm <i class="fa fa-search"></i></label>
                 <form method="GET" class="form-group">
@@ -137,6 +143,7 @@
                 <div style="display:flex;gap:50px;margin-left:50px;">
                     <h5>Tổng: {{count}} </h5> 
                     <p>{{pagination.links}}</p>
+                    {% if "HRD" in current_user.phongban or current_user.phanquyen == "sa" %}
                     <form method="POST">
                         <input type="hidden" name="Mã số thẻ" value='{{request.args.get("Mã số thẻ","")}}'>
                         <input type="hidden" name="Họ tên" value='{{request.args.get("Họ tên","")}}'>
@@ -154,6 +161,9 @@
                         <input type="date" hidden name="Nghỉ đến ngày" value='{{request.args.get("Nghỉ đến ngày","")}}'>
                         <button type="submit" class="btn btn-success"><i class="fa fa-download"></i></button>
                     </form>
+                    {% else %}
+                    <button type="submit" class="btn btn-success" disabled><i class="fa fa-download"></i></button>
+                    {% endif %}
                 </div>
                 <div class="list_nhanvien">
                 {% for row in users %}
