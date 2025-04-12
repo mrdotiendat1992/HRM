@@ -33,7 +33,7 @@ def run_before_every_request():
             lathuky= la_thuky(current_user.macongty,current_user.masothe)
             if lathuky:
                 cac_chuyen_thuky_quanly = lay_danhsach_chuyen_thuky_quanly(current_user.macongty,current_user.masothe)
-                # print(cac_chuyen_thuky_quanly)
+                # flash(cac_chuyen_thuky_quanly)
                 thuky_soluong_loithe = lay_soluong_loithe_thuky_canxuly(current_user.macongty,current_user.masothe)
                 thuky_soluong_diemdanhbu = lay_soluong_diemdanhbu_thuky_cankiemtra(current_user.macongty,current_user.masothe)
                 thuky_soluong_xinnghiphep = lay_soluong_xinnghiphep_thuky_cankiemtra(current_user.macongty,current_user.masothe)
@@ -198,9 +198,9 @@ def run_before_every_request():
                     g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
-        # print(g.notice)
+        # flash(g.notice)
     except Exception as e:  
-        print(f"Lỗi cập nhật thông tin chuông: {e}")
+        flash(f"Lỗi cập nhật thông tin chuông: {e}")
         f12 = trang_thai_function_12()    
         g.notice={"f12":f12,"db":url_database_pyodbc }
     
@@ -250,7 +250,7 @@ def doimatkhau():
     matkhaumoi = request.form.get("matkhaumoi")
     try:
         if doimatkhautaikhoan(macongty,masothe,matkhaumoi):
-            print("Đổi mật khẩu thành công")
+            flash("Đổi mật khẩu thành công")
     except Exception as e:
         app.logger.error(f"{masothe} o {macongty} doi mat khau thanh {matkhaumoi} thanh cong !!!")
     return redirect(url_for("home"))
@@ -290,7 +290,7 @@ def home():
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
         songuoi_danglamviec = lay_soluong_danglamviec()
         songuoi_dangnghithaisan = lay_soluong_dangnghithaisan()
-        print(f"Xin chào {current_user.hoten} !!!")
+        flash(f"Xin chào {current_user.hoten} !!!")
         return render_template("home.html", users=paginated_users,
                             page="Trang chủ", pagination=pagination,count=count,
                             songuoi_danglamviec=songuoi_danglamviec,
@@ -400,7 +400,7 @@ def home():
             response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
         except Exception as e:
-            print(f"Lỗi kết xuất danh sách nhân viên")
+            flash(f"Lỗi kết xuất danh sách nhân viên")
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
@@ -485,9 +485,9 @@ def danhsachdangkytuyendung():
                                cccd
                                )
         if ketqua["ketqua"]:
-            print("Cập nhật thông tin ứng viên thành công !!!")
+            flash("Cập nhật thông tin ứng viên thành công !!!")
         else:
-            print(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
+            flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
         return redirect(f"muc2_1?sdt={sdt}")
 
 @app.route("/muc2_2", methods=["GET","POST"])
@@ -500,7 +500,7 @@ def dangkytuyendung():
         phongban = request.args.get("phongban")
         danhsach = laydanhsachyeucautuyendung(phongban)
         danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
-        # print(danhsach_vitri_cacongty)
+        # flash(danhsach_vitri_cacongty)
         return render_template("2_2.html", 
                                page= "2.2 Yêu cầu tuyển dụng",
                                danhsach = danhsach,
@@ -525,12 +525,12 @@ def dangkytuyendung():
             budget = request.form.get("trong_budget")
             trongbudget = "Trong" if budget else"Ngoài"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
-                print("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                print(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
+                flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
+                flash(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
             else:
-                print("Thêm yêu cầu tuyển dụng mới thất bại !!!")
+                flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         except Exception as e:
-            print(f"Thêm yêu cầu tuyển dụng mới thất bại ({e})!!!")
+            flash(f"Thêm yêu cầu tuyển dụng mới thất bại ({e})!!!")
         return redirect("muc2_2")
 
 @app.route("/muc2_2_1", methods=["GET","POST"])
@@ -590,7 +590,7 @@ def tuyendungchitiet():
         linkcv.save(save_path)
         kenhtuyendung = request.form.get("kenhtuyendung")
         if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
-            print("Thêm ứng viên thành công")
+            flash("Thêm ứng viên thành công")
         return redirect(f"muc2_2_1?id={id_yeucautuyendung}")
     
 @app.route("/muc3_1", methods=["GET","POST"])
@@ -619,10 +619,10 @@ def nhapthongtinlaodongmoi():
     
     elif request.method == "POST":
         try:
-            # print(request.files, request.form)
+            # flash(request.files, request.form)
             anh = ""
             file = request.files.get("anh")
-            # print(file)
+            # flash(file)
             if file:
                 file_path = os.path.join(FOLDER_AVATAR, request.form.get("masothe") + ".jpg")
                 file.save(file_path)
@@ -706,7 +706,7 @@ def nhapthongtinlaodongmoi():
                         {ngaybatdauhdvth},'N', '', GETDATE())"             
             ketqua = themnhanvienmoi(nhanvienmoi)
             if ketqua["ketqua"]:
-                print("Thêm lao động mới thành công !!!")
+                flash("Thêm lao động mới thành công !!!")
                 ca = laycatheochuyen(request.form.get("line"))
                 thangdangkycalamviec(
                     request.form.get("masothe"),
@@ -715,7 +715,7 @@ def nhapthongtinlaodongmoi():
                     datetime.now().date().strftime("%Y-%m-%d"), 
                     datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  
                 )
-                # print(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
+                # flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
                 themtaikhoanmoi(
                     int(request.form.get("masothe")),
                     request.form.get("hoten"),
@@ -723,9 +723,9 @@ def nhapthongtinlaodongmoi():
                     request.form.get("gradecode")
                 )              
             else:
-                print("Thêm lao động mới thất bại !!!")
+                flash("Thêm lao động mới thất bại !!!")
         except Exception as e:
-            print(f"Them lao dong moi that bai: {e} !!!")
+            flash(f"Them lao dong moi that bai: {e} !!!")
         finally:
             return redirect("/muc3_1")
         
@@ -741,7 +741,7 @@ def thaydoithongtinlaodong():
             mst = request.form.get("mst")
             anh = ""
             file = request.files.get("anh")
-            print(file)
+            flash(file)
             if file:
                 file_path = os.path.join(FOLDER_AVATAR, mst + ".jpg")
                 if os.path.exists(file_path):
@@ -1109,9 +1109,9 @@ def thaydoithongtinlaodong():
             cursor.execute(query)
             conn.commit()
             conn.close()
-            print("Cập nhật thông tin người lao động thành công !!!")
+            flash("Cập nhật thông tin người lao động thành công !!!")
         except Exception as e:
-            print(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
+            flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
         return redirect("/muc3_2")
     
 @app.route("/muc3_3", methods=["GET","POST"])
@@ -1153,10 +1153,10 @@ def inhopdonglaodong():
             sectioncode = request.form.get("sectioncode")
             sectiondescription = request.form.get("sectiondescription")
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
-                print("Thêm hợp đồng thành công !!!")
+                flash("Thêm hợp đồng thành công !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:
-                print("Thêm hợp đồng thất bại")
+                flash("Thêm hợp đồng thất bại")
             return redirect("/muc3_3")
     except:
         return redirect("/muc3_3")
@@ -1258,7 +1258,7 @@ def danhsachsaphethanhopdong():
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc5_1_1", methods=["GET","POST"])
@@ -1282,14 +1282,14 @@ def nhapkpi():
                     for x in row.items():
                         values.append(str(x[1]).replace("'","") if x[1] else "")
                     if not insert_kpidata(current_user.masothe,current_user.macongty,values):
-                        print("Upload new KPI failed: Cannot insert data !!!")
+                        flash("Upload new KPI failed: Cannot insert data !!!")
                         return redirect("/muc5_1_1")
                 guimailthongbaodaguikpi(current_user.macongty,current_user.masothe,current_user.hoten)
-                print("Upload new KPI successfully !!!")
+                flash("Upload new KPI successfully !!!")
             else:
-                print("Upload new KPI failed: Cannot found data !!!")
+                flash("Upload new KPI failed: Cannot found data !!!")
         except Exception as e:
-            print(f"Upload new KPI failed {e} !!!")
+            flash(f"Upload new KPI failed {e} !!!")
         return redirect("/muc5_1_1")
 
 @app.route("/muc5_1_2", methods=["GET","POST"])
@@ -1418,11 +1418,11 @@ def dieuchuyen():
                                     khongdoica
                                     )
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
                 
             elif loaidieuchuyen == "Nghỉ việc":
@@ -1435,11 +1435,11 @@ def dieuchuyen():
                         ngaydieuchuyen,
                         ghichu)
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Nghỉ thai sản":
                 try:
@@ -1452,11 +1452,11 @@ def dieuchuyen():
                                 'Nghỉ thai sản'
                                 )
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Thai sản đi làm lại":
                 try:
@@ -1473,11 +1473,11 @@ def dieuchuyen():
                                     'Thai sản đi làm lại'
                             )
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Tạm hoãn hợp đồng":
                 try:
@@ -1490,11 +1490,11 @@ def dieuchuyen():
                                 'Tạm hoãn hợp đồng'
                                 )
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
             elif loaidieuchuyen=="Đi làm lại":
                 try:
@@ -1511,11 +1511,11 @@ def dieuchuyen():
                                 'Đi làm lại'
                             )
                     if ketqua["ketqua"]:
-                        print("Điều chuyển thành công !!!")
+                        flash("Điều chuyển thành công !!!")
                     else:
-                        print(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
                 except Exception as e:
-                    print(f"Điều chuyển thất bại, lí do: {e}")
+                    flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
             return redirect(f"/muc6_1")
         elif request.method == "GET":
@@ -1524,7 +1524,7 @@ def dieuchuyen():
                             cacvitri=cacvitri,
                             page="6.1 Điều chuyển chức vụ, bộ phận")
     except Exception as e:
-        print(e)
+        flash(e)
         cacvitri= laycacvitri()
         return render_template("6_1.html",
                             cacvitri=cacvitri,
@@ -1732,7 +1732,7 @@ def khaibaochamcong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), as_attachment=True)
             
 @app.route("/muc7_1_2", methods=["GET","POST"]) # Danh sách lỗi chấm công
@@ -1877,7 +1877,7 @@ def xinnghikhongluong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
-        print("Tải file thành công !!!")
+        flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sách xin nghỉ khác
@@ -2701,7 +2701,7 @@ def muc7_1_17():
                                     pagination=pagination,
                                     count=total)
         except Exception as e:
-            print(f"Lỗi tải trang: {e}")
+            flash(f"Lỗi tải trang: {e}")
             return render_template("7_1_17.html",
                                     danhsach=[])
     else:
@@ -3079,7 +3079,7 @@ def xulykiluat():
         try:
             mst = request.form.get("mst")
             if not mst:
-                print("Chưa có thông tin người vi phạm")
+                flash("Chưa có thông tin người vi phạm")
                 return redirect("/muc9_1") 
             hoten = request.form.get("hoten")
             chucvu = request.form.get("chucvu")
@@ -3099,11 +3099,11 @@ def xulykiluat():
                 anh.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}",f"{cacanhvipham.index(anh,start=1)}.jpg"))  
             bienbankiluat.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}"),"bienban.pdf")
             if themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
-                print("Thêm biên bản kỷ luật thành công !!!")
+                flash("Thêm biên bản kỷ luật thành công !!!")
             else:
-                print("Thêm biên bản kỷ luật thất bại !!!")
+                flash("Thêm biên bản kỷ luật thất bại !!!")
         except Exception as e:
-            print(f"Thêm biên bản kỷ luật thất bại {e}!!!")
+            flash(f"Thêm biên bản kỷ luật thất bại {e}!!!")
         return redirect("/muc9_1") 
     
 @app.route("/muc10_1", methods=["GET","POST"])
@@ -3147,9 +3147,9 @@ def nhandonnghiviec():
         ngaynghi = request.form.get("form_ngaydukiennghi")
         ghichu = request.form.get("form_ghichu")
         if themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
-            print("Thêm đơn xin nghỉ thành công !!!")
+            flash("Thêm đơn xin nghỉ thành công !!!")
         else:
-            print("Thêm đơn xin nghỉ thất bại !!!")
+            flash("Thêm đơn xin nghỉ thất bại !!!")
         return redirect(f"/muc10_2?mst={mst}")
     
 @app.route("/muc10_3", methods=["GET","POST"])
@@ -3189,7 +3189,7 @@ def inchamduthopdong():
 
                 return redirect("/muc10_3")
         except Exception as e:
-            print(f"Lỗi tải trang: {e}")
+            flash(f"Lỗi tải trang: {e}")
             return redirect("/muc10_3") 
         
 @app.route("/muc12", methods=["GET","POST"])
@@ -3201,7 +3201,7 @@ def khong_kiem_xuong():
         else:
             return "OK"
     except Exception as e:
-        print(f"Lỗi tải trang: {e}")
+        flash(f"Lỗi tải trang: {e}")
         return "NOT OK"
 
 @app.route("/admin", methods=["GET"])
