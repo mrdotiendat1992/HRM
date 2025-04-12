@@ -626,7 +626,7 @@ def nhapthongtinlaodongmoi():
             if file:
                 file_path = os.path.join(FOLDER_AVATAR, request.form.get("masothe") + ".jpg")
                 file.save(file_path)
-            anh = f"'{file_path}'"
+                anh = f"'{file_path}'"
             masothe = f"'{request.form.get("masothe")}'"
             thechamcong = f"'{int(request.form.get("masothe"))}'"
             hoten = f"N'{request.form.get("hoten")}'"
