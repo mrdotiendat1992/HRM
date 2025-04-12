@@ -748,7 +748,7 @@ def thaydoithongtinlaodong():
                     os.remove(file_path)
                 file.save(file_path)
             
-            anh = f"'{file_path}'"
+                anh = f"'{file_path}'"
             trangthailamviec = request.form.get("trangthai")
             thechamcong = request.form.get("thechamcong")
             cccd = request.form.get("cccd")
