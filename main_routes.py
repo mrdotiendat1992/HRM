@@ -739,9 +739,8 @@ def thaydoithongtinlaodong():
     else:
         try:
             mst = request.form.get("mst")
-            anh = ""
+            anh = "NULL"
             file = request.files.get("anh")
-            flash(file)
             if file:
                 file_path = os.path.join(FOLDER_AVATAR, mst + ".jpg")
                 if os.path.exists(file_path):
