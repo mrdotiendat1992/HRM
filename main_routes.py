@@ -2863,8 +2863,8 @@ def muc7_1_19():
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
-        tungay = request.args.get("tungay")
-        denngay = request.args.get("denngay")
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchunhatchuachot(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHUACHOT_KX)
@@ -2936,8 +2936,8 @@ def muc7_1_20():
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
-        tungay = request.args.get("tungay")
-        denngay = request.args.get("denngay")
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchunhatchot(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT_KX)
@@ -3004,14 +3004,13 @@ def muc7_1_21():
         return render_template("7_1_21.html", page="Bảng chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
-                            count=count,
-                            danhsachphongban=danhsachphongban)
+                            count=count)
     elif request.method=="POST":
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
-        tungay = request.args.get("tungay")
-        denngay = request.args.get("denngay")   
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")   
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT_KX)

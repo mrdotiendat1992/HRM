@@ -1496,8 +1496,10 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
             query += f" AND Chuyen_to = '{chuyen}'"
         if phongban:
             query += f" AND Bo_phan LIKE '%{phongban}%'"
-        if ngay:
-            query += f" AND Ngay = '{ngay}'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
@@ -1561,8 +1563,10 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, t
             query += f" AND Bo_phan LIKE '%{phongban}%'"
         if phanloai:
             query += f" AND Phan_loai LIKE N'%{phanloai}%'"
-        if ngay:
-            query += f" AND Ngay = '{ngay}'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
         else:
             query = f"SELECT TOP (10) * FROM Bang_cham_cong_chu_nhat_qua_khu WHERE Nha_may = '{current_user.macongty}'"
         query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
