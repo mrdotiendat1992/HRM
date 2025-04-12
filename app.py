@@ -1266,6 +1266,7 @@ def themnhanvienmoi(nhanvienmoi):
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
     query = f"INSERT INTO Danh_sach_CBCNV VALUES {nhanvienmoi}"
+    print(query)
     try:
         cursor.execute(query)
         conn.commit()

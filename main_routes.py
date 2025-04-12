@@ -620,7 +620,7 @@ def nhapthongtinlaodongmoi():
     elif request.method == "POST":
         try:
             # flash(request.files, request.form)
-            anh = ""
+            anh = "NULL"
             file = request.files.get("anh")
             # flash(file)
             if file:
