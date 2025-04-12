@@ -723,7 +723,7 @@ def nhapthongtinlaodongmoi():
                     request.form.get("gradecode")
                 )              
             else:
-                flash("Thêm lao động mới thất bại !!!")
+                flash(f"Thêm lao động mới thất bại {ketqua['lido']}!!!")
         except Exception as e:
             flash(f"Them lao dong moi that bai: {e} !!!")
         finally:
