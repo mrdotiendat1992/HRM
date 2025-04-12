@@ -13,15 +13,41 @@ input, select {
     margin-left: 10px;
     width: 150px;
 }
+.image-upload-wrapper {
+    width: 200px;
+    height: 200px;
+    border: 2px dashed #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.image-upload-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#anh {
+    display: none;
+}
 
 </style>
 {% endblock style %}
 {% block content %}
-<div class="content"> 
-    <form action="/muc3_1" method="POST">
+<div class="content">
+    <form action="/muc3_1" method="POST" enctype="multipart/form-data">
+
         <div class="form-group">
-            <label for="anh">Ảnh</label>
-            <input type="text" id="anh" name="anh" style="width:200px;height:200px;" readonly>
+            <label for="anh" class="image-upload-wrapper">
+                <img id="previewImage" src="static/img/avatar/default-avatar.svg" alt="Ảnh">
+            </label>
+            <input type="file" id="anh" name="anh" accept="image/*" onchange="previewImage(event)">
+
             <label for="masothe">Mã số thẻ</label>
             <input type="text" id="masothe" name="masothe" readonly value={{masothe}}>
             
@@ -527,6 +553,23 @@ input, select {
             document.getElementById("noisinh").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
             
         })
+    </script>
+    <script>
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    
+        // gắn sự kiện onchange khi DOM đã sẵn sàng
+        document.addEventListener("DOMContentLoaded", function () {
+            document.getElementById('anh').addEventListener('change', previewImage);
+        });
     </script>
 </div>
 {% endblock content %}

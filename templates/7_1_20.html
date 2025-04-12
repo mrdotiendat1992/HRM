@@ -77,8 +77,10 @@
                 <input type="text" id="phanloai" name="phanloai" placeholder='Phân loại' value='{{request.args.get("phanloai", '')}}'>
             </div>
             <div class="form-group">
-                <label for="ngay">Ngày</label>
-                <input type="date" id="ngay" name="ngay" value="{{request.args.get('ngay', '')}}">
+                <label for="ngay">Từ ngày</label>
+                <input type="date" name="tungay" value="{{request.args.get('tungay', '')}}">
+                <label for="ngay">Đến ngày</label>
+                <input type="date" name="denngay" value="{{request.args.get('denngay', '')}}">
             </div>
         <div style="display: flex; align-items: center; gap: 50px;">
             <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>

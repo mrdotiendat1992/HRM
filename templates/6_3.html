@@ -64,7 +64,16 @@ td, label, p, input, h5 {
             {% for row in danhsach %}
             <tr data-info='{{ row  | safe }}'>
                 <td>{{row[1]}}</td> 
-                <td>{{row[2]}}</td>
+                <td>
+                    <form action='/thaydoi_ten_lichsu_congviec' method='POST'> 
+                        <input name="hoten" value="{{row[2]}}">
+                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
+                        <input type="hidden" name="bophan" value="{{request.args.get('bophan', '')}}">
+                        <input type="hidden" name="chuyen_filter" value="{{request.args.get('chuyen', '')}}"> 
+                        <input type="hidden" name="id" value={{row[11]}}> 
+                        <input class="form_lscv" onchange="this.form.submit()" type="text" name="chuyen" value={{row[3]}}>
+                    </form>
+                </td>
                 <td>
                     <form action='/thaydoi_chuyen_lichsu_congviec' method='POST'> 
                         <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
