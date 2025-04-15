@@ -4466,7 +4466,7 @@ def delete_chamcongtay():
 
 @app.route("/tai_sample_chamcongtay", methods=["POST"])
 def tai_sample_chamcongtay():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_150", "PHUT_TANG_CA_DEM", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -4528,10 +4528,10 @@ def tailen_chamcongtay():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO CHAM_CONG_TAY (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_HC, PHUT_TANG_CA_100, PHUT_TANG_CA_150, PHUT_TANG_CA_DEM, PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO CHAM_CONG_TAY (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_HC, PHUT_TANG_CA_100, TC_100_THUC_TE, PHUT_TANG_CA_150, TC_150_THUC_TE, PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_150", "PHUT_TANG_CA_DEM", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
             cursor.executemany(insert_query, normalized_data_rows)
 
