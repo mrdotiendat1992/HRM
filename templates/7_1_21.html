@@ -71,23 +71,27 @@
         <br>
         <form method="GET">
             <div class="form-group">
-                <input type="text" id="mst" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
-                <input type="text" id="chuyen" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
-                <input type="text" id="phongban" name="phongban" placeholder='Phòng ban' value={{request.args.get('phongban', '')}}>
-                <input type="text" id="phanloai" name="phanloai" placeholder='Phân loại' value='{{request.args.get("phanloai", '')}}'>
+                <input type="text" name="mst" placeholder='Mã số thẻ' value={{request.args.get('mst', '')}}>
+                <input type="text" name="chuyen" placeholder='Chuyền' value={{request.args.get('chuyen', '')}}>
+                <input type="text" name="phongban" placeholder='Phòng ban' value={{request.args.get('phongban', '')}}>
+                <input type="text" name="phanloai" placeholder='Phân loại' value='{{request.args.get("phanloai", '')}}'>
             </div>
             <div class="form-group">
-                <label for="ngay">Ngày</label>
-                <input type="date" id="ngay" name="ngay" value="{{request.args.get('ngay', '')}}">
+                <label for="tungay">Từ ngày</label>
+                <input type="date" name="tungay" value="{{request.args.get('tungay', '')}}">
+                <label for="denngay">Đến ngày</label>
+                <input type="date" name="denngay" value="{{request.args.get('denngay', '')}}">
             </div>
         <div style="display: flex; align-items: center; gap: 50px;">
             <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></input>
         </form>
             <form method="POST">
-                <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
-                <input type="text" id="phongban" name="phongban" hidden value={{request.args.get('phongban', '')}}>
-                <input type="date" id="ngay" name="tungay" hidden value={{request.args.get('ngay', '')}}>
-                <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
+                <input type="text" name="mst" hidden value={{request.args.get('mst', '')}}>
+                <input type="text" name="chuyen" hidden value={{request.args.get('chuyen', '')}}>
+                <input type="text" name="phongban" hidden value={{request.args.get('phongban', '')}}>
+                <input type="date" name="tungay" hidden value={{request.args.get('tungay', '')}}>
+                <input type="date"name="denngay" hidden value={{request.args.get('denngay', '')}}>
+                <input type="text" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
                 <button type="submit" class="btn btn-success btn-sm"><i class="fa fa-download"></i></button>
             </form>
             <br>
@@ -101,10 +105,10 @@
                     <th>#</th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
+                    <th>Ngày</th> 
                     <th>Chức danh</th>
                     <th>Chuyền tổ</th>
-                    <th>Phòng ban</th>
-                    <th>Ngày</th>                    
+                    <th>Phòng ban</th>  
                     <th>Ca</th>
                     <th>Giờ vào</th>
                     <th>Giờ ra</th>  
@@ -120,10 +124,10 @@
                     <td>{{ loop.index + (pagination.page - 1) * pagination.per_page }}</td>
                     <td>{{row[1]}}</td>
                     <td>{{row[2]}}</td>
+                    <td class='date_en'>{{row[6]}}</td>
                     <td>{{row[3]}}</td>
                     <td>{{row[4]}}</td>
                     <td>{{row[5]}}</td>
-                    <td class='date_en'>{{row[6]}}</td>
                     <td>{{row[7]}}</td>
                     <td>{{row[8]}}</td>
                     <td>{{row[9]}}</td>

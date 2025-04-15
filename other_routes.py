@@ -42,7 +42,7 @@ def laythongtincccd():
     if request.method == "POST":
         cccd = request.args.get("cccd")  # lấy giá trị cccd từ form data
         if cccd:
-            employee = cursor.execute("SELECT * FROM HR.dbo.Dang_ky_thong_tin WHERE CCCD = ?", cccd).fetchone()
+            employee = cursor.execute("SELECT * FROM Dang_ky_thong_tin WHERE CCCD = ?", cccd).fetchone()
             conn.close()
             if employee:
                 tamtru = employee[10]
@@ -296,7 +296,7 @@ def export_dsdktt():
         hoten = request.form.get("hoten")
         vitri = request.form.get("vitri")
         rows = laydanhsachdangkytuyendung(sdt, cccd, ngaygui,hoten,vitri)   
-        # print(rows)
+        # flash(rows)
         for row in rows:
             try:
                 row["Ngày sinh con 1"] = datetime.strptime(row['Ngày sinh con 1'],"%Y-%m-%d") if row["Ngày sinh con 1"] != '' else row["Ngày sinh con 1"]
@@ -443,7 +443,7 @@ def export_dsdktt():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response 
     except Exception as e:
-        print(e)
+        flash(e)
         return redirect("/muc2_1")
       
 @app.route("/check_hcname", methods=["POST"])
@@ -540,7 +540,7 @@ def doicanhom():
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        print(e)
+        flash(e)
         app.logger.error(e)
         flash(f"Đổi ca bị lỗi, {e} !!!")
         return redirect("/muc7_1_1")
@@ -3008,7 +3008,7 @@ def bangcong_tong_web():
 
         for row in danhsach:
             data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
-            print(data)
+            flash(data)
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
@@ -3591,6 +3591,22 @@ def boduyet_hangloat_tangca():
         link+=f"&chuyen={ch}"
     return redirect(link)  
 
+@app.route("/thaydoi_ten_lichsu_congviec", methods=["POST"])
+@login_required
+def thaydoi_ten_lichsu_congviec():
+    if request.method == "POST":
+        id = request.form.get("id")
+        chuyen_filter = request.form.get("chuyen_filter")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        hoten = request.form.get("hoten")
+        bophan = request.form.get("bophan")
+        if sua_ten_lichsu_congviec(id,chuyen):
+            flash(f"Sửa tên cho dòng lịch sử công việc số {id} sang {hoten} thành công")
+        else:
+            flash(f"Sửa tên cho dòng lịch sử công việc số {id} sang {hoten} thất bại")
+        return redirect(f"/muc6_3?mst={mst}&chuyen={chuyen_filter}&bophan={bophan}&mst={mst}")
+    
 @app.route("/thaydoi_chuyen_lichsu_congviec", methods=["POST"])
 @login_required
 def thaydoi_chuyen_lichsu_congviec():
@@ -3715,23 +3731,23 @@ def lay_danhsach_userhientai():
 
         df = pd.DataFrame(users)
 
-        df["Ngày sinh"] = to_datetime(df['Ngày sinh'])
-        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'])
-        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'])
-        df["Ngày vào"] = to_datetime(df['Ngày vào'])
-        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'])
-        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'])
-        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'])
-        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
-        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'])
-        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'])
-        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'])
-        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'])
-        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'])
-        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'])
-        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'])
-        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'])
-        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'])
+        df["Ngày sinh"] = to_datetime(df['Ngày sinh'], errors='coerce')
+        df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'], errors='coerce')
+        df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'], errors='coerce')
+        df["Ngày vào"] = to_datetime(df['Ngày vào'], errors='coerce')
+        df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'], errors='coerce')
+        df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'], errors='coerce')
+        df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'], errors='coerce')
+        df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'], errors='coerce')
+        df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'], errors='coerce')
+        df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'], errors='coerce')
+        df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'], errors='coerce')
+        df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'], errors='coerce')
+        df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'], errors='coerce')
+        df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'], errors='coerce')
+        df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'], errors='coerce')
+        df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'], errors='coerce')
         
         output = BytesIO()
         with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -4891,7 +4907,7 @@ def sua_not_cham_cong():
                     "ngay_cham": item[2].strftime('%d/%m/%Y'),
                     "gio_cham": item[3].strftime('%H:%M:%S'),
                 })
-            print(data)
+            flash(data)
             return jsonify({"success": "True", "data": data})
         else:
             return jsonify({"success": "False"})
@@ -4909,7 +4925,7 @@ def update_cham_cong():
     conn = pyodbc.connect(url_database_pyodbc)
     cur = conn.cursor()
     query = f"UPDATE Check_in_out SET GioCham = '{giochammoi}' WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
-    # print(query)
+    # flash(query)
     cur.execute(query)
     conn.commit()
     conn.close()
@@ -4927,7 +4943,7 @@ def delete_cham_cong():
     conn = pyodbc.connect(url_database_pyodbc)
     cur = conn.cursor()
     query = f"DELETE FROM Check_in_out WHERE MaChamCong = '{masothe}' AND NgayCham = '{ngay}' AND GioCham = '{ngay} {giochamcu}'"
-    print(query)
+    flash(query)
     cur.execute(query)
     conn.commit()
     conn.close()

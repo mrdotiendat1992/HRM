@@ -72,11 +72,7 @@
     .content {
         width: auto;
     }
-    td.sticky_2 {
-        background-color: #4e73df;
-        color:white;
-        font-weight: bold;
-    }
+
     td.sticky_2 {
         position: sticky;
         left: 0;
@@ -88,34 +84,64 @@
 {% block content %} 
 <div class="scroll-container">
     <div class="content">
-        <div style="display: fixed; align-items: center;">
-            <form method="GET" action="/muc2_1" style="display: inline;">
-                <label for="hoten">Họ tên</label>
-                <input class="form-control-sm" id="hoten" name="hoten" type="text" onchange="this.form.submit()" placeholder="Họ tên" value='{{request.args.get("hoten","")}}'>
-                <label for="vitri">Vị trí</label>
-                <input class="form-control-sm" id="vitri" name="vitri" type="text" onchange="this.form.submit()" placeholder="Vị trí" value='{{request.args.get("vitri","")}}'>
-                <label for="sdt">Số điện thoại</label>
-                <input class="form-control-sm" id="sdt" name="sdt" type="text" onchange="this.form.submit()" placeholder="Số điện thoại" value={{request.args.get('sdt','')}}>
-                <label for="cccd">CCCD</label>
-                <input class="form-control-sm" id="cccd" name="cccd" type="text" onchange="this.form.submit()" placeholder="CCCD" value={{request.args.get('cccd','')}}>
-                <label for="ngaygui">Ngày ứng tuyển</label>
-                <input class="form-control-sm" id="ngaygui" name="ngaygui" type="date" onchange="this.form.submit()">
-                <input class="btn btn-primary btn-sm" style="width: 80px;" onclick="window.location.href='/muc2_1'" value="Tất cả">
+        <div class="container mt-3">
+            <form method="GET" action="/muc2_1" class="row g-2 align-items-center">
+                <div class="col-md-2">
+                    <label for="hoten" class="form-label">Họ tên</label>
+                    <input class="form-control form-control-sm" id="hoten" name="hoten" type="text"
+                           onchange="this.form.submit()" placeholder="Họ tên"
+                           value="{{ request.args.get('hoten', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="vitri" class="form-label">Vị trí</label>
+                    <input class="form-control form-control-sm" id="vitri" name="vitri" type="text"
+                           onchange="this.form.submit()" placeholder="Vị trí"
+                           value="{{ request.args.get('vitri', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="sdt" class="form-label">Số điện thoại</label>
+                    <input class="form-control form-control-sm" id="sdt" name="sdt" type="text"
+                           onchange="this.form.submit()" placeholder="Số điện thoại"
+                           value="{{ request.args.get('sdt', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="cccd" class="form-label">CCCD</label>
+                    <input class="form-control form-control-sm" id="cccd" name="cccd" type="text"
+                           onchange="this.form.submit()" placeholder="CCCD"
+                           value="{{ request.args.get('cccd', '') }}">
+                </div>
+                <div class="col-md-2">
+                    <label for="ngaygui" class="form-label">Ngày ứng tuyển</label>
+                    <input class="form-control form-control-sm" id="ngaygui" name="ngaygui" type="date"
+                           onchange="this.form.submit()" value="{{ request.args.get('ngaygui', '') }}">
+                </div>
+                <div class="col-md-2 d-flex align-items-end">
+                    <a href="/muc2_1" class="btn btn-primary btn-sm w-100">Tất cả</a>
+                </div>
             </form>
+        
+            <div class="row mt-3 align-items-center">
+                <div class="col-md-2">
+                    <h5 class="mb-0">Tổng: {{ count }}</h5>
+                </div>
+                <div class="col-md-6">
+                    <div class="pagination">{{ pagination.links }}</div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <form method="POST" action="/export_dsdktt" class="d-inline">
+                        <input name="sdt" type="hidden" value="{{ request.args.get('sdt', '') }}">
+                        <input name="cccd" type="hidden" value="{{ request.args.get('cccd', '') }}">
+                        <input name="ngaygui" type="hidden" value="{{ request.args.get('ngaygui', '') }}">
+                        <input name="hoten" type="hidden" value="{{ request.args.get('hoten', '') }}">
+                        <input name="vitri" type="hidden" value="{{ request.args.get('vitri', '') }}">
+                        <button class="btn btn-success btn-sm" type="submit">
+                            <i class="fa fa-download"></i> Tải xuống
+                        </button>
+                    </form>
+                </div>
+            </div>
         </div>
-        <br>
-        <div style="display: flex; align-items: center;">
-            <h5>Tổng: {{count}}</h5>
-            <div class="pagination">{{ pagination.links }}</div>
-            <form method="POST" action="/export_dsdktt">
-                <input id="sdt" name="sdt" type="text" hidden value={{request.args.get('sdt','')}}>
-                <input id="cccd" name="cccd" type="text" hidden value={{request.args.get('cccd','')}}>
-                <input id="ngaygui" name="ngaygui" type="date" hidden value={{request.args.get('ngaygui','')}} >
-                <input id="hoten" name="hoten" type="text" hidden value={{request.args.get('hoten','')}} >
-                <input id="vitri" name="vitri" type="text" hidden value={{request.args.get('vitri','')}} >
-                <button class="btn btn-success btn-sm" type="submit"><i class="fa fa-download"></i></button>
-            </form>
-        </div>
+        
         <table class="table table-bordered table-hover table-sm">
             <tr class="bg-primary">
                 <th class="sticky_2">Họ và tên</th>
@@ -155,9 +181,9 @@
                 <form action="/muc2_1" method="POST">
                     <tr data-info='{{ user | safe }}'>
                         <input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">
-                        <td class="sticky_2">{{ user["Họ tên"] }}</td>
+                        <td class="sticky_2"><input type="text" name="hoten" id="hoten" value="{{ user["Họ tên"] }}"></input></td>
                         <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
-                        <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}" hidden>{{ user["Số điện thoại"] }}</td>
+                        <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}"></input></td>
                         {% if user["Trạng thái"] == "Đạt" %}
                         <td style= "background-color: green; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
                         {% elif user["Trạng thái"] == "Không đạt" %}
@@ -254,7 +280,7 @@
 <script>
     function openModal(element) {
         var modal = document.getElementById("myModal");
-        var phone = element.closest("tr").querySelector(".user-phone").innerText;
+        var phone = element.closest("tr").querySelector(".user-phone").value;
         document.getElementById("phone").value = phone;
         modal.style.display = "block";
     }

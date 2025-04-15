@@ -13,6 +13,24 @@
         margin-left: 10px;
         width: 150px;
     }
+    .image-upload-wrapper {
+        width: 200px;
+        height: 200px;
+        border: 2px dashed #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+    
+    .image-upload-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -32,9 +50,17 @@
         <label for="masothe">Mã số thẻ</label>
         <input type="text" id="masothe" name="masothe" value={{request.args.get('masothe', '')}}>
     </div>
-
     <hr />
-    <form action="/muc3_2" method="POST">
+    <form action="/muc3_2" method="POST" enctype="multipart/form-data" >
+    <div class="form-group">
+        <input type="file" id="avatarInput" accept="image/*" name="anh"  style="display: none;">
+        <label for="avatarInput" class="image-upload-wrapper">
+            <img id="avatar" src="static/img/avatar/default.svg"
+            style="width: 150px; height: 150px; object-fit: cover; cursor: pointer; border-radius: 50%;">
+        </label>
+    </div>
+    <hr />
+    
         <h5>Thông tin người lao động </h5>
         <div class="form-group">
             <input type="text" id="mst" name="mst" hidden>
@@ -261,8 +287,9 @@
                 .then(function (response) {
                     var data = response.data
                     if (response.data != "") {
-                        console.log(data)
+                        //console.log(data)
                         document.getElementById("mst").value = data["MST"]
+                        document.getElementById("avatar").src = data["Ảnh chân dung"];
                         document.getElementById("trangthai").value = data["Trạng thái"];
                         document.getElementById("cccd").value = data["CCCD"];
                         document.getElementById("ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]);
@@ -330,7 +357,7 @@
                 method: 'post',
                 url: '/laycatheomst?mst=' + document.getElementById('masothe').value
             }).then(function(response) {
-                console.log(response.data)
+                //console.log(response.data)
                 document.getElementById('calamviec').value = response.data['Ca']
             })
         }
@@ -392,6 +419,23 @@
         // Set the formatted value back to the input field
         e.target.value = formattedValue;
     });
+    </script>
+    <script>
+        const avatarInput = document.getElementById('avatarInput');
+        const avatar = document.getElementById('avatar');
+    
+        avatarInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+    
+                reader.onload = function(e) {
+                    avatar.src = e.target.result;
+                }
+    
+                reader.readAsDataURL(file);
+            }
+        });
     </script>
 </div>
 {% endblock content %}

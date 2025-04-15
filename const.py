@@ -3,14 +3,13 @@ from config import url_database_pyodbc
 
 url_database_pyodbc = url_database_pyodbc
 
-MST_TPNS = 9514
-
 FOLDER_NHAP = os.path.join(os.path.dirname(__file__), r'nhapxuat/nhap')
 FOLDER_XUAT = os.path.join(os.path.dirname(__file__), r'nhapxuat/xuat')
 FOLDER_BIENBAN = os.path.join(os.path.dirname(__file__), r'nhapxuat/bienban')
 FOLDER_JD = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/jd')
 FOLDER_CV = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/cv')
 FOLDER_DGPV = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/dgpv')
+FOLDER_AVATAR = 'static/img/avatar'
 
 HINHANH_LOGO = os.path.join(os.path.dirname(__file__), r'static/img/logo.png')
 FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')

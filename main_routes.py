@@ -33,7 +33,7 @@ def run_before_every_request():
             lathuky= la_thuky(current_user.macongty,current_user.masothe)
             if lathuky:
                 cac_chuyen_thuky_quanly = lay_danhsach_chuyen_thuky_quanly(current_user.macongty,current_user.masothe)
-                # print(cac_chuyen_thuky_quanly)
+                # flash(cac_chuyen_thuky_quanly)
                 thuky_soluong_loithe = lay_soluong_loithe_thuky_canxuly(current_user.macongty,current_user.masothe)
                 thuky_soluong_diemdanhbu = lay_soluong_diemdanhbu_thuky_cankiemtra(current_user.macongty,current_user.masothe)
                 thuky_soluong_xinnghiphep = lay_soluong_xinnghiphep_thuky_cankiemtra(current_user.macongty,current_user.masothe)
@@ -198,7 +198,7 @@ def run_before_every_request():
                     g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
-        # print(g.notice)
+        # flash(g.notice)
     except Exception as e:  
         flash(f"Lỗi cập nhật thông tin chuông: {e}")
         f12 = trang_thai_function_12()    
@@ -332,23 +332,23 @@ def home():
 
             df = pd.DataFrame(users)
 
-            df["Ngày sinh"] = to_datetime(df['Ngày sinh'])
-            df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'])
-            df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'])
-            df["Ngày vào"] = to_datetime(df['Ngày vào'])
-            df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'])
-            df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'])
-            df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'])
-            df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'])
-            df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'])
-            df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'])
-            df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'])
-            df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'])
-            df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'])
-            df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'])
-            df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'])
-            df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'])
-            df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'])
+            df["Ngày sinh"] = to_datetime(df['Ngày sinh'],errors='coerce')
+            df["Ngày cấp CCCD"] = to_datetime(df['Ngày cấp CCCD'],errors='coerce')
+            df["Ngày ký HĐ"] = to_datetime(df['Ngày ký HĐ'],errors='coerce')
+            df["Ngày vào"] = to_datetime(df['Ngày vào'],errors='coerce')
+            df["Ngày nghỉ"] = to_datetime(df['Ngày nghỉ'],errors='coerce')
+            df["Ngày hết hạn"] = to_datetime(df['Ngày hết hạn'],errors='coerce')
+            df["Ngày vào nối thâm niên"] = to_datetime(df['Ngày vào nối thâm niên'],errors='coerce')
+            df["Ngày sinh con 1"] = to_datetime(df['Ngày sinh con 1'],errors='coerce')
+            df["Ngày sinh con 2"] = to_datetime(df['Ngày sinh con 2'],errors='coerce')
+            df["Ngày sinh con 3"] = to_datetime(df['Ngày sinh con 3'],errors='coerce')
+            df["Ngày sinh con 4"] = to_datetime(df['Ngày sinh con 4'],errors='coerce')
+            df["Ngày sinh con 5"] = to_datetime(df['Ngày sinh con 5'],errors='coerce')
+            df["Ngày kí HĐ Thử việc"] = to_datetime(df['Ngày kí HĐ Thử việc'],errors='coerce')
+            df["Ngày hết hạn HĐ Thử việc"] = to_datetime(df['Ngày hết hạn HĐ Thử việc'],errors='coerce')
+            df["Ngày kí HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày kí HĐ xác định thời hạn lần 1'],errors='coerce')
+            df["Ngày hết hạn HĐ xác định thời hạn lần 1"] = to_datetime(df['Ngày hết hạn HĐ xác định thời hạn lần 1'],errors='coerce')
+            df["Ngày kí HĐ không thời hạn"] = to_datetime(df['Ngày kí HĐ không thời hạn'],errors='coerce')
             
             output = BytesIO()
             with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -431,6 +431,7 @@ def danhsachdangkytuyendung():
         
     if request.method == "POST":
         id = request.form.get("id")
+        hoten = request.form.get("hoten")
         sdt = request.form.get("sdt")
         vitrituyendung = request.form.get("vitrituyendung")
         hocvan = request.form.get("hocvan")
@@ -499,7 +500,7 @@ def dangkytuyendung():
         phongban = request.args.get("phongban")
         danhsach = laydanhsachyeucautuyendung(phongban)
         danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
-        # print(danhsach_vitri_cacongty)
+        # flash(danhsach_vitri_cacongty)
         return render_template("2_2.html", 
                                page= "2.2 Yêu cầu tuyển dụng",
                                danhsach = danhsach,
@@ -525,7 +526,7 @@ def dangkytuyendung():
             trongbudget = "Trong" if budget else"Ngoài"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
                 flash("Thêm yêu cầu tuyển dụng mới thành công !!!")
-                print(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
+                flash(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
             else:
                 flash("Thêm yêu cầu tuyển dụng mới thất bại !!!")
         except Exception as e:
@@ -618,7 +619,14 @@ def nhapthongtinlaodongmoi():
     
     elif request.method == "POST":
         try:
-            anh = f"N'{request.form.get("anh")}'"
+            # flash(request.files, request.form)
+            anh = "NULL"
+            file = request.files.get("anh")
+            # flash(file)
+            if file:
+                file_path = os.path.join(FOLDER_AVATAR, request.form.get("masothe") + ".jpg")
+                file.save(file_path)
+                anh = f"'{file_path}'"
             masothe = f"'{request.form.get("masothe")}'"
             thechamcong = f"'{int(request.form.get("masothe"))}'"
             hoten = f"N'{request.form.get("hoten")}'"
@@ -683,7 +691,19 @@ def nhapthongtinlaodongmoi():
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
 
-            nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},{gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},{sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},{tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},{anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},{ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},{ngaybatdauhdvth},'N', '', GETDATE())"             
+            nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},\
+                        {gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},\
+                        {thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},\
+                        {tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},\
+                        {sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},\
+                        {tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},\
+                        {anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},\
+                        {jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},\
+                        {sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},\
+                        {positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},\
+                        {ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},\
+                        {ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},\
+                        {ngaybatdauhdvth},'N', '', GETDATE())"             
             ketqua = themnhanvienmoi(nhanvienmoi)
             if ketqua["ketqua"]:
                 flash("Thêm lao động mới thành công !!!")
@@ -696,14 +716,14 @@ def nhapthongtinlaodongmoi():
                     datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  
                 )
                 # flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
-                # themtaikhoanmoi(
-                #     int(request.form.get("masothe")),
-                #     request.form.get("hoten"),
-                #     request.form.get("phongban"),
-                #     request.form.get("gradecode")
-                # )              
+                themtaikhoanmoi(
+                    int(request.form.get("masothe")),
+                    request.form.get("hoten"),
+                    request.form.get("phongban"),
+                    request.form.get("gradecode")
+                )              
             else:
-                flash("Thêm lao động mới thất bại !!!")
+                flash(f"Thêm lao động mới thất bại {ketqua['lido']}!!!")
         except Exception as e:
             flash(f"Them lao dong moi that bai: {e} !!!")
         finally:
@@ -718,6 +738,16 @@ def thaydoithongtinlaodong():
         return render_template("3_2.html", page="3.2 Thay đổi thông tin người lao động")
     else:
         try:
+            mst = request.form.get("mst")
+            anh = "NULL"
+            file = request.files.get("anh")
+            if file:
+                file_path = os.path.join(FOLDER_AVATAR, mst + ".jpg")
+                if os.path.exists(file_path):
+                    os.remove(file_path)
+                file.save(file_path)
+            
+                anh = f"'{file_path}'"
             trangthailamviec = request.form.get("trangthai")
             thechamcong = request.form.get("thechamcong")
             cccd = request.form.get("cccd")
@@ -742,7 +772,7 @@ def thaydoithongtinlaodong():
             nganhang = request.form.get("nganhang")
             sotaikhoan = request.form.get("sotaikhoan")
             connho = request.form.get("connho")
-            mst = request.form.get("mst")
+            
             tenconnho1 = request.form.get("tenconnho1")
             tenconnho2 = request.form.get("tenconnho2")
             tenconnho3 = request.form.get("tenconnho3")
@@ -779,7 +809,7 @@ def thaydoithongtinlaodong():
             ngaykyhdtv = request.form.get("ngaykyhdtv")
             ngayhethanhdtv = request.form.get("ngayhethanhdtv")
             
-            query = f"UPDATE HR.dbo.Danh_sach_CBCNV SET "
+            query = f"UPDATE Danh_sach_CBCNV SET "
             if thechamcong:
                 query += f"The_cham_cong = '{thechamcong}',"
             else:
@@ -1067,6 +1097,11 @@ def thaydoithongtinlaodong():
                 query += f"Ngay_het_han_HDTV = '{ngayhethanhdtv}',"
             else:
                 query += f"Ngay_het_han_HDTV = NULL,"
+            if anh:
+                query += f"Anh_chan_dung = {anh},"
+            else:
+                query += f"Anh_chan_dung = NULL,"
+
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -1822,7 +1857,8 @@ def xinnghikhongluong():
         ngay = request.form.get("ngaynghi")
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
-        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly)
+        mstthuky = request.form.get("mstthuky")
+        danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
         data = []
         for row in danhsach:
             data.append({
@@ -1834,7 +1870,7 @@ def xinnghikhongluong():
                 "Phòng ban": row[5],
                 "Ngày xin phép": row[6],
                 "Tổng số phút": row[7],
-                "Lý do": row[8],
+                "Loại nghỉ": row[8],
                 "Trạng thái": row[9]
             })
         df = pd.DataFrame(data)
@@ -1884,14 +1920,15 @@ def danhsachxinnghikhac():
         data = [{
             "Nhà máy": row[0],
             "Mã số thẻ": row[1],
-            "Họ tên": row[8],
-            "Bộ phận": row[10],
-            "Chuyền": row[9],
-            "Ngày nghỉ": row[2],
-            "Tổng số phút": row[3],
-            "Loại nghỉ": row[4],
-            "Trạng thái": row[5],
-            "Nhận giấy tờ": row[6],            
+            "Họ tên": row[2],
+            "Chức danh": row[3],
+            "Chuyền": row[4],
+            "Bộ phận": row[5],
+            "Ngày nghỉ": row[6],
+            "Tổng số phút": row[7],
+            "Loại nghỉ": row[8],
+            "Trạng thái": row[9],
+            "Nhận giấy tờ": row[10],            
         } for row in danhsach] 
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
@@ -2808,7 +2845,7 @@ def muc7_1_19():
         tungay = request.args.get("tungay")
         denngay = request.args.get("denngay")
         phanloai = request.args.get("phanloai")
-        rows = laydanhsachchamcongchunhatchuachot(mst,chuyen,phongban,tungay,denngay,phanloai)
+        rows = laydanhsachchamcongchunhatchuachot(mst, chuyen, phongban, tungay, denngay, phanloai)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2817,7 +2854,7 @@ def muc7_1_19():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_19.html", page="Bảng chấm công",
+        return render_template("7_1_19.html", page="Bảng chấm công Chủ Nhật chi tiết chưa chốt",
                             danhsach=paginated_rows, 
                             pagination=pagination,
                             count=count)
@@ -2879,7 +2916,7 @@ def muc7_1_20():
         tungay = request.args.get("tungay")
         denngay = request.args.get("denngay")
         phanloai = request.args.get("phanloai")
-        rows = laydanhsachchamcongchunhatchot(mst,chuyen,phongban,tungay,denngay,phanloai)
+        rows = laydanhsachchamcongchunhatchot(mst, chuyen, phongban, tungay, denngay, phanloai)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2953,7 +2990,7 @@ def muc7_1_21():
         tungay = request.args.get("tungay")
         denngay = request.args.get("denngay")
         phanloai = request.args.get("phanloai")
-        rows = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
+        rows = laydanhsachchamcongchunhatchotquakhu(mst, chuyen, phongban, tungay, denngay, phanloai)
         count = len(rows)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -2966,14 +3003,13 @@ def muc7_1_21():
         return render_template("7_1_21.html", page="Bảng chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
-                            count=count,
-                            danhsachphongban=danhsachphongban)
+                            count=count)
     elif request.method=="POST":
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
         tungay = request.form.get("tungay")
-        denngay = request.form.get("denngay")
+        denngay = request.form.get("denngay")   
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT_KX)
