@@ -3601,7 +3601,7 @@ def thaydoi_ten_lichsu_congviec():
         chuyen = request.form.get("chuyen")
         hoten = request.form.get("hoten")
         bophan = request.form.get("bophan")
-        if sua_ten_lichsu_congviec(id,chuyen):
+        if sua_ten_lichsu_congviec(id,hoten):
             flash(f"Sửa tên cho dòng lịch sử công việc số {id} sang {hoten} thành công")
         else:
             flash(f"Sửa tên cho dòng lịch sử công việc số {id} sang {hoten} thất bại")
