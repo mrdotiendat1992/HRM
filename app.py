@@ -2986,8 +2986,10 @@ def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
             query += f" and MST = '{mst}' "
         if ngay:
             query += f" and Ngay_dang_ky = '{ngay}'"
-        query += f" ORDER BY CAST(MST AS INT) ASC, GIO_VAO ASC"
-        # 
+        else:
+            query += f" and Ngay_dang_ky = (SELECT MAX(Ngay_dang_ky) FROM Dang_ky_tang_ca)"
+
+        query += f" order by Ngay_dang_ky desc, CAST(MST AS INT) ASC, GIO_VAO ASC"
         cursor = cursor.execute(query)
         rows = cursor.fetchall()
         result = [{
