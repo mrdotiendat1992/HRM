@@ -42,14 +42,18 @@
                 <input class="form-control" type="number" placeholder="Tháng" name="thang" value="{{ request.args.get('thang', '') }}"/>
                 <input class="form-control" type="text" placeholder="Năm" name="nam" value="{{ request.args.get('nam', '') }}"/>
                 <input class="btn btn-success" type="submit" name="action" value="Tìm kiếm" />
-                <input class="btn btn-danger" type="submit" name="action" value="Xóa tìm kiếm" />
             </form>
-            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#secretary_modal" ><i class="fa fa-plus"></i> Cập nhập</button>
+            <a href="/capnhat_phepton" class="btn btn-danger">Xóa tìm kiếm</a>
+            <form action="/tai_mau_capnhatphepton" method="POST">
+                <button type="submit" class="btn btn-primary mx-2"><i class="fa fa-download"></i> Tải mẫu</button>
+            </form>
+            
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#secretary_modal" ><i class="fa fa-upload"></i> Cập nhập</button>
             <div class="modal fade" id="secretary_modal" tabindex="-1" aria-labelledby="secretary_modal" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="secretary_modal">Số phút phép</h1>
+                      <h1 class="modal-title fs-5" id="secretary_modal">Chọn file muốn cập nhật ...</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
