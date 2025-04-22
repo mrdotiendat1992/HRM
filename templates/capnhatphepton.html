@@ -1,0 +1,94 @@
+{% extends "12.html" %}
+
+{% block style %}
+    .action {
+        display: flex;
+        gap: 10px
+    }
+
+    .action input {
+        width: max-content;
+    }
+
+    th, td {
+        white-space: nowrap; /* Không cho phép xuống dòng */
+        overflow: hidden; /* Ẩn phần văn bản tràn ra */
+        text-overflow: ellipsis; /* Thêm dấu ... vào phần văn bản bị ẩn */
+        font-weight: bold;
+        font-size: 11px;
+        vertical-align: middle;
+        height: 40px;
+    }
+
+    th {
+        text-align: center;
+        color: white;
+    }
+
+    .pointer {
+        cursor: pointer;
+    }
+
+    .hide {
+        display: none
+    }
+{% endblock style %}
+
+{% block content %}
+    <div class="container-fluid" id="main_window">
+        <div class="d-flex justify-content-between">
+            <form class="action">
+                <input class="form-control" type="text" placeholder="Mã số thẻ" name="mst" value="{{ request.args.get('mst', '') }}"/>
+                <input class="form-control" type="number" placeholder="Tháng" name="thang" value="{{ request.args.get('thang', '') }}"/>
+                <input class="form-control" type="text" placeholder="Năm" name="nam" value="{{ request.args.get('nam', '') }}"/>
+                <input class="btn btn-success" type="submit" name="action" value="Tìm kiếm" />
+                <input class="btn btn-danger" type="submit" name="action" value="Xóa tìm kiếm" />
+            </form>
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#secretary_modal" ><i class="fa fa-plus"></i> Cập nhập</button>
+            <div class="modal fade" id="secretary_modal" tabindex="-1" aria-labelledby="secretary_modal" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="secretary_modal">Số phút phép</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="post" enctype="multipart/form-data">
+                            <input type="file" class="form-control" name="file">
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                      <button type="submit" data-bs-dismiss="modal" class="btn btn-primary">Lưu</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+        <div class="mt-2">
+            <table class="table table-bordered table-hover table-sm">
+                <thead class="bg-primary">
+                    <tr>
+                        <th style="width: 25%">MST</th>
+                        <th style="width: 25%">Năm</th>
+                        <th style="width: 25%">Tháng</th>
+                        <th style="width: 25%">Số phút</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in danhsach %}
+                        <tr>
+                            <td class="text-center edit" name="mst">{{row[0]}}</td>
+                            <td class="text-center edit" name="thang">{{row[1]}}</td>
+                            <td class="text-center edit" name="nam">{{row[2]}}</td>
+                            <td class="text-center edit" name="sophut">{{row[3]}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="pagination d-flex justify-content-center">{{ pagination.links }}</div>
+        </div>
+    </div>
+
+
+{% endblock content%}

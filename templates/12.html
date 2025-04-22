@@ -60,9 +60,9 @@
                                     <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                                         Đăng ký làm thêm giờ
                                     </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/dangki_tangca_web">Đăng ký làm thêm giờ</a></li>
-                                        <li><a class="dropdown-item" href="/duieu_tangca_web">Dữ liệu cũ</a></li>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
+                                        <li><a class="dropdown-item" href="/dangki_tangca_web" hidden>Đăng ký làm thêm giờ</a></li>
+                                        <li><a class="dropdown-item" href="/duieu_tangca_web" hidden>Dữ liệu cũ</a></li>
                                     </ul>
                                 </div>
                                 <div class="dropdown">
@@ -147,6 +147,7 @@
                                 {%if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369 )%}
                                     <div>
                                         <a class="btn btn-primary btn-sm" href="/phanquyenthuky">Phân quyền thư ký</a>
+                                        <a class="btn btn-primary btn-sm" href="/capnhat_phepton">Cập nhật phép tồn</a>
                                     </div>
                                 {%endif%}
                                 {% if 'HRD' in current_user.phongban %}
@@ -161,7 +162,7 @@
                                 </div>
                                 {%endif%} 
                                 {% if current_user.masothe==2833 %}       
-                                    <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
+                                    <a href="/chotcong" class="btn btn-primary btn-sm" hidden>Chốt công</a>
                                 {% endif %}
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 

@@ -4951,3 +4951,32 @@ def delete_cham_cong():
         'success': True,
         'message': 'Xóa thành công'
     })
+
+@app.route("/capnhat_phepton", methods=["GET","POST"])
+def capnhat_phepton():
+    if request.method == "POST":
+        file = request.files.get("file")
+        if not file:
+            flash("KHông tìm thấy file")
+        
+
+        return render_template("capnhatphepton.html")
+    else:
+        thang = request.args.get("thang")
+        nam = request.args.get("nam") if request.args.get("nam") else datetime.now().year
+        mst = request.args.get("mst")
+        danhsach = lay_dulieu_phepton(mst, thang,nam)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("capnhatphepton.html",
+                               danhsach=paginated_rows,
+                                pagination=pagination,
+                                thang=thang,
+                                nam=nam,
+                                mst=mst
+                            )

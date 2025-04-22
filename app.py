@@ -5282,3 +5282,23 @@ def lay_danhsach_vitri_theo_hcname(macongty):
     except Exception as e:
         flash(f"Lỗi lấy danh sách vị trí: {e}")
         return {}
+    
+def lay_dulieu_phepton(mst, thang, nam):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT MST,NAM,THANG,So_phut_phep from So_phut_phep WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query += f" AND MST='{mst}'"
+        if thang:
+            query += f" AND THANG='{thang}'"
+        if nam:
+            query += f" AND NAM='{nam}'"
+        query += f" ORDER BY THANG DESC, MST ASC"
+        rows = cur.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+        flash(f"Lỗi lấy dữ liệu phép tồn: ({query}){e}")
+        return []
+    
