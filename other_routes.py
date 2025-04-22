@@ -5043,3 +5043,14 @@ def tai_mau_capnhatphepton():
     response.headers['Content-Disposition'] = f'attachment; filename=capnhat_phepton_{time_stamp}.xlsx'
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
+
+@app.route("/chotcong/notdapthe", methods=["POST"])
+def chotcong_notdapthe():
+    mst = request.form.get("mst")
+    tungay = request.form.get("tungay")
+    denngay = request.form.get("denngay")
+    data = lay_dulieu_chotcong_notdapthe(mst, tungay, denngay)
+    if data:
+        return jsonify({"success": "True", "data": data})
+    else:
+        return jsonify({"success": "False"})

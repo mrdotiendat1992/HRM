@@ -5310,3 +5310,28 @@ def lay_dulieu_phepton(mst, thang, nam):
         flash(f"Lỗi lấy dữ liệu phép tồn: ({query}){e}")
         return []
     
+def lay_dulieu_chotcong_notdapthe(mst, tungay, denngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT MaChamCong, NgayCham,GioCham,ID from Check_In_Out WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query += f" AND MaChamCong='{mst}'"
+        if tungay:
+            query += f" AND NgayCham >= '{tungay}'"
+        if denngay:
+            query += f" AND NgayCham <= '{denngay}'"
+        query += f" ORDER BY NgayCham DESC, MaChamCong ASC"
+        rows = cur.execute(query).fetchall()
+        conn.close()
+        return [
+            {
+                "Mã số thẻ": row[0],
+                "Ngày": row[1].strftime("%d/%m/%Y"),
+                "Giờ": row[2].strftime("%H:%M:%S"),
+                "ID": row[3]
+            }
+            for row in rows]
+    except Exception as e:
+        print(e)
+        return []
