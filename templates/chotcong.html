@@ -22,7 +22,7 @@
 {% endblock style %}
 
 {% block content %}
-    <div class="container-fluid" id="main_window">
+    <div class="container" id="main_window">
         <div class="container my-3">
             <form class="row g-3 align-items-end">
                 <div class="col-sm-3">
@@ -60,16 +60,14 @@
         </div>
         
         
-    </div>
-    <br/>
-    <div class="row" id="dulieulayve">
-    <div class="text-center my-3" id="loading_spinner" style="display:none;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+        <div class="text-center my-3" id="loading_spinner" style="display:none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
-                <p>Đang lấy dữ liệu...</p>
-            </div>
+            <p>Đang lấy dữ liệu...</p>
         </div>
+    
+        <div class="row" id="dulieulayve">
     </div>
     <!-- Modal chạy lại công -->
     <div class="modal fade" id="modalChayCong" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
@@ -614,6 +612,16 @@
                  
                             }
 
+                            if (Object.keys(response.data["Xin nghỉ phép"]).length === 0
+                                && Object.keys(response.data["Xin nghỉ khác"]).length === 0
+                                && Object.keys(response.data["Xin nghỉ không lương"]).length === 0 
+                                && Object.keys(response.data["Điểm danh bù"]).length === 0 
+                                && Object.keys(response.data["Nốt dập thẻ"]).length === 0
+                            ) {
+                                
+                                $('#loading_spinner').hide();
+                                $('#dulieulayve').html('<p class="text-danger">Không tìm thấy dữ liệu.</p>');   
+                            }
                         } else {
                             $('#loading_spinner').hide();
                             $('#dulieulayve').html('<p class="text-danger">Không tìm thấy dữ liệu.</p>');   
