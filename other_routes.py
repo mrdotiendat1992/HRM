@@ -5086,3 +5086,139 @@ def xoa_notdapthe():
     except Exception as e:
         print("Lỗi:", e)
         return jsonify({'success': "False", 'error': str(e)})
+
+@app.route("/chotcong/sua_diemdanhbu", methods=["POST"])
+def sua_diemdanhbu():
+    id = request.form.get('id')
+    gio_moi = request.form.get('gio_moi')
+    ngay_moi = request.form.get('ngay_moi')
+    loaidiemdanh_moi = request.form.get('loaidiemdanh_moi')
+    trangthai_moi = request.form.get('trangthai_moi')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Diem_danh_bu SET Ngay_diem_danh = '{ngay_moi}', Gio_diem_danh = '{gio_moi}', Loai_diem_danh = N'{loaidiemdanh_moi}', Trang_thai = N'{trangthai_moi}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+    
+@app.route("/chotcong/xoa_diemdanhbu", methods=["POST"])
+def xoa_diemdanhbu():
+    id = request.form.get('id')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM Diem_danh_bu WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+
+@app.route("/chotcong/sua_xinnghiphep", methods=["POST"])
+def sua_xinnghiphep():
+    id = request.form.get('id')
+    ngay_moi = request.form.get('ngay_moi')
+    tongsophut_moi = request.form.get('tongsophut_moi')
+    trangthai_moi = request.form.get('trangthai_moi')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Xin_nghi_phep SET Ngay_nghi_phep = '{ngay_moi}', Tong_so_phut = '{tongsophut_moi}', Trang_thai = N'{trangthai_moi}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+    
+@app.route("/chotcong/xoa_xinnghiphep", methods=["POST"])
+def xoa_xinnghiphep():
+    id = request.form.get('id')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM Xin_nghi_phep WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+
+@app.route("/chotcong/sua_xinnghikhongluong", methods=["POST"])
+def sua_xinnghikhongluong():
+    id = request.form.get('id')
+    ngay_moi = request.form.get('ngay_moi')
+    sophut_moi = request.form.get('sophut_moi')
+    trangthai_moi = request.form.get('trangthai_moi')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Xin_nghi_khong_luong SET Ngay_xin_phep = '{ngay_moi}', So_phut = '{sophut_moi}', Trang_thai = N'{trangthai_moi}' WHERE ID = {id}"
+        # print(query)
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+    
+@app.route("/chotcong/xoa_xinnghikhongluong", methods=["POST"])
+def xoa_xinnghikhongluong():
+    id = request.form.get('id')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM Xin_nghi_khong_luong WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+
+@app.route("/chotcong/sua_xinnghikhac", methods=["POST"])
+def sua_xinnghikhac():
+    id = request.form.get('id')
+    ngay_moi = request.form.get('ngay_moi')
+    tongsophut_moi = request.form.get('tongsophut_moi')
+    loainghi_moi = request.form.get('loainghi_moi')
+    trangthai_moi = request.form.get('trangthai_moi')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Xin_nghi_khac SET Ngay_nghi = '{ngay_moi}', Loai_nghi = '{loainghi_moi}', Tong_so_phut = '{tongsophut_moi}', Trang_thai = N'{trangthai_moi}' WHERE ID = {id}"
+        # print(query)
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+    
+@app.route("/chotcong/xoa_xinnghikhac", methods=["POST"])
+def xoa_xinnghikhac():
+    id = request.form.get('id')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM Xin_nghi_khac WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})

@@ -25,22 +25,19 @@
     <div class="container-fluid" id="main_window">
         <div class="d-flex justify-content-between">
             <label for="tungay">Từ ngày:</label>
-                <input id="tungay" name="tungay" type="date"/>
+            <input type="date" id="tungay" name="tungay">
+
             <label for="denngay">Đến ngày:</label>
-                <input id="denngay" name="denngay" type="date"/>
+            <input type="date" id="denngay" name="denngay">
+
             <label for="mst">Mã số thẻ:</label>
-                <input id="mst" name="mst" placeholder="Nhập mã số thẻ" type="text"/>
-            <button class="btn btn-primary" id="timdulieuchotcong">Tìm</button>
+            <input type="text" id="mst" name="mst" placeholder="Nhập mã số thẻ">
+
+            <button id="timdulieuchotcong" class="btn btn-primary">Tìm</button>
         </div>
-    </div>
-    <br/>
-    <div class="row" id="dulieulayve">
-    <div class="text-center my-3" id="loading_spinner" style="display:none;">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-            </div>
-                <p>Đang lấy dữ liệu...</p>
-            </div>
+        <br>
+        <div class="row" id="dulieulayve">
+            
         </div>
     </div>
     <script>
@@ -298,8 +295,6 @@
         $(document).ready(function () {
             
             $('#timdulieuchotcong').click(function () {
-                $('#loading_spinner').show();
-                $('#dulieulayve').empty();
                 var tungay = $('#tungay').val();
                 var denngay = $('#denngay').val();
                 var mst = $('#mst').val();
@@ -346,8 +341,8 @@
                                 var tableWrapper = `
                                     <div class="col-12">
                                         <br>
-                                        <h4>Nốt dập thẻ <button class="btn btn-sm btn-secondary toggle-section" data-target="#notdapthe_section">Ẩn/Hiện</button></h4>
-                                        <div id="notdapthe_section" style="max-height: 300px; overflow-y: auto;">
+                                        <h4>Nốt dập thẻ</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
                                             ${table}
                                         </div>
                                         <br>
@@ -355,7 +350,6 @@
                                 `;
                             
                                 $('#dulieulayve').append(tableWrapper);
-                                $('#loading_spinner').hide();
                             }
                             
                             if (response.data["Điểm danh bù"] && Object.keys(response.data["Điểm danh bù"]).length <= 0) {
@@ -383,8 +377,8 @@
                                 var tableWrapper = `
                                     <div class="col-12">
                                         <br>
-                                        <h4>Điểm danh bù <button class="btn btn-sm btn-secondary toggle-section" data-target="#diemdanhbu_section">Ẩn/Hiện</button></h4>
-                                        <div id="diemdanhbu_section" style="max-height: 300px; overflow-y: auto;">
+                                        <h4>Điểm danh bù</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
                                             ${table}
                                         </div>
                                         <br>
@@ -392,7 +386,6 @@
                                 `;
                             
                                 $('#dulieulayve').append(tableWrapper);
-                                $('#loading_spinner').hide();
                             }
 
                             if (response.data["Xin nghỉ phép"] && Object.keys(response.data["Xin nghỉ phép"]).length <= 0) {
@@ -418,15 +411,14 @@
                                 var tableWrapper = `
                                     <div class="col-12">
                                         <br>
-                                        <h4>Xin nghỉ phép <button class="btn btn-sm btn-secondary toggle-section" data-target="#xinnghiphep_section">Ẩn/Hiện</button></h4>
-                                        <div id="xinnghiphep_section" style="max-height: 300px; overflow-y: auto;">
+                                        <h4>Xin nghỉ phép</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
                                             ${table}
                                         </div>
                                         <br>
                                     </div>
                                 `;
                                 $('#dulieulayve').append(tableWrapper);
-                                $('#loading_spinner').hide();
                  
                             }
 
@@ -453,15 +445,14 @@
                                 var tableWrapper = `
                                     <div class="col-12">
                                         <br>
-                                        <h4>Xin nghỉ không lương <button class="btn btn-sm btn-secondary toggle-section" data-target="#xinnghikhongluong_section">Ẩn/Hiện</button></h4>
-                                        <div id="xinnghikhongluong_section" style="max-height: 300px; overflow-y: auto;">
+                                        <h4>Xin nghỉ không lương</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
                                             ${table}
                                         </div>
                                         <br>
                                     </div>
                                 `;
                                 $('#dulieulayve').append(tableWrapper);
-                                $('#loading_spinner').hide();
                  
                             }
                             
@@ -489,38 +480,28 @@
                                 var tableWrapper = `
                                     <div class="col-12">
                                         <br>
-                                        <h4>Xin nghỉ khác <button class="btn btn-sm btn-secondary toggle-section" data-target="#xinnghikhac_section">Ẩn/Hiện</button></h4>
-                                        <div id="xinnghikhac_section" style="max-height: 300px; overflow-y: auto;">
+                                        <h4>Xin nghỉ khác</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
                                             ${table}
                                         </div>
                                         <br>
                                     </div>
                                 `;
                                 $('#dulieulayve').append(tableWrapper);
-                                $('#loading_spinner').hide();
                  
                             }
 
                         } else {
-                            $('#loading_spinner').hide();
-                            $('#dulieulayve').html('<p class="text-danger">Không tìm thấy dữ liệu.</p>');   
-
+                            console.log("Không có dữ liệu nào");
                         }
                     },
                     error: function (xhr, status, error) {
-                        $('#loading_spinner').hide();
-                        $('#dulieulayve').html('<p class="text-danger">Lỗi khi gửi yêu cầu.</p>');
-                        console.error(error);
+                        console.error('Lỗi:', error);
                     }
                 });
             });
+        });
         
 
-    
-        $(document).on('click', '.toggle-section', function () {
-            var target = $(this).data('target');
-            $(target).toggle();
-        });
-    });
-</script>
+    </script>
 {% endblock content %}
