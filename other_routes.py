@@ -5222,3 +5222,21 @@ def xoa_xinnghikhac():
     except Exception as e:
         print("Lỗi:", e)
         return jsonify({'success': "False", 'error': str(e)})
+
+@app.route("/chotcong/chaylaicong", methods=["POST"])
+def chaylaicong():
+    loai = request.form.get("loai")
+    thang = request.form.get("thang")
+    nam = request.form.get("nam")
+    mst = request.form.get("mst")
+    if loai == "Hiện tại":
+        ketqua = chaylaicong_hientai(mst, thang, nam)
+    elif loai == "Quá khứ":
+        ketqua = chaylaicong_quakhu(mst, thang, nam)
+    else:
+        ketqua = False
+
+    if ketqua:
+        return jsonify({"success": "True"})
+    else:
+        return jsonify({"success": "False"})

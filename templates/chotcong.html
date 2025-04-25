@@ -23,15 +23,43 @@
 
 {% block content %}
     <div class="container-fluid" id="main_window">
-        <div class="d-flex justify-content-between">
-            <label for="tungay">Từ ngày:</label>
-                <input id="tungay" name="tungay" type="date"/>
-            <label for="denngay">Đến ngày:</label>
-                <input id="denngay" name="denngay" type="date"/>
-            <label for="mst">Mã số thẻ:</label>
-                <input id="mst" name="mst" placeholder="Nhập mã số thẻ" type="text"/>
-            <button class="btn btn-primary" id="timdulieuchotcong">Tìm</button>
+        <div class="container my-3">
+            <form class="row g-3 align-items-end">
+                <div class="col-sm-3">
+                    <label for="tungay" class="form-label">Từ ngày</label>
+                    <input id="tungay" name="tungay" type="date" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <label for="denngay" class="form-label">Đến ngày</label>
+                    <input id="denngay" name="denngay" type="date" class="form-control"/>
+                </div>
+                <div class="col-sm-3">
+                    <label for="mst" class="form-label">Mã số thẻ</label>
+                    <input id="mst" name="mst" placeholder="Nhập mã số thẻ" type="text" class="form-control"/>
+                </div>
+                <div class="col-sm-1">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <button class="btn btn-primary w-100" id="timdulieuchotcong" type="button">
+                        <i class="bi bi-search"></i> Tìm
+                    </button>
+                </div>
+                <div class="col-sm-2">
+                    <label class="form-label d-block">&nbsp;</label>
+                    <div class="dropdown w-100">
+                        <button class="btn btn-secondary dropdown-toggle w-100" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Chạy lại công
+                        </button>
+                        <ul class="dropdown-menu w-100">
+                            <li><a class="dropdown-item" href="#" onclick="openChayCong('Hiện tại')">Hiện tại</a></li>
+                            <li><a class="dropdown-item" href="#" onclick="openChayCong('Quá khứ')">Quá khứ</a></li>
+                        </ul>
+                        
+                    </div>
+                </div>
+            </form>
         </div>
+        
+        
     </div>
     <br/>
     <div class="row" id="dulieulayve">
@@ -43,7 +71,92 @@
             </div>
         </div>
     </div>
+    <!-- Modal chạy lại công -->
+    <div class="modal fade" id="modalChayCong" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="modalLabel">Chạy lại công (<span id="loaiCongText"></span>)</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+            <div class="modal-body">
+            <form id="formChayCong">
+                <div class="mb-3">
+                <label for="mstModal" class="form-label">Mã số thẻ</label>
+                <input type="text" class="form-control" id="mstModal" placeholder="Nhập mã số thẻ">
+                </div>
+                <div class="mb-3">
+                <label for="thangModal" class="form-label">Tháng</label>
+                <input type="number" class="form-control" id="thangModal" min="1" max="12">
+                </div>
+                <div class="mb-3">
+                <label for="namModal" class="form-label">Năm</label>
+                <input type="number" class="form-control" id="namModal" min="2024" max="2054">
+                </div>
+            </form>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="button" class="btn btn-primary" onclick="submitChayCong()">Gửi yêu cầu</button>
+            </div>
+        </div>
+        </div>
+    </div>
+    
     <script>
+        function chayLaiCong(loai,mst,nam,thang) {
+            $.ajax({
+                url: '/chotcong/chaylaicong',
+                type: 'POST',
+                data: {
+                    loai: loai,
+                    mst: mst,
+                    nam: nam,
+                    thang: thang
+                },
+                success: function (response) {
+                    if (response.success === "True") {
+                        alert("Chạy lại công thành công.");
+                    } else {
+                        alert("Chạy lại công thất bại.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Lỗi khi gửi yêu cầu.");
+                    console.error(error);
+                }
+            });
+
+        }
+
+
+        function openChayCong(loai) {
+                document.getElementById("loaiCongText").innerText = loai;
+                const modal = new bootstrap.Modal(document.getElementById('modalChayCong'));
+                modal.show();
+            }
+        
+        function submitChayCong() {
+                const mst = document.getElementById('mstModal').value;
+                const thang = document.getElementById('thangModal').value;
+                const nam = document.getElementById('namModal').value;
+                const loai = document.getElementById('loaiCongText').innerText;
+        
+                if (!mst || !thang || !nam) {
+                    alert("Vui lòng nhập đầy đủ thông tin.");
+                    return;
+                }
+        
+                const tuNgay = `${nam}-${thang}-01`;
+                const denNgay = `${nam}-${thang}-31`;
+                
+                // TODO: Gửi AJAX hoặc xử lý logic tại đây
+                chayLaiCong(loai, mst, nam, thang);
+        
+                // Đóng modal sau khi gửi
+                bootstrap.Modal.getInstance(document.getElementById('modalChayCong')).hide();
+            }
+        
         function suaNotDapThe(id) {
             var newNgay = $('#notdapthe_ngay_' + id).val();
             var newGio = $('#notdapthe_gio_' + id).val();

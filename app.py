@@ -5425,3 +5425,75 @@ def lay_dulieu_chotcong(mst, tungay, denngay):
     except Exception as e:
         print(e)
         return data
+
+def chaylaicong_hientai(mst, thang, nam):
+
+    start_day = datetime(int(nam), int(thang), 1).strftime("%Y-%m-%d")
+    end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    success_step = 0
+
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        success_step = 1
+        query_1 = f"EXEC CHAM_CONG_TU_DONG_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
+        cur.execute(query_1)
+        conn.commit()
+        success_step = 2
+        query_2 = f"EXEC CHAM_CONG_CHU_NHAT_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
+        cur.execute(query_2)
+        conn.commit()
+        success_step = 3
+        query_3 = f"EXEC CHAM_CONG_TU_DONG_TAP_THE '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
+        cur.execute(query_3)
+        conn.commit()
+        success_step = 4
+        return True
+    except Exception as e:
+        print(f"Loi o buoc: {success_step} - {e}")  
+        return False
+    finally:
+        conn.close()
+
+def chaylaicong_quakhu(mst, thang, nam):
+
+    start_day = datetime(int(nam), int(thang), 1).strftime("%Y-%m-%d")
+    end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+
+    success_step = 0
+
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        success_step = 1
+        query_1 = f"EXEC CHAM_CONG_TU_DONG_CA_NHAN_QUA_KHU '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
+        cur.execute(query_1)
+        conn.commit()
+        success_step = 2
+        query_2 = f"EXEC Bang_cong_tong_ca_nhan '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        cur.execute(query_2)
+        conn.commit()
+        success_step = 3
+        query_3 = f"EXEC Bang_cong_tong_ca_nhan '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        cur.execute(query_3)
+        conn.commit()
+        success_step = 4
+        query_4 = f"EXEC CAP_NHAT_BANG_CONG_THANG_KIEM_XUONG_CA_NHAN '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        cur.execute(query_4)
+        conn.commit()
+        success_step = 5
+        query_5 = f"EXEC CAP_NHAT_BANG_CONG_TONG_HOP_CA_THANG_CA_NHAN '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        cur.execute(query_5)
+        conn.commit()
+        success_step = 6
+        query_6 = f"EXEC CAP_NHAT_BANG_CONG_TONG_HOP_CA_THANG_KIEM_XUONG_CA_NHAN '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        cur.execute(query_6)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi o buoc: {success_step} - {e}")  
+        conn.close()
+        return False
+        
