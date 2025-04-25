@@ -5044,13 +5044,45 @@ def tai_mau_capnhatphepton():
     response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     return response  
 
-@app.route("/chotcong/notdapthe", methods=["POST"])
+@app.route("/chotcong/dulieu", methods=["POST"])
 def chotcong_notdapthe():
     mst = request.form.get("mst")
     tungay = request.form.get("tungay")
     denngay = request.form.get("denngay")
-    data = lay_dulieu_chotcong_notdapthe(mst, tungay, denngay)
+    data = lay_dulieu_chotcong(mst, tungay, denngay)
     if data:
         return jsonify({"success": "True", "data": data})
     else:
         return jsonify({"success": "False"})
+
+@app.route("/chotcong/sua_notdapthe", methods=["POST"])
+def sua_notdapthe():
+    id = request.form.get('id')
+    gio_moi = request.form.get('gio_moi')
+    ngay_moi = request.form.get('ngay_moi')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"UPDATE Check_in_out SET GioCham = '{ngay_moi} {gio_moi}' WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})
+    
+@app.route("/chotcong/xoa_notdapthe", methods=["POST"])
+def xoa_notdapthe():
+    id = request.form.get('id')
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"DELETE FROM Check_in_out WHERE ID = {id}"
+        cur.execute(query)
+        conn.commit()
+
+        return jsonify({'success': "True"})
+    except Exception as e:
+        print("Lỗi:", e)
+        return jsonify({'success': "False", 'error': str(e)})

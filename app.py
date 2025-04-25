@@ -5310,28 +5310,118 @@ def lay_dulieu_phepton(mst, thang, nam):
         flash(f"Lỗi lấy dữ liệu phép tồn: ({query}){e}")
         return []
     
-def lay_dulieu_chotcong_notdapthe(mst, tungay, denngay):
+def lay_dulieu_chotcong(mst, tungay, denngay):
+    data={
+        "Nốt dập thẻ":{},
+        "Điểm danh bù":{},
+        "Xin nghỉ phép":{},
+        "Xin nghỉ không lương":{},
+        "Xin nghỉ khác":{}
+    }
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        query = f"SELECT MaChamCong, NgayCham,GioCham,ID from Check_In_Out WHERE Nha_may='{current_user.macongty}'"
+        query_notdapthe = f"SELECT MaChamCong, NgayCham,GioCham,ID from Check_In_Out WHERE Nha_may='{current_user.macongty}'"
         if mst:
-            query += f" AND MaChamCong='{mst}'"
+            query_notdapthe += f" AND MaChamCong='{mst}'"
         if tungay:
-            query += f" AND NgayCham >= '{tungay}'"
+            query_notdapthe += f" AND NgayCham >= '{tungay}'"
         if denngay:
-            query += f" AND NgayCham <= '{denngay}'"
-        query += f" ORDER BY NgayCham DESC, MaChamCong ASC"
-        rows = cur.execute(query).fetchall()
-        conn.close()
-        return [
+            query_notdapthe += f" AND NgayCham <= '{denngay}'"
+        query_notdapthe += f" ORDER BY NgayCham DESC, MaChamCong ASC"
+        rows_notdapthe = cur.execute(query_notdapthe).fetchall()
+        # conn.close()
+        data["Nốt dập thẻ"] = [
             {
                 "Mã số thẻ": row[0],
-                "Ngày": row[1].strftime("%d/%m/%Y"),
+                "Ngày": row[1].strftime("%Y-%m-%d"),
                 "Giờ": row[2].strftime("%H:%M:%S"),
                 "ID": row[3]
             }
-            for row in rows]
+            for row in rows_notdapthe]
+        
+        query_diemdanhbu = f"SELECT MST, Loai_diem_danh, Ngay_diem_danh, Gio_diem_danh, Trang_thai, ID from Diem_danh_bu WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query_diemdanhbu += f" AND MST='{mst}'"
+        if tungay:
+            query_diemdanhbu += f" AND Ngay_diem_danh >= '{tungay}'"
+        if denngay:
+            query_diemdanhbu += f" AND Ngay_diem_danh <= '{denngay}'"
+        query_diemdanhbu += f" ORDER BY Ngay_diem_danh DESC, MST ASC"
+        rows_diemdanhbu = cur.execute(query_diemdanhbu).fetchall()
+        
+        data["Điểm danh bù"] = [
+            {
+                "Mã số thẻ": row[0],
+                "Loại điểm danh": row[1],
+                "Ngày": row[2],
+                "Giờ": row[3],
+                "Trạng thái": row[4],
+                "ID": row[5]
+            }
+            for row in rows_diemdanhbu]
+
+        query_xinnghiphep = f"SELECT MST, Ngay_nghi_phep, Tong_so_phut, Trang_thai, ID from Xin_nghi_phep WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query_xinnghiphep += f" AND MST='{mst}'"
+        if tungay:
+            query_xinnghiphep += f" AND Ngay_nghi_phep >= '{tungay}'"
+        if denngay:
+            query_xinnghiphep += f" AND Ngay_nghi_phep <= '{denngay}'"
+        rows_xinnghiphep = cur.execute(query_xinnghiphep).fetchall()
+
+        data["Xin nghỉ phép"] = [
+            {
+                "Mã số thẻ": row[0],
+                "Ngày": row[1],
+                "Tổng số phút": row[2],
+                "Trạng thái": row[3],
+                "ID": row[4]
+            }
+            for row in rows_xinnghiphep]
+
+        query_xinnghikhongluong = f"SELECT MST, Ngay_xin_phep, So_phut, Trang_thai, ID from Xin_nghi_khong_luong WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query_xinnghikhongluong += f" AND MST='{mst}'"
+        if tungay:
+            query_xinnghikhongluong += f" AND Ngay_xin_phep >= '{tungay}'"
+        if denngay:
+            query_xinnghikhongluong += f" AND Ngay_xin_phep <= '{denngay}'"
+        rows_xinnghikhongluong = cur.execute(query_xinnghikhongluong).fetchall()
+        
+        data["Xin nghỉ không lương"] = [
+            {
+                "Mã số thẻ": row[0],
+                "Ngày": row[1],
+                "Tổng số phút": row[2],
+                "Trạng thái": row[3],
+                "ID": row[4]
+            }
+            for row in rows_xinnghikhongluong]
+        
+        query_xinnghikhac = f"SELECT MST, Ngay_nghi, Tong_so_phut, Loai_nghi, Trang_thai, ID from Xin_nghi_khac WHERE Nha_may='{current_user.macongty}'"
+        if mst:
+            query_xinnghikhac += f" AND MST='{mst}'"
+        if tungay:
+            query_xinnghikhac += f" AND Ngay_nghi >= '{tungay}'"
+        if denngay:
+            query_xinnghikhac += f" AND Ngay_nghi <= '{denngay}'"
+        
+        rows_xinnghikhac = cur.execute(query_xinnghikhac).fetchall()
+
+        data["Xin nghỉ khác"] = [
+            {
+                "Mã số thẻ": row[0],
+                "Ngày": row[1],
+                "Tổng số phút": row[2],
+                "Loại nghỉ": row[3],
+                "Trạng thái": row[4],
+                "ID": row[5]
+            }
+            for row in rows_xinnghikhac]
+
+        conn.close()
+        return data
     except Exception as e:
         print(e)
-        return []
+        return data

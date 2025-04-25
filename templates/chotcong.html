@@ -17,6 +17,22 @@
     .hide {
         display: none
     }
+
+    table td {
+        white-space: nowrap;
+    }
+    .input-gio {
+        width: 70px;
+        padding: 2px;
+    }
+
+    table.table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+    }
+
 {% endblock style %}
 
 {% block content %}
@@ -30,99 +46,257 @@
 
             <label for="mst">Mã số thẻ:</label>
             <input type="text" id="mst" name="mst" placeholder="Nhập mã số thẻ">
+
+            <button id="timdulieuchotcong" class="btn btn-primary">Tìm</button>
         </div>
         <br>
-        <div class="row">
-            <div class="col">
-                <h5>Dữ liệu dập thẻ <i class="fa fa-search"  id="timnotdapthe"></i></h5>
-                <div id="notdapthe" class="hide"></div>
-            </div>
-            <div class="col">
-                <h5>Dữ liệu điểm danh bù <i class="fa fa-search" id="timdiemdanhbu"></i></h5>
-                <div id="diemdanhbu" class="hide"></div>
-            </div>
-            <div class="col">
-                <h5>Dữ liệu xin nghỉ phép <i class="fa fa-search" id="timxinnghiphep"></i></h5>
-                <div id="xinnghiphep" class="hide"></div>
-            </div>
-            <div class="col">
-                <h5>Dữ liệu xin nghỉ không lương <i class="fa fa-search"  id="timxinnghikhongluong"></i></h5>
-                <div id="xinnghikhongluong" class="hide"></div>
-            </div>
-            <div class="col">
-                <h5>Dữ liệu xin nghỉ khác <i class="fa fa-search" id="timxinnghikhac"></i></h5>
-                <div id="xinnghikhac" class="hide"></div>
-            </div>
+        <div class="row" id="dulieulayve">
+            
         </div>
     </div>
     <script>
+        function suaNotDapThe(id) {
+            var newNgay = $('#ngay_' + id).val();
+            var newGio = $('#gio_' + id).val();
+            
+            $.ajax({
+                url: '/chotcong/sua_notdapthe', // Thay đổi thành endpoint API thực tế của bạn
+                method: 'POST',
+                data: {
+                    id: id,
+                    gio_moi: newGio,
+                    ngay_moi: newNgay
+                },
+                success: function (response) {
+                    if (response.success === "True") {
+                        alert("Cập nhật nốt dập thẻ thành công.");
+                    } else {
+                        alert("Cập nhật nốt dập thẻ thất bại.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Lỗi khi gửi yêu cầu.");
+                    console.error(error);
+                }
+            });
+        }
+        function xoaNotDapThe(id) {
+    
+            $.ajax({
+                url: '/chotcong/xoa_notdapthe', // Thay đổi thành endpoint API thực tế của bạn
+                method: 'POST',
+                data: {
+                    id: id
+                },
+                success: function (response) {
+                    if (response.success === "True") {
+                        alert("Xóa nốt dập thẻ thành công.");
+                    } else {
+                        alert("Xóa nốt dập thẻ thất bại.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("Lỗi khi gửi yêu cầu.");
+                    console.error(error);
+                }
+            });
+        }
+
         $(document).ready(function () {
-            $('#timnotdapthe').click(function () {
+            
+            $('#timdulieuchotcong').click(function () {
                 var tungay = $('#tungay').val();
                 var denngay = $('#denngay').val();
                 var mst = $('#mst').val();
+        
                 $.ajax({
-                    url: '/chotcong/notdapthe',
+                    url: '/chotcong/dulieu',
                     type: 'POST',
                     data: {
-                        'tungay': tungay,
-                        'denngay': denngay,
-                        'mst': mst
+                        tungay: tungay,
+                        denngay: denngay,
+                        mst: mst
                     },
-                    success: function(response) {
+                    success: function (response) {
                         console.log(response);
-                        // Xử lý dữ liệu trả về từ server
+        
                         if (response.success === "True") {
-                            // Hiển thị response.data trong bảng
-                            //{
-                            //    "Mã số thẻ": ,
-                            //    "Ngày":,
-                            //    "Giờ":,
-                            //    "ID":,
-                            //}
-                            var table = '<table class="table table-bordered table-striped"><thead><tr>';
-                                table += '<th>Ngày</th>';
-                                table += '<th>Giờ</th>';
-                                table += '<th></th>';
-                                table += '</tr></thead><tbody>';
-                                
-                                $.each(response.data, function(index, item) {
-                                    table += '<tr>';
-                                    table += '<td>' + item['Ngày'] + '</td>';
-                                    table += '<td>';
-                                    table += '<form action="/update_chotcong_notdapthe" method="POST" style="display: inline;">';
-                                    table += '<input type="hidden" name="id" value="' + item['ID'] + '">';
-                                    table += '<input name="gio" value="' + item['Giờ'] + '" />';
-                                    table += '</td>';
-                                    table += '<td class="action">';
-                                    table += '<button type="submit" class="btn btn-primary">Sửa</button>';
-                                    table += '</form>';
-                                    table += '<button type="submit" class="btn btn-danger" value="Xóa">';
-                                    table += '</td>';
-                                    table += '</tr>';
-                                });
-                                
+                            $('#dulieulayve').empty(); // Xóa nội dung cũ trong div dulieulayve
+        
+                            // Kiểm tra nếu "Nốt dập thẻ" không rỗng
+                            if (response.data["Nốt dập thẻ"] && Object.keys(response.data["Nốt dập thẻ"]).length <= 0) {
+                                // Không có dữ liệu
+                            } else {
+                                // Hiển thị dữ liệu nốt dập thẻ dưới dạng bảng trong div col bên trong div có ID dulieulayve
+                                var table = '<table class="table table-bordered"><thead><tr><th>Ngày</th><th>Giờ</th><th></th><th></th></tr></thead><tbody>'; 
+                                var stt = 1;
+                                for (var key in response.data["Nốt dập thẻ"]) {
+                                    if (response.data["Nốt dập thẻ"].hasOwnProperty(key)) {
+                                        var item = response.data["Nốt dập thẻ"][key];
+                                    
+                                        table += '<tr>';
+                                        table += '<td><input type="text" class="form-control input-ngay" readonly id="ngay_' + item["ID"] + '" value="' + item["Ngày"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-gio" id="gio_' + item["ID"] + '" value="' + item["Giờ"] + '" /></td>';
+                                        table += '<td><button class="btn btn-primary" onclick="suaNotDapThe(\'' + item["ID"] + '\')">Sửa</button></td>';
+                                        table += '<td><button class="btn btn-danger" onclick="xoaNotDapThe(\'' + item["ID"] + '\')">Xóa</button></td>';
+                                        table += '</tr>';
+                                    
+                                        stt++;
+                                    }
+                                }
                                 table += '</tbody></table>';
-                                $('#notdapthe').html(table);
-                                $('#notdapthe').show();
-                                $('#notdapthe').css({
-                                    'overflow': 'auto',
-                                    'max-height': '400px',
-                                    'overflow-y': 'scroll'
-                                });
+                            
+                                var tableWrapper = `
+                                    <div class="col-12">
+                                        <br>
+                                        <h4>Nốt dập thẻ</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
+                                            ${table}
+                                        </div>
+                                        <br>
+                                    </div>
+                                `;
+                            
+                                $('#dulieulayve').append(tableWrapper);
+                            }
+                            
+                            if (response.data["Điểm danh bù"] && Object.keys(response.data["Điểm danh bù"]).length <= 0) {
+                                // Không có dữ liệu
+                            } else {
+                                // Hiển thị dữ liệu Điểm danh bù dưới dạng bảng trong div col bên trong div có ID dulieulayve
+                                var table = '<table class="table table-bordered"><thead><tr><th>Loại điểm danh</th><th>Ngày</th><th>Giờ</th><th>Trạng thái</th><th></th><th></th></tr></thead><tbody>'; 
+                                var stt = 1;
+                                for (var key in response.data["Điểm danh bù"]) {
+                                    if (response.data["Điểm danh bù"].hasOwnProperty(key)) {
+                                        var item = response.data["Điểm danh bù"][key];
+                                        table += '<tr>';
+                                        table += '<td><input type="text" class="form-control input-loaidiemdanh" readonly id="loaidiemdanh_' + item["ID"] + '" value="' + item["Loại điểm danh"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-ngay" readonly id="ngay_' + item["ID"] + '" value="' + item["Ngày"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-gio" id="gio_' + item["ID"] + '" value="' + item["Giờ"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-trangthai" id="trangthai_' + item["ID"] + '" value="' + item["Trạng thái"] + '" /></td>';
+                                        table += '<td><button class="btn btn-primary" onclick="suaDiemDanhBu(\'' + item["ID"] + '\')">Sửa</button></td>';
+                                        table += '<td><button class="btn btn-danger" onclick="xoaDiemDanhBu(\'' + item["ID"] + '\')">Xóa</button></td>';
+                                        table += '</tr>';
+                                        stt++;
+                                    }
+                                }
+                                table += '</tbody></table>';
+                            
+                                var tableWrapper = `
+                                    <div class="col-12">
+                                        <br>
+                                        <h4>Điểm danh bù</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
+                                            ${table}
+                                        </div>
+                                        <br>
+                                    </div>
+                                `;
+                            
+                                $('#dulieulayve').append(tableWrapper);
+                            }
+
+                            if (response.data["Xin nghỉ phép"] && Object.keys(response.data["Xin nghỉ phép"]).length <= 0) {
                                 
+                            } else {
+                                // Hiển thị dữ liệu nốt dập thẻ dưới dạng bảng trong div col bên trong div có ID dulieulayve 
+                                var table = '<table class="table table-bordered"><thead><tr><th>Ngày</th><th>Tổng số phút</th><th>Trạng thái</th><th></th><th></th></tr></thead><tbody>'; 
+                                var stt = 1;
+                                for (var key in response.data["Xin nghỉ phép"]) {
+                                    if (response.data["Xin nghỉ phép"].hasOwnProperty(key)) {
+                                        var item = response.data["Xin nghỉ phép"][key];
+                                        table += '<tr>';
+                                        table += '<td><input type="text" class="form-control input-ngay" readonly id="ngay_' + item["ID"] + '" value="' + item["Ngày"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-tongsophut" id="gio_' + item["ID"] + '" value="' + item["Tổng số phút"] + '" /></td>';
+                                        table += '<td><input type="text" class="form-control input-trangthai" id="trangthai_' + item["ID"] + '" value="' + item["Trạng thái"] + '" /></td>';
+                                        table += '<td><button class="btn btn-primary" onclick="suaXinNghiPhep(\'' + item["ID"] + '\')">Sửa</button></td>';
+                                        table += '<td><button class="btn btn-danger" onclick="xoaXinNghiPhep(\'' + item["ID"] + '\')">Xóa</button></td>';
+                                        table += '</tr>';
+                                        stt++;
+                                    }
+                                }
+                                table += '</tbody></table>';
+                                var tableWrapper = `
+                                    <div class="col-12">
+                                        <br>
+                                        <h4>Xin nghỉ phép</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
+                                            ${table}
+                                        </div>
+                                        <br>
+                                    </div>
+                                `;
+                                $('#dulieulayve').append(tableWrapper);
+                 
+                            }
+
+                            if (response.data["Xin nghỉ không lương"] && Object.keys(response.data["Xin nghỉ không lương"]).length <= 0) {
+                                
+                            } else {
+                                // Hiển thị dữ liệu nốt dập thẻ dưới dạng bảng trong div col bên trong div có ID dulieulayve 
+                                var table = '<table class="table table-bordered"><thead><tr><th>Ngày</th><th>Tổng số phút</th></tr></thead><tbody>'; 
+                                var stt = 1;
+                                for (var key in response.data["Xin nghỉ không lương"]) {
+                                    if (response.data["Xin nghỉ không lương"].hasOwnProperty(key)) {
+                                        var item = response.data["Xin nghỉ không lương"][key];
+                                        table += '<tr><td>' + item["Ngày"] + '</td><td>' + item["Tổng số phút"] + '</td></tr>';
+                                        stt++;
+                                    }
+                                }
+                                table += '</tbody></table>';
+                                var tableWrapper = `
+                                    <div class="col-12">
+                                        <br>
+                                        <h4>Xin nghỉ không lương</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
+                                            ${table}
+                                        </div>
+                                        <br>
+                                    </div>
+                                `;
+                                $('#dulieulayve').append(tableWrapper);
+                 
+                            }
+                            
+                            if (response.data["Xin nghỉ khác"] && Object.keys(response.data["Xin nghỉ khác"]).length <= 0) {
+                                
+                            } else {
+                                // Hiển thị dữ liệu nốt dập thẻ dưới dạng bảng trong div col bên trong div có ID dulieulayve 
+                                var table = '<table class="table table-bordered"><thead><tr><th>Ngày</th><th>Tổng số phút</th></tr></thead><tbody>'; 
+                                var stt = 1;
+                                for (var key in response.data["Xin nghỉ khác"]) {
+                                    if (response.data["Xin nghỉ khác"].hasOwnProperty(key)) {
+                                        var item = response.data["Xin nghỉ khác"][key];
+                                        table += '<tr><td>' + item["Ngày"] + '</td><td>' + item["Tổng số phút"] + '</td></tr>';
+                                        stt++;
+                                    }
+                                }
+                                table += '</tbody></table>';
+                                var tableWrapper = `
+                                    <div class="col-12">
+                                        <br>
+                                        <h4>Xin nghỉ khác</h4>
+                                        <div style="max-height: 300px; overflow-y: auto;">
+                                            ${table}
+                                        </div>
+                                        <br>
+                                    </div>
+                                `;
+                                $('#dulieulayve').append(tableWrapper);
+                 
+                            }
 
                         } else {
-                            $('#notdapthe').html('<h5>Không có dữ liệu</h5>');
-                            $('#notdapthe').show();
+                            console.log("Không có dữ liệu nào");
                         }
                     },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
+                    error: function (xhr, status, error) {
+                        console.error('Lỗi:', error);
                     }
                 });
             });
         });
+        
 
     </script>
 {% endblock content %}
