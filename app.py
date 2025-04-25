@@ -1339,7 +1339,10 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
                     FROM 
                         Danh_sach_loi_the_3
                     INNER JOIN 
-                        Phan_quyen_thu_ky
+                        (select distinct MST,Chuyen_to, Nha_may
+						FROM Phan_quyen_thu_ky
+						)
+						AS Phan_quyen_thu_ky
                     ON
                         Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
