@@ -2808,7 +2808,7 @@ def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,gio
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""insert into Diem_danh_bu 
-        Nha_may, MST, Ho_ten, Chuc_vu, Line, Bo_phan, Loai_diem_danh, Ngay_diem_danh, Gio_diem_danh, Ly_do, Trang_thai
+        (Nha_may, MST, Ho_ten, Chuc_vu, Line, Bo_phan, Loai_diem_danh, Ngay_diem_danh, Gio_diem_danh, Ly_do, Trang_thai)
         values
         ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"""
         
