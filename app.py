@@ -1339,10 +1339,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
                     FROM 
                         Danh_sach_loi_the_3
                     INNER JOIN 
-                        (select distinct MST,Chuyen_to, Nha_may
-						FROM Phan_quyen_thu_ky
-						)
-						AS Phan_quyen_thu_ky
+                        Phan_quyen_thu_ky
                     ON
                         Danh_sach_loi_the_3.Nha_may= Phan_quyen_thu_ky.Nha_may and Danh_sach_loi_the_3.Chuyen_to=Phan_quyen_thu_ky.Chuyen_to
                     WHERE 
@@ -2810,7 +2807,10 @@ def them_diemdanhbu(masothe,hoten,chucdanh,chuyen,phongban,loaidiemdanh,ngay,gio
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"insert into Diem_danh_bu values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"
+        query = f"""insert into Diem_danh_bu 
+        Nha_may, MST, Ho_ten, Chuc_vu, Line, Bo_phan, Loai_diem_danh, Ngay_diem_danh, Gio_diem_danh, Ly_do, Trang_thai
+        values
+        ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}',N'{loaidiemdanh}','{ngay}','{giovao}',N'{lydo}',N'{trangthai}')"""
         
         cursor.execute(query)
         conn.commit()
