@@ -2125,7 +2125,9 @@ def thuky_dakiemtra_diemdanhbu(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Diem_danh_bu SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Diem_danh_bu 
+        SET Trang_thai = N'Đã kiểm tra', Ngay_duyet = GETDATE()
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2137,7 +2139,9 @@ def thuky_tuchoi_diemdanhbu(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Diem_danh_bu SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Diem_danh_bu 
+        SET Trang_thai = N'Bị từ chối bởi người kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2148,7 +2152,9 @@ def quanly_pheduyet_diemdanhbu(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Diem_danh_bu SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Diem_danh_bu SET 
+        Trang_thai = N'Đã phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2160,7 +2166,9 @@ def quanly_tuchoi_diemdanhbu(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Diem_danh_bu SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Diem_danh_bu 
+        SET Trang_thai = N'Bị từ chối bởi người phê duyệt', Ngay_duyet = GETDATE()
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2171,7 +2179,10 @@ def thuky_dakiemtra_xinnghiphep(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_phep SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_phep 
+        SET Trang_thai = N'Đã kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' 
+        AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2183,7 +2194,9 @@ def thuky_tuchoi_xinnghiphep(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_phep SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_phep 
+        SET Trang_thai = N'Bị từ chối bởi người kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2194,7 +2207,9 @@ def quanly_pheduyet_xinnghiphep(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_phep SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_phep 
+        SET Trang_thai = N'Đã phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2206,7 +2221,9 @@ def quanly_tuchoi_xinnghiphep(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_phep SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_phep 
+        SET Trang_thai = N'Bị từ chối bởi người phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2217,7 +2234,9 @@ def thuky_dakiemtra_xinnghikhongluong(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khong_luong SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khong_luong 
+        SET Trang_thai = N'Đã kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2229,7 +2248,8 @@ def thuky_tuchoi_xinnghikhongluong(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khong_luong 
+        SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2240,7 +2260,9 @@ def quanly_pheduyet_xinnghikhongluong(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khong_luong SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khong_luong 
+        SET Trang_thai = N'Đã phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2252,7 +2274,9 @@ def quanly_tuchoi_xinnghikhongluong(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khong_luong SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khong_luong 
+        SET Trang_thai = N'Bị từ chối bởi người phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         # 
         cursor.execute(query)
         conn.commit()
@@ -2264,7 +2288,9 @@ def thuky_dakiemtra_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Trang_thai = N'Đã kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Trang_thai = N'Đã kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2276,7 +2302,9 @@ def thuky_tuchoi_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Trang_thai = N'Bị từ chối bởi người kiểm tra' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Trang_thai = N'Bị từ chối bởi người kiểm tra', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2287,7 +2315,9 @@ def quanly_pheduyet_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Trang_thai = N'Đã phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Trang_thai = N'Đã phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         
         cursor.execute(query)
         conn.commit()
@@ -2299,7 +2329,9 @@ def quanly_tuchoi_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Trang_thai = N'Bị từ chối bởi người phê duyệt' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Trang_thai = N'Bị từ chối bởi người phê duyệt', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2310,7 +2342,9 @@ def nhansu_nhangiayto_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Giay_to = N'Đã nhận' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Giay_to = N'Đã nhận', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2321,7 +2355,9 @@ def nhansu_khongnhangiayto_xinnghikhac(id):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"UPDATE Xin_nghi_khac SET Giay_to = N'Không có' WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"
+        query = f"""UPDATE Xin_nghi_khac 
+        SET Giay_to = N'Không có', Ngay_duyet = GETDATE() 
+        WHERE Nha_may = '{current_user.macongty}' AND ID = '{id}'"""
         cursor.execute(query)
         conn.commit()
         conn.close()
@@ -2825,7 +2861,10 @@ def them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangtha
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"insert into Xin_nghi_phep values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',NULL,N'{trangthai}')"
+        query = f"""insert into Xin_nghi_phep 
+        (Nha_may,MST,Ho_ten,Chuc_vu,Line,Bo_phan,Ngay_nghi_phep,Tong_so_phut,Ly_do,Trang_thai)
+        values 
+        ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',NULL,N'{trangthai}')"""
         
         cursor.execute(query)
         conn.commit()
@@ -2840,7 +2879,10 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
         ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"insert into Xin_nghi_khong_luong values ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"
+        query = f"""insert into Xin_nghi_khong_luong 
+        (Nha_may,MST,Ho_ten,Chuc_vu,Chuyen,Bo_phan,Ngay_xin_phep,So_phut,Ly_do,Trang_thai)
+        values 
+        ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}')"""
         
         cursor.execute(query)
         conn.commit()
@@ -2856,9 +2898,15 @@ def them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,tra
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         if not nhangiayto:
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"
+            query = f"""INSERT INTO Xin_nghi_khac 
+            (Nha_may,MST,Ho_ten,Chuc_vu,Line,Bo_phan,Ngay_nghi,Tong_so_phut,Loai_nghi,Trang_thai,Giay_to)
+            VALUES
+            ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"""
         else:
-            query = f"INSERT INTO Xin_nghi_khac VALUES ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'{nhangiayto}')"
+            query = f"""INSERT INTO Xin_nghi_khac 
+            (Nha_may,MST,Ho_ten,Chuc_vu,Line,Bo_phan,Ngay_nghi,Tong_so_phut,Loai_nghi,Trang_thai,Giay_to)
+            VALUES 
+            ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',N'{nhangiayto}')"""
         
         cursor.execute(query)
         conn.commit()
