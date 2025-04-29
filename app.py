@@ -1637,9 +1637,15 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
                     query += f"AND Ly_do LIKE N'%{lido}%' "   
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%' "    
+                if not mst and not hoten and not chucvu and not chuyen and not bophan and not loaidiemdanh and not ngaydiemdanh and not lido and not trangthai:
+                    query = f"SELECT TOP (100) * FROM Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
                 query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
+
         rows = cursor.execute(query).fetchall()
         conn.close()
+        for row in rows:
+            row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
+            row[13] = row[13].strftime("%d/%m/%Y %H:%M:%S") if row[13] else ""
         return rows
     except Exception as e:
         flash(e)
@@ -1688,11 +1694,15 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                     query += f"AND Ngay_nghi_phep = '{ngaynghi}'"    
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
+                if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not trangthai:
+                    query = f"SELECT TOP (100) * FROM Xin_nghi_phep WHERE Nha_may='{current_user.macongty}'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
-        ##
-        
+                print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
+        for row in rows:
+            row[11] = row[11].strftime("%d/%m/%Y %H:%M:%S") if row[11] else ""
+            row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
         return rows
     except Exception as e:
         flash(e)
@@ -1744,9 +1754,14 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
                     query += f"AND Ly_do LIKE N'%{lydo}%'"
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
+                if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngay and not trangthai:
+                    query = f"SELECT TOP (100) * FROM Xin_nghi_khong_luong WHERE Nha_may='{current_user.macongty}'"
                 query += " ORDER BY Ngay_xin_phep DESC, Bo_phan ASC, Chuyen ASC, MST ASC"
         rows = cursor.execute(query).fetchall()
         conn.close()
+        for row in rows:
+            row[11] = row[11].strftime("%d/%m/%Y %H:%M:%S") if row[11] else ""
+            row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
         return rows
     except Exception as e:
         flash(e)
@@ -2077,10 +2092,14 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
                         query += f" AND Trang_thai=N'Đã phê duyệt' AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
                     else:
                         query += f" AND Giay_to=N'{nhangiayto}'" 
+                if not mst and not chuyen and not bophan and not ngaynghi and not loainghi and not trangthai and not nhangiayto:
+                    query = f"SELECT TOP (100) * FROM Xin_nghi_khac WHERE Nha_may='{current_user.macongty}'"
                 query += " ORDER BY Ngay_nghi DESC, MST ASC"
-        
         rows = cursor.execute(query).fetchall()
         conn.close()
+        for row in rows:
+            row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
+            row[13] = row[13].strftime("%d/%m/%Y %H:%M:%S") if row[13] else ""
         return rows 
     except Exception as e:
         flash(f"Lỗi lấy danh sách xin nghỉ khác {e}")

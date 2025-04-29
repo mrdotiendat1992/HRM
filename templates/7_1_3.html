@@ -107,7 +107,7 @@
         <div class="content">
             <div style="display: flex;">
                 <h5>Tổng: {{count}}</h5>
-                <form method="POST" action="/export_dsddb">
+                <form method="POST">
                     <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                     <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
                     <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
@@ -119,7 +119,7 @@
                     <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
                     <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                     <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
-                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
+                    <button type="submit" class="btn btn-success btn-sm">Xuất excel</button>
                 </form>
                 <div class="pagination">{{pagination.links}}</div>
                 {% if notice["Quản lý"] %}
@@ -155,6 +155,8 @@
                         <th>Giờ</th>
                         <th>Lý do</th> 
                         <th>Trạng thái</th>
+                        <th>Thời gian tạo</th>
+                        <th>Thời gian duyệt</th>
                         <th></th>
                     </tr>
                     <tr>
@@ -211,6 +213,8 @@
                             <td></td>
                             {% endif %}
                             <td>{{row[10]}}</td>
+                            <td>{{row[12]}}</td>
+                            <td>{{row[13]}}</td>
                             {% if row[10]=='Chờ kiểm tra'%}
                                 <td>
                                     <div style="display: flex;">

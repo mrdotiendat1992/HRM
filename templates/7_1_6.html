@@ -130,6 +130,8 @@
                         <th>Tổng số phút</th>
                         <th>Loại nghỉ</th>
                         <th>Trạng thái</th>
+                        <th>Thời gian tạo</th>
+                        <th>Thời gian duyệt</th>
                         <th style="display:flex;gap:5px;">
                             Nhận giấy tờ 
                             {% if 'HRD' in current_user.phongban %}
@@ -160,6 +162,7 @@
                         <td class="date_en">{{row[6]}}</td>
                         <td>{{row[7]}}</td>
                         <td>{{row[8]}}</td>
+                        
                         {% if not row[9] or row[9] == 'Chờ kiểm tra'%}
                             <td style="display: flex;" >Chờ kiểm tra 
                                 <form action="/thuky_kiemtra_xinnghikhac" method="POST">
@@ -177,6 +180,8 @@
                                     <input type="submit" class="btn btn-danger btn-sm" id="kiemtra" name="kiemtra" value="Từ chối">
                                 </form>
                             </td>
+                            <td>{{row[12]}}</td>
+                            <td>{{row[13]}}</td>
                             <td>Chưa nhận</td>
                         {% elif row[9] == 'Đã kiểm tra' or 'Đã kiểm tra' in row[9]  %}
                             <td style="display: flex;" >
@@ -196,10 +201,14 @@
                                     <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
                                 </form>
                             </td>
+                            <td>{{row[12]}}</td>
+                            <td>{{row[13]}}</td>
                             <td>Chưa nhận</td>
                         {% elif 'Đã phê duyệt' in row[9] or row[9]=='Đã phê duyệt' %}
                             <td>Đã phê duyệt</td>
                             {% if row[10]=='Chưa nhận' %}
+                                <td>{{row[12]}}</td>
+                                <td>{{row[13]}}</td>
                                 <td style="display: flex;">
                                     Chưa nhận 
                                     <form action="/nhansu_nhangiayto_xinnghikhac" method="POST">
@@ -218,6 +227,8 @@
                                     </form>
                                 </td>
                             {% else %}
+                            <td>{{row[12]}}</td>
+                            <td>{{row[13]}}</td>
                             <td>{{row[10]}}</td>
                             {% endif %}
                         {% else %}

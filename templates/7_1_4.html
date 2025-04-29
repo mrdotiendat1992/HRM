@@ -108,7 +108,7 @@
             <div style="display: flex; align-items: center;">
                 <h5>Tổng: {{count}}</h5>
 
-                <form method="POST" action="/export_dsxnp">
+                <form method="POST">
                     <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                     <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                     <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
@@ -146,6 +146,8 @@
                         <th>Số phút xin nghỉ</th>
                         <th>Số phút phép tồn</th>
                         <th>Trạng thái</th>
+                        <th>Thời gian tạo</th>
+                        <th>Thời gian duyệt</th>
                         <th></th>
                     </tr>
                     <tr class="table-light">
@@ -200,6 +202,8 @@
                             {% endif %}
                             <td>{{row[8]}}</td>
                             <td>{{row[9]}}</td>
+                            <td>{{row[11]}}</td>
+                            <td>{{row[12]}}</td>
                             {% if row[9]=='Chờ kiểm tra'%}
                                 <td>
                                     <div style="display: flex;">

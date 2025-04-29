@@ -138,6 +138,8 @@
                         <th>Tổng số phút</th>
                         <th>Lý do</th> 
                         <th>Trạng thái</th>
+                        <th>Thời gian tạo</th>
+                        <th>Thời gian duyệt</th>
                         <th></th>
                     </tr>
                     <tr class="table-light">
@@ -192,6 +194,8 @@
                         <td></td>
                         {% endif %}
                         <td>{{row[9]}}</td>
+                        <td>{{row[11]}}</td>
+                        <td>{{row[12]}}</td>
                         {% if row[9]=='Chờ kiểm tra'%}
                                 <td>
                                     <div style="display: flex;">
@@ -288,6 +292,7 @@
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+
     });
 </script>
 {% endblock content %}

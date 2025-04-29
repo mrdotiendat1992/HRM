@@ -1758,67 +1758,139 @@ def loichamcong():
                             count=count)
 
 
-@app.route("/muc7_1_3", methods=["GET"]) # Danh sách điểm danh bù
+@app.route("/muc7_1_3", methods=["GET","POST"]) # Danh sách điểm danh bù
 @login_required
 def diemdanhbu():
-    mstthuky = request.args.get("mstthuky")
-    mstquanly = request.args.get("mstquanly")
-    mst = request.args.get("mst")
-    hoten = request.args.get("hoten")
-    chucvu = request.args.get("chucvu")
-    chuyen = request.args.get("chuyen")
-    bophan = request.args.get("bophan")
-    loaidiemdanh = request.args.get("loaidiemdanh")
-    ngay = request.args.get("ngay")
-    lido = request.args.get("lido")
-    trangthai = request.args.get("trangthai")
-    danh_sach_chuyen = laydanhsachchuyen()
-    danh_sach_bophan = laydanhsachbophan()
-    danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly,mstthuky)
-    count = len(danhsach)
-    current_page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
-    total = len(danhsach)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_3.html",
-                        page="Lỗi chấm công",
-                        danhsach=paginated_rows, 
-                        pagination=pagination,
-                        count=count,
-                        danh_sach_chuyen=danh_sach_chuyen,
-                        danh_sach_bophan=danh_sach_bophan)
- 
-@app.route("/muc7_1_4", methods=["GET"]) # Danh sách xin nghỉ phép 
+    if request.method == "GET":
+        mstthuky = request.args.get("mstthuky")
+        mstquanly = request.args.get("mstquanly")
+        mst = request.args.get("mst")
+        hoten = request.args.get("hoten")
+        chucvu = request.args.get("chucvu")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        loaidiemdanh = request.args.get("loaidiemdanh")
+        ngay = request.args.get("ngay")
+        lido = request.args.get("lido")
+        trangthai = request.args.get("trangthai")
+        danh_sach_chuyen = laydanhsachchuyen()
+        danh_sach_bophan = laydanhsachbophan()
+        danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly,mstthuky)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_3.html",
+                            page="Lỗi chấm công",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=count,
+                            danh_sach_chuyen=danh_sach_chuyen,
+                            danh_sach_bophan=danh_sach_bophan)
+    elif request.method == "POST":
+        mstquanly = request.form.get("mstquanly")
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        hoten = request.form.get("hoten")
+        chucvu = request.form.get("chucvu")
+        ngaydiemdanh = request.form.get("ngay")
+        lydo = request.form.get("lydo")
+        trangthai = request.form.get("trangthai")
+        loaidiemdanh = request.form.get("loaidiemdanh")
+        
+        rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
+        result = []
+        for row in rows:
+            result.append({
+                "Nhà máy": row[0],
+                "MST": row[1],
+                "Họ tên": row[2],
+                "Chức vụ": row[3],
+                "Chuyền tổ": row[4],
+                "Bộ phận": row[5],
+                "Loại điểm danh": row[6],
+                "Ngày điểm danh": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y"),
+                "Giờ điểm danh": row[8],
+                "Lý do": row[9],
+                "Trạng thái": row[10],
+                "ID":row[11],
+                "Thời gian tạo": row[12],
+                "Thời gian duyệt": row[13]
+            })
+        
+        df = pd.DataFrame(result)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
+        
+        return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route("/muc7_1_4", methods=["GET","POST"]) # Danh sách xin nghỉ phép 
 @login_required
 def xinnghiphep():
-    mstthuky = request.args.get("mstthuky")
-    mstquanly = request.args.get("mstquanly")
-    mst = request.args.get("mst")
-    hoten = request.args.get("hoten")
-    chucvu = request.args.get("chucvu")
-    chuyen = request.args.get("chuyen")
-    bophan = request.args.get("bophan")
-    ngay = request.args.get("ngaynghi")
-    lydo = request.args.get("lydo")
-    trangthai = request.args.get("trangthai")
-    danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
-    count = len(danhsach)
-    current_page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
-    total = len(danhsach)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_4.html",
-                        page="Lỗi chấm công",
-                        danhsach=paginated_rows, 
-                        pagination=pagination,
-                        count=count)
-
+    if request.method == "GET":
+        mstthuky = request.args.get("mstthuky")
+        mstquanly = request.args.get("mstquanly")
+        mst = request.args.get("mst")
+        hoten = request.args.get("hoten")
+        chucvu = request.args.get("chucvu")
+        chuyen = request.args.get("chuyen")
+        bophan = request.args.get("bophan")
+        ngay = request.args.get("ngaynghi")
+        lydo = request.args.get("lydo")
+        trangthai = request.args.get("trangthai")
+        danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
+        count = len(danhsach)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("7_1_4.html",
+                            page="Lỗi chấm công",
+                            danhsach=paginated_rows, 
+                            pagination=pagination,
+                            count=count)
+    elif request.method == "POST":
+        mstquanly = request.form.get("mstquanly")
+        mstthuky = request.args.get("mstthuky")
+        mst = request.form.get("mst")
+        hoten = request.form.get("hoten")
+        chucvu = request.form.get("chucvu")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngaynghi")
+        lydo = request.form.get("lydo")
+        trangthai = request.form.get("trangthai")
+        danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
+        result = []
+        for row in danhsach:
+            result.append({
+                'Mã công ty': row[0],
+                'Mã số thẻ': row[1],
+                'Họ tên': row[2],
+                'Chức vụ': row[3],
+                'Chuyền tổ': row[4],
+                'Phòng ban': row[5],
+                'Ngày nghỉ phép': datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y"),
+                'Tổng số phút': row[7],
+                'Lý do': row[8],
+                'Trạng thái': row[9],
+                'ID': row[10],
+                'Thời gian tạo': row[11],
+                'Thời gian duyệt': row[12]
+            })
+        df = pd.DataFrame(result)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True)
 @app.route("/muc7_1_5", methods=["GET","POST"]) # Danh sách xin nghỉ không lương
 @login_required
 def xinnghikhongluong():
@@ -1871,7 +1943,10 @@ def xinnghikhongluong():
                 "Ngày xin phép": row[6],
                 "Tổng số phút": row[7],
                 "Loại nghỉ": row[8],
-                "Trạng thái": row[9]
+                "Trạng thái": row[9],
+                "ID": row[10],
+                "Thời gian tạo": row[11],
+                "Thời gian duyệt": row[12]
             })
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
@@ -1928,7 +2003,10 @@ def danhsachxinnghikhac():
             "Tổng số phút": row[7],
             "Loại nghỉ": row[8],
             "Trạng thái": row[9],
-            "Nhận giấy tờ": row[10],            
+            "Nhận giấy tờ": row[10],  
+            "ID": row[11],
+            "Thời gian tạo": row[12],
+            "Thời gian duyệt": row[13]          
         } for row in danhsach] 
         df = DataFrame(data)
         df["Mã số thẻ"] = to_numeric(df['Mã số thẻ'], errors='coerce')
