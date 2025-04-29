@@ -160,6 +160,7 @@
                         <th>Trạng thái</th>
                         <th class="hidden-col">Thời gian tạo</th>
                         <th class="hidden-col">Thời gian duyệt</th>
+                        <th><input type="checkbox" id="check_all"></th>
                         <th></th>
                     </tr>
                     <tr>
@@ -185,7 +186,7 @@
                                 </select>
                             </th>
                             <th></th>
-                            <th><input type="checkbox" id="check_all"></th>
+                            <th></th>
                         </form>
                     </tr>
                 </thead>
@@ -237,7 +238,7 @@
                                             <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
                                             <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
                                             <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                            <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
+                                            <input type="submit" class="btn btn-warning"  name="kiemtra" value="Kiểm tra">
                                         </form>
                                         <form action="/thuky_kiemtra_diemdanhbu" method="POST" style="margin-left: 10px;">
                                             <input type="hidden" name="id" value="{{row[11]}}">
@@ -254,7 +255,7 @@
                                             <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                             <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
                                             <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
-                                            <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
+                                            <input type="submit" class="btn btn-danger"  name="kiemtra" value="Từ chối">
                                         </form>
                                     </div>
                                 </td>
@@ -276,7 +277,7 @@
                                             <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                             <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
                                             <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
-                                            <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
+                                            <input type="submit" class="btn btn-success btn-sm"  name="pheduyet" value="Phê duyệt">
                                         </form>
                                         <form action="/quanly_pheduyet_diemdanhbu" method="POST" style="margin-left: 10px;">
                                             <input type="hidden" name="id" value="{{row[11]}}">
@@ -293,7 +294,7 @@
                                             <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
                                             <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
                                             <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
-                                            <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
+                                            <input type="submit" class="btn btn-danger btn-sm"  name="pheduyet" value="Từ chối">
                                         </form>
                                     </div>
                                 </td>
@@ -319,7 +320,13 @@
         }
     }
 
+    document.getElementById('check_all').addEventListener('change', function () {
+        const checkboxes = document.querySelectorAll('input[name="selected_ids"]');
+        checkboxes.forEach(cb => cb.checked = this.checked);
+    });
+
     document.addEventListener('DOMContentLoaded', (event) => {
+        
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
