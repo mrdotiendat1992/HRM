@@ -1640,7 +1640,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
                 if not mst and not hoten and not chucvu and not chuyen and not bophan and not loaidiemdanh and not ngaydiemdanh and not lido and not trangthai:
                     query = f"SELECT TOP (100) * FROM Diem_danh_bu WHERE Nha_may = '{current_user.macongty}' "
                 query += "ORDER BY Ngay_diem_danh DESC, Bo_phan ASC, Line ASC, MST ASC"
-
+        # print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         for row in rows:
@@ -1697,7 +1697,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not trangthai:
                     query = f"SELECT TOP (100) * FROM Xin_nghi_phep WHERE Nha_may='{current_user.macongty}'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
-                print(query)
+        # print(query)
         rows = cursor.execute(query).fetchall()
         conn.close()
         for row in rows:
