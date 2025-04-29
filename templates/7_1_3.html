@@ -17,8 +17,8 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 200px; /* Adjust based on your requirement */
-        color: white;color: #4e73df;
+        max-width: 200px;
+        color: #4e73df;
         font-weight: bold;
     }
     .scroll-container {
@@ -26,7 +26,7 @@
         overflow-x: auto;
     }
     .content {
-        width: 1500px;
+        width: 100%;
     }
     .pagination {
         font-size: 10px;
@@ -99,6 +99,9 @@
         padding: 5px 10px;
         cursor: pointer;
     }
+    .hidden-col {
+        display: none;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -139,7 +142,7 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}
-                
+                <button id="toggle-cols" class="btn btn-secondary btn-sm" style="margin-left: 10px;">Hiển thị đầy đủ</button>
             </div>
             <br>
             <table class="table table-hover table-sm">
@@ -147,29 +150,29 @@
                     <tr class="bg-primary">
                         <th class="sticky_1">Mã số thẻ</th>
                         <th class="sticky_2">Họ tên</th>
-                        <th>Chức danh</th>
-                        <th>Chuyền tổ</th>
-                        <th>Phòng ban</th>
+                        <th class="hidden-col">Chức danh</th>
+                        <th class="hidden-col">Chuyền tổ</th>
+                        <th class="hidden-col">Phòng ban</th>
                         <th>Loại điểm danh</th>
                         <th>Ngày</th>                    
                         <th>Giờ</th>
-                        <th>Lý do</th> 
+                        <th class="hidden-col">Lý do</th> 
                         <th>Trạng thái</th>
-                        <th>Thời gian tạo</th>
-                        <th>Thời gian duyệt</th>
+                        <th class="hidden-col">Thời gian tạo</th>
+                        <th class="hidden-col">Thời gian duyệt</th>
                         <th></th>
                     </tr>
                     <tr>
                         <form action = "/muc7_1_3" method = "GET">
                             <th class="sticky_1"><input type="text" class="nhaplieu" id="mst" name="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
                             <th class="sticky_2"><input type="text" class="nhaplieu" id="hoten" name="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" class="nhaplieu" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" class="nhaplieu" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" class="nhaplieu" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" class="nhaplieu" id="chucvu" name="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" class="nhaplieu" id="chuyen" name="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" class="nhaplieu" id="bophan" name="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
                             <th><input type="text" class="nhaplieu" id="loaidiemdanh" name="loaidiemdanh" value="{{ request.args.get('loaidiemdanh', '') }}" onchange='this.form.submit()'></th>
                             <th><input type="date" class="nhaplieu" id="ngay" name="ngay" value="{{ request.args.get('ngay', '') }}" onchange='this.form.submit()'></th></th>
                             <th></th>  
-                            <th><input type="text" class="nhaplieu" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                            <th class="hidden-col"><input type="text" class="nhaplieu" id="lydo" name="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
                             <th>
                                 <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
                                     <option value="{{ request.args.get('trangthai', '') }}">{{ request.args.get('trangthai', '') }}</option>
@@ -182,6 +185,7 @@
                                 </select>
                             </th>
                             <th></th>
+                            <th><input type="checkbox" id="check_all"></th>
                         </form>
                     </tr>
                 </thead>
@@ -201,20 +205,20 @@
                     {% endif %} 
                             <td class="sticky_1">{{row[1]}}</td>
                             <td class="sticky_2">{{row[2]}}</td>
-                            <td>{{row[3]}}</td>
-                            <td>{{row[4]}}</td>
-                            <td>{{row[5]}}</td>
+                            <td class="hidden-col">{{row[3]}}</td>
+                            <td class="hidden-col">{{row[4]}}</td>
+                            <td class="hidden-col">{{row[5]}}</td>
                             <td>{{row[6]}}</td>
                             <td class="date_en">{{row[7]}}</td>
                             <td>{{row[8][:5]}}</td>
                             {% if row[9] %}
-                            <td>{{row[9]}}</td>
+                            <td class="hidden-col">{{row[9]}}</td>
                             {% else %}
                             <td></td>
                             {% endif %}
                             <td>{{row[10]}}</td>
-                            <td>{{row[12]}}</td>
-                            <td>{{row[13]}}</td>
+                            <td class="hidden-col">{{row[12]}}</td>
+                            <td class="hidden-col">{{row[13]}}</td>
                             {% if row[10]=='Chờ kiểm tra'%}
                                 <td>
                                     <div style="display: flex;">
@@ -295,6 +299,7 @@
                                 </td>
                                 {% else %}
                                 <td></td>
+                                <td><input type="checkbox" name="selected_ids" value="{{ row[11] }}"></td>
                             {% endif %}
                         </tr>  
                     {% endfor %}
@@ -310,12 +315,34 @@
         try{
             return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
         } catch {
-            return "";    
-    }}
+            return "";
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+
+        const initialState = localStorage.getItem('showHiddenCols') === 'true';
+        const hiddenColsInit = document.querySelectorAll('.hidden-col');
+        hiddenColsInit.forEach(col => {
+            col.style.display = initialState ? 'table-cell' : 'none';
+        });
+        const toggleBtn = document.getElementById('toggle-cols');
+        if (toggleBtn) {
+            toggleBtn.textContent = initialState ? 'Ẩn bớt thông tin' : 'Hiển thị đầy đủ';
+
+            toggleBtn.addEventListener('click', function () {
+                const hiddenCols = document.querySelectorAll('.hidden-col');
+                hiddenCols.forEach(col => {
+                    col.style.display = (col.style.display === 'none' || col.style.display === '') ? 'table-cell' : 'none';
+                });
+                const isNowVisible = hiddenCols[0].style.display === 'table-cell';
+                localStorage.setItem('showHiddenCols', isNowVisible);
+                this.textContent = isNowVisible ? 'Ẩn bớt thông tin' : 'Hiển thị đầy đủ';
+            });
+        }
     });
 </script>
 {% endblock content %}

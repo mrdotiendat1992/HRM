@@ -1935,13 +1935,19 @@ def chuadangkycalamviec(mst):
 def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
     try:
         if type(ngayketthuc) == str:
-            ngayketthuc = datetime.strptime(ngayketthuc, '%Y-%m-%d')
+            try:
+                ngayketthuc = datetime.strptime(ngayketthuc, '%Y-%m-%d')
+            except:
+                ngayketthuc = datetime.strptime(ngayketthuc, '%d/%m/%Y')
         if type(ngaybatdau) == str:
-            ngaybatdau = datetime.strptime(ngaybatdau, '%Y-%m-%d')
+            try:
+                ngaybatdau = datetime.strptime(ngaybatdau, '%Y-%m-%d')
+            except:
+                ngaybatdau = datetime.strptime(ngaybatdau, '%d/%m/%Y')
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         if pd.notna(ngayketthuc):
-            flash("Co ngay ket thuc")
+            # print("Co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngayvecamacdinh = ngayketthuc + timedelta(days=1)
             if ngaybatdau <= ngayketthuc:
@@ -1968,7 +1974,7 @@ def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             else:
                 flash("Đổi ca thất bại, ngày bắt đầu lớn hơn ngày kết thúc")
         else:
-            flash("Khong co ngay ket thuc")
+            # print("Khong co ngay ket thuc")
             ngayketthuccacu = ngaybatdau - timedelta(days=1)
             ngaymoc = datetime(2054,12,31)
             query = f"""
@@ -1993,11 +1999,11 @@ def laycahientai(mst):
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         ngayketthuc = datetime(2054,12,31)
-        query = f"SELECT * FROM Dang_ky_ca_lam_viec WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngayketthuc}'"
-        
+        query = f"SELECT Ca FROM Dang_ky_ca_lam_viec WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngayketthuc}'"
+        print(query)
         row = cursor.execute(query).fetchone()
         if row:
-            return row[-2]
+            return row[0]
         return None
     except Exception as e:
         flash(e)

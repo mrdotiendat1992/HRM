@@ -529,7 +529,9 @@ def doicanhom():
                         filepath = os.path.join(FOLDER_NHAP, f"doicanhom_{thoigian}.xlsx")
                         file.save(filepath)
                         data = pd.read_excel(filepath).to_dict(orient="records")
+                        
                         for row in data:
+                            print(row)
                             thangdangkycalamviec(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
