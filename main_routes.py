@@ -216,6 +216,11 @@ def unauthorized():
 def page_not_found(e):
     return render_template('blank.html'), 404
 
+@login_manager.unauthorized_handler
+def unauthorized():
+    # Không flash gì cả — chỉ redirect
+    return redirect(url_for('login'))
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -227,6 +232,10 @@ def login():
             if user and user.matkhau == matkhau:
                 if login_user(user):    
                     app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
+                    next_page = request.form.get('next', type=str)
+                    print(f"Next page: {next_page}")
+                    if next_page and next_page != '/login':
+                        return redirect(next_page)
                     return redirect(url_for('home'))
             return redirect(url_for("login"))
         except Exception as e:
@@ -1778,7 +1787,7 @@ def diemdanhbu():
         danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly,mstthuky)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 20
         total = len(danhsach)
         start = (current_page - 1) * per_page
         end = start + per_page
@@ -1828,6 +1837,90 @@ def diemdanhbu():
         df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
         
         return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route("/muc7_1_3/kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def kiemtradiemdanhbu():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_dakiemtra_diemdanhbu(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_3/tuchoi_kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_kiemtradiemdanhbu():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_tuchoi_diemdanhbu(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_3/pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def pheduyetdiemdanhbu():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_pheduyet_diemdanhbu(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_3/tuchoi_pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_pheduyetdiemdanhbu():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_tuchoi_diemdanhbu(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
 
 @app.route("/muc7_1_4", methods=["GET","POST"]) # Danh sách xin nghỉ phép 
 @login_required

@@ -5245,3 +5245,12 @@ def chaylaicong():
         return jsonify({"success": "True"})
     else:
         return jsonify({"success": "False"})
+
+@app.route("/chotcong/hoten", methods=["POST"])
+def chotcong_hoten():
+    mst = request.form.get("mst")
+    hoten = chotcong_layhoten(mst)
+    if hoten:
+        return jsonify({"success": "True", "data": hoten})
+    else:
+        return jsonify({"success": "False"})

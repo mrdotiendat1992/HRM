@@ -110,6 +110,7 @@
                             <label for="matkhau">Mật khẩu</label>
                             <input type="password" name="matkhau" id="matkhau">
                         </p>
+                        <input type="text" name="next" value="{{ request.args.get('next','') }}" hidden>
                         <p>
                             <input class="btn btn-primary" type="submit" value="Đăng nhập"/>
                         </p>

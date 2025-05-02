@@ -24,7 +24,7 @@
 {% block content %}
     <div class="container" id="main_window">
         <div class="container my-3">
-            <form class="row g-3 align-items-end">
+            <div class="row g-3 align-items-end">
                 <div class="col-sm-3">
                     <label for="tungay" class="form-label">Từ ngày</label>
                     <input id="tungay" name="tungay" type="date" class="form-control"/>
@@ -56,9 +56,9 @@
                         
                     </div>
                 </div>
-            </form>
+            </div>
         </div>
-        
+        <h1 id="hoten" class="alert-danger"></h1>
         
         <div class="text-center my-3" id="loading_spinner" style="display:none;">
             <div class="spinner-border text-primary" role="status">
@@ -414,7 +414,29 @@
                 var tungay = $('#tungay').val();
                 var denngay = $('#denngay').val();
                 var mst = $('#mst').val();
-        
+                
+                $.ajax({
+                    url: '/chotcong/hoten',
+                    type: 'POST',
+                    data: {
+                        mst: mst
+                    },
+
+                    success: function (response) {
+                        console.log(response);
+                        if (response.success === "True") {
+                            $('#hoten').html(response.data);
+                        } else {
+                            $('#hoten').html('<p class="text-danger">Không tìm thấy dữ liệu.</p>');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        $('#loading_spinner').hide();
+                        $('#hoten').html('<p class="text-danger">Lỗi khi gửi yêu cầu.</p>');
+                        console.error(error);
+                    }
+                });
+
                 $.ajax({
                     url: '/chotcong/dulieu',
                     type: 'POST',

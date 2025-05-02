@@ -2157,8 +2157,10 @@ def thuky_dakiemtra_diemdanhbu(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def thuky_tuchoi_diemdanhbu(id):
     try:
@@ -2170,8 +2172,10 @@ def thuky_tuchoi_diemdanhbu(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def quanly_pheduyet_diemdanhbu(id):
     try:
@@ -2184,8 +2188,10 @@ def quanly_pheduyet_diemdanhbu(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def quanly_tuchoi_diemdanhbu(id):
     try:
@@ -2197,8 +2203,10 @@ def quanly_tuchoi_diemdanhbu(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def thuky_dakiemtra_xinnghiphep(id):
     try:
@@ -5573,3 +5581,18 @@ def chaylaicong_quakhu(mst, thang, nam):
         conn.close()
         return False
         
+def chotcong_layhoten(mst):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT Ho_ten FROM Danh_sach_CBCNV WHERE MST='{mst}' AND Factory='{current_user.macongty}'"
+        result = cur.execute(query).fetchone()[0]
+        conn.close()
+        if result:
+            result = result.strip()
+        else:
+            result = ""
+        return result
+    except Exception as e:
+        flash(f"Lỗi lấy họ tên: {e}")
+        return ""
