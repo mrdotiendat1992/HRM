@@ -2242,7 +2242,7 @@ def tuchoi_pheduyetxinnghikhongluong():
             print(f"Error: {e}")
             return jsonify({"success": False, "message": str(e)})
     return jsonify({"success": False, "message": "Invalid request method"})
-           
+        
 @app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sách xin nghỉ khác
 @login_required
 def danhsachxinnghikhac():
@@ -2259,7 +2259,7 @@ def danhsachxinnghikhac():
         danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 20
         total = len(danhsach)
         start = (current_page - 1) * per_page
         end = start + per_page
@@ -2330,6 +2330,8 @@ def danhsachxinnghikhac():
         response.headers['Content-Disposition'] = f'attachment; filename=xinnghikhac_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
+
+
 
 @app.route("/muc7_1_7", methods=["GET","POST"]) # Danh sách phép tồn
 @login_required
