@@ -2113,7 +2113,7 @@ def xinnghikhongluong():
         danhsach = laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 20
         total = len(danhsach)
         start = (current_page - 1) * per_page
         end = start + per_page
@@ -2158,7 +2158,91 @@ def xinnghikhongluong():
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
         flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
-        
+
+@app.route("/muc7_1_5/kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def kiemtraxinnghikhongluong():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_dakiemtra_xinnghikhongluong(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_5/tuchoi_kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_kiemtraxinnghikhongluong():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_tuchoi_xinnghikhongluong(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_5/pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def pheduyetxinnghikhongluong():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_pheduyet_xinnghikhongluong(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_5/tuchoi_pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_pheduyetxinnghikhongluong():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_tuchoi_xinnghikhongluong(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+           
 @app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sách xin nghỉ khác
 @login_required
 def danhsachxinnghikhac():
