@@ -26,7 +26,7 @@
         overflow-x: auto;
     }
     .content {
-        width: 1500px;
+        width: 100%;
     }
     .pagination {
         font-size: 10px;
@@ -99,6 +99,9 @@
         padding: 5px 10px;
         cursor: pointer;
     }
+    .hidden-col {
+        display: none;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -122,16 +125,21 @@
                     <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
                 </form>
                 <div class="pagination">{{ pagination.links }}</div>
-                {% if notice %}
+                {% if not request.args.get('mstthuky') %}
+                    <form method = "GET" style="margin-left: 50px;">
+                        <input type="hidden" name="mstthuky" value="{{ current_user.masothe }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Kiểm tra</button>
+                    </form>
+                {% endif %}
                 {% if not request.args.get('mstquanly') %}
-                <form method = "GET" style="margin-left: 50px;">
-                    <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
-                    <input type="submit" class="btn btn-primary btn-sm" value="Phê duyệt"></input>
-                </form>
-                {% else %}
-                <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 50px;">Quay lại</button>
+                    <form method = "GET" style="margin-left: 20px;">
+                        <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
+                        <button type="submit" class="btn btn-primary btn-sm">Phê duyệt</button>
+                    </form>
                 {% endif %}
-                {% endif %}
+                <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 20px;">Tất cả</button>
+
+                <button id="toggle-cols" class="btn btn-outline-primary btn-sm" style="margin-left: 20px;">Hiển thị đầy đủ</button>
             </div>
             <br>
             <table class="table table-hover table-sm">
@@ -139,24 +147,36 @@
                     <tr class="bg-primary">
                         <th class="sticky_1">Mã số thẻ</th>
                         <th class="sticky_2">Họ tên</th>
-                        <th>Chức danh</th>
-                        <th>Chuyền tổ</th>
-                        <th>Phòng ban</th>
+                        <th class="hidden-col">Chức danh</th>
+                        <th class="hidden-col">Chuyền tổ</th>
+                        <th class="hidden-col">Phòng ban</th>
                         <th>Ngày nghỉ</th>                    
                         <th>Số phút xin nghỉ</th>
                         <th>Số phút phép tồn</th>
                         <th>Trạng thái</th>
-                        <th>Thời gian tạo</th>
-                        <th>Thời gian duyệt</th>
-                        <th></th>
+                        <th class="hidden-col">Thời gian tạo</th>
+                        <th class="hidden-col">Thời gian duyệt</th>
+                        {% if request.args.get('mstthuky') %}
+                            <th>
+                                <button id="kiemtra_hangloat" class="btn btn-sm btn-success">Kiểm tra</button>
+                                <button id="tuchoi_kiemtra_hangloat" class="btn btn-sm btn-danger">Từ chối</button>
+                                <input type="checkbox" id="check_all">
+                            </th>
+                        {% elif request.args.get('mstquanly') %}
+                            <th>
+                                <button id="pheduyet_hangloat" class="btn btn-sm btn-success">Phê duyệt</button>
+                                <button id="tuchoi_pheduyet_hangloat" class="btn btn-sm btn-danger">Từ chối</button>
+                                <input type="checkbox" id="check_all">
+                            </th>
+                        {% endif %}
                     </tr>
                     <tr class="table-light">
                         <form action="/muc7_1_4" method="get">
                             <th class="sticky_1"><input type="text" class="nhaplieu" name="mst" id="mst" value="{{ request.args.get('mst', '') }}" onchange='this.form.submit()'></th>
                             <th class="sticky_2"><input type="text" class="nhaplieu" name="hoten" id="hoten" value="{{ request.args.get('hoten', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" name="chucvu" class="nhaplieu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" name="chuyen" class="nhaplieu" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
-                            <th><input type="text" name="bophan" class="nhaplieu" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" name="chucvu" class="nhaplieu" id="chucvu" value="{{ request.args.get('chucvu', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" name="chuyen" class="nhaplieu" id="chuyen" value="{{ request.args.get('chuyen', '') }}" onchange='this.form.submit()'></th>
+                            <th class="hidden-col"><input type="text" name="bophan" class="nhaplieu" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
                             <th><input type="date" name="ngaynghi" class="nhaplieu" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
                             <th></th>
                             <th></th> 
@@ -171,7 +191,11 @@
                                     <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
                                 </select>
                             </th>
+                            <th class="hidden-col"></th>
+                            <th class="hidden-col"></th>
+                            {% if request.args.get('mstthuky') or request.args.get('mstquanly') %}
                             <th></th>
+                            {% endif %}
                         </form>
                     </tr>
                 </thead>
@@ -191,91 +215,27 @@
                     {% endif %} 
                             <td class="sticky_1">{{row[1]}}</td>
                             <td class="sticky_2">{{row[2]}}</td>
-                            <td>{{row[3]}}</td>
-                            <td>{{row[4]}}</td>
-                            <td>{{row[5]}}</td>
+                            <td class="hidden-col">{{row[3]}}</td>
+                            <td class="hidden-col">{{row[4]}}</td>
+                            <td class="hidden-col">{{row[5]}}</td>
                             <td class="date_en">{{row[6]}}</td>
                             {% if row[8] and (row[8] <= 0) %}
                             <td style="color: red">{{row[7]}}</td>
                             {% else %}
                             <td>{{row[7]}}</td>
                             {% endif %}
+                            {% if row[8] %}
                             <td>{{row[8]}}</td>
+                            {% else %}
+                            <td style="color: red">Đang cập nhật</td>
+                            {% endif %}
                             <td>{{row[9]}}</td>
-                            <td>{{row[11]}}</td>
-                            <td>{{row[12]}}</td>
-                            {% if row[9]=='Chờ kiểm tra'%}
-                                <td>
-                                    <div style="display: flex;">
-                                        <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                            <input type="hidden" name="id" value="{{row[10]}}">
-                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                            <input type="submit" class="btn btn-warning" id="kiemtra" name="kiemtra" value="Kiểm tra">
-                                        </form>
-                                        <form action="/thuky_kiemtra_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                            <input type="hidden" name="id" value="{{row[10]}}">
-                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                            <input type="submit" class="btn btn-danger" id="kiemtra" name="kiemtra" value="Từ chối">
-                                        </form>
-                                    </div>
-                                </td>
-                                {% elif row[9]=='Đã kiểm tra' or row[9]=='Đã kiểm tra'%}
-                                <td>
-                                    <div style="display: flex;">
-                                        <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                            <input type="hidden" name="id" value="{{row[10]}}">
-                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                            <input type="submit" class="btn btn-success btn-sm" id="pheduyet" name="pheduyet" value="Phê duyệt">
-                                        </form>
-                                        <form action="/quanly_pheduyet_xinnghiphep" method="POST" style="margin-left: 10px;">
-                                            <input type="hidden" name="mst_xinnghiphep" value="{{row[1]}}">
-                                            <input type="hidden" name="id" value="{{row[10]}}">
-                                            <input type="hidden" name="chuyen" value="{{row[4]}}">
-                                            <input type="hidden" name="mst_filter" value="{{ request.args.get('mst', '') }}">
-                                            <input type="hidden" name="hoten_filter" value="{{ request.args.get('hoten', '') }}">
-                                            <input type="hidden" name="chucvu_filter" value="{{ request.args.get('chucvu', '') }}">
-                                            <input type="hidden" name="chuyen_filter" value="{{ request.args.get('chuyen', '') }}">
-                                            <input type="hidden" name="bophan_filter" value="{{ request.args.get('bophan', '') }}">
-                                            <input type="hidden" name="ngay_filter" value="{{ request.args.get('ngaynghi', '') }}">
-                                            <input type="hidden" name="trangthai_filter" value="{{ request.args.get('trangthai', '') }}">
-                                            <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                                            <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                                            <input type="submit" class="btn btn-danger btn-sm" id="pheduyet" name="pheduyet" value="Từ chối">
-                                        </form>
-                                    </div>
-                                </td>
-                                {% else %}
-                                <td></td>
+                            <td class="hidden-col">{{row[11]}}</td>
+                            <td class="hidden-col">{{row[12]}}</td>
+                            {% if request.args.get('mstthuky') or request.args.get('mstquanly') %}
+                            <td>
+                                <input type="checkbox" name="selected_ids" value="{{ row[10] }}">
+                            </td>
                             {% endif %}
                         </tr>  
                     {% endfor %}
@@ -293,10 +253,188 @@
         } catch {
             return "";    
     }}
+
+    var check_all = document.getElementById('check_all')
+    if (check_all) {
+        check_all.addEventListener('change', function () {
+            const checkboxes = document.querySelectorAll('input[name="selected_ids"]');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+        });
+    }
+
+    var kiemtra_hangloat = document.getElementById('kiemtra_hangloat')
+    if (kiemtra_hangloat) {
+        kiemtra_hangloat.addEventListener('click', function () {
+            const selectedIds = Array.from(document.querySelectorAll('input[name="selected_ids"]:checked')).map(cb => cb.value);
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/muc7_1_4/kiemtra",
+                    data: { selected_ids: selectedIds },
+                    success: function (response) {
+                        var result_string = "Kiểm tra Xin nghỉ phép \n";
+                        if (response.success) {
+                            //hiển thị response.result kiểu object sang stringformat
+                            for (var i = 0; i < response.result.length; i++) {
+                                if (response.result[i].status) {
+                                    result_string += "ID " + response.result[i].id + ": => Thành công !!!\n";
+                                }
+                                else {
+                                    result_string += "ID " + response.result[i].id + ": => Thất bại !!!\n";
+                                }
+                            }
+                            alert(result_string);
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra trong quá trình kiểm tra!');
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra trong quá trình kiểm tra!');
+                    }
+                });
+            } else {
+                alert('Vui lòng chọn ít nhất một mục để kiểm tra!');
+            }
+        });
+    }
+
+    var tuchoi_kiemtra_hangloat = document.getElementById('tuchoi_kiemtra_hangloat')
+    if (tuchoi_kiemtra_hangloat) {
+        tuchoi_kiemtra_hangloat.addEventListener('click', function () {
+            const selectedIds = Array.from(document.querySelectorAll('input[name="selected_ids"]:checked')).map(cb => cb.value);
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/muc7_1_4/tuchoi_kiemtra",
+                    data: { selected_ids: selectedIds },
+                    success: function (response) {
+                        var result_string = "Từ chối kiểm tra Xin nghỉ phép \n";
+                        if (response.success) {
+                            //hiển thị response.result kiểu object sang stringformat
+                            for (var i = 0; i < response.result.length; i++) {
+                                if (response.result[i].status) {
+                                    result_string += "ID " + response.result[i].id + ": => Thành công !!!\n";
+                                }
+                                else {
+                                    result_string += "ID " + response.result[i].id + ": => Thất bại !!!\n";
+                                }
+                            }
+                            alert(result_string);
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra trong quá trình từ chối kiểm tra!');
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra trong quá trình từ chối kiểm tra!');
+                    }
+                });
+            } else {
+                alert('Vui lòng chọn ít nhất một mục để từ chối kiểm tra!');
+            }
+        });
+    }
+
+    var pheduyet_hangloat = document.getElementById('pheduyet_hangloat')
+    if (pheduyet_hangloat) {
+        pheduyet_hangloat.addEventListener('click', function () {
+            const selectedIds = Array.from(document.querySelectorAll('input[name="selected_ids"]:checked')).map(cb => cb.value);
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/muc7_1_4/pheduyet",
+                    data: { selected_ids: selectedIds },
+                    success: function (response) {
+                        if (response.success) {
+                            var result_string = "Phê duyệt Xin nghỉ phép \n";
+                            //hiển thị response.result kiểu object sang stringformat
+                            for (var i = 0; i < response.result.length; i++) {
+                                if (response.result[i].status) {
+                                    result_string += "ID " + response.result[i].id + ": => Thành công !!!\n";
+                                }
+                                else {
+                                    result_string += "ID" + response.result[i].id + ": => Thất bại !!!\n";
+                                }
+                            }
+                            alert(result_string);
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra trong quá trình phê duyệt!' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra trong quá trình phê duyệt!' + response.error);
+                    }
+                });
+            } else {
+                alert('Vui lòng chọn ít nhất một mục để phê duyệt!');
+            }
+        });
+    }
+
+    var tuchoi_pheduyet_hangloat = document.getElementById('tuchoi_pheduyet_hangloat')
+    if (tuchoi_pheduyet_hangloat) {
+        tuchoi_pheduyet_hangloat.addEventListener('click', function () {
+            const selectedIds = Array.from(document.querySelectorAll('input[name="selected_ids"]:checked')).map(cb => cb.value);
+            if (selectedIds.length > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/muc7_1_4/tuchoi_pheduyet",
+                    data: { selected_ids: selectedIds },
+                    success: function (response) {
+                        if (response.success) {
+                            var result_string = "Từ chối phê duyệt Xin nghỉ phép \n";
+                            //hiển thị response.result kiểu object sang stringformat
+                            for (var i = 0; i < response.result.length; i++) {
+                                if (response.result[i].status) {
+                                    result_string += "ID " + response.result[i].id + ": => Thành công !!!\n";
+                                }
+                                else {
+                                    result_string += "ID" + response.result[i].id + ": => Thất bại !!!\n";
+                                }
+                            }
+                            alert(result_string);
+                            location.reload();
+                        } else {
+                            alert('Có lỗi xảy ra trong quá trình từ chối phê duyệt!' + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Có lỗi xảy ra trong quá trình từ chối phê duyệt!' + response.error);
+                    }
+                });
+            } else {
+                alert('Vui lòng chọn ít nhất một mục để từ chối phê duyệt!');
+            }
+        });
+    }
+
     document.addEventListener('DOMContentLoaded', (event) => {
+        
         document.querySelectorAll('.date_en').forEach((element) => {
             element.textContent = changeFormatDate(element.textContent);
         });
+
+        const initialState = localStorage.getItem('showHiddenCols') === 'true';
+        const hiddenColsInit = document.querySelectorAll('.hidden-col');
+        hiddenColsInit.forEach(col => {
+            col.style.display = initialState ? 'table-cell' : 'none';
+        });
+        const toggleBtn = document.getElementById('toggle-cols');
+        if (toggleBtn) {
+            toggleBtn.textContent = initialState ? 'Ẩn bớt thông tin' : 'Hiển thị đầy đủ';
+
+            toggleBtn.addEventListener('click', function () {
+                const hiddenCols = document.querySelectorAll('.hidden-col');
+                hiddenCols.forEach(col => {
+                    col.style.display = (col.style.display === 'none' || col.style.display === '') ? 'table-cell' : 'none';
+                });
+                const isNowVisible = hiddenCols[0].style.display === 'table-cell';
+                localStorage.setItem('showHiddenCols', isNowVisible);
+                this.textContent = isNowVisible ? 'Ẩn bớt thông tin' : 'Hiển thị đầy đủ';
+            });
+        }
     });
 </script>
 {% endblock content %}

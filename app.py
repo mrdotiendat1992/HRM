@@ -2220,8 +2220,10 @@ def thuky_dakiemtra_xinnghiphep(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def thuky_tuchoi_xinnghiphep(id):
     try:
@@ -2233,8 +2235,10 @@ def thuky_tuchoi_xinnghiphep(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def quanly_pheduyet_xinnghiphep(id):
     try:
@@ -2247,8 +2251,10 @@ def quanly_pheduyet_xinnghiphep(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def quanly_tuchoi_xinnghiphep(id):
     try:
@@ -2260,8 +2266,10 @@ def quanly_tuchoi_xinnghiphep(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
         
 def thuky_dakiemtra_xinnghikhongluong(id):
     try:
@@ -2274,8 +2282,10 @@ def thuky_dakiemtra_xinnghikhongluong(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def thuky_tuchoi_xinnghikhongluong(id):
     try:
@@ -2300,8 +2310,10 @@ def quanly_pheduyet_xinnghikhongluong(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def quanly_tuchoi_xinnghikhongluong(id):
     try:
@@ -2314,8 +2326,11 @@ def quanly_tuchoi_xinnghikhongluong(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
+    
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def thuky_dakiemtra_xinnghikhac(id):
     try:
@@ -2328,8 +2343,10 @@ def thuky_dakiemtra_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def thuky_tuchoi_xinnghikhac(id):
     try:
@@ -2341,8 +2358,10 @@ def thuky_tuchoi_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def quanly_pheduyet_xinnghikhac(id):
     try:
@@ -2355,8 +2374,10 @@ def quanly_pheduyet_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
     
 def quanly_tuchoi_xinnghikhac(id):
     try:
@@ -2368,8 +2389,10 @@ def quanly_tuchoi_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
 
 def nhansu_nhangiayto_xinnghikhac(id):
     try:
@@ -2381,8 +2404,10 @@ def nhansu_nhangiayto_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
         
 def nhansu_khongnhangiayto_xinnghikhac(id):
     try:
@@ -2394,8 +2419,10 @@ def nhansu_khongnhangiayto_xinnghikhac(id):
         cursor.execute(query)
         conn.commit()
         conn.close()
+        return True
     except Exception as e:
-        flash(e)
+        print(e)
+        return False
         
 def laydanhsachcahientai(mst,chuyen, phongban):
     try:
@@ -5529,7 +5556,7 @@ def chaylaicong_hientai(mst, thang, nam):
         cur.execute(query_2)
         conn.commit()
         success_step = 3
-        query_3 = f"EXEC CHAM_CONG_TU_DONG_TAP_THE '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
+        query_3 = f"EXEC CHAM_CONG_NGAY_LE_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
         cur.execute(query_3)
         conn.commit()
         success_step = 4
@@ -5559,7 +5586,7 @@ def chaylaicong_quakhu(mst, thang, nam):
         cur.execute(query_2)
         conn.commit()
         success_step = 3
-        query_3 = f"EXEC Bang_cong_tong_ca_nhan '{current_user.macongty}','{mst}','{thang}','{nam}'"
+        query_3 = f"EXEC CAP_NHAT_BANG_CONG_THANG_CA_NHAN '{current_user.macongty}','{mst}','{thang}','{nam}'"
         cur.execute(query_3)
         conn.commit()
         success_step = 4

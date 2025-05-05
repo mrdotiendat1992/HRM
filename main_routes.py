@@ -233,7 +233,6 @@ def login():
                 if login_user(user):    
                     app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
                     next_page = request.form.get('next', type=str)
-                    print(f"Next page: {next_page}")
                     if next_page and next_page != '/login':
                         return redirect(next_page)
                     return redirect(url_for('home'))
@@ -409,114 +408,131 @@ def home():
             response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             return response
         except Exception as e:
-            flash(f"Lỗi kết xuất danh sách nhân viên")
+            flash(f"Lỗi kết xuất danh sách nhân viên ({e})")
+            app.logger.error(f"Lỗi kết xuất danh sách nhân viên ({e})")
+            return redirect(url_for("home"))
 
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','tnc','sa','gd','td','tbp')
 def danhsachdangkytuyendung():
     if request.method == "GET":
-        hoten = request.args.get("hoten")
-        vitri = request.args.get("vitri")
-        sdt = request.args.get("sdt")
-        cccd = request.args.get("cccd")
-        ngaygui = request.args.get("ngaygui")
-        rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui,hoten,vitri)
-        count=len(rows)
-        count = len(rows)
-        current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
-        total = len(rows)
-        start = (current_page - 1) * per_page
-        end = start + per_page
-        paginated_rows = rows[start:end]
-        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        try:
+            hoten = request.args.get("hoten")
+            vitri = request.args.get("vitri")
+            sdt = request.args.get("sdt")
+            cccd = request.args.get("cccd")
+            ngaygui = request.args.get("ngaygui")
+            rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui,hoten,vitri)
+            count=len(rows)
+            count = len(rows)
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(rows)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = rows[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
 
-        return render_template("2_1.html", 
-                            page="2.1 Danh sách ứng viên",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+            return render_template("2_1.html", 
+                                page="2.1 Danh sách ứng viên",
+                                danhsach=paginated_rows, 
+                                pagination=pagination,
+                                count=count)
+        except Exception as e:
+            flash(f"Lỗi lấy danh sách ứng viên ({e})")
+            app.logger.error(f"Lỗi lấy danh sách ứng viên ({e})")
+            return redirect(url_for("home"))
         
     if request.method == "POST":
-        id = request.form.get("id")
-        hoten = request.form.get("hoten")
-        sdt = request.form.get("sdt")
-        vitrituyendung = request.form.get("vitrituyendung")
-        hocvan = request.form.get("hocvan")
-        diachi = request.form.get("diachi")
-        ngayhendilam = request.form.get("ngayhendilam")
-        hieusuat = request.form.get("hieusuat")
-        loaimay = request.form.get("loaimay")
-        cccd = request.form.get("cccd")
-        dantoc = request.form.get("dantoc")
-        connho = request.form.get("connho")
-        tencon1 = request.form.get("tenconnho1")
-        ngaysinhcon1 = request.form.get("ngaysinhcon1")
-        tencon2 = request.form.get("tenconnho2")
-        ngaysinhcon2 = request.form.get("ngaysinhcon2")
-        tencon3 = request.form.get("tenconnho3")
-        ngaysinhcon3 = request.form.get("ngaysinhcon3")
-        tencon4 = request.form.get("tenconnho4")
-        ngaysinhcon4 = request.form.get("ngaysinhcon4")
-        tencon5 = request.form.get("tenconnho5")
-        ngaysinhcon5 = request.form.get("ngaysinhcon5")
-        nguoithan = request.form.get("nguoithan")
-        sdtnguoithan = request.form.get("sdtnguoithan")
-        ngayhendilam = request.form.get("ngayhendilam")
-        luuhoso = request.form.get("luuhoso")
-        ghichu = request.form.get("ghichu")
-        cccd = request.form.get("cccd")
-        ketqua = capnhatthongtinungvien(id,
-                               sdt,
-                               ngayhendilam,
-                               hieusuat,
-                               loaimay,
-                               vitrituyendung,
-                               hocvan,
-                               diachi,
-                               dantoc,
-                               connho,
-                               tencon1,
-                               ngaysinhcon1,
-                               tencon2,
-                               ngaysinhcon2,
-                               tencon3,
-                               ngaysinhcon3,
-                               tencon4,
-                               ngaysinhcon4,
-                               tencon5,
-                               ngaysinhcon5,
-                               nguoithan,
-                               sdtnguoithan,
-                               luuhoso,
-                               ghichu,
-                               cccd
-                               )
-        if ketqua["ketqua"]:
-            flash("Cập nhật thông tin ứng viên thành công !!!")
-        else:
-            flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
-        return redirect(f"muc2_1?sdt={sdt}")
-
+        try:
+            id = request.form.get("id")
+            hoten = request.form.get("hoten")
+            sdt = request.form.get("sdt")
+            vitrituyendung = request.form.get("vitrituyendung")
+            hocvan = request.form.get("hocvan")
+            diachi = request.form.get("diachi")
+            ngayhendilam = request.form.get("ngayhendilam")
+            hieusuat = request.form.get("hieusuat")
+            loaimay = request.form.get("loaimay")
+            cccd = request.form.get("cccd")
+            dantoc = request.form.get("dantoc")
+            connho = request.form.get("connho")
+            tencon1 = request.form.get("tenconnho1")
+            ngaysinhcon1 = request.form.get("ngaysinhcon1")
+            tencon2 = request.form.get("tenconnho2")
+            ngaysinhcon2 = request.form.get("ngaysinhcon2")
+            tencon3 = request.form.get("tenconnho3")
+            ngaysinhcon3 = request.form.get("ngaysinhcon3")
+            tencon4 = request.form.get("tenconnho4")
+            ngaysinhcon4 = request.form.get("ngaysinhcon4")
+            tencon5 = request.form.get("tenconnho5")
+            ngaysinhcon5 = request.form.get("ngaysinhcon5")
+            nguoithan = request.form.get("nguoithan")
+            sdtnguoithan = request.form.get("sdtnguoithan")
+            ngayhendilam = request.form.get("ngayhendilam")
+            luuhoso = request.form.get("luuhoso")
+            ghichu = request.form.get("ghichu")
+            cccd = request.form.get("cccd")
+            ketqua = capnhatthongtinungvien(id,
+                                sdt,
+                                ngayhendilam,
+                                hieusuat,
+                                loaimay,
+                                vitrituyendung,
+                                hocvan,
+                                diachi,
+                                dantoc,
+                                connho,
+                                tencon1,
+                                ngaysinhcon1,
+                                tencon2,
+                                ngaysinhcon2,
+                                tencon3,
+                                ngaysinhcon3,
+                                tencon4,
+                                ngaysinhcon4,
+                                tencon5,
+                                ngaysinhcon5,
+                                nguoithan,
+                                sdtnguoithan,
+                                luuhoso,
+                                ghichu,
+                                cccd
+                                )
+            if ketqua["ketqua"]:
+                flash("Cập nhật thông tin ứng viên thành công !!!")
+            else:
+                flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
+            
+        except Exception as e:
+            flash(f"Cập nhật thông tin ứng viên thất bại ({e})")
+            app.logger.error(f"Cập nhật thông tin ứng viên thất bại ({e})")
+        finally:
+            return redirect(f"muc2_1")
 @app.route("/muc2_2", methods=["GET","POST"])
 @login_required
 def dangkytuyendung():
     if request.method == "GET":
-        lathuki = kiemtra_danhsach_thuki()
-        if (current_user.phanquyen not in ['tbp','gd','sa','td']) and not lathuki:
-            return redirect("/unauthorized")
-        phongban = request.args.get("phongban")
-        danhsach = laydanhsachyeucautuyendung(phongban)
-        danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
-        # flash(danhsach_vitri_cacongty)
-        return render_template("2_2.html", 
-                               page= "2.2 Yêu cầu tuyển dụng",
-                               danhsach = danhsach,
-                               lathuki = lathuki,
-                               danhsach_vitri_cacongty=danhsach_vitri_cacongty
-                               )
-    
+        try:
+            lathuki = kiemtra_danhsach_thuki()
+            if (current_user.phanquyen not in ['tbp','gd','sa','td']) and not lathuki:
+                return redirect("/unauthorized")
+            phongban = request.args.get("phongban")
+            danhsach = laydanhsachyeucautuyendung(phongban)
+            danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
+            # flash(danhsach_vitri_cacongty)
+            return render_template("2_2.html", 
+                                page= "2.2 Yêu cầu tuyển dụng",
+                                danhsach = danhsach,
+                                lathuki = lathuki,
+                                danhsach_vitri_cacongty=danhsach_vitri_cacongty
+                                )
+        except Exception as e:
+            flash(f"Lỗi lấy danh sách yêu cầu tuyển dụng ({e})")
+            app.logger.error(f"Lỗi lấy danh sách yêu cầu tuyển dụng ({e})")
+            return redirect(url_for("home"))
+        
     elif request.method == "POST":
         try:
             bophan = current_user.phongban
@@ -547,85 +563,99 @@ def dangkytuyendung():
 @roles_required('tbp','gd','sa','td')
 def tuyendungchitiet():
     if request.method == "GET":
-        id_yeucautuyendung = request.args.get("id")
-        thongtin_tuyendung = lay_thongtin_yeucautuyendung(id_yeucautuyendung)
-        vitri_tuyendung = thongtin_tuyendung[0]
-        phongban = thongtin_tuyendung[1]
-        danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
-        danhsach_ungvien_tiemnang = lay_danhsach_ungvien_tiemnang(vitri_tuyendung)
-        danhsach_ungvien_2_1 = lay_danhsach_ungvien_2_1()
-        so_ungvien_tong = len(danhsach)
-        so_ungvien_chophongvan = 0
-        so_ungvien_dangphongvan = 0
-        so_ungvien_quaphongvan = 0
-        so_ungvien_danhanviec = 0
-        so_ungvien_khongnhanviec = 0
-        for ungvien in danhsach:
-            if ungvien[16] == "Chưa phỏng vấn":
-                so_ungvien_chophongvan += 1
-            elif ungvien[16] == "Đang phỏng vấn":
-                so_ungvien_dangphongvan += 1
-            elif ungvien[16] == "Qua phỏng vấn":
-                so_ungvien_quaphongvan += 1
-            elif ungvien[16] == "Đã nhận việc":
-                so_ungvien_danhanviec += 1
-            elif ungvien[16] == "Không nhận việc":
-                so_ungvien_khongnhanviec += 1
-        phongban = lay_phongban_theo_idyctd(id_yeucautuyendung)
-        return render_template("2_2_1.html", 
-                               page="2.2.1 Danh sách ứng viên tuyển dụng",
-                               vitri_tuyendung=vitri_tuyendung,
-                               danhsach=danhsach,
-                               phongban=phongban,
-                               so_ungvien_tong=so_ungvien_tong,
-                               so_ungvien_chophongvan=so_ungvien_chophongvan,
-                               so_ungvien_dangphongvan=so_ungvien_dangphongvan,
-                               so_ungvien_quaphongvan=so_ungvien_quaphongvan,
-                               so_ungvien_danhanviec=so_ungvien_danhanviec,
-                               so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
-                               danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang,
-                               danhsach_congnhan_ungtuyen=danhsach_ungvien_2_1
-                               ) 
+        try:
+            id_yeucautuyendung = request.args.get("id")
+            thongtin_tuyendung = lay_thongtin_yeucautuyendung(id_yeucautuyendung)
+            vitri_tuyendung = thongtin_tuyendung[0]
+            phongban = thongtin_tuyendung[1]
+            danhsach = lay_danhsach_ungvien(id_yeucautuyendung)
+            danhsach_ungvien_tiemnang = lay_danhsach_ungvien_tiemnang(vitri_tuyendung)
+            danhsach_ungvien_2_1 = lay_danhsach_ungvien_2_1()
+            so_ungvien_tong = len(danhsach)
+            so_ungvien_chophongvan = 0
+            so_ungvien_dangphongvan = 0
+            so_ungvien_quaphongvan = 0
+            so_ungvien_danhanviec = 0
+            so_ungvien_khongnhanviec = 0
+            for ungvien in danhsach:
+                if ungvien[16] == "Chưa phỏng vấn":
+                    so_ungvien_chophongvan += 1
+                elif ungvien[16] == "Đang phỏng vấn":
+                    so_ungvien_dangphongvan += 1
+                elif ungvien[16] == "Qua phỏng vấn":
+                    so_ungvien_quaphongvan += 1
+                elif ungvien[16] == "Đã nhận việc":
+                    so_ungvien_danhanviec += 1
+                elif ungvien[16] == "Không nhận việc":
+                    so_ungvien_khongnhanviec += 1
+            phongban = lay_phongban_theo_idyctd(id_yeucautuyendung)
+            return render_template("2_2_1.html", 
+                                page="2.2.1 Danh sách ứng viên tuyển dụng",
+                                vitri_tuyendung=vitri_tuyendung,
+                                danhsach=danhsach,
+                                phongban=phongban,
+                                so_ungvien_tong=so_ungvien_tong,
+                                so_ungvien_chophongvan=so_ungvien_chophongvan,
+                                so_ungvien_dangphongvan=so_ungvien_dangphongvan,
+                                so_ungvien_quaphongvan=so_ungvien_quaphongvan,
+                                so_ungvien_danhanviec=so_ungvien_danhanviec,
+                                so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
+                                danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang,
+                                danhsach_congnhan_ungtuyen=danhsach_ungvien_2_1
+                                ) 
+        except Exception as e:
+            flash(f"Lỗi lấy danh sách ứng viên ({e})")
+            app.logger.error(f"Lỗi lấy danh sách ứng viên ({e})")
+            return redirect(url_for("home"))
     else:
-        id_yeucautuyendung = request.form.get("id")
-        phongban = request.form.get("phongban")
-        hoten = request.form.get("hoten")
-        gioitinh = request.form.get("gioitinh")
-        tuoi = request.form.get("tuoi")
-        namkinhnghiem = request.form.get("namkinhnghiem")
-        linkcv = request.files.get("linkcv")
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        save_path = os.path.join(FOLDER_CV,f"cv_{timestamp}.pdf")
-        linkcv.save(save_path)
-        kenhtuyendung = request.form.get("kenhtuyendung")
-        if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
-            flash("Thêm ứng viên thành công")
-        return redirect(f"muc2_2_1?id={id_yeucautuyendung}")
-    
+        try:
+            id_yeucautuyendung = request.form.get("id")
+            phongban = request.form.get("phongban")
+            hoten = request.form.get("hoten")
+            gioitinh = request.form.get("gioitinh")
+            tuoi = request.form.get("tuoi")
+            namkinhnghiem = request.form.get("namkinhnghiem")
+            linkcv = request.files.get("linkcv")
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            save_path = os.path.join(FOLDER_CV,f"cv_{timestamp}.pdf")
+            linkcv.save(save_path)
+            kenhtuyendung = request.form.get("kenhtuyendung")
+            if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
+                flash("Thêm ứng viên thành công")
+            return redirect(f"muc2_2_1?id={id_yeucautuyendung}")
+        except Exception as e:
+            flash(f"Lỗi thêm ứng viên ({e})")
+            app.logger.error(f"Lỗi thêm ứng viên ({e})")
+            return redirect(url_for("home"))
+        
 @app.route("/muc3_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
 def nhapthongtinlaodongmoi():
     
     if request.method == "GET":
-        data= request.args.get("data")
-        masothe = checkformatmst(int(laymasothemoi())+1)
-        cacvitri= laycacvitri()
-        cacto = laycacto()
-        cacca = laycacca()
-        data=request.args.get("scan-qrcode")
-        datenow = datetime.now()
-        macongty = current_user.macongty 
-        return render_template("3_1.html", 
-                                page="3.1 Nhập thông tin lao động mới",
-                                qrcccd=data,
-                                masothe=masothe,
-                                ngaybatdau=datenow,
-                                cacvitri=cacvitri,
-                                cacto=cacto,
-                                cacca=cacca,
-                                macongty=macongty)
-    
+        try:
+            data= request.args.get("data")
+            masothe = checkformatmst(int(laymasothemoi())+1)
+            cacvitri= laycacvitri()
+            cacto = laycacto()
+            cacca = laycacca()
+            data=request.args.get("scan-qrcode")
+            datenow = datetime.now()
+            macongty = current_user.macongty 
+            return render_template("3_1.html", 
+                                    page="3.1 Nhập thông tin lao động mới",
+                                    qrcccd=data,
+                                    masothe=masothe,
+                                    ngaybatdau=datenow,
+                                    cacvitri=cacvitri,
+                                    cacto=cacto,
+                                    cacca=cacca,
+                                    macongty=macongty)
+        except Exception as e:
+            flash(f"Lỗi lấy thông tin lao động mới ({e})")
+            app.logger.error(f"Lỗi lấy thông tin lao động mới ({e})")
+            return redirect(url_for("home"))
     elif request.method == "POST":
         try:
             # flash(request.files, request.form)
@@ -1782,8 +1812,6 @@ def diemdanhbu():
         ngay = request.args.get("ngay")
         lido = request.args.get("lido")
         trangthai = request.args.get("trangthai")
-        danh_sach_chuyen = laydanhsachchuyen()
-        danh_sach_bophan = laydanhsachbophan()
         danhsach = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngay,lido,trangthai,mstquanly,mstthuky)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -1797,9 +1825,7 @@ def diemdanhbu():
                             page="Lỗi chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
-                            count=count,
-                            danh_sach_chuyen=danh_sach_chuyen,
-                            danh_sach_bophan=danh_sach_bophan)
+                            count=count)
     elif request.method == "POST":
         mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
@@ -1939,7 +1965,7 @@ def xinnghiphep():
         danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
         count = len(danhsach)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 10
+        per_page = 20
         total = len(danhsach)
         start = (current_page - 1) * per_page
         end = start + per_page
@@ -1984,6 +2010,92 @@ def xinnghiphep():
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
         
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True)
+
+@app.route("/muc7_1_4/kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def kiemtraxinnghiphep():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_dakiemtra_xinnghiphep(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_4/tuchoi_kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_kiemtraxinnghiphep():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_tuchoi_xinnghiphep(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_4/pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def pheduyetxinnghiphep():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_pheduyet_xinnghiphep(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_4/tuchoi_pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_pheduyetxinnghiphep():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_tuchoi_xinnghiphep(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+
 @app.route("/muc7_1_5", methods=["GET","POST"]) # Danh sách xin nghỉ không lương
 @login_required
 def xinnghikhongluong():
