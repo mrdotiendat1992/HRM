@@ -5612,14 +5612,14 @@ def chotcong_layhoten(mst):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        query = f"SELECT Ho_ten FROM Danh_sach_CBCNV WHERE MST='{mst}' AND Factory='{current_user.macongty}'"
-        result = cur.execute(query).fetchone()[0]
+        query = f"SELECT Ho_ten FROM Danh_sach_CBCNV WHERE MST={mst} AND Factory='{current_user.macongty}'"
+        result = cur.execute(query).fetchone()
         conn.close()
         if result:
-            result = result.strip()
+            result = result[0].strip()
         else:
             result = ""
         return result
     except Exception as e:
-        flash(f"Lỗi lấy họ tên: {e}")
+        print(f"Loi lay ho ten(chotcong): {e}")
         return ""

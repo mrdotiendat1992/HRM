@@ -3482,7 +3482,7 @@ def khong_kiem_xuong():
         else:
             return "OK"
     except Exception as e:
-        flash(f"Lỗi tải trang: {e}")
+        print(e)
         return "NOT OK"
 
 @app.route("/admin", methods=["GET"])
