@@ -2331,7 +2331,131 @@ def danhsachxinnghikhac():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
+@app.route("/muc7_1_6/kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def kiemtraxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_dakiemtra_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
 
+@app.route("/muc7_1_6/tuchoi_kiemtra", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_kiemtraxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = thuky_tuchoi_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_6/pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def pheduyetxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_pheduyet_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_6/tuchoi_pheduyet", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def tuchoi_pheduyetxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = quanly_tuchoi_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_6/nhan_giayto", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def nhan_giaytoxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = nhansu_nhangiayto_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
+
+@app.route("/muc7_1_6/khongnhan_giayto", methods=["POST"]) # Danh sách điểm danh bù
+@login_required
+def khongnhan_giaytoxinnghikhac():
+    if request.method == "POST":
+        try:
+            data = request.form.getlist("selected_ids[]")
+            result = []
+            x=0
+            for item in data:
+                x = nhansu_khongnhangiayto_xinnghikhac(item)
+                result.append({
+                    "id": item,
+                    "status": x
+                })
+            result = {"success": True, "result": result}
+            return jsonify(result)
+        except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"success": False, "message": str(e)})
+    return jsonify({"success": False, "message": "Invalid request method"})
 
 @app.route("/muc7_1_7", methods=["GET","POST"]) # Danh sách phép tồn
 @login_required
