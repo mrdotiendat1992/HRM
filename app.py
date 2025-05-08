@@ -1694,7 +1694,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
                 if trangthai:
                     query += f"AND Trang_thai LIKE N'%{trangthai}%'"
                 if not mst and not hoten and not chucvu and not chuyen and not bophan and not ngaynghi and not trangthai:
-                    query = f"SELECT TOP (100) * FROM Xin_nghi_phep WHERE Nha_may='{current_user.macongty}'"
+                    query = f"SELECT TOP (100) * FROM DS_Xin_nghi_phep WHERE Nha_may='{current_user.macongty}'"
                 query += " ORDER BY Ngay_nghi_phep DESC, MST ASC"
         # print(query)
         rows = cursor.execute(query).fetchall()
