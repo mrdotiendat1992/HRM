@@ -221,6 +221,11 @@
                             </th>
                             <th>
                                 <select class="nhaplieu" id="nhangiayto" name="nhangiayto" onchange='this.form.submit()'>
+                                    {% if not request.args.get('nhangiayto') %}
+                                    <option value="" selected>Tất cả</option>
+                                    {% else %}
+                                    <option value="">Tất cả</option>
+                                    {% endif %}
                                     {% if request.args.get('nhangiayto')=='Chưa nhận' %}
                                     <option value="Chưa nhận" selected>Chưa nhận</option>
                                     {% else %}
