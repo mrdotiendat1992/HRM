@@ -1274,7 +1274,6 @@ def themnhanvienmoi(nhanvienmoi):
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()
     query = f"INSERT INTO Danh_sach_CBCNV VALUES {nhanvienmoi}"
-    print(query)
     try:
         cursor.execute(query)
         conn.commit()
@@ -2000,7 +1999,6 @@ def laycahientai(mst):
         cursor = conn.cursor()
         ngayketthuc = datetime(2054,12,31)
         query = f"SELECT Ca FROM Dang_ky_ca_lam_viec WHERE MST = '{mst}' AND Factory = '{current_user.macongty}' AND Den_ngay = '{ngayketthuc}'"
-        print(query)
         row = cursor.execute(query).fetchone()
         if row:
             return row[0]
