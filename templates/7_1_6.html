@@ -221,9 +221,21 @@
                             </th>
                             <th>
                                 <select class="nhaplieu" id="nhangiayto" name="nhangiayto" onchange='this.form.submit()'>
-                                    <option value=""></option>
-                                    <option value="Có">Có</option>
-                                    <option value="Không">Không</option>
+                                    {% if request.args.get('nhangiayto')=='Chưa nhận' %}
+                                    <option value="Chưa nhận" selected>Chưa nhận</option>
+                                    {% else %}
+                                    <option value="Chưa nhận">Chưa nhận</option>
+                                    {% endif %}
+                                    {% if request.args.get('nhangiayto')=='Đã nhận' %}
+                                    <option value="Đã nhận" selected>Đã nhận</option>
+                                    {% else %}
+                                    <option value="Đã nhận">Đã nhận</option>
+                                    {% endif %}
+                                    {% if request.args.get('nhangiayto')=='Không có' %}
+                                    <option value="Không có" selected>Không có</option>
+                                    {% else %}
+                                    <option value="Không có">Không có</option>
+                                    {% endif %}
                                 </select>
                             </th>
                             <th class="hidden-col"></th>
