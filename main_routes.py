@@ -2605,6 +2605,7 @@ def muc7_1_8():
         return response
 
 @app.route("/muc7_1_9", methods=["GET","POST"]) # Bảng làm thêm giờ chế độ
+@login_required
 def muc7_1_9():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2674,6 +2675,7 @@ def muc7_1_9():
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chedo_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_10", methods=["GET","POST"]) # Danh sách làm thêm giờ ban ngày
+@login_required
 def muc7_1_10():
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
@@ -2743,6 +2745,7 @@ def muc7_1_10():
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_banngay_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_11", methods=["GET","POST"]) # Danh sách làm thêm giờ ban đêm
+@login_required
 def muc7_1_11():
     if request.method == "GET":
         thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
@@ -2812,6 +2815,7 @@ def muc7_1_11():
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_bandem_{timestamp}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_12", methods=["GET","POST"]) # Danh sách làm thêm giờ Chủ nhật
+@login_required
 def muc7_1_12():
     if request.method == "GET":
         thang = request.args.get("thang") if request.args.get("thang") else datetime.now().month
@@ -2883,6 +2887,7 @@ def muc7_1_12():
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chunhat_{timestamp}.xlsx"), as_attachment=True)
         
 @app.route("/muc7_1_13", methods=["GET","POST"]) # Danh sách làm thêm giờ ngày lễ
+@login_required
 def muc7_1_13():
     if request.method == "GET":
         thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
