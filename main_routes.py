@@ -3357,53 +3357,57 @@ def muc7_1_19():
                             pagination=pagination,
                             count=count)
     elif request.method=="POST":
-        mst = request.form.get('mst')
-        chuyen = request.form.get('chuyen')
-        phongban = request.form.get('phongban')
-        tungay = request.form.get("tungay")
-        denngay = request.form.get("denngay")
-        phanloai = request.form.get("phanloai")
-        danhsach = laydanhsachchamcongchunhatchuachot(mst,chuyen,phongban,tungay,denngay,phanloai)
-        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHUACHOT_KX)
+        try:
+            mst = request.form.get('mst')
+            chuyen = request.form.get('chuyen')
+            phongban = request.form.get('phongban')
+            tungay = request.form.get("tungay")
+            denngay = request.form.get("denngay")
+            phanloai = request.form.get("phanloai")
+            danhsach = laydanhsachchamcongchunhatchuachot(mst,chuyen,phongban,tungay,denngay,phanloai)
+            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHUACHOT_KX)
 
-        sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
-        image_path = HINHANH_LOGO
-        # Tạo đối tượng hình ảnh
-        img = Image(image_path)
-        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
-        img.width = img.width * 0.25
-        img.height = img.height * 0.25
+            sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+            image_path = HINHANH_LOGO
+            # Tạo đối tượng hình ảnh
+            img = Image(image_path)
+            # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+            img.width = img.width * 0.25
+            img.height = img.height * 0.25
 
-        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
-        img.anchor = 'A1'
-        
-        # Chèn hình ảnh vào sheet
-        sheet.add_image(img)
+            # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+            img.anchor = 'A1'
+            
+            # Chèn hình ảnh vào sheet
+            sheet.add_image(img)
 
-        # Xóa hàng từ hàng 7 đến hàng 10000
-        sheet.delete_rows(4, 10000 - 4 + 1)
+            # Xóa hàng từ hàng 7 đến hàng 10000
+            sheet.delete_rows(4, 10000 - 4 + 1)
 
-        for row in danhsach:
-            data = [y for y in row[:-1]]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
-            sheet.append(data)
+            for row in danhsach:
+                data = [y for y in row[:-1]]
+                data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+                sheet.append(data)
 
-        # Tạo kiểu định dạng ngày
-        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
-        # Duyệt qua các ô trong khu vực G4:H10000
-        for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-            for col in ['H']:
-                cell = sheet[f"{col}{row}"]
-                
-                try:
-                    cell.style = date_style
-                except ValueError:
-                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này            
+            # Tạo kiểu định dạng ngày
+            date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+            # Duyệt qua các ô trong khu vực G4:H10000
+            for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+                for col in ['G']:
+                    cell = sheet[f"{col}{row}"]
+                    
+                    try:
+                        cell.style = date_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này            
 
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chuachot_{timestamp}.xlsx"))
-        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chuachot_{timestamp}.xlsx"), as_attachment=True)
-
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chuachot_{timestamp}.xlsx"))
+            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chuachot_{timestamp}.xlsx"), as_attachment=True)
+        except Exception as e:
+            flash(f"Lỗi tải trang: {e}")
+            return render_template("7_1_19.html",
+                                    danhsach=[])
 @app.route("/muc7_1_20", methods=["GET","POST"]) # Bảng chấm công chi tiết chốt
 @login_required
 def muc7_1_20():
