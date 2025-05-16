@@ -224,6 +224,7 @@
                         {% else %}
                             {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
                             or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                            or (current_user.masothe==1369 and current_user.macongty=='NT2')
                             or current_user.phanquyen == 'sa' %}
                             <th>
                                 <button id="nhangiayto_hangloat" class="btn btn-sm btn-success">Đã nhận</button>
@@ -282,6 +283,7 @@
                             {% if request.args.get('mstthuky') or request.args.get('mstquanly') or
                             ((current_user.masothe==2833 and current_user.macongty=='NT1')
                             or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                            or (current_user.masothe==1369 and current_user.macongty=='NT2')
                             or current_user.phanquyen == 'sa' )%}
                             <th></th>
                             {% endif %}
@@ -317,6 +319,7 @@
                         {% if request.args.get('mstthuky') or request.args.get('mstquanly') or
                         (current_user.masothe==2833 and current_user.macongty=='NT1')
                             or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                            or (current_user.masothe==1369 and current_user.macongty=='NT2')
                             or current_user.phanquyen == 'sa' %}
                             <td>
                                 <input type="checkbox" name="selected_ids" value="{{ row[11] }}">
