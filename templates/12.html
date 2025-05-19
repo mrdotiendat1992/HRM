@@ -157,7 +157,10 @@
                                 </div>
                                 {% endif %} 
 
-                                {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369 )%}
+                                {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or 
+                                (current_user.macongty=='NT2' and current_user.masothe==2176) or 
+                                (current_user.macongty=='NT2' and current_user.masothe==1369) or 
+                                current_user.phanquyen == 'sa' %}
                                     <div>
                                         <a class="btn btn-primary btn-sm" href="/phanquyenthuky">Phân quyền thư ký</a>
                                         <a class="btn btn-primary btn-sm" href="/capnhat_phepton">Cập nhật phép tồn</a>
@@ -166,6 +169,7 @@
 
                                 {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
                                     or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                                    or (current_user.macongty=='NT2' and current_user.masothe==1369)
                                     or current_user.phanquyen == 'sa' %}       
                                     <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
                                 {% endif %}
