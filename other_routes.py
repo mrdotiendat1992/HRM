@@ -566,6 +566,11 @@ def laycatheoline():
         "Ca": ca
     })
 
+@app.route("/taifilexinnghikhongluongmau", methods=["POST"])
+def taifilexinnghikhongluongmau():
+    file = FILE_MAU_DANGKY_XINNGHIKHONGLUONG
+    return send_file(file, as_attachment=True)
+
 @app.route("/taifilexinnghiphepkhacmau", methods=["POST"])
 def taifilexinnghiphepkhacmau():
     file = FILE_MAU_DANGKY_XINNGHIKHAC
@@ -1648,7 +1653,41 @@ def chamcong_sang_web():
         response.headers['Content-Disposition'] = f'attachment; filename=danhsach_chamcongsang_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response   
-        
+
+@app.route("/nhansu_themxinnghikhongluong", methods=["POST"])
+def nhansu_themxinnghikhongluong():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"themxinnghikhac_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                x=1
+                for row in data:
+                    try:
+                        masothe = int(row['Mã số thẻ'])
+                        ngaynghi = str(row['Ngày nghỉ'])[:10]
+                        sophut = int(row['Tổng số phút'])
+                        hoten = row["Họ tên"]
+                        chucdanh = row["Chức danh"]
+                        chuyen = row["Chuyền"]
+                        phongban = row["Bộ phận"]
+                        trangthai = "Đã phê duyệt"
+                        lydo = "Việc riêng"
+                        if them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngaynghi,sophut,lydo,trangthai):
+                            print(f"Thêm xin nghỉ không lương thành công, dòng {x}")
+                        else:
+                            print(f"Thêm xin nghỉ không lương thất bại, dòng {x}")
+                        x+=1
+                    except Exception as e:
+                        print(f"Loi them xin nghi không lương: {e}")
+                        break
+            except Exception as e:
+                print(e)
+        return redirect("/muc7_1_5")
+
 @app.route("/nhansu_themxinnghikhac", methods=["POST"])
 def nhansu_them_xinnghikhac():
     if request.method=="POST":

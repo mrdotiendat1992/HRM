@@ -2934,7 +2934,7 @@ def them_xinnghiphep(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,trangtha
     
 def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,lydo,trangthai):
     try:
-        ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0]
+        ngay = ngay.split("/")[2] + "-" + ngay.split("/")[1] + "-" + ngay.split("/")[0] if "/" in ngay else ngay
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""insert into Xin_nghi_khong_luong 
@@ -2947,7 +2947,7 @@ def them_xinnghikhongluong(masothe,hoten,chucdanh,chuyen,phongban,ngay,sophut,ly
         conn.close()
         return True
     except Exception as e:
-        flash(f"Loi khi them xin nghi khong luong: {e} !!!")
+        print(f"Loi khi them xin nghi khong luong: {e} !!!")
         return False
 
 def them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,trangthai,nhangiayto):

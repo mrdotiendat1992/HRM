@@ -29,6 +29,7 @@ FILE_MAU_CDHD_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau
 FILE_MAU_DANGKY_TANGCA_NHOM = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/tangca/tangcanhom.xlsx') 
 FILE_MAU_DANGKY_DOICA_NHOM = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/doica/doicanhom.xlsx') 
 FILE_MAU_DANGKY_XINNGHIKHAC = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/xinnghikhac/xinnghikhac.xlsx') 
+FILE_MAU_DANGKY_XINNGHIKHONGLUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/xinnghikhongluong/xinnghikhongluong.xlsx') 
 FILE_MAU_DANGKY_KPI = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/kpi/Kpi report sample.xlsx') 
 FILE_MAU_CAPNHAT_STK = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/capnhatstk/capnhatstk.xlsx')
 FILE_MAU_THEM_HOPDONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/nhaphophong/taohopdong.xlsx')
