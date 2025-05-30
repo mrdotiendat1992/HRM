@@ -137,7 +137,7 @@
                     <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
                     <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                     <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                    <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                    <input type="hidden" name="loainghi" value="{{ request.args.get('loainghi', '') }}">
                     <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
                     <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
                     <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
@@ -204,7 +204,7 @@
                         <th class="hidden-col">Phòng ban</th>
                         <th>Ngày nghỉ</th>                    
                         <th>Tổng số phút</th>
-                        <th class="hidden-col">Lý do</th> 
+                        <th class="hidden-col">Loại nghỉ</th> 
                         <th>Trạng thái</th>
                         <th>Nhận giấy tờ</th>
                         <th class="hidden-col">Thời gian tạo</th>
@@ -243,7 +243,7 @@
                             <th class="hidden-col"><input type="text" name="bophan"  class="nhaplieu" id="bophan" value="{{ request.args.get('bophan', '') }}" onchange='this.form.submit()'></th>
                             <th><input type="date" name="ngaynghi" class="nhaplieu" id="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}" onchange='this.form.submit()'></th>                    
                             <th></th>
-                            <th class="hidden-col"><input type="text" name="lydo" class="nhaplieu" id="lydo" value="{{ request.args.get('lydo', '') }}" onchange='this.form.submit()'></th> 
+                            <th class="hidden-col"><input type="text" name="loainghi" class="nhaplieu" id="loainghi" value="{{ request.args.get('loainghi', '') }}" onchange='this.form.submit()'></th> 
                             <th>
                                 <select class="nhaplieu" id="trangthai" name="trangthai" onchange='this.form.submit()'>
                                     <option value=""></option>
