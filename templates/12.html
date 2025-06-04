@@ -173,6 +173,9 @@
                                     or current_user.phanquyen == 'sa' %}       
                                     <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
                                 {% endif %}
+                                {% if "HRD" in current_user.phongban %}       
+                                    <a href="/thoivu" class="btn btn-primary btn-sm">Thời vụ</a>
+                                {% endif %}
                                 
                                 <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
                                     <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
@@ -184,9 +187,6 @@
                 </nav>
             </div>
         </div>  
-        {% block content %}
-        
-        {% endblock content %}
         {% with messages = get_flashed_messages() %}
             {% if messages %}
                 <div class="alert" role="alert" style="margin-left: 500px;display: fixed; border: 1px solid #f5c6cb;
@@ -198,6 +198,10 @@
                 </div>
             {% endif %}
         {% endwith %}
+        {% block content %}
+        
+        {% endblock content %}
+        
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 
         <script>

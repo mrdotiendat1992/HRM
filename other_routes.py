@@ -5293,3 +5293,48 @@ def chotcong_hoten():
         return jsonify({"success": "True", "data": hoten})
     else:
         return jsonify({"success": "False"})
+
+@app.route("/thoivu", methods=["GET","POST"])
+def thoivu():
+    if request.method == "GET":
+        conn = pyodbc.connect('DRIVER={SQL Server};SERVER=172.16.60.100;DATABASE=HR;UID=hrm;PWD=Namthuan@2025#')
+        cursor = conn.cursor()
+        danhsach = cursor.execute(f"SELECT * FROM dbo.Thoi_vu WHERE NhaMay = '{current_user.macongty}' ORDER BY BoPhan").fetchall()
+        count = len(danhsach)
+        cursor.close()
+        conn.close()
+        return render_template("thoivu.html", danhsach=danhsach, count=count)
+    else:
+        file = request.files['file']
+        if file:
+            # read data from excel file
+            try:
+                workbook = openpyxl.load_workbook(file)
+                sheet = workbook.active
+                data = []
+                for row in sheet.iter_rows(values_only=True, min_row=2):
+                    if row[0] is not None:
+                        data.append(list(row))
+                nhamay = data[0][-1]
+                if nhamay == current_user.macongty and len(data) >= 1:
+                    # connect to SQL Server.
+                    conn = pyodbc.connect('DRIVER={SQL Server};SERVER=172.16.60.100;DATABASE=HR;UID=hrm;PWD=Namthuan@2025#')
+                    cursor = conn.cursor()
+                    cursor.execute("DELETE FROM dbo.Thoi_vu WHERE NhaMay = ?", nhamay)
+                    conn.commit()
+                    # insert data into SQL Server
+                    for row in data:
+                        cursor.execute("""
+                            INSERT INTO dbo.Thoi_vu (NhaMay, Hoten, BoPhan)
+                            VALUES (?, ?, ?)
+                        """, row[3], row[1], row[2])
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+                    flash("Cập nhật thành công!")
+                else:
+                    flash("Nhà máy không đúng, vui lòng kiểm tra lại.")
+                    return redirect(url_for('thoivu'))
+            except Exception as e:
+                flash(f"Cập nhật không thành công: {e}")
+        return redirect(url_for('thoivu'))
