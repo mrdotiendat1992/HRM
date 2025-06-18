@@ -4473,10 +4473,11 @@ def chamcongtay():
             "ngay": ngay
         }
 
-        query = f"select * from CHAM_CONG_TAY where nha_may='{current_user.macongty}' order by ngay desc"
+        query = f"select * from CHAM_CONG_TAY where nha_may='{current_user.macongty}'"
         query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
         if query_condition:
             query += f" and {query_condition}"
+        query += "order by ngay desc"
         
         danhsach = cur.execute(query).fetchall()
         cur.commit()
@@ -4500,6 +4501,7 @@ def chamcongtay():
             formatted_rows.append(tuple(formatted_row))
 
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+        
 
         return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination)
     except Exception as e:
