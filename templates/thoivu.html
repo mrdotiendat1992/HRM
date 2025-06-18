@@ -1,0 +1,59 @@
+{% extends "12.html" %}
+
+{% block style %}
+
+    table td {
+        white-space: nowrap;
+    }
+    .input-gio {
+        width: 100px;
+    }
+    .input-ngay {
+        width: 120px;
+    }
+
+    table.table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+    }
+
+{% endblock style %}
+
+{% block content %}
+<div class="table-responsive">
+    <div class="container">
+        <br>
+
+        <div class="form-control">
+            <form method="POST" enctype="multipart/form-data">
+                <label for="file">Chọn file:</label>
+                <input type="file" id="file" name="file" class="input">
+                <button type="submit" class="btn btn-outline-primary">Cập nhật</button>
+            </form>
+        </div>
+        
+        <br>
+        <h5 class="text-center">Danh sách (Tổng: {{count}})</h5>
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr class="bg-primary">
+                    <th>STT</th>
+                    <th>Họ tên</th>
+                    <th>Bộ phận</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in danhsach %}
+                    <tr data='{{row | safe }}'>
+                        <td>{{loop.index}}</td>
+                        <td>{{row[1]}}</td>
+                        <td>{{row[2]}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

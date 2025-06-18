@@ -577,6 +577,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         sheet['B21'] = f"Số CCCD: {cccd}"
                         sheet['L21'] = ngaycapcccd
                         sheet['E22'] = sodienthoai
+                        sheet['G29'] = chucdanh
                         sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
                         sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"        
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
