@@ -138,9 +138,9 @@
                     </form>
                 {% endif %}
                 <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_3'" style="margin-left: 20px;">Tất cả</button>
-
+                {% if notice["f12"]=="1" %}
                 <button id="toggle-cols" class="btn btn-outline-primary btn-sm" style="margin-left: 20px;">Hiển thị đầy đủ</button>
-                
+                {% endif %}
             </div>
             <br>
             <table class="table table-hover table-sm">
@@ -156,8 +156,10 @@
                         <th>Giờ</th>
                         <th class="hidden-col">Lý do</th> 
                         <th>Trạng thái</th>
+                        {% if notice["f12"]=="1" %}
                         <th class="hidden-col">Thời gian tạo</th>
                         <th class="hidden-col">Thời gian duyệt</th>
+                        {% endif %}
                         {% if request.args.get('mstthuky') %}
                             <th>
                                 <button id="kiemtra_hangloat" class="btn btn-sm btn-success">Kiểm tra</button>
@@ -230,8 +232,10 @@
                             <td></td>
                             {% endif %}
                             <td>{{row[10]}}</td>
+                            {% if notice["f12"]=="1" %}
                             <td class="hidden-col">{{row[12]}}</td>
                             <td class="hidden-col">{{row[13]}}</td>
+                            {% endif %}
                             {% if request.args.get('mstthuky') or request.args.get('mstquanly') %}
                             <td>
                                 <input type="checkbox" name="selected_ids" value="{{ row[11] }}">

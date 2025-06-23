@@ -130,8 +130,9 @@
                     </form>
                 {% endif %}
                 <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_5'" style="margin-left: 20px;">Tất cả</button>
-
+                {% if notice["f12"]=="1" %}
                 <button id="toggle-cols" class="btn btn-outline-primary btn-sm" style="margin-left: 20px;">Hiển thị đầy đủ</button>
+                {% endif %}
                 {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
                 or (current_user.masothe==2176 and current_user.macongty=='NT2')
                 or (current_user.masothe==1369 and current_user.macongty=='NT2')
@@ -180,8 +181,10 @@
                         <th>Tổng số phút</th>
                         <th class="hidden-col">Lý do</th> 
                         <th>Trạng thái</th>
+                        {% if notice["f12"]=="1" %}
                         <th class="hidden-col">Thời gian tạo</th>
                         <th class="hidden-col">Thời gian duyệt</th>
+                        {% endif %}
                         {% if request.args.get('mstthuky') %}
                             <th>
                                 <button id="kiemtra_hangloat" class="btn btn-sm btn-success">Kiểm tra</button>
@@ -217,8 +220,10 @@
                                     <option value="Bị từ chối bởi người phê duyệt">Bị tổ chối bởi người phê duyệt</option>
                                 </select>
                             </th>
+                            {% if notice["f12"]=="1" %}
                             <th class="hidden-col"></th>
                             <th class="hidden-col"></th>
+                            {% endif %}
                             {% if request.args.get('mstthuky') or request.args.get('mstquanly') %}
                             <th></th>
                             {% endif %}
@@ -252,8 +257,10 @@
                         <td class="hidden-col"></td>
                         {% endif %}
                         <td>{{row[9]}}</td>
+                        {% if notice["f12"]=="1" %}
                         <td class="hidden-col">{{row[11]}}</td>
                         <td class="hidden-col">{{row[12]}}</td>
+                        {% endif %}
                         {% if request.args.get('mstthuky') or request.args.get('mstquanly') %}
                             <td>
                                 <input type="checkbox" name="selected_ids" value="{{ row[10] }}">
