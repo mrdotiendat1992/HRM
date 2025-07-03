@@ -674,6 +674,7 @@ def nhapthongtinlaodongmoi():
             cmt = f"'{request.form.get("cmt")}'"
             cccd = f"'{request.form.get("cccd")}'"
             ngaycapcccd = f"'{request.form.get("ngaycap")}'" if request.form.get("ngaycap") else "NULL"
+            noicapcccd = f"N'{request.form.get("noicap")}'" if request.form.get("noicap") else "NULL"
             thuongtru = f"N'{request.form.get("thuongtru")}'" if request.form.get("thuongtru") else "NULL"
             noisinh = f"N'{request.form.get("noisinh")}'" if request.form.get("noisinh") else "NULL"
             tamtru = f"N'{request.form.get("tamtru")}'" if request.form.get("tamtru") else "NULL"
@@ -731,7 +732,7 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdvth = "NULL"
 
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},\
-                        {gioitinh},{cccd},{ngaycapcccd},N'Cục cảnh sát',{cmt},{thuongtru},\
+                        {gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},\
                         {thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},\
                         {tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},\
                         {sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},\
@@ -742,7 +743,8 @@ def nhapthongtinlaodongmoi():
                         {positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},\
                         {ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},\
                         {ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},\
-                        {ngaybatdauhdvth},'N', '', GETDATE())"             
+                        {ngaybatdauhdvth},'N', '', GETDATE())"   
+                      
             ketqua = themnhanvienmoi(nhanvienmoi)
             if ketqua["ketqua"]:
                 flash("Thêm lao động mới thành công !!!")

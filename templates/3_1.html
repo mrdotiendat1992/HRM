@@ -59,11 +59,15 @@ input, select {
         <div class="form-group">
             <label for="scan-qrcode">Scan QR CCCD</label>
             <input type="text" id="scan-qrcode" name="scan-qrcode">
+        </div>
+
+        <div class="form-group">
             <label for="cccd">CCCD</label>
             <input type="text" id="cccd" name="cccd">
             <label for="ngaycap">Ngày cấp</label>
             <input type="date" id="ngaycap" name="ngaycap">
-            
+            <label for="noicap">Nơi cấp</label>
+            <input type="text" id="noicap" name="noicap">
         </div>        
         <div class="form-group">
             <label for="hoten">Họ và tên</label>
@@ -272,6 +276,7 @@ input, select {
                     document.getElementById("phuongxa").value = diachi_data[1];
                     document.getElementById("quanhuyen").value = diachi_data[2];
                     document.getElementById("tinhthanhpho").value = diachi_data[3];
+                    document.getElementById("noicap").value = "Cục cảnh sát";
 
                 }
                 else if (datalength === 6) {
@@ -287,6 +292,8 @@ input, select {
                     document.getElementById("tinhthanhpho").value = diachi_data[3];
                     document.getElementById("tamtru").value = diachi_data;
                     document.getElementById("noisinh").value = diachi_data;
+                    document.getElementById("noicap").value = "Cục cảnh sát";
+                    
                 } else {
                     alert("Thông tin CCCD không chính xác. Vui lòng nhập lại.");
                 }
