@@ -1,6 +1,5 @@
 # -*- encoding: utf-8 -*-
 
-import openpyxl.styles
 from app import *
 
 ##################################

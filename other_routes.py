@@ -4051,6 +4051,26 @@ def delete_phanquyenthuky():
         flash(e)
         return {"message": "Xóa thất bại"}
 
+@app.route("/update_sophut_phepton", methods=["POST"])
+@login_required
+def update_sophut_phepton():
+    try:
+        if (current_user.macongty=='NT1' and current_user.masothe==2833) or (current_user.macongty=='NT2' and current_user.masothe==2176) or (current_user.macongty=='NT2' and current_user.masothe==1369):
+            data = request.json
+            conn = pyodbc.connect(url_database_pyodbc)
+            cur = conn.cursor()
+            query = f"UPDATE So_phut_phep SET So_phut_phep = '{data.get("sophut", "")}' WHERE Nha_may = '{current_user.macongty}' AND MST = '{data.get("mst", "")}' AND Thang = {data.get("thang", "")} AND Nam = {data.get("nam", "")}"
+            print(query)
+            cur.execute(query)
+            cur.commit()
+            conn.close()
+
+        return {"message": "Sửa thành công"}
+    except Exception as e:
+        print(e)
+        return {"message": "Sửa thất bại"}
+
+
 @app.route("/thaydoi_ten_yctd", methods=["POST"])
 @login_required
 def thaydoi_ten_yctd():
