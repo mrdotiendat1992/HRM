@@ -3,16 +3,6 @@ from main_routes import *
 #                "OTHER ENDPOINT"           #
 #############################################
 
-# @app.route("/thaydoiphanquyen", methods=["POST"])
-# def thaydoiphanquyen():
-#     if request.method == "POST":
-#         userid= request.form["id"]
-#         newrole = request.form["newrole"]
-#         user = Users.query.filter_by(id=userid).first()
-#         if user:
-#             user.role = newrole
-#             db.session.commit()
-#         return redirect("/admin")
 
 @app.route("/taimautangcanhom", methods=["POST"])
 def taimautangcanhom():

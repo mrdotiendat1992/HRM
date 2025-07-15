@@ -6,8 +6,15 @@ from app import *
 #          MAIN ROUTES           #
 ##################################
 
+
+
 @app.before_request
 def run_before_every_request():
+    """Mỗi lần load trang, sẽ xử lý các tác vụ:
+    - Kiểm tra người dùng đã đăng nhập chưa
+    - Cập nhật thông báo cho người dùng
+    - Cập nhật thông tin có bật function 12 không    
+    """
     try:
         if current_user.is_authenticated:
             f12 = trang_thai_function_12()
@@ -197,7 +204,6 @@ def run_before_every_request():
                     g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
                 else:
                     g.notice["Tuyển dụng bị từ chối"] = 0
-        # flash(g.notice)
     except Exception as e:  
         flash(f"Lỗi cập nhật thông tin chuông: {e}")
         f12 = trang_thai_function_12()    
@@ -217,7 +223,6 @@ def page_not_found(e):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    # Không flash gì cả — chỉ redirect
     return redirect(url_for('login'))
 
 @app.route("/login", methods=["GET", "POST"])
