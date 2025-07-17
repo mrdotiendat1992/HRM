@@ -5405,7 +5405,7 @@ def lay_dulieu_phepton(mst, thang, nam):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        query = f"SELECT MST,NAM,THANG,So_phut_phep from So_phut_phep WHERE Nha_may='{current_user.macongty}'"
+        query = f"SELECT MST,THANG,NAM,So_phut_phep from So_phut_phep WHERE Nha_may='{current_user.macongty}'"
         if mst:
             query += f" AND MST='{mst}'"
         if thang:
