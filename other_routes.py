@@ -561,6 +561,11 @@ def taifilexinnghikhongluongmau():
     file = FILE_MAU_DANGKY_XINNGHIKHONGLUONG
     return send_file(file, as_attachment=True)
 
+@app.route("/taifilexinnghiphepmau", methods=["POST"])
+def taifilexinnghiphepmau():
+    file = FILE_MAU_DANGKY_XINNGHIPHEP
+    return send_file(file, as_attachment=True)
+
 @app.route("/taifilexinnghiphepkhacmau", methods=["POST"])
 def taifilexinnghiphepkhacmau():
     file = FILE_MAU_DANGKY_XINNGHIKHAC
@@ -1677,6 +1682,40 @@ def nhansu_themxinnghikhongluong():
             except Exception as e:
                 print(e)
         return redirect("/muc7_1_5")
+
+@app.route("/nhansu_themxinnghiphep", methods=["POST"])
+def nhansu_themxinnghiphep():
+    if request.method=="POST":
+        file = request.files.get("file")
+        if file:
+            try:
+                thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                filepath = os.path.join(FOLDER_NHAP, f"themxinnghiphep_{thoigian}.xlsx")
+                file.save(filepath)
+                data = pd.read_excel(filepath ).to_dict(orient="records")
+                query = ""
+                for row in data:
+                    masothe = int(row['Mã số thẻ'])
+                    ngay = str(row['Ngày nghỉ'])[:10]
+                    sophut = int(row['Số phút nghỉ'])
+                    hoten = row["Họ tên"]
+                    chucdanh = row["Chức danh"]
+                    chuyen = row["Chuyền"]
+                    phongban = row["Bộ phận"]
+                    trangthai = "Đã phê duyệt"
+                    query += f"INSERT INTO Xin_nghi_phep (Nha_may, mst, ho_ten, chuc_vu, line, bo_phan, ngay_nghi_phep, tong_so_phut, trang_thai) VALUES ('{current_user.macongty}', {masothe}, N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', {sophut}, N'{trangthai}');\n"
+                # print(f"query xin nghỉ phép: {query}")
+                conn = pyodbc.connect(url_database_pyodbc)
+                cursor = conn.cursor()
+                cursor.execute(query)
+                conn.commit()
+                cursor.close()
+                conn.close()
+                flash("Thêm xin nghỉ phép thành công !!!")
+            except Exception as e:
+                print(e)
+                flash(f"Lỗi khi thêm xin nghỉ phép: {e}")
+        return redirect("/muc7_1_4")
 
 @app.route("/nhansu_themxinnghikhac", methods=["POST"])
 def nhansu_them_xinnghikhac():
