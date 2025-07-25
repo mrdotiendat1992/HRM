@@ -1882,7 +1882,7 @@ def capnhatdieuchuyentheofile():
                     ghichu = row["Ghi chú"]
                     hople = kiemtra_thongtin_dieuchuyen(x,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen)
                     if not hople["ketqua"]:
-                        print(f"Dòng {x} sai thông tin: {hople['lydo']}")
+                        flash(f"Dòng {x} sai thông tin: {hople['lydo']}")
                         return redirect("/muc6_2") 
                     else:
                         x += 1
