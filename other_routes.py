@@ -1882,7 +1882,7 @@ def capnhatdieuchuyentheofile():
                     ghichu = row["Ghi chú"]
                     hople = kiemtra_thongtin_dieuchuyen(x,masothe,chucdanhmoi,chuyenmoi,loaidieuchuyen)
                     if not hople["ketqua"]:
-                        flash(f"Dòng {x} sai thông tin: {hople['lido']}")
+                        print(f"Dòng {x} sai thông tin: {hople['lydo']}")
                         return redirect("/muc6_2") 
                     else:
                         x += 1
@@ -1985,9 +1985,9 @@ def capnhatdieuchuyentheofile():
                                                 capbaccu,hccategorycu,ngay)
                     flash("Cập nhật điều chuyển bằng file thành công !!!")
             except Exception as e:
-                flash(e)
-                flash(f"Cập nhật điều chuyển bằng file thất bại {e} !!!")
-    return redirect("/muc6_2")
+                print(e)
+                print(f"Cập nhật điều chuyển bằng file thất bại {e} !!!")
+    return redirect("/muc6_1")
 
 @app.route("/bangcong_hanhchinh_web", methods=["GET","POST"])
 def bangcong_hanhchinh_web():

@@ -3851,7 +3851,9 @@ def kiemtra_thongtin_dieuchuyen(dong,masothe,chucdanhmoi,chuyenmoi,loaidieuchuye
                         "lydo": "Không tìm thấy thông tin chuyền, chức danh mới trong danh sách HC Name !!!"}
         return {"ketqua":True}
     except Exception as e:
-        flash(e)
+        return {"ketqua":False,
+        "dong":dong,
+        "lydo": str(e)}
 
 def laylichsucongviec(mst,chuyen,bophan):
     try:
