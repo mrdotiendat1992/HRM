@@ -2094,7 +2094,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
                         query += f" AND Trang_thai=N'{trangthai}'"
                 if nhangiayto:
                     if nhangiayto=="Chưa nhận":
-                        query += f" AND Trang_thai=N'Đã phê duyệt' AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
+                        query += f" AND (Giay_to=N'{nhangiayto}' or Giay_to is NULL)"
                     else:
                         query += f" AND Giay_to=N'{nhangiayto}'" 
                 if not mst and not chuyen and not bophan and not ngaynghi and not loainghi and not trangthai and not nhangiayto:
