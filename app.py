@@ -960,16 +960,13 @@ def laydanhsachtheomst(mst):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+        query = f"SELECT TOP(1) * FROM Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
         
-        users = cursor.execute(query).fetchall()
+        user = cursor.execute(query).fetchone()
         conn.close()
-        result = []
-        for user in users:
-            result.append(lay_user(user))
-        return result
+        return lay_user(user)
     except Exception as e:
-        flash(e)
+        flash(f"Lỗi khi lấy danh sách nhân viên theo MST: {e}")
         return []
     
 def laydanhsachtheothechamcong(mst):
@@ -985,7 +982,7 @@ def laydanhsachtheothechamcong(mst):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(f"Lỗi khi lấy danh sách nhân viên theo thẻ chấm công: {e}")
         return []
 
 def laydanhsachusercacongty(macongty):
@@ -5628,3 +5625,15 @@ def chotcong_layhoten(mst):
     except Exception as e:
         print(f"Loi lay ho ten(chotcong): {e}")
         return ""
+
+def lay_danh_sach_hcname():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT * FROM HC_Name WHERE Factory='{current_user.macongty}'"
+        result = cur.execute(query).fetchall()
+        conn.close()
+        return [row for row in result]
+    except Exception as e:
+        flash(f"Lỗi lấy danh sách HC_Name: {e}")
+        return []

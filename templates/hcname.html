@@ -1,0 +1,39 @@
+{% extends "12.html" %}
+
+{% block style %}
+
+    table td {
+        white-space: nowrap;
+    }
+    .input-gio {
+        width: 100px;
+    }
+    .input-ngay {
+        width: 120px;
+    }
+
+    table.table thead th {
+        position: sticky;
+        top: 0;
+        background-color: #f8f9fa;
+        z-index: 1;
+    }
+
+{% endblock style %}
+
+{% block content %}
+<h1 class="text-center">Headcount Name</h1>
+<br>
+<div class="table-responsive">
+    <div class="container">
+        
+    </div>
+</div>
+{% for item in danhsach %}
+    <div class="row">
+        <div class="col-md-12">
+            <h4>{{ item }}</h4>
+        </div>
+    </div>
+{% endfor %}
+{% endblock content %}

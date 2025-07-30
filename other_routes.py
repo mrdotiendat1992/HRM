@@ -95,9 +95,9 @@ def kiemtrathongtinnld():
     if request.method == "POST":
         mst = request.args.get("masothe")
         if mst:
-            users = laydanhsachtheomst(mst)
-            if users:
-                return jsonify(users[0]), 200
+            user = laydanhsachtheomst(mst)
+            if user:
+                return jsonify(user), 200
             else:
                 return jsonify({"error": "User not found"}), 404
         else:
@@ -113,7 +113,6 @@ def dangkitangcacanhan():
         user = laydanhsachtheomst(mst)
 
         if user:
-            user = user[0]
 
             if kiemtrathuki(current_user.masothe,user['Line']):
                 if insert_tangca(current_user.macongty,
@@ -3775,11 +3774,10 @@ def hosonhanvien():
         mst = request.args.get("mst")
         nhanvien = laydanhsachtheomst(mst)
         dulieucong = lay_dulieu_tongcong(mst)
-        flash(dulieucong)
         if not nhanvien:
             flash(f"Không tìm thấy nhân viên có mã số thẻ là {mst}")
             return redirect("/")
-        return render_template("hosonhanvien.html",nhanvien=nhanvien[0],dulieucong=dulieucong)
+        return render_template("hosonhanvien.html",nhanvien=nhanvien,dulieucong=dulieucong)
     
 @app.route("/lay_danhsach_userhientai", methods=["POST"])
 @login_required
@@ -5389,3 +5387,8 @@ def thoivu():
             except Exception as e:
                 flash(f"Cập nhật không thành công: {e}")
         return redirect(url_for('thoivu'))
+        
+@app.route("/hcname", methods=["POST"])
+def hcname():
+    danhsach = lay_danh_sach_hcname()
+    return render_template("hcname.html", danhsach=danhsach)

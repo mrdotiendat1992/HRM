@@ -797,6 +797,7 @@ def thaydoithongtinlaodong():
             thechamcong = request.form.get("thechamcong")
             cccd = request.form.get("cccd")
             ngaycapcccd = request.form.get("ngaycapcccd")
+            noicapcccd = request.form.get("noicapcccd")
             hoten = request.form.get("hoten")
             ngaysinh = request.form.get("ngaysinh")
             gioitinh = request.form.get("gioitinh")
@@ -869,7 +870,12 @@ def thaydoithongtinlaodong():
                 query += f"Ngay_cap = '{ngaycapcccd}',"
             else:
                 query += f"Ngay_cap = NULL,"
-                
+            
+            if noicapcccd: 
+                query += f"Noi_cap = N'{noicapcccd}',"
+            else:
+                query += f"Noi_cap = NULL,"
+
             if hoten: 
                 query += f"Ho_ten = N'{hoten}',"
             else:
