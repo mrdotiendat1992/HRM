@@ -54,8 +54,16 @@
                 <button class="btn btn-primary" type="submit">Lọc</button>
             </form>
         </div>
+        <div class="export">
+            <form method="POST" action="/hcname">
+                <input type="hidden" name="search-type" value="{{ request.args.get('search-type', '') }}">
+                <input type="hidden" name="search" value="{{ request.args.get('search', '') }}">
+                <button class="btn btn-success" type="submit">Xuất Excel</button>
+            </form>
+        </div>
+
         <!-- Nút mở modal -->
-        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#add_hcname_modal">
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_hcname_modal">
         <i class="fa fa-upload"></i> Thêm mới
         </button>
 

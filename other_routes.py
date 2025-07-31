@@ -5389,20 +5389,72 @@ def thoivu():
                 flash(f"Cập nhật không thành công: {e}")
         return redirect(url_for('thoivu'))
         
-@app.route("/hcname", methods=["GET"])
+@app.route("/hcname", methods=["GET","POST"])
 @login_required
 def hcname():
-    search_type = request.args.get("search-type")
-    search_value = request.args.get("search")
-    danhsach = lay_danh_sach_hcname(search_type, search_value)
-    current_page = request.args.get(get_page_parameter(), type=int, default=1)
-    per_page = 10
-    total = len(danhsach)
-    start = (current_page - 1) * per_page
-    end = start + per_page
-    paginated_rows = danhsach[start:end]
-    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("hcname.html", danhsach=paginated_rows, pagination=pagination)
+    if request.method == "GET":
+        search_type = request.args.get("search-type")
+        search_value = request.args.get("search")
+        danhsach = lay_danh_sach_hcname(search_type, search_value)
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("hcname.html", danhsach=paginated_rows, pagination=pagination)
+    elif request.method == "POST":
+        search_type = request.form.get("search-type")
+        search_value = request.form.get("search")
+        print(search_type, search_value)
+        danhsach = [{
+                        "Line": row[0],
+                        "Detail_job_title_VN": row[1],
+                        "Detail_job_title_EN": row[2],
+                        "Employee_type": row[3],
+                        "Position_code": row[4],
+                        "Position_code_description": row[5],
+                        "Grade_code": row[6],
+                        "HC_category": row[7],
+                        "Factory": row[8],
+                        "Department": row[9],
+                        "Section_code": row[10],
+                        "Section_description": row[11],
+                        "Position_code_VN": row[12],
+                        "ID": row[13]
+        } 
+                    for row in lay_danh_sach_hcname(search_type, search_value)] 
+        # Tạo thành file excel để tải về
+        headers = ["Line", "Detail_job_title_VN", "Detail_job_title_EN", "Employee_type", "Position_code", "Position_code_description", "Grade_code", "HC_category", "Factory", "Department", "Section_code", "Section_description", "Position_code_VN","ID"]
+        df = pd.DataFrame(danhsach, columns=headers)
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='HCName')
+    
+            # Truy cập workbook và worksheet
+            workbook = writer.book
+            worksheet = writer.sheets['HCName']
+
+            # Làm nổi bật header
+            header_font = Font(bold=True, color="FFFFFF")
+            header_fill = PatternFill(start_color="4F81BD", end_color="4F81BD", fill_type="solid")
+            for col_idx, col_name in enumerate(df.columns, 1):
+                cell = worksheet.cell(row=1, column=col_idx)
+                cell.font = header_font
+                cell.fill = header_fill
+
+            # Auto-adjust column width
+            for i, column in enumerate(df.columns, 1):
+                max_length = max(
+                    df[column].astype(str).map(len).max(),
+                    len(str(column))
+                )
+                adjusted_width = max_length + 2  # padding
+                worksheet.column_dimensions[get_column_letter(i)].width = adjusted_width
+
+        output.seek(0)
+        return send_file(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", as_attachment=True, download_name="hcname.xlsx")
 
 @app.route("/hcname/add", methods=["POST"])
 @login_required
