@@ -5344,6 +5344,7 @@ def chotcong_hoten():
         return jsonify({"success": "False"})
 
 @app.route("/thoivu", methods=["GET","POST"])
+@login_required
 def thoivu():
     if request.method == "GET":
         conn = pyodbc.connect('DRIVER={SQL Server};SERVER=172.16.60.100;DATABASE=HR;UID=hrm;PWD=Namthuan@2025#')
@@ -5389,6 +5390,7 @@ def thoivu():
         return redirect(url_for('thoivu'))
         
 @app.route("/hcname", methods=["GET"])
+@login_required
 def hcname():
     search_type = request.args.get("search-type")
     search_value = request.args.get("search")
@@ -5401,3 +5403,82 @@ def hcname():
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
     return render_template("hcname.html", danhsach=paginated_rows, pagination=pagination)
+
+@app.route("/hcname/add", methods=["POST"])
+@login_required
+def hcname_add():
+    if request.method == "POST":
+        data = request.get_json()
+        rows = data.get("rows", [])
+        list_query = [f"""INSERT INTO HC_Name VALUES ('{row['Line']}',N'{row['Detail_job_title_VN']}','{row['Detail_job_title_EN']}','{row['Employee_type']}','{row['Position_code']}','{row['Position_code_description']}','{row['Grade_code']}','{row['HC_category']}','{row['Factory']}','{row['Department']}','{row['Section_code']}','{row['Section_description']}',N'{row['Position_code_VN']}')""" for row in rows]
+        if not list_query:
+            return jsonify({"success": False, "message": "Không có dữ liệu để thêm."})
+        query = "\n".join(list_query)
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)
+            cursor.commit()
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"success": False, "message": str(e)})
+        finally:
+            conn.close()
+        flash("Thêm thành công!")
+        return jsonify({"success": True})
+    return redirect(url_for("hcname"))
+
+@app.route("/hcname/edit", methods=["POST"])
+@login_required
+def hcname_edit():
+    if request.method == "POST":
+        id = request.form.get("id")
+        Line = request.form.get("Line")
+        Detail_job_title_VN = request.form.get("Detail_job_title_VN")
+        Detail_job_title_EN = request.form.get("Detail_job_title_EN")
+        Employee_type = request.form.get("Employee_type")
+        Position_code = request.form.get("Position_code")
+        Position_code_description = request.form.get("Position_code_description")
+        Grade_code = request.form.get("Grade_code")
+        HC_category = request.form.get("HC_category")
+        Factory = request.form.get("Factory")
+        Department = request.form.get("Department")
+        Section_code = request.form.get("Section_code")
+        Section_description = request.form.get("Section_description")
+        Position_code_VN = request.form.get("Position_code_VN")
+        query = f"""UPDATE HC_Name SET Line = '{Line}', Detail_job_title_VN = N'{Detail_job_title_VN}', Detail_job_title_EN = '{Detail_job_title_EN}', Employee_type = '{Employee_type}', Position_code = '{Position_code}', Position_code_description = '{Position_code_description}', Grade_code = '{Grade_code}', HC_category = '{HC_category}', Factory = '{Factory}', Department = '{Department}', Section_code = '{Section_code}', Section_description = '{Section_description}', Position_code_VN = N'{Position_code_VN}' WHERE id = {id}"""
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)
+            cursor.commit()
+        except Exception as e:
+            conn.rollback()
+            flash("Cập nhật thất bại!")
+        finally:
+            conn.close()
+        flash("Cập nhật thành công!")
+    return redirect(url_for("hcname"))
+
+@app.route("/hcname/delete", methods=["POST"])
+@login_required
+def hcname_delete():
+    if request.method == "POST":
+        id = request.form.get("id")
+        query = f"DELETE FROM HC_Name WHERE id = {id}"
+        if not id:
+            flash("Không có ID để xóa.")
+            return redirect(url_for("hcname"))
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)
+            cursor.commit()
+        except Exception as e:
+            conn.rollback()
+            flash("Xóa thất bại!")
+        finally:
+            conn.close()
+        flash("Xóa thành công!")
+    return redirect(url_for("hcname"))
+    
