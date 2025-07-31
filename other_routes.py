@@ -5388,7 +5388,16 @@ def thoivu():
                 flash(f"Cập nhật không thành công: {e}")
         return redirect(url_for('thoivu'))
         
-@app.route("/hcname", methods=["POST"])
+@app.route("/hcname", methods=["GET"])
 def hcname():
-    danhsach = lay_danh_sach_hcname()
-    return render_template("hcname.html", danhsach=danhsach)
+    search_type = request.args.get("search-type")
+    search_value = request.args.get("search")
+    danhsach = lay_danh_sach_hcname(search_type, search_value)
+    current_page = request.args.get(get_page_parameter(), type=int, default=1)
+    per_page = 10
+    total = len(danhsach)
+    start = (current_page - 1) * per_page
+    end = start + per_page
+    paginated_rows = danhsach[start:end]
+    pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+    return render_template("hcname.html", danhsach=paginated_rows, pagination=pagination)

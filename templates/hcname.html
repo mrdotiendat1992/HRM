@@ -1,39 +1,116 @@
 {% extends "12.html" %}
 
 {% block style %}
-
+    .table-responsive {
+        width: 100%;
+        font-size: 10px;
+    }
+    table th {
+        white-space: pre-line;
+        text-align: center;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; 
+        vertical-align: middle;
+    }
     table td {
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+        font-weight: bold;
     }
-    .input-gio {
-        width: 100px;
-    }
-    .input-ngay {
-        width: 120px;
+    .pagination {
+        font-size: 10px;
     }
 
-    table.table thead th {
-        position: sticky;
-        top: 0;
-        background-color: #f8f9fa;
-        z-index: 1;
-    }
 
 {% endblock style %}
 
 {% block content %}
 <h1 class="text-center">Headcount Name</h1>
 <br>
-<div class="table-responsive">
-    <div class="container">
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="pagination">{{pagination.links}}</div>
+        <div class="filter">
+            <form method="GET" action="/hcname">
+                <label for="search">Tìm kiếm:</label>
+                <select id="search-type" name="search-type">
+                    <option value="" {% if request.args.get('search-type') == '' %}selected{% endif %}>Tất cả</option>
+                    <option value="Detail_job_title_VN" {% if request.args.get('search-type') == 'Detail_job_title_VN' %}selected{% endif %}>Detail Job Title VN</option>
+                    <option value="Detail_job_title_EN" {% if request.args.get('search-type') == 'Detail_job_title_EN' %}selected{% endif %}>Detail Job Title EN</option>
+                    <option value="Line" {% if request.args.get('search-type') == 'Line' %}selected{% endif %} >Line</option>
+                </select>
+                <input type="text" id="search" name="search" value="{{ request.args.get('search', '') }}">
+                <button class="btn btn-primary" type="submit">Lọc</button>
+            </form>
+        </div>
         
-    </div>
-</div>
-{% for item in danhsach %}
-    <div class="row">
-        <div class="col-md-12">
-            <h4>{{ item }}</h4>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#requestModal">Thêm mới</button>
+        <div class="modal fade bd-example-modal-lg" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requestModalLabel">Thêm mới headcount name</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                        <input class="btn btn-primary" value="Thêm" onclick="return luuhopdong()" type="submit"></input>
+                    </div>
+                </form>
+                </div>
+            </div>
         </div>
     </div>
-{% endfor %}
+    </div>
+    <br>
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+        <thead>
+            <tr class="bg-primary">
+                <th>Line</th>
+                <th>Detail Job Title VN</th>
+                <th>Detail Job Title EN</th>
+                <th>Employee Type</th>
+                <th>Position</th>
+                <th>Position Code</th>
+                <th>Position Code Description</th>
+                <th>Grade Code</th>
+                <th>HC Category</th>
+                <th>Factory</th>
+                <th>Department</th>
+                <th>Section Code</th>
+                <th>Section Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in danhsach %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                    <td>{{ item[12] }}</td>
+                    <td>{{ item[4] }}</td>
+                    <td>{{ item[5] }}</td>
+                    <td>{{ item[6] }}</td>
+                    <td>{{ item[7] }}</td>
+                    <td>{{ item[8] }}</td>
+                    <td>{{ item[9] }}</td>
+                    <td>{{ item[10] }}</td>
+                    <td>{{ item[11] }}</td>
+                    
+                </tr>
+            {% endfor %}
+        </tbody>
+    </div>
+</div>
 {% endblock content %}

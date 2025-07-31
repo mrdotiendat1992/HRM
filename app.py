@@ -5626,11 +5626,17 @@ def chotcong_layhoten(mst):
         print(f"Loi lay ho ten(chotcong): {e}")
         return ""
 
-def lay_danh_sach_hcname():
+def lay_danh_sach_hcname(search_type, search_value):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
         query = f"SELECT * FROM HC_Name WHERE Factory='{current_user.macongty}'"
+        if search_type and search_value:
+            if search_type == "Detail_job_title_VN":
+                query += f" AND {search_type} LIKE N'%{search_value}%'"
+            else:
+                query += f" AND {search_type} LIKE '%{search_value}%'"
+        query += " ORDER BY Line asc, Detail_job_title_VN asc"
         result = cur.execute(query).fetchall()
         conn.close()
         return [row for row in result]

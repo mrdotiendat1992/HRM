@@ -428,7 +428,6 @@ def danhsachdangkytuyendung():
             cccd = request.args.get("cccd")
             ngaygui = request.args.get("ngaygui")
             rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui,hoten,vitri)
-            count=len(rows)
             count = len(rows)
             current_page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 10
