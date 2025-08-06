@@ -3196,21 +3196,31 @@ def muc7_1_17():
             mst = request.args.get("mst")
             bophan = request.args.get("bophan")
             chuyen = request.args.get("chuyen")
-            danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
-            total = len(danhsach)
+            if (nam > 2025 or (nam == 2025 and thang > 6)):
+                danhsach = lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam)
+            else:
+                danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
+            count = len(danhsach)
             page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 15
             start = (page - 1) * per_page
             end = start + per_page
             paginated_rows = danhsach[start:end]
-            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-            return render_template("7_1_17.html", page="Bảng chấm công",
+            pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
+            
+            if (nam > 2025 or (nam == 2025 and thang > 6)):
+                return render_template("7_1_17_sau_072025.html", page="Bảng chấm công",
                                     danhsach=paginated_rows, 
                                     pagination=pagination,
-                                    count=total)
+                                    count=count)
+            else:
+                return render_template("7_1_17.html", page="Bảng chấm công",
+                                    danhsach=danhsach, 
+                                    pagination=pagination,
+                                    count=count)
         except Exception as e:
             flash(f"Lỗi tải trang: {e}")
-            return render_template("7_1_17.html",
+            return render_template("7_1_17_sau_072025.html",
                                     danhsach=[])
     else:
         thang = int(request.form.get("thang")) if request.args.get("thang") else 0
@@ -3218,8 +3228,12 @@ def muc7_1_17():
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
-        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX)
+        if (nam > 2025 or (nam == 2025 and thang > 6)):
+            danhsach = lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam)
+            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX_SAU_072025)
+        else:
+            danhsach = lay_bangcongthang_kx(mst,bophan,chuyen,thang,nam)
+            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX)
 
         sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
@@ -3241,7 +3255,11 @@ def muc7_1_17():
         sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
-            data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            if (nam < 2025 or (nam == 2025 and thang > 6)):
+                data = [y for y in row]
+            else:
+                # Chỉ lấy các cột cần thiết và sắp xếp lại thứ tự
+                data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
@@ -3249,28 +3267,51 @@ def muc7_1_17():
         # Tạo kiểu định dạng ngày
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0.00")
-        # Duyệt qua các ô trong khu vực G7:H10000
-        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-            for col in ['G', 'H']:
-                cell = sheet[f"{col}{row}"]
-                
-                try:
-                    cell.style = date_style
-                except ValueError:
-                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
-                cell = sheet[f"{col}{row}"]
-                if cell.value and int(cell.value) > 0:
+        if (nam > 2025 or (nam == 2025 and thang > 6)):
+            # Duyệt qua các ô trong khu vực G7:H10000
+            for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+                for col in ['G', 'H']:
+                    cell = sheet[f"{col}{row}"]
+                    
                     try:
-                        cell.style = number_style
+                        cell.style = date_style
                     except ValueError:
                         pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                    cell = sheet[f"{col}{row}"]
+                    if cell.value and int(cell.value) > 0:
+                        try:
+                            cell.style = number_style
+                        except ValueError:
+                            pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             
 
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
-        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+        else:
+            # Duyệt qua các ô trong khu vực G7:H10000
+            for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+                for col in ['G', 'H']:
+                    cell = sheet[f"{col}{row}"]
+                    
+                    try:
+                        cell.style = date_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'W', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK']:
+                    cell = sheet[f"{col}{row}"]
+                    if cell.value and int(cell.value) > 0:
+                        try:
+                            cell.style = number_style
+                        except ValueError:
+                            pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            
 
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+        
 @app.route("/muc7_1_18", methods=["GET","POST"]) # Bảng chấm công chi tiết chốt quá khứ
 @login_required
 def muc7_1_18():

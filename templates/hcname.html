@@ -40,6 +40,7 @@
 <br>
 <div class="container">
     <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="toggleEditAll" class="btn btn-warning mb-2" onclick="toggleEditAll()">Sửa</button>
         <div class="pagination">{{pagination.links}}</div>
         <div class="filter">
             <form method="GET" action="/hcname">
@@ -78,47 +79,47 @@
 
             <div class="modal-body">
                 <div class="table-responsive">
-                <table class="table table-bordered table-hover table-sm">
-                    <thead>
-                    <tr class="bg-primary text-white">
-                        <th>Line</th>
-                        <th>Detail Job Title VN</th>
-                        <th>Detail Job Title EN</th>
-                        <th>Employee Type</th>
-                        <th>Position</th>
-                        <th>Position Code</th>
-                        <th>Position Code Description</th>
-                        <th>Grade Code</th>
-                        <th>HC Category</th>
-                        <th>Factory</th>
-                        <th>Department</th>
-                        <th>Section Code</th>
-                        <th>Section Description</th>
-                    </tr>
-                    </thead>
-                    <tbody id="hcname_tbody">
-                    <tr>
-                        <td><input type="text"  name="Line" required></td>
-                        <td><input type="text"  name="Detail_job_title_VN" required></td>
-                        <td><input type="text"  name="Detail_job_title_EN" required></td>
-                        <td><input type="text"  name="Employee_type" required></td>
-                        <td><input type="text"  name="Position_code_VN" required></td>
-                        <td><input type="text"  name="Position_code" required></td>
-                        <td><input type="text"  name="Position_code_description" required></td>
-                        <td><input type="text"  name="Grade_code" required></td>
-                        <td><input type="text"  name="HC_category" required></td>
-                        <td><input type="text"  name="Factory" required></td>
-                        <td><input type="text"  name="Department" required></td>
-                        <td><input type="text"  name="Section_code" required></td>
-                        <td><input type="text"  name="Section_description" required></td>
-                    </tr>
-                    </tbody>
-                </table>
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                        <tr class="bg-primary text-white">
+                            <th>Line</th>
+                            <th>Detail Job Title VN</th>
+                            <th>Detail Job Title EN</th>
+                            <th>Employee Type</th>
+                            <th>Position</th>
+                            <th>Position Code</th>
+                            <th>Position Code Description</th>
+                            <th>Grade Code</th>
+                            <th>HC Category</th>
+                            <th>Factory</th>
+                            <th>Department</th>
+                            <th>Section Code</th>
+                            <th>Section Description</th>
+                        </tr>
+                        </thead>
+                        <tbody id="hcname_tbody">
+                        <tr>
+                            <td><input type="text"  name="Line" required></td>
+                            <td><input type="text"  name="Detail_job_title_VN" required></td>
+                            <td><input type="text"  name="Detail_job_title_EN" required></td>
+                            <td><input type="text"  name="Employee_type" required></td>
+                            <td><input type="text"  name="Position_code_VN" required></td>
+                            <td><input type="text"  name="Position_code" required></td>
+                            <td><input type="text"  name="Position_code_description" required></td>
+                            <td><input type="text"  name="Grade_code" required></td>
+                            <td><input type="text"  name="HC_category" required></td>
+                            <td><input type="text"  name="Factory" required></td>
+                            <td><input type="text"  name="Department" required></td>
+                            <td><input type="text"  name="Section_code" required></td>
+                            <td><input type="text"  name="Section_description" required></td>
+                        </tr>
+                        </tbody>
+                    </table>
 
-                <!-- Nút dấu + -->
-                <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRow()">
-                    <i class="fa fa-plus"></i> Thêm dòng
-                </button>
+                    <!-- Nút dấu + -->
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRow()">
+                        <i class="fa fa-plus"></i> Thêm dòng
+                    </button>
                 </div>
             </div>
 
@@ -134,59 +135,62 @@
                     
     </div>
     <br>
+    
     <div class="table-responsive">
         <table class="table table-bordered table-hover table-sm">
-        <thead>
-            <tr class="bg-primary">
-                <th>Line</th>
-                <th>Detail Job Title VN</th>
-                <th>Detail Job Title EN</th>
-                <th>Employee Type</th>
-                <th>Position</th>
-                <th>Position Code</th>
-                <th>Position Code Description</th>
-                <th>Grade Code</th>
-                <th>HC Category</th>
-                <th>Factory</th>
-                <th>Department</th>
-                <th>Section Code</th>
-                <th>Section Description</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in danhsach %}
-                <tr>
-                    <form action="/hcname/edit" method="POST">
-                        <input type="hidden" name="id" value="{{ item[13] }}">
-                        <td><input type="text"  name="Line" value="{{ item[0] }}" required></td>
-                        <td><input type="text"  name="Detail_job_title_VN" value="{{ item[1] }}" required></td>
-                        <td><input type="text"  name="Detail_job_title_EN" value="{{ item[2] }}" required></td>
-                        <td><input type="text"  name="Employee_type" value="{{ item[3] }}" required></td>
-                        <td><input type="text"  name="Position_code_VN" value="{{ item[12] }}" required></td>
-                        <td><input type="text"  name="Position_code" value="{{ item[4] }}" required></td>
-                        <td><input type="text"  name="Position_code_description" value="{{ item[5] }}" required></td>
-                        <td><input type="text"  name="Grade_code" value="{{ item[6] }}" required></td>
-                        <td><input type="text"  name="HC_category" value="{{ item[7] }}" required></td>
-                        <td><input type="text"  name="Factory" value="{{ item[8] }}" required></td>
-                        <td><input type="text"  name="Department" value="{{ item[9] }}" required></td>
-                        <td><input type="text"  name="Section_code" value="{{ item[10] }}" required></td>
-                        <td><input type="text"  name="Section_description" value="{{ item[11] }}" required></td>
-                        <td>
-                            <button type="submit" class="btn btn-success btn-sm">Lưu</button>
-                        </form>
-                        <form action="/hcname/delete" method="POST" style="display:inline;">
-                            <input type="hidden" name="id" value="{{ item[13] }}">
-                            <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
-                        </form>
-                        </td>
-                                      
+            <thead>
+                <tr class="bg-primary">
+                    <th>Line</th>
+                    <th>Detail Job Title VN</th>
+                    <th>Detail Job Title EN</th>
+                    <th>Employee Type</th>
+                    <th>Position</th>
+                    <th>Position Code</th>
+                    <th>Position Code Description</th>
+                    <th>Grade Code</th>
+                    <th>HC Category</th>
+                    <th>Factory</th>
+                    <th>Department</th>
+                    <th>Section Code</th>
+                    <th>Section Description</th>
                 </tr>
-            {% endfor %}
-        </tbody>
+            </thead>
+            <tbody>
+                {% for item in danhsach %}
+                    <tr>
+                        <form action="/hcname/edit" method="POST">
+                            <input type="hidden" name="id" value="{{ item[13] }}">
+                            <td><input type="text"  name="Line" value="{{ item[0] }}" required></td>
+                            <td><input type="text"  name="Detail_job_title_VN" value="{{ item[1] }}" required></td>
+                            <td><input type="text"  name="Detail_job_title_EN" value="{{ item[2] }}" required></td>
+                            <td><input type="text"  name="Employee_type" value="{{ item[3] }}" required></td>
+                            <td><input type="text"  name="Position_code_VN" value="{{ item[12] }}" required></td>
+                            <td><input type="text"  name="Position_code" value="{{ item[4] }}" required></td>
+                            <td><input type="text"  name="Position_code_description" value="{{ item[5] }}" required></td>
+                            <td><input type="text"  name="Grade_code" value="{{ item[6] }}" required></td>
+                            <td><input type="text"  name="HC_category" value="{{ item[7] }}" required></td>
+                            <td><input type="text"  name="Factory" value="{{ item[8] }}" required></td>
+                            <td><input type="text"  name="Department" value="{{ item[9] }}" required></td>
+                            <td><input type="text"  name="Section_code" value="{{ item[10] }}" required></td>
+                            <td><input type="text"  name="Section_description" value="{{ item[11] }}" required></td>
+                            <td>
+                                <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+                            </form>
+                            <form action="/hcname/delete" method="POST" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ item[13] }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                            </form>
+                            </td>
+                                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
 <script>
+    // Hàm thêm dòng mới vào bảng
     function addRow() {
     const tbody = document.getElementById("hcname_tbody");
     const firstRow = tbody.rows[0];
@@ -229,5 +233,43 @@
         alert('Lỗi mạng hoặc máy chủ.');
     });
     }
+
+    // Biến để theo dõi trạng thái chỉnh sửa toàn bộ
+    let isEditingAll = true;
+
+    function toggleEditAll() {
+        const button = document.getElementById('toggleEditAll');
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            row.querySelectorAll('input[type="text"]').forEach(input => {
+                if (isEditingAll) {
+                    // Chế độ xem → chỉ hiển thị text
+                    const span = document.createElement('span');
+                    span.textContent = input.value;
+                    span.classList.add('static-text');
+                    span.style.display = 'inline-block';
+                    input.style.display = 'none';
+                    input.after(span);
+                } else {
+                    // Chế độ sửa → hiển thị lại input
+                    input.style.display = '';
+                    if (input.nextElementSibling && input.nextElementSibling.classList.contains('static-text')) {
+                        input.nextElementSibling.remove();
+                    }
+                }
+            });
+
+            // Ẩn/hiện nút Lưu
+            const saveButton = row.querySelector('button.btn-success');
+            if (saveButton) {
+                saveButton.style.display = isEditingAll ? 'none' : '';
+            }
+        });
+
+        button.textContent = isEditingAll ? 'Xem' : 'Sửa';
+        isEditingAll = !isEditingAll;
+    }
+
 </script>
 {% endblock content %}
