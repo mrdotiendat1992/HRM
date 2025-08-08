@@ -81,6 +81,7 @@
                 <th colspan="10">Làm thêm (Over Time)</th>
                 <th rowspan="3">Tuân thủ nội quy</th>
                 <th rowspan="3">Nghỉ tự do (UA)</th>
+                <th rowspan="3">Nghỉ không lương (UP)</th>
                 <th rowspan="3">Nghỉ không lương không ảnh hưởng TTNQ (UP01,CL)</th>
                 <th rowspan="3">Nghỉ phép(AL)</th>
                 <th colspan="2">Nghỉ hưởng lương</th>
@@ -90,6 +91,7 @@
                 <th rowspan="3">Khám thai(ML03)</th>
                 <th rowspan="3">Nghỉ vợ sinh(ML02)</th>
                 <th rowspan="3">Nghỉ thai sản(LML)</th>
+                <th rowspan="3">Tạm hoãn hợp đồng(TSLC)</th>
                 <th rowspan="3">Nghỉ việc(OSL)</th>
                 <th rowspan="3">Tổng cộng</th>
                 <th rowspan="3">Số biên bản kỉ luật</th>
@@ -147,7 +149,8 @@
                     <td>{{row[20]}}</td>
                     <td>{{row[21]}}</td>
                     <td>{{row[22]}}</td>
-                    <td>{{row[23]}}</td>   
+                    <td>{{row[23]}}</td> 
+                    <td>{{row[24]}}</td>  
                     <td>{{row[25]}}</td>
                     <td>{{row[26]}}</td>
                     <td>{{row[27]}}</td>
@@ -160,6 +163,9 @@
                     <td>{{row[34]}}</td>
                     <td>{{row[35]}}</td>
                     <td>{{row[36]}}</td>
+                    <td>{{row[37]}}</td>
+                    <td>{{row[38]}}</td>
+                    <td>{{row[39]}}</td>                  
                 </tr>
             {% endfor %}
         </tbody>
@@ -175,7 +181,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         var tds = document.querySelectorAll('td');
         tds.forEach(td => {
-            if (td.textContent.trim() === 'None') {
+            if (td.textContent.trim() === 'None' || td.textContent.trim() === '0.00' || td.textContent.trim() === '0') {
                 td.textContent = '';
             }
         });

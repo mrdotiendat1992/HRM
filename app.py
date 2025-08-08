@@ -4062,7 +4062,7 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""select MST,HO_TEN,BO_PHAN,CHUYEN,VI_TRI,Chuc_danh,NGAY_VAO,NGAY_CHINH_THUC,CA,CONG_TV,CONG_CT,TC_CHE_DO_TV,TC_CHE_DO_CT,TC_NGAY_TV,TC_NGAY_CT,TC_DEM_TV,TC_DEM_CT,TC_CHU_NHAT_TV,TC_CHU_NHAT_CT,TC_NGAY_LE_TV,TC_NGAY_LE_CT,TUAN_THU_NOI_QUY,UA,UP,UP01_CL,AL,PH_PL01_PL02_PL03_TV,PH_PL01_PL02_PL03_CT,OCL,SL,BL,ML03,ML02,LML,OSL,TONG_CONG,SO_BIEN_BAN_KY_LUAT
+        query = f"""select MST,HO_TEN,BO_PHAN,CHUYEN,VI_TRI,Chuc_danh,NGAY_VAO,NGAY_CHINH_THUC,CA,CONG_TV,CONG_CT,TC_CHE_DO_TV,TC_CHE_DO_CT,TC_NGAY_TV,TC_NGAY_CT,TC_DEM_TV,TC_DEM_CT,TC_CHU_NHAT_TV,TC_CHU_NHAT_CT,TC_NGAY_LE_TV,TC_NGAY_LE_CT,TUAN_THU_NOI_QUY,UA,UP,UP01_CL,AL,PH_PL01_PL02_PL03_TV,PH_PL01_PL02_PL03_CT,OCL,SL,BL,ML03,ML02,LML,TSLC,OSL,TONG_CONG,SO_BIEN_BAN_KY_LUAT
                     from [HR].[dbo].[BANG_TONG_CONG_CA_THANG] 
                     where Nha_may='{current_user.macongty}' """
         if not thang:
@@ -4079,8 +4079,8 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
         # flash(len(rows))
-        for row in rows:
-            row[35] = round(row[35],0) if row[35] else 0
+        # for row in rows:
+        #     row[38] = round(row[38],0) if row[38] else 0
 
         return rows
     except Exception as e:
@@ -4118,7 +4118,7 @@ def lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"""select MST,HO_TEN,BO_PHAN,CHUYEN,VI_TRI,Chuc_danh,NGAY_VAO,NGAY_CHINH_THUC,CA,CONG_TV,CONG_CT,TC_CHE_DO_TV,TC_CHE_DO_CT,TC_NGAY_TV,TC_NGAY_CT,TC_DEM_TV,TC_DEM_CT,TC_CHU_NHAT_TV,TC_CHU_NHAT_CT,TC_NGAY_LE_TV,TC_NGAY_LE_CT,TUAN_THU_NOI_QUY,UA,UP,UP01_CL,AL,PH_PL01_PL02_PL03_TV,PH_PL01_PL02_PL03_CT,OCL,SL,BL,ML03,ML02,LML,OSL,TONG_CONG,SO_BIEN_BAN_KY_LUAT
+        query = f"""select MST,HO_TEN,BO_PHAN,CHUYEN,VI_TRI,Chuc_danh,NGAY_VAO,NGAY_CHINH_THUC,CA,CONG_TV,CONG_CT,TC_CHE_DO_TV,TC_CHE_DO_CT,TC_NGAY_TV,TC_NGAY_CT,TC_DEM_TV,TC_DEM_CT,TC_CHU_NHAT_TV,TC_CHU_NHAT_CT,TC_NGAY_LE_TV,TC_NGAY_LE_CT,TUAN_THU_NOI_QUY,UA,UP,UP01_CL,AL,PH_PL01_PL02_PL03_TV,PH_PL01_PL02_PL03_CT,OCL,SL,BL,ML03,ML02,LML,TSLC,OSL,TONG_CONG,SO_BIEN_BAN_KY_LUAT
                     from [HR].[dbo].[BANG_TONG_CONG_CA_THANG_THUC_TE] 
                     where Nha_may='{current_user.macongty}' """
         query += f" and Thang={thang} and Nam={nam}"
@@ -4129,7 +4129,7 @@ def lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam):
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
-        print(query)
+        # print(query)
         rows =  cursor.execute(query).fetchall()
         for row in rows:
             row[35] = round(row[35],0) if row[35] else 0
