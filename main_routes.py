@@ -3208,14 +3208,14 @@ def muc7_1_17():
             paginated_rows = danhsach[start:end]
             pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
             
-            if (nam > 2025 or (nam == 2025 and thang > 6)):
+            if (nam > 2025 or (nam == 2025 and thang > 6)) or (nam == 0 and thang == 0):
                 return render_template("7_1_17_sau_072025.html", page="Bảng chấm công",
                                     danhsach=paginated_rows, 
                                     pagination=pagination,
                                     count=count)
             else:
                 return render_template("7_1_17.html", page="Bảng chấm công",
-                                    danhsach=danhsach, 
+                                    danhsach=paginated_rows, 
                                     pagination=pagination,
                                     count=count)
         except Exception as e:
@@ -3228,7 +3228,7 @@ def muc7_1_17():
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        if (nam > 2025 or (nam == 2025 and thang > 6)):
+        if (nam > 2025 or (nam == 2025 and thang > 6) or (nam == 0 and thang == 0)):
             danhsach = lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam)
             workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX_SAU_072025)
         else:
