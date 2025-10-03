@@ -29,3 +29,4 @@ import sys
 from configparser import ConfigParser
 from decimal import Decimal
 from openpyxl.drawing.image import Image
+from docx import Document

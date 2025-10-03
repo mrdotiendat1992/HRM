@@ -304,68 +304,74 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         ngaylamhopdong = ngaybatdau.split("/")[0]
         thanglamhopdong = ngaybatdau.split("/")[1]
         namlamhopdong = ngaybatdau.split("/")[2]
-        ngayketthuchopdong = ngayketthuc.split("/")[0] if ngayketthuc else None
-        thangketthuchopdong = ngayketthuc.split("/")[1] if ngayketthuc else None 
-        namketthuchopdong = ngayketthuc.split("/")[2] if ngayketthuc else None
+        ngayketthuchopdong = ngayketthuc.split("/")[0] if ngayketthuc else ""
+        thangketthuchopdong = ngayketthuc.split("/")[1] if ngayketthuc else "" 
+        namketthuchopdong = ngayketthuc.split("/")[2] if ngayketthuc else ""
         if loaihopdong == "Hợp đồng thử việc":
             if macongty == "NT1":
-                if capbac in ["O2","O1","M3","M2","M1"]:
+                if capbac in ["O3","C1","C2","W1","O1"]:
                     try:
                         songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDTV_NT1_O2_TROLEN)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: PC/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD: {cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['H25'] = f"Thử việc {songaythuviec} ngày"
-                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G32'] = chucdanh
-                        sheet['G43'] = f"{int(luongcoban):,} VNĐ/tháng"   
-                        if phucap > 0:
-                            sheet['G44'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G44'] = "Không"
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_TO2_{masothe}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
-                        return filepath
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDTV_NT1_O3_TRO_XUONG)
+                        # Thay thế các placeholder trong tài liệu
+                        for paragraph in doc.paragraphs:
+                            if '{{mst}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{mst}}', '{masothe}')
+                            if '{{ngaylamhopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{ngaylamhopdong}}', f'{ngaylamhopdong}')
+                            if '{{thanglamhopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{thanglamhopdong}}', f'{thanglamhopdong}')
+                            if '{{namlamhopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{namlamhopdong}}', f'{namlamhopdong}')
+                            if '{{hoten}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{hoten}}', f'{hoten.upper()}')
+                            if '{{ngaysinh}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{ngaysinh}}', f'{ngaysinh}')
+                            if '{{gioitinh}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{gioitinh}}', f'{gioitinh}')
+                            if '{{sodienthoai}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{sodienthoai}}', f'{sodienthoai}')
+                            if '{{thuongtru}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{thuongtru}}', f'{thuongtru}')
+                            if '{{tamtru}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{tamtru}}', f'{tamtru}')
+                            if '{{cccd}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{cccd}}', f'{cccd}')
+                            if '{{ngaycapcc}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{ngaycapcc}}', f'{ngaycapcccd}')
+                            if '{{noicapcc}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{noicapcc}}', f'Cục trưởng cục cảnh sát')
+                            if '{{chucdanh}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{chucdanh}}', f'{chucdanh}')
+                            if '{{songaythuviec}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{songaythuviec}}', f'{songaythuviec}')
+                            if '{{ngayketthuchopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{ngayketthuchopdong}}', f'{ngayketthuchopdong}')
+                            if '{{thangketthuchopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{thangketthuchopdong}}', f'{thangketthuchopdong}')
+                            if '{{namketthuchopdong}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
+                            if '{{luongcoban}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
+                        # Lưu lai và gửi cho user file mới:
+                        buffer = BytesIO()
+                        doc.save(buffer)
+                        buffer.seek(0)
+                        return send_file(
+                                    buffer,
+                                    as_attachment=True,
+                                    download_name="hopdong_moi.docx",
+                                    mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                                    )
+                        
+
+
                     except Exception as e:
                         flash(e)
                         return None
                 else:
-                    try:
-                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDTV_NT1_DUOI_O2)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: PC/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['D21'] = cccd
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['H25'] = f"Thử việc {songaythuviec} ngày"
-                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G32'] = chucdanh
-                        sheet['G43'] = f"{int(luongcoban):,} VNĐ/tháng"  
-                        if phucap > 0:
-                            sheet['G44'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G44'] = "Không" 
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_DO2_{masothe}{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
-                        return filepath
-                    except Exception as e:
-                        flash(e)
+                    
                         return None
             elif macongty == "NT2":
                 try:
@@ -711,7 +717,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query= f"""SELECT * FROM Lich_su_cong_tac_OK WHERE Nha_may = '{current_user.macongty}' """
+        query= f"""SELECT Ho_ten,MST,Ngay_chinh_thuc,Line_cu,Bo_phan_cu,Line_moi,Bo_phan_moi,Ngay_thuc_hien,Chuc_vu_cu,Chuc_vu_moi,Phan_loai,Ghi_chu,Nha_may,ID FROM Lich_su_cong_tac_OK WHERE Nha_may = '{current_user.macongty}' """
         if mst:
             query += f"AND MST = '{mst}' "
         if ngay:
