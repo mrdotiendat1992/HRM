@@ -314,6 +314,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                         # dùng docx để thay thế các dữ liệu cần thiết
                         doc = Document(FILE_MAU_HDTV_NT1_O3_TRO_XUONG)
+                        print(doc.paragraphs)
                         # Thay thế các placeholder trong tài liệu
                         for paragraph in doc.paragraphs:
                             if '{{mst}}' in paragraph.text:
@@ -356,7 +357,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                                 paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
                         # Lưu lai và gửi cho user file mới:
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx')
                         doc.save(filepath)
                         return filepath
                                                 
