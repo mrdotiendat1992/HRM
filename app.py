@@ -314,9 +314,10 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                         # dùng docx để thay thế các dữ liệu cần thiết
                         doc = Document(FILE_MAU_HDTV_NT1_O3_TRO_XUONG)
-                        print(doc.paragraphs)
+
                         # Thay thế các placeholder trong tài liệu
                         for paragraph in doc.paragraphs:
+                            print(paragraph.text)
                             if '{{mst}}' in paragraph.text:
                                 paragraph.text = paragraph.text.replace('{{mst}}', '{masothe}')
                             if '{{ngaylamhopdong}}' in paragraph.text:
