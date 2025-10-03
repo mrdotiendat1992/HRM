@@ -355,18 +355,11 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                             if '{{luongcoban}}' in paragraph.text:
                                 paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
                         # Lưu lai và gửi cho user file mới:
-                        buffer = BytesIO()
-                        doc.save(buffer)
-                        buffer.seek(0)  # quan trọng!
-
-                        # Trả về file cho client tải xuống
-                        return send_file(
-                            buffer,
-                            as_attachment=True,
-                            download_name="hopdong.docx",
-                            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        )
-                                            
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
+                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
+                        doc.save(filepath)
+                        return filepath
+                                                
 
 
                     except Exception as e:
