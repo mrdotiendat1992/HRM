@@ -317,7 +317,6 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
 
                         # Thay thế các placeholder trong tài liệu
                         for paragraph in doc.paragraphs:
-                            print(paragraph.text)
                             if '{{mst}}' in paragraph.text:
                                 paragraph.text = paragraph.text.replace('{{mst}}', '{masothe}')
                             if '{{ngaylamhopdong}}' in paragraph.text:
@@ -356,10 +355,56 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                                 paragraph.text = paragraph.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
                             if '{{luongcoban}}' in paragraph.text:
                                 paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
+                        for t in getattr(doc, "tables", []):
+                            for row in t.rows:
+                                for cell in row.cells:
+                                    if '{{mst}}' in cell.text:
+                                        cell.text = cell.text.replace('{{mst}}', f'{masothe}')
+                                    if '{{ngaylamhopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{ngaylamhopdong}}', f'{ngaylamhopdong}')
+                                    if '{{thanglamhopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{thanglamhopdong}}', f'{thanglamhopdong}')
+                                    if '{{namlamhopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{namlamhopdong}}', f'{namlamhopdong}')
+                                    if '{{hoten}}' in cell.text:
+                                        cell.text = cell.text.replace('{{hoten}}', f'{hoten.upper()}')
+                                    if '{{ngaysinh}}' in cell.text:
+                                        cell.text = cell.text.replace('{{ngaysinh}}', f'{ngaysinh}')
+                                    if '{{gioitinh}}' in cell.text:
+                                        cell.text = cell.text.replace('{{gioitinh}}', f'{gioitinh}')
+                                    if '{{sodienthoai}}' in cell.text:
+                                        cell.text = cell.text.replace('{{sodienthoai}}', f'{sodienthoai}')
+                                    if '{{thuongtru}}' in cell.text:
+                                        cell.text = cell.text.replace('{{thuongtru}}', f'{thuongtru}')
+                                    if '{{tamtru}}' in cell.text:
+                                        cell.text = cell.text.replace('{{tamtru}}', f'{tamtru}')
+                                    if '{{cccd}}' in cell.text:
+                                        cell.text = cell.text.replace('{{cccd}}', f'{cccd}')
+                                    if '{{ngaycapcc}}' in cell.text:
+                                        cell.text = cell.text.replace('{{ngaycapcc}}', f'{ngaycapcccd}')
+                                    if '{{noicapcc}}' in cell.text:
+                                        cell.text = cell.text.replace('{{noicapcc}}', f'Cục trưởng cục cảnh sát')
+                                    if '{{chucdanh}}' in cell.text:
+                                        cell.text = cell.text.replace('{{chucdanh}}', f'{chucdanh}')
+                                    if '{{songaythuviec}}' in cell.text:
+                                        cell.text = cell.text.replace('{{songaythuviec}}', f'{songaythuviec}')
+                                    if '{{ngayketthuchopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{ngayketthuchopdong}}', f'{ngayketthuchopdong}')
+                                    if '{{thangketthuchopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{thangketthuchopdong}}', f'{thangketthuchopdong}')
+                                    if '{{namketthuchopdong}}' in cell.text:
+                                        cell.text = cell.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
+                                    if '{{luongcoban}}' in cell.text:
+                                        cell.text = cell.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
                         # Lưu lai và gửi cho user file mới:
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx')
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
                         doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
                         return filepath
                                                 
 
