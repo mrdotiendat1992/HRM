@@ -355,6 +355,8 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                                 paragraph.text = paragraph.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
                             if '{{luongcoban}}' in paragraph.text:
                                 paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
+                            if '{{bophan}}' in paragraph.text:
+                                paragraph.text = paragraph.text.replace('{{bophan}}', f'{phongban}')
                         for t in getattr(doc, "tables", []):
                             for row in t.rows:
                                 for cell in row.cells:
@@ -396,6 +398,8 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                                         cell.text = cell.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
                                     if '{{luongcoban}}' in cell.text:
                                         cell.text = cell.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
+                                    if '{{bophan}}' in cell.text:
+                                        cell.text = cell.text.replace('{{bophan}}', f'{phongban}')
                         # Lưu lai và gửi cho user file mới:
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                         filename = f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
