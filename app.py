@@ -410,8 +410,6 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
 
                         # Trả về đường dẫn file (hoặc tên file)
                         return filepath
-                                                
-
 
                     except Exception as e:
                         flash(e)

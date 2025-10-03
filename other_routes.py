@@ -1109,7 +1109,9 @@ def inhopdong():
         ngayketthuc = datetime.strptime(hopdong[18], "%Y-%m-%d").strftime("%d/%m/%Y") if hopdong[18] else None
         file = inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
         # flash(file)
-        if file:
+        if file and file.endswith(".docx"):
+            return send_file(file, as_attachment=True, download_name="hopdong.docx")
+        elif file and file.endswith(".xlsx"):
             return send_file(file, as_attachment=True, download_name="hopdong.xlsx")
         else:
             return redirect("/muc3_3")
