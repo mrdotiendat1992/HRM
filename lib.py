@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for, redirect, flash, g, jsonify, send_file, session, get_flashed_messages, render_template_string, make_response,send_from_directory,abort
+from flask import Flask, render_template, request, url_for, redirect, flash, g, jsonify, send_file, session, get_flashed_messages, render_template_string, make_response,send_from_directory,abort, Response
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, logout_user, current_user, login_required
 from flask_paginate import Pagination, get_page_parameter
