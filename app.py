@@ -309,7 +309,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         namketthuchopdong = ngayketthuc.split("/")[2] if ngayketthuc else ""
         if loaihopdong == "Hợp đồng thử việc":
             if macongty == "NT1":
-                if capbac in ["O3","C1","C2","W1","O1"]:
+                if capbac in ["O3","C1","C2","W1"]:
                     try:
                         songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
                         # dùng docx để thay thế các dữ liệu cần thiết
@@ -357,14 +357,17 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         # Lưu lai và gửi cho user file mới:
                         buffer = BytesIO()
                         doc.save(buffer)
-                        buffer.seek(0)
-                        return send_file(
-                                    buffer,
-                                    as_attachment=True,
-                                    download_name="hopdong_moi.docx",
-                                    mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                                    )
-                        
+                        buffer.seek(0)  # quan trọng!
+
+                        # Trả về file cho client tải xuống
+                        return Response(
+                            buffer.getvalue(),
+                            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                            headers={
+                                "Content-Disposition": "attachment;filename=hopdong.docx"
+                            }
+                        )
+                                            
 
 
                     except Exception as e:
