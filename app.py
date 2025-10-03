@@ -360,12 +360,11 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         buffer.seek(0)  # quan trọng!
 
                         # Trả về file cho client tải xuống
-                        return Response(
-                            buffer.getvalue(),
-                            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                            headers={
-                                "Content-Disposition": "attachment;filename=hopdong.docx"
-                            }
+                        return send_file(
+                            buffer,
+                            as_attachment=True,
+                            download_name="hopdong.docx",
+                            mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                         )
                                             
 
