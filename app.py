@@ -748,7 +748,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                         }
                         
                         # dùng docx để thay thế các dữ liệu cần thiết
-                        doc = Document(FILE_MAU_HDCTH_NT1_O3_TRO_XUONG)
+                        doc = Document(FILE_MAU_HDVTH_NT1_O3_TRO_XUONG)
 
                         replace_text_preserve_style_full(doc, replacements)
 
@@ -792,7 +792,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                         }
                         
                         # dùng docx để thay thế các dữ liệu cần thiết
-                        doc = Document(FILE_MAU_HDCTH_NT1_O1_O2)
+                        doc = Document(FILE_MAU_HDVTH_NT1_O1_O2)
 
                         replace_text_preserve_style_full(doc, replacements)
 
@@ -836,7 +836,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                         }
                         
                         # dùng docx để thay thế các dữ liệu cần thiết
-                        doc = Document(FILE_MAU_HDCTH_NT1_TREN_O1)
+                        doc = Document(FILE_MAU_HDVTH_NT1_TREN_O1)
 
                         replace_text_preserve_style_full(doc, replacements)
 
