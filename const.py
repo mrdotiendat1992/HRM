@@ -12,15 +12,28 @@ FOLDER_DGPV = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/dgpv'
 FOLDER_AVATAR = 'static/img/avatar'
 
 HINHANH_LOGO = os.path.join(os.path.dirname(__file__), r'static/img/logo.png')
+
 FILE_MAU_HDTV_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdtv.docx')
-FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')
-FILE_MAU_HDTV_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdtv.xlsx')
-FILE_MAU_HDCTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdcth.xlsx')
-FILE_MAU_HDCTH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdcth.xlsx')
-FILE_MAU_HDVTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdvth.xlsx')
-FILE_MAU_HDVTH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdvth.xlsx')
-FILE_MAU_HDNH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdnh.xlsx')
-FILE_MAU_HDNH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdnh.xlsx')
+FILE_MAU_HDCTH_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdcth.docx')
+FILE_MAU_HDVTH_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdvth.docx')
+
+FILE_MAU_HDTV_NT1_O1_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o1_o2/hdtv.docx')
+FILE_MAU_HDCTH_NT1_O1_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o1_o2/hdcth.docx')
+FILE_MAU_HDVTH_NT1_O1_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o1_o2/hdvth.docx')
+
+FILE_MAU_HDTV_NT1_TREN_O1 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/tren_o1/hdtv.docx')
+FILE_MAU_HDCTH_NT1_TREN_O1 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/tren_o1/hdcth.docx')
+FILE_MAU_HDVTH_NT1_TREN_O1 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/tren_o1/hdvth.docx')
+
+
+# FILE_MAU_HDTV_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdtv.xlsx')
+# FILE_MAU_HDTV_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdtv.xlsx')
+# FILE_MAU_HDCTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdcth.xlsx')
+# FILE_MAU_HDCTH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdcth.xlsx')
+# FILE_MAU_HDVTH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdvth.xlsx')
+# FILE_MAU_HDVTH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdvth.xlsx')
+# FILE_MAU_HDNH_NT1_O2_TROLEN = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o2_trolen/hdnh.xlsx')
+# FILE_MAU_HDNH_NT1_DUOI_O2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/duoi_o2/hdnh.xlsx')
 FILE_MAU_HDTV_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt2/hdtv.xlsx')
 FILE_MAU_HDCTH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt2/hdcth.xlsx')
 FILE_MAU_HDVTH_NT2 = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt2/hdvth.xlsx')

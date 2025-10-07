@@ -1166,7 +1166,7 @@ def thaydoithongtinlaodong():
 @app.route("/muc3_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
-def inhopdonglaodong():
+def quanlyhopdong():
     try:
         if request.method == "GET":
             mst = request.args.get("mst")

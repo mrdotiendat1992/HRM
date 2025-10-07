@@ -174,7 +174,7 @@ def dieuchuyennhansu(mst,
             conn.close()
         return {"ketqua":True}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {
                 "ketqua": False,
                 "lido":e,
@@ -191,7 +191,7 @@ def laydanhsachca(mst):
         conn.close()
         return rows
     except Exception as e:
-            flash(e)
+            flash(str(e))
             return
     
 def dichuyennghiviec(mst,
@@ -296,8 +296,59 @@ def dichuyendilamlai(mst,
                 "lido":e,
                 "query":""
                 }
-    
-def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):   
+
+def replace_text_across_runs(paragraph, replacements):
+    """
+    Thay thế placeholder có thể bị chia giữa nhiều run trong paragraph.
+    Giữ nguyên định dạng (style) của các phần còn lại.
+    """
+    # Gộp toàn bộ text của paragraph
+    full_text = ''.join(run.text for run in paragraph.runs)
+
+    replaced = False
+    for key, value in replacements.items():
+        if key in full_text:
+            full_text = full_text.replace(key, str(value))
+            replaced = True
+
+    if replaced:
+        # Xóa toàn bộ run cũ và chỉ giữ lại một run đầu tiên
+        for run in paragraph.runs:
+            run.text = ""
+        # Gán lại nội dung mới vào run đầu tiên
+        paragraph.runs[0].text = full_text
+
+
+def replace_text_preserve_style_full(doc, replacements):
+    """
+    Thay thế placeholder trong body, bảng, header/footer (có xử lý chia run)
+    """
+    def process_paragraphs(paragraphs):
+        for p in paragraphs:
+            replace_text_across_runs(p, replacements)
+
+    def process_tables(tables):
+        for t in tables:
+            for r in t.rows:
+                for c in r.cells:
+                    process_paragraphs(c.paragraphs)
+                    process_tables(c.tables)
+
+    # Body
+    process_paragraphs(doc.paragraphs)
+    process_tables(doc.tables)
+
+    # Header/Footer
+    for section in doc.sections:
+        process_paragraphs(section.header.paragraphs)
+        process_tables(section.header.tables)
+        process_paragraphs(section.footer.paragraphs)
+        process_tables(section.footer.tables)
+
+
+def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
+                     thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,
+                     chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):   
     
     try:
         sodienthoai = lay_sodienthoai_theo_mst(masothe)
@@ -312,94 +363,35 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                 if capbac in ["O3","C1","C2","W1"]:
                     try:
                         songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{songaythuviec}}": songaythuviec,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
                         # dùng docx để thay thế các dữ liệu cần thiết
                         doc = Document(FILE_MAU_HDTV_NT1_O3_TRO_XUONG)
 
-                        # Thay thế các placeholder trong tài liệu
-                        for paragraph in doc.paragraphs:
-                            if '{{mst}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{mst}}', '{masothe}')
-                            if '{{ngaylamhopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{ngaylamhopdong}}', f'{ngaylamhopdong}')
-                            if '{{thanglamhopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{thanglamhopdong}}', f'{thanglamhopdong}')
-                            if '{{namlamhopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{namlamhopdong}}', f'{namlamhopdong}')
-                            if '{{hoten}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{hoten}}', f'{hoten.upper()}')
-                            if '{{ngaysinh}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{ngaysinh}}', f'{ngaysinh}')
-                            if '{{gioitinh}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{gioitinh}}', f'{gioitinh}')
-                            if '{{sodienthoai}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{sodienthoai}}', f'{sodienthoai}')
-                            if '{{thuongtru}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{thuongtru}}', f'{thuongtru}')
-                            if '{{tamtru}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{tamtru}}', f'{tamtru}')
-                            if '{{cccd}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{cccd}}', f'{cccd}')
-                            if '{{ngaycapcc}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{ngaycapcc}}', f'{ngaycapcccd}')
-                            if '{{noicapcc}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{noicapcc}}', f'Cục trưởng cục cảnh sát')
-                            if '{{chucdanh}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{chucdanh}}', f'{chucdanh}')
-                            if '{{songaythuviec}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{songaythuviec}}', f'{songaythuviec}')
-                            if '{{ngayketthuchopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{ngayketthuchopdong}}', f'{ngayketthuchopdong}')
-                            if '{{thangketthuchopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{thangketthuchopdong}}', f'{thangketthuchopdong}')
-                            if '{{namketthuchopdong}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
-                            if '{{luongcoban}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
-                            if '{{bophan}}' in paragraph.text:
-                                paragraph.text = paragraph.text.replace('{{bophan}}', f'{phongban}')
-                        for t in getattr(doc, "tables", []):
-                            for row in t.rows:
-                                for cell in row.cells:
-                                    if '{{mst}}' in cell.text:
-                                        cell.text = cell.text.replace('{{mst}}', f'{masothe}')
-                                    if '{{ngaylamhopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{ngaylamhopdong}}', f'{ngaylamhopdong}')
-                                    if '{{thanglamhopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{thanglamhopdong}}', f'{thanglamhopdong}')
-                                    if '{{namlamhopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{namlamhopdong}}', f'{namlamhopdong}')
-                                    if '{{hoten}}' in cell.text:
-                                        cell.text = cell.text.replace('{{hoten}}', f'{hoten.upper()}')
-                                    if '{{ngaysinh}}' in cell.text:
-                                        cell.text = cell.text.replace('{{ngaysinh}}', f'{ngaysinh}')
-                                    if '{{gioitinh}}' in cell.text:
-                                        cell.text = cell.text.replace('{{gioitinh}}', f'{gioitinh}')
-                                    if '{{sodienthoai}}' in cell.text:
-                                        cell.text = cell.text.replace('{{sodienthoai}}', f'{sodienthoai}')
-                                    if '{{thuongtru}}' in cell.text:
-                                        cell.text = cell.text.replace('{{thuongtru}}', f'{thuongtru}')
-                                    if '{{tamtru}}' in cell.text:
-                                        cell.text = cell.text.replace('{{tamtru}}', f'{tamtru}')
-                                    if '{{cccd}}' in cell.text:
-                                        cell.text = cell.text.replace('{{cccd}}', f'{cccd}')
-                                    if '{{ngaycapcc}}' in cell.text:
-                                        cell.text = cell.text.replace('{{ngaycapcc}}', f'{ngaycapcccd}')
-                                    if '{{noicapcc}}' in cell.text:
-                                        cell.text = cell.text.replace('{{noicapcc}}', f'Cục trưởng cục cảnh sát')
-                                    if '{{chucdanh}}' in cell.text:
-                                        cell.text = cell.text.replace('{{chucdanh}}', f'{chucdanh}')
-                                    if '{{songaythuviec}}' in cell.text:
-                                        cell.text = cell.text.replace('{{songaythuviec}}', f'{songaythuviec}')
-                                    if '{{ngayketthuchopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{ngayketthuchopdong}}', f'{ngayketthuchopdong}')
-                                    if '{{thangketthuchopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{thangketthuchopdong}}', f'{thangketthuchopdong}')
-                                    if '{{namketthuchopdong}}' in cell.text:
-                                        cell.text = cell.text.replace('{{namketthuchopdong}}', f'{namketthuchopdong}')
-                                    if '{{luongcoban}}' in cell.text:
-                                        cell.text = cell.text.replace('{{luongcoban}}', f'{int(luongcoban):,}')
-                                    if '{{bophan}}' in cell.text:
-                                        cell.text = cell.text.replace('{{bophan}}', f'{phongban}')
+                        replace_text_preserve_style_full(doc, replacements)
+
                         # Lưu lai và gửi cho user file mới:
                         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
                         filename = f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
@@ -412,10 +404,99 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                         return filepath
 
                     except Exception as e:
-                        flash(e)
+                        flash(str(e))
+                        return None
+                elif capbac in ["O1","O2"]:
+                    try:
+                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{songaythuviec}}": songaythuviec,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDTV_NT1_O1_O2)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
+                        return filepath
+
+                    except Exception as e:
+                        flash(str(e))
                         return None
                 else:
-                    
+                    try:
+                        songaythuviec = (datetime.strptime(ngayketthuc,"%d/%m/%Y")-datetime.strptime(ngaybatdau,"%d/%m/%Y")).days+1
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{songaythuviec}}": songaythuviec,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDTV_NT1_TREN_O1)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDTV_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
+                        return filepath
+
+                    except Exception as e:
+                        flash(str(e))
                         return None
             elif macongty == "NT2":
                 try:
@@ -446,62 +527,11 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    flash(e)
+                    flash(str(e))
                     return None
         elif loaihopdong == "Hợp đồng có thời hạn 28 ngày":
             if macongty == "NT1":
-                if capbac in ["O2","O1","M3","M2","M1"]:
-                    try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDNH_NT1_O2_TROLEN)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC28D/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD:{cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G28'] = chucdanh
-                        sheet['G38'] = f"{int(luongcoban):,} VNĐ/tháng"
-                        if phucap > 0 :
-                            sheet['G39'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G39'] = "Không"
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDNH_TO2_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
-                        return filepath
-                    except Exception as e:
-                        flash(e)
-                        return None
-                else:
-                    try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDNH_NT1_DUOI_O2)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC28D/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD: {cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['B25'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G28'] = f"{chucdanh}"
-                        sheet['G38'] = f"{int(luongcoban):,} VNĐ/tháng"
-                        if phucap > 0 :
-                            sheet['G39'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G39'] = "Không"
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDNH_DO2_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
-                        return filepath
-                    except Exception as e:
-                        flash(e)
-                        return None
+                return None
             elif macongty == "NT2":
                 try:
                     workbook = openpyxl.load_workbook(FILE_MAU_HDCTH_NT2)
@@ -527,63 +557,141 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    flash(e)
+                    flash(str(e))
                     return None
         elif loaihopdong == "Hợp đồng có thời hạn 1 năm":
             if macongty == "NT1":
-                if capbac in ["O2","O1","M3","M2","M1"]:
+                if capbac in ["O3","C1","C2","W1"]:
                     try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDCTH_NT1_O2_TROLEN)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC12/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD:{cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G29'] = f"{chucdanh}"
-                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
-                        if phucap > 0 :
-                            sheet['G40'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G40'] = "Không"
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_TO3_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_O3_TRO_XUONG)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
                         return filepath
+
                     except Exception as e:
-                        flash(e)
+                        flash(str(e))
+                        return None
+                elif capbac in ["O1","O2"]:
+                    try:
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_O1_O2)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
+                        return filepath
+
+                    except Exception as e:
+                        flash(str(e))
                         return None
                 else:
                     try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDCTH_NT1_DUOI_O2)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC12/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD: {cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['B26'] = f"Từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong} đến hết ngày {ngayketthuchopdong} tháng {thangketthuchopdong} năm {namketthuchopdong}"
-                        sheet['G29'] = f"{chucdanh}"
-                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
-                        if phucap > 0 :
-                            sheet['G40'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G40'] = "Không"
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT1_HDCTH_DO3_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_TREN_O1)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
                         return filepath
+
                     except Exception as e:
-                        flash(e)
+                        flash(str(e))
                         return None
             elif macongty == "NT2":
                 try:
@@ -610,61 +718,142 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    flash(e)
+                    flash(str(e))
                     return None
         elif loaihopdong == "Hợp đồng vô thời hạn":
             if macongty == "NT1":
-                if capbac in ["O2","O1","M3","M2","M1"]:
+                if capbac in ["O3","C1","C2","W1"]:
                     try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDVTH_NT1_O2_TROLEN)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD: {cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['G29'] = chucdanh
-                        sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"
-                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"        
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT2_HDVTH_T03_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_O3_TRO_XUONG)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
                         return filepath
+
                     except Exception as e:
-                        flash(e)
-                        return None   
+                        flash(str(e))
+                        return None
+                elif capbac in ["O1","O2"]:
+                    try:
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_O1_O2)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
+                        return filepath
+
+                    except Exception as e:
+                        flash(str(e))
+                        return None
                 else:
                     try:
-                        workbook = openpyxl.load_workbook(FILE_MAU_HDVTH_NT1_DUOI_O2)
-                        sheet = workbook.active
-                        sheet['E4'] = f'Số: LC/{masothe}'
-                        sheet['M4'] = f'Hải Phòng, ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}'
-                        sheet['D18'] = hoten.upper()
-                        sheet['E19'] = ngaysinh
-                        sheet['Q19'] = gioitinh
-                        sheet['F20'] = thuongtru
-                        sheet['B21'] = f"Số CCCD: {cccd}"
-                        sheet['L21'] = ngaycapcccd
-                        sheet['E22'] = sodienthoai
-                        sheet['B26'] = f"Kể từ ngày {ngaylamhopdong} tháng {thanglamhopdong} năm {namlamhopdong}"   
-                        sheet['G29'] = f"{chucdanh}"
-                        sheet['G39'] = f"{int(luongcoban):,} VNĐ/tháng"
-                        if phucap > 0 :
-                            sheet['G40'] = f"{phucap} VNĐ/tháng"
-                        else:
-                            sheet['G40'] = "Không"    
-                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")     
-                        filepath = os.path.join(FOLDER_XUAT, f'NT2_HDVTH_D03_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.xlsx')
-                        workbook.save(filepath)
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
                         
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HDCTH_NT1_TREN_O1)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
                         return filepath
+
                     except Exception as e:
-                        flash(e)
-                        return None  
+                        flash(str(e))
+                        return None
             if macongty == "NT2":
                 try:
                     workbook = openpyxl.load_workbook(FILE_MAU_HDVTH_NT2)
@@ -689,10 +878,10 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
                     workbook.save(filepath)
                     return filepath
                 except Exception as e:
-                    flash(e)
+                    flash(str(e))
                     return None  
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return None
     
 def inchamduthd(mst,
@@ -728,7 +917,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            flash(e)
+            flash(str(e))
             return None
     elif current_user.macongty == "NT2":
         try:
@@ -754,7 +943,7 @@ def inchamduthd(mst,
             
             return filepath
         except Exception as e:
-            flash(e)
+            flash(str(e))
             return None
    
 def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
@@ -795,7 +984,7 @@ def laylichsucongtac(mst,hoten,ngay,kieudieuchuyen):
         conn.close()
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
                      
 def laydanhsachlinetheovitri(vitri):
@@ -811,7 +1000,7 @@ def laydanhsachlinetheovitri(vitri):
             result.append(row[0])
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def lay_user(user):
@@ -977,7 +1166,7 @@ def laycacphongban():
             result.append(x[0])
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laycacto():
@@ -990,7 +1179,7 @@ def laycacto():
         conn.close()
         return [x[0] for x in cacto]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laycachccategory():
@@ -1003,7 +1192,7 @@ def laycachccategory():
         conn.close()
         return [x[0] for x in cachccategory]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def laydanhsachtheomst(mst):
@@ -1048,7 +1237,7 @@ def laydanhsachusercacongty(macongty):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def laydanhsachusertheophongban(phongban):
@@ -1064,7 +1253,7 @@ def laydanhsachusertheophongban(phongban):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def laydanhsachusertheogioitinh(gioitinh):
@@ -1080,7 +1269,7 @@ def laydanhsachusertheogioitinh(gioitinh):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachusertheoline(line):
@@ -1096,7 +1285,7 @@ def laydanhsachusertheoline(line):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachusertheostatus(status):
@@ -1112,7 +1301,7 @@ def laydanhsachusertheostatus(status):
             result.append(lay_user(user))
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laycactrangthai():
@@ -1125,7 +1314,7 @@ def laycactrangthai():
         conn.close()
         return [x[0] for x in cactrangtha]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laycacvitri():
@@ -1138,7 +1327,7 @@ def laycacvitri():
         conn.close()
         return [x[0] for x in cacvitri]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def laycacca():
@@ -1151,7 +1340,7 @@ def laycacca():
         conn.close()
         return [x[0] for x in cacca]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def layhcname(jobtitle,line):
@@ -1164,7 +1353,7 @@ def layhcname(jobtitle,line):
         conn.close()
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
@@ -1233,7 +1422,7 @@ def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
             })
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
@@ -1358,7 +1547,7 @@ def xoanhanvien(MST):
         conn.close()
         return f"{MST} đã xoá thành công"
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return f"{MST} đã xoá thất bại"
     
 def laymasothemoi():
@@ -1373,7 +1562,7 @@ def laymasothemoi():
             return result[0]
         return 0
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return 0
 
 def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=None):
@@ -1430,7 +1619,7 @@ def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=Non
             })
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachchuyen():
@@ -1443,7 +1632,7 @@ def laydanhsachchuyen():
         conn.close()
         return rows
     except Exception as e:
-            flash(e)
+            flash(str(e))
             return []
 
 def laydanhsachbophan():
@@ -1456,7 +1645,7 @@ def laydanhsachbophan():
         conn.close()
         return rows
     except Exception as e:
-            flash(e)
+            flash(str(e))
             return []
 
 def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1482,7 +1671,7 @@ def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denng
         conn.close()
         return rows
     except Exception as e:
-            flash(e)
+            flash(str(e))
             return []
 
 
@@ -1509,7 +1698,7 @@ def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tun
         conn.close()
         return rows
     except Exception as e:
-            flash(e)
+            flash(str(e))
             return []
 
 def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1538,7 +1727,7 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
             result.append(row)
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1567,7 +1756,7 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
             result.append(row)
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1601,7 +1790,7 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
             result.append(row)
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
@@ -1634,7 +1823,7 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, t
             result.append(row)
         return result
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None,mstquanly=None,mstthuky=None):
@@ -1695,7 +1884,7 @@ def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=Non
             row[13] = row[13].strftime("%d/%m/%Y %H:%M:%S") if row[13] else ""
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangthai,mstquanly,mstthuky):
@@ -1752,7 +1941,7 @@ def laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngaynghi,lydo,trangtha
             row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky):
@@ -1811,7 +2000,7 @@ def laydanhsachxinnghikhongluong(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangt
             row[12] = row[12].strftime("%d/%m/%Y %H:%M:%S") if row[12] else ""
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def thuky_duoc_phanquyen(mst,chuyen):
@@ -1826,7 +2015,7 @@ def thuky_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def quanly_duoc_phanquyen(mst,chuyen):
@@ -1843,7 +2032,7 @@ def quanly_duoc_phanquyen(mst,chuyen):
         else:
             return False
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def kiemtrathuki(mst,chuyen):
@@ -1861,7 +2050,7 @@ def kiemtrathuki(mst,chuyen):
         else:
             return False
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def capnhat_xinnghiphep(mst,ngay):
@@ -1874,7 +2063,7 @@ def capnhat_xinnghiphep(mst,ngay):
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
 
 def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
     try:
@@ -1889,7 +2078,7 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         conn.close()
         return False
         
@@ -1920,7 +2109,7 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         conn.close()
         return rows
     except Exception as e:
-        flash(e)  
+        flash(str(e))  
         return [] 
     
 def laydanhsachphepton(mst=None):
@@ -1937,7 +2126,7 @@ def laydanhsachphepton(mst=None):
         result = []
         return rows 
     except Exception as e:
-        flash(e)   
+        flash(str(e))   
         return [] 
     
 def laydanhsachkyluat():
@@ -1951,7 +2140,7 @@ def laydanhsachkyluat():
         result = []
         return rows 
     except Exception as e:
-        flash(e)  
+        flash(str(e))  
         return [] 
 
 def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
@@ -1964,7 +2153,7 @@ def themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadi
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
 
 def chuadangkycalamviec(mst):
     try:
@@ -2038,7 +2227,7 @@ def thangdangkycalamviec(mst,cacu,camoi,ngaybatdau,ngayketthuc):
             flash("Đổi ca thành công", "success")
             return True
     except Exception as e:
-        flash(e)   
+        flash(str(e))   
         return False 
         
 def laycahientai(mst):
@@ -2052,7 +2241,7 @@ def laycahientai(mst):
             return row[0]
         return None
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return None
 
 def laydanhsachyeucautuyendung(phongban):
@@ -2067,7 +2256,7 @@ def laydanhsachyeucautuyendung(phongban):
         rows = cursor.execute(query).fetchall()
         return [list(x) for x in rows]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
@@ -2091,7 +2280,7 @@ def themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,cap
         conn.commit()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly):
@@ -2167,7 +2356,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
 #         conn.close()
 #         return True
 #     except Exception as e:
-#         flash(e)
+#         flash(str(e))
 #         return False
 
 # def themdulieuchamcong2ngay():
@@ -2189,7 +2378,7 @@ def laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangia
 #         conn1.close()
 #         return True
 #     except Exception as e:
-#         flash(e)
+#         flash(str(e))
 #         return False
     
 def thuky_dakiemtra_diemdanhbu(id):
@@ -2343,7 +2532,7 @@ def thuky_tuchoi_xinnghikhongluong(id):
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
 
 def quanly_pheduyet_xinnghikhongluong(id):
     try:
@@ -2506,7 +2695,7 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         conn.close()
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def laydanhsachkpichuaduyet(mst,macongty):
@@ -2525,7 +2714,7 @@ def laydanhsachkpichuaduyet(mst,macongty):
             return []
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []  
    
 def laydanhsachkpidaduyet(mst,macongty):
@@ -2565,7 +2754,7 @@ def delete_kpidata(masothe,macongty):
         conn.close()
         return True    
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def insert_kpidata(masothe:str,macongty:str,values:list):
@@ -2592,7 +2781,7 @@ def insert_kpidata(masothe:str,macongty:str,values:list):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def guimailthongbaodaguikpi(nhamay,mst,hoten):
@@ -2605,7 +2794,7 @@ def guimailthongbaodaguikpi(nhamay,mst,hoten):
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
@@ -2618,7 +2807,7 @@ def guimailthongbaodapheduyetkpi(nhamay,mst,hoten,email):
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
@@ -2631,7 +2820,7 @@ def guimailthongbaodatuchoikpi(nhamay,mst,hoten,email):
         conn.commit()
         conn.close()
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def laydanhsachquanly(macongty):
@@ -2649,7 +2838,7 @@ def laydanhsachquanly(macongty):
             result.append({"mst":row[0],"hoten":row[1]})
         return result        
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
     
 def pheduyetkpi(masothe,macongty):
@@ -2662,7 +2851,7 @@ def pheduyetkpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def tuchoikpi(masothe,macongty):
@@ -2675,7 +2864,7 @@ def tuchoikpi(masothe,macongty):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def layemailquanly(macongty,masothe):
@@ -2687,7 +2876,7 @@ def layemailquanly(macongty,masothe):
         conn.close()
         return row[0]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphethan):
@@ -2724,7 +2913,7 @@ def laydanhsach_chonghiviec(mst,hoten,chuyen,phongban,ngaynopdon,ngaynghi,saphet
         conn.close()
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
@@ -2741,7 +2930,7 @@ def themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def rutdonnghiviec(id):
@@ -2754,7 +2943,7 @@ def rutdonnghiviec(id):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def laydanhsach_hopdong_theomst(mst):
@@ -2786,7 +2975,7 @@ def laydanhsach_hopdong_theomst(mst):
             "Ngày hết hạn hợp đồng": row[18]
         } for row in rows]
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []  
 
 def capnhat_stk(mst, stk, macongty, nganhang):
@@ -3053,7 +3242,7 @@ def capnhat_ghichu_lsct(mst,ngaythuchien,phanloai,ghichumoi):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def capnhat_ngaythuchien_lsct(mst,ngaythuchienmoi,phanloai,chuyencu,chuyenmoi):
@@ -3073,7 +3262,7 @@ def capnhat_ngaythuchien_lsct(mst,ngaythuchienmoi,phanloai,chuyencu,chuyenmoi):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def sua_dangky_ca(id,camoi):
@@ -3087,7 +3276,7 @@ def sua_dangky_ca(id,camoi):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False   
 
 
@@ -3102,7 +3291,7 @@ def suadoi_ngaybatdau_ca_dangky_ca(id,ngaybatdau_camoi):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False   
     
 def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
@@ -3116,7 +3305,7 @@ def suadoi_ngayketthuc_ca_dangky_ca(id,ngayketthuc_camoi):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False  
     
 def lay_chuyen_theo_mst(mst):
@@ -3132,7 +3321,7 @@ def lay_chuyen_theo_mst(mst):
         else:
             return None
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return None 
     
 def danhsach_tangca(mst,chuyen:list,ngay,pheduyet):
@@ -4383,7 +4572,7 @@ def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
         email = cursor.execute(query1).fetchone()[0]
         flash(email) 
     except Exception as e:
-        flash(e)
+        flash(str(e))
         email = ""     
     query = f"""insert into YEU_CAU_TUYEN_DUNG_CHO_KIEM_TRA 
                 values ('{current_user.macongty}','{current_user.masothe}',
@@ -4396,7 +4585,7 @@ def them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget):
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"ketqua":False, "lido":e, "query":query}
 
 def them_yeucau_tuyendung_cho_pheduyet(id):
@@ -4422,7 +4611,7 @@ def them_yeucau_tuyendung_cho_pheduyet(id):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def them_yeucau_tuyendung_duoc_pheduyet(id):
@@ -4447,7 +4636,7 @@ def them_yeucau_tuyendung_duoc_pheduyet(id):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
     
 def them_yeucau_tuyendung_bi_tuchoi(id):
@@ -4658,7 +4847,7 @@ def lay_dulieu_tongcong(mst):
             data[year] = [float(value) if isinstance(value, Decimal) else value for value in data[year]]
         return data
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return data
     
 def lay_phanquyen_hientai(macongty,masothe):
@@ -4669,7 +4858,7 @@ def lay_phanquyen_hientai(macongty,masothe):
         result = cur.execute(query).fetchone()
         return result[0] if result else ""
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return ""
     
 def suadoi_phanquyen(macongty,masothe,phanquyen):
@@ -4682,7 +4871,7 @@ def suadoi_phanquyen(macongty,masothe,phanquyen):
         conn.close()
         return True
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return False
 
 def laydanhsach_phanquyenthuky(filters):
@@ -4698,7 +4887,7 @@ def laydanhsach_phanquyenthuky(filters):
         conn.close()
         return rows
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return []
 
 
