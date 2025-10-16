@@ -816,6 +816,7 @@ def thaydoithongtinlaodong():
             masothue = request.form.get("masothue")
             nganhang = request.form.get("nganhang")
             sotaikhoan = request.form.get("sotaikhoan")
+            diachimoi = request.form.get("diachimoi")
             connho = request.form.get("connho")
             
             tenconnho1 = request.form.get("tenconnho1")
@@ -967,6 +968,11 @@ def thaydoithongtinlaodong():
                 query += f"So_tai_khoan = N'{sotaikhoan}',"
             else:
                 query += f"So_tai_khoan = NULL,"
+                
+            if diachimoi: 
+                query += f"Dia_chi_moi = N'{diachimoi}',"
+            else:
+                query += f"Dia_chi_moi = NULL,"
                 
             if connho: 
                 query += f"Con_nho = N'{connho}',"

@@ -1032,6 +1032,7 @@ def lay_user(user):
                 "Mã số thuế": user[22],
                 "Ngân hàng": user[23],
                 "Số tài khoản": user[24],
+                "Địa chỉ mới": user[73],
                 "Con nhỏ": user[25],
                 "Tên con 1": user[26],
                 "Ngày sinh con 1": user[27],
