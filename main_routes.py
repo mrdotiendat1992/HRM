@@ -1157,7 +1157,7 @@ def thaydoithongtinlaodong():
                 query += f"Anh_chan_dung = {anh},"
             else:
                 query += f"Anh_chan_dung = NULL,"
-
+            query += f"Dia_chi_moi = NULL,"
             query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
