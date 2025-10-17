@@ -733,6 +733,7 @@ def nhapthongtinlaodongmoi():
             ngaybatdauhdcthl2 = "NULL"
             ngayketthuchdcthl2 = "NULL"
             ngaybatdauhdvth = "NULL"
+            diachimoi = "NULL"
 
             nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},\
                         {gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},\
@@ -746,7 +747,7 @@ def nhapthongtinlaodongmoi():
                         {positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},\
                         {ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},\
                         {ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},\
-                        {ngaybatdauhdvth},'N', '', GETDATE())"   
+                        {ngaybatdauhdvth},'N', '', GETDATE(), {diachimoi})"   
                       
             ketqua = themnhanvienmoi(nhanvienmoi)
             if ketqua["ketqua"]:
