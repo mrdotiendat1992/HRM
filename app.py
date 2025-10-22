@@ -5936,3 +5936,14 @@ def lay_danh_sach_hcname(search_type, search_value):
     except Exception as e:
         flash(f"Lỗi lấy danh sách HC_Name: {e}")
         return []
+    
+def lay_lich_su_dong_bo_cham_cong():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"SELECT Ngay, may1, may2, may3, may4, may5, may6, may7, may8 FROM Dong_bo_cham_cong WHERE Nhamay='NT1'"
+        rows = cur.execute(query).fetchall()
+        conn.close()
+        return list(rows)
+    except:
+        return []

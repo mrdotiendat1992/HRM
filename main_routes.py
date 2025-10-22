@@ -3767,4 +3767,5 @@ def khong_kiem_xuong():
 @roles_required('sa')
 def admin_page():
     trangthai = trang_thai_function_12()
-    return render_template("admin.html",trangthai=trangthai)
+    rows = lay_lich_su_dong_bo_cham_cong()
+    return render_template("admin.html",trangthai=trangthai, rows=rows)

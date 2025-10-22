@@ -14,7 +14,10 @@
     <div class="container">
         <br>
         <div class="row">
-            <div class="col">
+            <a class="navbar-brand" href="/">
+                <img src="/static/img/logo.png" alt="Logo" width="60" class="d-inline-block align-text-top">
+            </a>
+            <div class="navbar-brand">
                 {% if trangthai=="0" %}
                     <form action="/bat_12" method="POST">
                         <button type="submit" class="btn btn-success btn-sm">Bật function số 12</button>
@@ -31,34 +34,41 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="phanquyenModalLabel">Phân quyền người dùng</h5>
+                                <h5 class="modal-title" id="phanquyenModalLabel">Chấm công tự động</h5>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" action="/capnhat_phanquyen">
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" id="masothe" name="masothe" placeholder="Mã số thẻ">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="hidden" class="form-control" id="macongty" name="macongty"  value={{current_user.macongty}}>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" class="form-control" readonly id="phanquyencu">
-                                    </div>
-                                    <div class="form-group">
-                                        <select type="text" class="form-control" name="phanquyenmoi">
-                                            <option value="sa">Super Admin</option>
-                                            <option value="hr">Nhân sự</option>
-                                            <option value="td">Tuyển dụng</option>
-                                            <option value="tbp">Trưởng bộ phận</option>
-                                            <option value="gd">Giám đốc</option>
-                                        </select>
-                                    </div>
-                                
-                            </div>
-                            <div class="modal-footer">
-                                <button class="btn btn-secondary" type="button" data-dismiss="modal">Hủy</button>
-                                <button class="btn btn-primary" type="submit">Lưu</button>
-                            </form>
+                                <div class="container" id="frame">
+                                    <table class="table table-strip table-responsive table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Ngày</th>
+                                                <th>Máy 1</th>
+                                                <th>Máy 2</th>
+                                                <th>Máy 3</th>
+                                                <th>Máy 4</th>
+                                                <th>Máy 5</th>
+                                                <th>Máy 6</th>
+                                                <th>Máy 7</th>
+                                                <th>Máy 8</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for row in rows %}
+                                            <tr>
+                                                <td>{{row[0]}}</td>
+                                                <td>{{row[1]}}</td>
+                                                <td>{{row[2]}}</td>
+                                                <td>{{row[3]}}</td>
+                                                <td>{{row[4]}}</td>
+                                                <td>{{row[5]}}</td>
+                                                <td>{{row[6]}}</td>
+                                                <td>{{row[7]}}</td>
+                                                <td>{{row[8]}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -66,30 +76,7 @@
             </div>
         </div>
         <br>
-        <div class="row">
-            <h3>Ấn vào <a href="/">đây</a> để quay lại trang chủ</h3>  
-        </div>
     </div>
     <script>
-        document.getElementById("masothe").addEventListener("change", function() {
-            var masothe = document.getElementById("masothe").value;
-            var macongty = document.getElementById("macongty").value;
-            axios({
-                method: 'post',
-                url: '/check_phanquyen?masothe=' + masothe+"&macongty="+macongty
-            })
-            .then(function (response) {
-                var data = response.data
-                if (response.data != "") {
-                    data = response.data
-                    console.log(data)
-                    document.getElementById("phanquyencu").value = data["phanquyen"];
-                    
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-        })
         
     </script>
