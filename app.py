@@ -5947,3 +5947,43 @@ def lay_lich_su_dong_bo_cham_cong():
         return list(rows)
     except:
         return []
+    
+def get_dashboard_data():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        query_danglamviec = "select count(*) Trang_thai_lam_viec from Danh_sach_CBCNV where Factory='Nt1' and Trang_thai_lam_viec=N'Đang làm việc'"
+        query_nghithaisan = "select count(*) Trang_thai_lam_viec from Danh_sach_CBCNV where Factory='Nt1' and Trang_thai_lam_viec=N'Nghỉ thai sản'"
+        query_tamhoanhopdong = "select count(*) Trang_thai_lam_viec from Danh_sach_CBCNV where Factory='Nt1' and Trang_thai_lam_viec=N'Tạm hoãn hợp đồng'"
+
+        query_congnhanmay_chinhthuc = "select count(*)  from Danh_sach_CBCNV where Factory='Nt1' and Job_title_VN=N'Công nhân vận hành máy may công nghiệp'"
+        query_congnhanmay_thuviec = "select count(*)  from Danh_sach_CBCNV where Factory='Nt1' and Job_title_VN=N'Công nhân thử việc may'"
+        query_congnhan_thoivu = "select count(*)  from Thoi_vu where NhaMay='Nt1'"
+
+        
+        row_soluong_danglamviec = cursor.execute(query_danglamviec).fetchone()
+        soluong_danglamviec = row_soluong_danglamviec[0] if row_soluong_danglamviec else 0
+        row_soluong_nghithaisan = cursor.execute(query_nghithaisan).fetchone()
+        soluong_nghithaisan = row_soluong_nghithaisan[0] if row_soluong_nghithaisan else 0
+        row_soluong_tamhoanhopdong = cursor.execute(query_tamhoanhopdong).fetchone()
+        soluong_tamhoanhopdong = row_soluong_tamhoanhopdong[0] if row_soluong_tamhoanhopdong else 0
+        row_soluong_congnhanmay_thinhthuc = cursor.execute(query_congnhanmay_chinhthuc).fetchone()
+        soluong_congnhanmay_thinhthuc = row_soluong_congnhanmay_thinhthuc[0] if row_soluong_congnhanmay_thinhthuc else 0
+        row_soluong_congnhanmay_thuviec = cursor.execute(query_congnhanmay_thuviec).fetchone()
+        soluong_congnhanmay_thuviec = row_soluong_congnhanmay_thuviec[0] if row_soluong_congnhanmay_thuviec else 0
+        row_soluong_congnhanmay_thoivu = cursor.execute(query_congnhan_thoivu).fetchone()
+        soluong_congnhanmay_thoivu = row_soluong_congnhanmay_thoivu[0] if row_soluong_congnhanmay_thoivu else 0
+
+        conn.close()
+
+        return {
+            "danglamviec": soluong_danglamviec,
+            "nghithaisan": soluong_nghithaisan,
+            "tamhoanhopdong": soluong_tamhoanhopdong,
+            "congnhanmay_chinhthuc": soluong_congnhanmay_thinhthuc,
+            "congnhanmay_thuviec": soluong_congnhanmay_thuviec,
+            "congnhan_thoivu": soluong_congnhanmay_thoivu
+        }
+    except:
+        return {}

@@ -416,6 +416,11 @@ def home():
             app.logger.error(f"Lỗi kết xuất danh sách nhân viên ({e})")
             return redirect(url_for("home"))
 
+@app.route("/dashboard", methods=["GET"])
+def dashboard():
+    data = get_dashboard_data()
+    return render_template("dashboard.html", page="Dashboard", data=data)
+
 @app.route("/muc2_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','tnc','sa','gd','td','tbp')

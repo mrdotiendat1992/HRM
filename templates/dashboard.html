@@ -1,0 +1,71 @@
+{% extends  "base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5><a href="#" class="btn btn-sm btn-outline-primary">Đang làm việc</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("danglamviec")}}<h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                        <h5><a href="#" class="btn btn-sm btn-outline-primary">Nghỉ thai sản</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("nghithaisan")}}<h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5><a href="#" class="btn btn-sm btn-outline-primary">Tạm hoãn hợp đồng</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("tamhoanhopdong")}}<h1>
+                </div>  
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5><a href="#" class="btn btn-sm btn-outline-primary">Công nhân may chính thức</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("congnhanmay_chinhthuc")}}<h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5><a href="#" class="btn btn-sm btn-outline-primary">Công nhân may đào tạo</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("congnhanmay_thuviec")}}<h1>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5><a href="#" class="btn btn-sm btn-outline-primary">Công nhân thử việc nhóm 2</a></h5>
+                </div>
+                <div class="card-body">
+                    <h1>{{data.get("congnhan_thoivu")}}<h1>
+                </div>  
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content%}
