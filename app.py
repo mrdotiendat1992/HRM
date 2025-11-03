@@ -4318,9 +4318,8 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
-        # flash(len(rows))
-        # for row in rows:
-        #     row[38] = round(row[38],0) if row[38] else 0
+        for row in rows:
+            row[-2] = round(row[-2],0) if row[-2] else 0
 
         return rows
     except Exception as e:

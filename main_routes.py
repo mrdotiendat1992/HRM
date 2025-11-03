@@ -3273,7 +3273,7 @@ def muc7_1_17():
                 data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
-            # data[-1] = round(data[-1]) if data[-1] else 0
+            data[-2] = round(data[-2]) if data[-2] else 0
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
