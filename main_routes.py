@@ -3273,6 +3273,7 @@ def muc7_1_17():
                 data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            # data[-1] = round(data[-1]) if data[-1] else 0
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
@@ -3288,7 +3289,7 @@ def muc7_1_17():
                         cell.style = date_style
                     except ValueError:
                         pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ']:
                     cell = sheet[f"{col}{row}"]
                     if cell.value and int(cell.value) > 0:
                         try:
