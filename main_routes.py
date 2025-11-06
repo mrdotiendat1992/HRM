@@ -1195,6 +1195,7 @@ def quanlyhopdong():
             thuongtru = request.form.get("form_thuongtru")
             tamtru = request.form.get("form_tamtru")
             cccd = request.form.get("form_cccd")
+            noicapcccd = request.form.get("form_noicap_cccd")
             ngaycapcccd = request.form.get("form_ngaycapcccd")
             capbac =  request.form.get("gradecode")
             loaihopdong = request.form.get("form_loaihopdong")
@@ -1212,7 +1213,7 @@ def quanlyhopdong():
             hccategory = request.form.get("hccategory")
             sectioncode = request.form.get("sectioncode")
             sectiondescription = request.form.get("sectiondescription")
-            if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+            if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noicapcccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
                 flash("Thêm hợp đồng thành công !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:

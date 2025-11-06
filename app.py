@@ -347,7 +347,7 @@ def replace_text_preserve_style_full(doc, replacements):
 
 
 def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
-                     thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,
+                     thuongtru,tamtru,cccd,ngaycapcccd,noicap,capbac,loaihopdong,
                      chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):   
     
     try:
@@ -377,7 +377,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                             "{{tamtru}}": tamtru,
                             "{{cccd}}": cccd,
                             "{{ngaycapcc}}": ngaycapcccd,
-                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{noicapcc}}": noicap,
                             "{{chucdanh}}": chucdanh,
                             "{{songaythuviec}}": songaythuviec,
                             "{{ngayketthuchopdong}}": ngayketthuchopdong,
@@ -423,7 +423,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                             "{{tamtru}}": tamtru,
                             "{{cccd}}": cccd,
                             "{{ngaycapcc}}": ngaycapcccd,
-                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{noicapcc}}": noicap,
                             "{{chucdanh}}": chucdanh,
                             "{{songaythuviec}}": songaythuviec,
                             "{{ngayketthuchopdong}}": ngayketthuchopdong,
@@ -469,7 +469,7 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                             "{{tamtru}}": tamtru,
                             "{{cccd}}": cccd,
                             "{{ngaycapcc}}": ngaycapcccd,
-                            "{{noicapcc}}": "Cục trưởng cục cảnh sát",
+                            "{{noicapcc}}": noicap,
                             "{{chucdanh}}": chucdanh,
                             "{{songaythuviec}}": songaythuviec,
                             "{{ngayketthuchopdong}}": ngayketthuchopdong,
@@ -3016,7 +3016,7 @@ def timkiemchucdanh(tutimkiem):
         flash(f"Lỗi tìm kiếm chức danh theo từ tìm kiếm: {e} !!!")
         return []
     
-def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
+def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noicapcccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
     
     try:
         try:
@@ -3032,7 +3032,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
-            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', '{ngayketthuc}')
+            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', '{ngayketthuc}',N'{noicapcccd}')
         """
         
         cursor.execute(query)
@@ -3044,7 +3044,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngay
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
-            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', NULL )
+            N'{loaihopdong}', N'{chucdanh}', '{phongban}', '{chuyen}', '{int(luongcoban)}', '0', '{ngaybatdau}', NULL, N'{noicapcccd}' )
         """
         cursor.execute(query)
         try:
@@ -3100,7 +3100,7 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
     except Exception as e:
         return {"ketqua":False,"lido":e, "query":query}
     
-def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,
+def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,noicap,
                            loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,chucdanh,phongban,luongcoban,phucap):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -3109,7 +3109,7 @@ def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,c
         query = f"""
         update QUAN_LY_HD set MST='{masothe}',HO_TEN=N'{hoten}',GIOI_TINH=N'{gioitinh}',NGAY_SINH='{ngaysinh}',DIA_CHI=N'{thuongtru}',TAM_TRU=N'{tamtru}',
         CCCD='{cccd}',NGAY_CAP='{ngaycapcccd}',LOAI_HD=N'{loaihopdong}',CHUC_DANH=N'{chucdanh}',PHONG_BAN='{phongban}',CHUYEN='{chuyen}',CAP_BAC='{capbac}',
-        LCB='{luongcoban}',PHU_CAP='{phucap}',NGAY_KY='{ngaybatdau}',NGAY_HET_HAN={ngayketthuc} where ID='{id}'
+        LCB='{luongcoban}',PHU_CAP='{phucap}',NGAY_KY='{ngaybatdau}',NGAY_HET_HAN={ngayketthuc},NOI_CAP = N'{noicap}' where ID='{id}'
         """
         # 
         cursor.execute(query)

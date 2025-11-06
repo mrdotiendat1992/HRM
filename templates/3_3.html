@@ -133,6 +133,7 @@
                                         <input type="text" id="form_hovaten" name="form_hovaten" placeholder="Họ tên">
                                         <input type="text" id="form_gioitinh" name="form_gioitinh" placeholder="Giới tính">
                                         <input type="text" id="form_cccd" name="form_cccd"  placeholder="Căn cước công dân">
+                                        <input type="text" id="form_noicap_cccd" name="form_noicap_cccd"  placeholder="Nơi cấp CCCD">
                                         <input type="text" id="form_thuongtru" name="form_thuongtru"  placeholder="Thường trú">
                                         <input type="text" id="form_tamtru" name="form_tamtru"  placeholder="Tạm trú">
                                         <div class="form-group">
@@ -250,6 +251,7 @@
                     document.getElementById("form_hovaten").value = data["Họ tên"]; //3
                     document.getElementById("form_gioitinh").value = data["Giới tính"]; //4
                     document.getElementById("form_cccd").value = data["CCCD"]; //6
+                    document.getElementById("form_noicap_cccd").value = data["Nơi cấp"]; //6
                     document.getElementById("form_ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]); //7
                     document.getElementById("form_thuongtru").value = data["Thường trú"]; //10
                     document.getElementById("form_tamtru").value = data["Tạm trú"]; //10

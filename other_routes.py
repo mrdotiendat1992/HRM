@@ -1098,6 +1098,7 @@ def inhopdong():
         tamtru = hopdong[7]
         cccd = hopdong[8]
         ngaycapcccd = datetime.strptime(hopdong[9], "%Y-%m-%d").strftime("%d/%m/%Y")
+        noicap = hopdong[19]
         capbac = hopdong[10]
         loaihopdong = hopdong[11]
         chucdanh = hopdong[12]
@@ -1107,7 +1108,7 @@ def inhopdong():
         phucap = hopdong[16]
         ngaybatdau = datetime.strptime(hopdong[17], "%Y-%m-%d").strftime("%d/%m/%Y")
         ngayketthuc = datetime.strptime(hopdong[18], "%Y-%m-%d").strftime("%d/%m/%Y") if hopdong[18] else None
-        file = inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
+        file = inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,noicap,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc)
         # flash(file)
         if file and file.endswith(".docx"):
             return send_file(file, as_attachment=True, download_name="hopdong.docx")
@@ -1231,6 +1232,7 @@ def suahopdonglaodong():
         thuongtru = request.form.get('thuongtru')
         tamtru = request.form.get('tamtru')
         cccd = request.form.get('cccd')
+        noicap = request.form.get('noicapcccd')
         ngaycapcccd = request.form.get('ngaycapcccd')
         
         loaihopdong = request.form.get('loaihopdong')
@@ -1246,7 +1248,7 @@ def suahopdonglaodong():
         phucap = request.form.get('phucap')
         
         if thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,
-                                  ngaycapcccd,loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,
+                                  ngaycapcccd,noicap,loaihopdong,ngaybatdau,ngayketthuc,chuyen,capbac,
                                   chucdanh,phongban,luongcoban,phucap):
             flash(f"Cập nhật hợp đồng số {id} thành công !!!")
         else:
