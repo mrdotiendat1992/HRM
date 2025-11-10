@@ -1157,6 +1157,7 @@ def capnhathopdongtheofilemau():
                     chucdanh = row['Chức danh']
                     phongban = row['Phòng ban']
                     chuyen = row['Chuyền']
+                    noicap = row['Nơi cấp']
                     hcname= layhcname(chucdanh,chuyen)
                     if hcname:
                         vitrien = hcname[2]
@@ -1174,7 +1175,7 @@ def capnhathopdongtheofilemau():
                         hccategory = 'NULL'
                         sectioncode = 'NULL'
                         sectiondescription = 'NULL'
-                    ketquathemhd = themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc)
+                    ketquathemhd = themhopdongmoi(nhamay, mst, hoten, gioitinh, ngaysinh, thuongtru, tamtru, cccd, noicap, ngaycapcccd, capbac, loaihopdong, chucdanh, phongban, chuyen, luongcoban, phucap, ngaybatdau, ngayketthuc)
                     if ketquathemhd["ketqua"]:
                         flash(f"Them HD dòng số {x} ok")
                     else:

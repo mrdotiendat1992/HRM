@@ -1213,6 +1213,7 @@ def quanlyhopdong():
             hccategory = request.form.get("hccategory")
             sectioncode = request.form.get("sectioncode")
             sectiondescription = request.form.get("sectiondescription")
+
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noicapcccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
                 flash("Thêm hợp đồng thành công !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)

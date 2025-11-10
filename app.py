@@ -3040,7 +3040,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noic
         conn.close()
         return {"ketqua":True}
     except Exception as e:
-        flash(f"Loi khi them hop dong co ngay ket thuc: {e} !!!\nQuery:{query}")
+        # flash(f"Loi khi them hop dong co ngay ket thuc: {e} !!!\nQuery:{query}")
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
