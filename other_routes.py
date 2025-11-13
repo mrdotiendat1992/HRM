@@ -520,7 +520,7 @@ def doicanhom():
                         data = pd.read_excel(filepath).to_dict(orient="records")
                         
                         for row in data:
-                            print(row)
+                            # print(row)
                             thangdangkycalamviec(row['Mã số thẻ'],laycahientai(row['Mã số thẻ']),row['Ca mới'],row['Từ ngày'],row['Đến ngày'])
                     danhsach = None
         if danhsach:
@@ -4126,7 +4126,7 @@ def update_sophut_phepton():
             conn = pyodbc.connect(url_database_pyodbc)
             cur = conn.cursor()
             query = f"UPDATE So_phut_phep SET So_phut_phep = '{data.get("sophut", "")}' WHERE Nha_may = '{current_user.macongty}' AND MST = '{data.get("mst", "")}' AND Thang = {data.get("thang", "")} AND Nam = {data.get("nam", "")}"
-            print(query)
+            # print(query)
             cur.execute(query)
             cur.commit()
             conn.close()
@@ -4680,7 +4680,7 @@ def tailen_chamcongtay():
             """
             data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
-            print(normalized_data_rows)
+            # print(normalized_data_rows)
             cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 
