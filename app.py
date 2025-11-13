@@ -5960,6 +5960,7 @@ def get_dashboard_data():
         query_congnhanmay_thuviec = "select count(*)  from Danh_sach_CBCNV where Factory='Nt1' and Job_title_VN=N'Công nhân thử việc may'"
         query_congnhan_thoivu = "select count(*)  from Thoi_vu where NhaMay='Nt1'"
 
+        query_dongbo_chamcong = "SELECT count(*) FROM Lich_su_bong_bo_cham_cong WHERE Ngay = CAST(GETDATE() AS date);"
         
         row_soluong_danglamviec = cursor.execute(query_danglamviec).fetchone()
         soluong_danglamviec = row_soluong_danglamviec[0] if row_soluong_danglamviec else 0
@@ -5973,7 +5974,9 @@ def get_dashboard_data():
         soluong_congnhanmay_thuviec = row_soluong_congnhanmay_thuviec[0] if row_soluong_congnhanmay_thuviec else 0
         row_soluong_congnhanmay_thoivu = cursor.execute(query_congnhan_thoivu).fetchone()
         soluong_congnhanmay_thoivu = row_soluong_congnhanmay_thoivu[0] if row_soluong_congnhanmay_thoivu else 0
-
+        
+        row_dongbo_chamcong = cursor.execute(query_dongbo_chamcong).fetchone()
+        da_dongbo_chamcong = row_dongbo_chamcong[0] if row_dongbo_chamcong else 0
         conn.close()
 
         return {
@@ -5982,7 +5985,8 @@ def get_dashboard_data():
             "tamhoanhopdong": soluong_tamhoanhopdong,
             "congnhanmay_chinhthuc": soluong_congnhanmay_thinhthuc,
             "congnhanmay_thuviec": soluong_congnhanmay_thuviec,
-            "congnhan_thoivu": soluong_congnhanmay_thoivu
+            "congnhan_thoivu": soluong_congnhanmay_thoivu,
+            "da_dongbo_chamcong": da_dongbo_chamcong
         }
     except:
         return {}

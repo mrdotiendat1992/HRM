@@ -2,6 +2,16 @@
 
 {% block content %}
 <div class="container-fluid">
+
+    <h5>Đồng bộ chấm công hôm nay
+        {% if data.get('da_dongbo_chamcong')==1 %}
+            <span class="badge badge-success">Đã đồng bộ</span>
+        {% else %}
+            <span class="badge badge-danger">Chưa đồng bộ</span>
+        {% endif %} 
+    </h5>
+    </br>
+    <h5>Số lượng cán bộ công nhân viên</h5>
     <div class="row">
         <div class="col">
             <div class="card">
