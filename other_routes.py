@@ -4570,7 +4570,7 @@ def chamcongtay():
             danhsach = cur.execute(query).fetchall()
             cur.commit()
             conn.close()
-
+            total = len(danhsach)
             page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 20
             total = len(danhsach)
@@ -4591,10 +4591,10 @@ def chamcongtay():
             pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
             
 
-            return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination)
+            return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination, total=total)
         except Exception as e:
             flash(e)
-            return render_template("chamcongtay.html", danhsach=[])
+            return render_template("chamcongtay.html", danhsach=[], total=0)
     elif request.method == "POST":
         mst = request.form.get("mst")
         ngay = request.form.get("ngay")

@@ -58,7 +58,9 @@ display: none
         <form action="/chamcongtay" method="POST">
             <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}" />
             <input type="hidden" name="ngay" value="{{ request.args.get('ngay', '') }}" />
-            <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
+            <button type="submit" class="btn btn-success btn-sm">{{ total }}
+                <i class="fas fa-fw fa-download"></i>
+            </button>
         </form>
     </div>
     <div class="mt-3">
