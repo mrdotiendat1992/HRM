@@ -4539,60 +4539,139 @@ def dong_yeucautuyendung():
         flash(e)
         return redirect(f"/muc2_2")
 
-@app.route("/chamcongtay", methods=["GET"])
+@app.route("/chamcongtay", methods=["GET","POST"])
 @login_required
 def chamcongtay():
-    try:
-        conn = pyodbc.connect(url_database_pyodbc)
-        cur = conn.cursor()
+    if request.method == "GET":
+        
+        try:
+            conn = pyodbc.connect(url_database_pyodbc)
+            cur = conn.cursor()
 
-        action = request.args.get("action")
-        if action == "Xóa tìm kiếm":
-            return redirect("/chamcongtay")
+            action = request.args.get("action")
+            if action == "Xóa tìm kiếm":
+                return redirect("/chamcongtay")
 
 
-        mst = request.args.get("mst")
-        ngay = request.args.get("ngay")
+            mst = request.args.get("mst")
+            ngay = request.args.get("ngay")
+
+            filters = {
+                "mst": mst,
+                "ngay": ngay
+            }
+
+            query = f"select * from CHAM_CONG_TAY where nha_may='{current_user.macongty}'"
+            query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
+            if query_condition:
+                query += f" and {query_condition}"
+            query += "order by ngay desc"
+            
+            danhsach = cur.execute(query).fetchall()
+            cur.commit()
+            conn.close()
+
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 20
+            total = len(danhsach)
+            start = (page - 1) * per_page
+            end = start + per_page 
+            paginated_rows = danhsach[start:end]
+
+            formatted_rows = []
+            for row in paginated_rows:
+                formatted_row = list(row)
+                for index, data in enumerate(formatted_row):
+                    formatted_row[index] = data if data is not None else ""
+                formatted_row[3] = datetime.strptime(formatted_row[3], '%Y-%m-%d').strftime('%d/%m/%Y') if formatted_row[3] else ""
+                formatted_row[5] = formatted_row[5][:5] if formatted_row[5] else ""
+                formatted_row[6] = formatted_row[6][:5] if formatted_row[6] else ""
+                formatted_rows.append(tuple(formatted_row))
+
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            
+
+            return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination)
+        except Exception as e:
+            flash(e)
+            return render_template("chamcongtay.html", danhsach=[])
+    elif request.method == "POST":
+        mst = request.form.get("mst")
+        ngay = request.form.get("ngay")
 
         filters = {
             "mst": mst,
             "ngay": ngay
         }
 
-        query = f"select * from CHAM_CONG_TAY where nha_may='{current_user.macongty}'"
-        query_condition  = " and ".join([f"{key} LIKE '%{value}%'" for key,value in filters.items() if value])
-        if query_condition:
-            query += f" and {query_condition}"
-        query += "order by ngay desc"
-        
-        danhsach = cur.execute(query).fetchall()
-        cur.commit()
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+
+        # --- Build SQL ---
+        query = "SELECT * FROM CHAM_CONG_TAY WHERE nha_may = ?"
+        params = [current_user.macongty]
+
+        for key, value in filters.items():
+            if value:
+                query += f" AND {key} LIKE ?"
+                params.append(f"%{value}%")
+
+        query += " ORDER BY ngay DESC"
+
+        # --- Execute query ---
+        danhsach = cur.execute(query, params).fetchall()
+        columns = [col[0] for col in cur.description]
+        df = pd.DataFrame.from_records(danhsach, columns=columns)
+
+        cur.close()
         conn.close()
 
-        page = request.args.get(get_page_parameter(), type=int, default=1)
-        per_page = 20
-        total = len(danhsach)
-        start = (page - 1) * per_page
-        end = start + per_page 
-        paginated_rows = danhsach[start:end]
+        # --- Export Excel ---
+        output = BytesIO()
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False)
 
-        formatted_rows = []
-        for row in paginated_rows:
-            formatted_row = list(row)
-            for index, data in enumerate(formatted_row):
-                formatted_row[index] = data if data is not None else ""
-            formatted_row[3] = datetime.strptime(formatted_row[3], '%Y-%m-%d').strftime('%d/%m/%Y') if formatted_row[3] else ""
-            formatted_row[5] = formatted_row[5][:5] if formatted_row[5] else ""
-            formatted_row[6] = formatted_row[6][:5] if formatted_row[6] else ""
-            formatted_rows.append(tuple(formatted_row))
+        output.seek(0)
+        workbook = openpyxl.load_workbook(output)
+        sheet = workbook.active
 
-        pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        
+        # --- Style header ---
+        header_fill = PatternFill(start_color="0000FF", end_color="0000FF", fill_type="solid")
+        header_font = Font(bold=True, color="FFFFFF")
 
-        return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination)
-    except Exception as e:
-        flash(e)
-        return render_template("chamcongtay.html", danhsach=[])
+        for cell in sheet[1]:
+            cell.fill = header_fill
+            cell.font = header_font
+
+        # --- Auto column width ---
+        for column in sheet.columns:
+            max_length = 0
+            column_letter = column[0].column_letter
+            for cell in column:
+                if cell.value:
+                    length = len(str(cell.value))
+                    if length > max_length:
+                        max_length = length
+            sheet.column_dimensions[column_letter].width = max_length + 6
+
+        # --- Save to Bytes ---
+        final_output = BytesIO()
+        workbook.save(final_output)
+        final_output.seek(0)
+
+        time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
+
+        # --- Send response ---
+        response = make_response(final_output.read())
+        response.headers[
+            'Content-Disposition'
+        ] = f'attachment; filename=chamcongtay_{time_stamp}.xlsx'
+        response.headers[
+            'Content-Type'
+        ] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+        return response
+
 
 @app.route("/delete_chamcongtay", methods=["DELETE"])
 @login_required
