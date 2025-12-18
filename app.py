@@ -5834,7 +5834,10 @@ def lay_dulieu_chotcong(mst, tungay, denngay):
 def chaylaicong_hientai(mst, thang, nam):
 
     start_day = datetime(int(nam), int(thang), 1).strftime("%Y-%m-%d")
-    end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+    if thang < 12:
+        end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+    else:
+        end_day = (datetime(int(nam) + 1, 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
 
     success_step = 0
 
@@ -5864,7 +5867,10 @@ def chaylaicong_hientai(mst, thang, nam):
 def chaylaicong_quakhu(mst, thang, nam):
 
     start_day = datetime(int(nam), int(thang), 1).strftime("%Y-%m-%d")
-    end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+    if thang < 12:
+        end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
+    else:
+        end_day = (datetime(int(nam),int(thang),31)).strftime("%Y-%m-%d")
 
     success_step = 0
 
