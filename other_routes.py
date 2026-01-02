@@ -4069,7 +4069,7 @@ def add_phanquyenthuky():
             data = request.json
             conn = pyodbc.connect(url_database_pyodbc)
             cur = conn.cursor()
-            query = f"INSERT INTO Phan_quyen_thu_ky VALUES ('{current_user.macongty}', {data.get("mst", "")}, '{data.get("chuyen", "")}', {data.get("mst_ql", "")})"
+            query = f"INSERT INTO Phan_quyen_thu_ky VALUES ('{current_user.macongty}', {data.get('mst', '')}, '{data.get('chuyen', '')}', {data.get('mst_ql', '')})"
             flash(query)
             cur.execute(query)
             cur.commit()
@@ -4088,7 +4088,7 @@ def update_phanquyenthuky():
             data = request.json
             conn = pyodbc.connect(url_database_pyodbc)
             cur = conn.cursor()
-            query = f"UPDATE Phan_quyen_thu_ky SET MST = '{data.get("mst", "")}', Chuyen_to = '{data.get("chuyen", "")}', MST_QL = '{data.get("mst_ql", "")}' WHERE ID = {data.get("id", "")}"
+            query = f"UPDATE Phan_quyen_thu_ky SET MST = '{data.get('mst', '')}', Chuyen_to = '{data.get('chuyen', '')}', MST_QL = '{data.get('mst_ql', '')}' WHERE ID = {data.get('id', '')}"
             flash(query)
             cur.execute(query)
             cur.commit()
@@ -4125,7 +4125,7 @@ def update_sophut_phepton():
             data = request.json
             conn = pyodbc.connect(url_database_pyodbc)
             cur = conn.cursor()
-            query = f"UPDATE So_phut_phep SET So_phut_phep = '{data.get("sophut", "")}' WHERE Nha_may = '{current_user.macongty}' AND MST = '{data.get("mst", "")}' AND Thang = {data.get("thang", "")} AND Nam = {data.get("nam", "")}"
+            query = f"UPDATE So_phut_phep SET So_phut_phep = '{data.get('sophut', '')}' WHERE Nha_may = '{current_user.macongty}' AND MST = '{data.get('mst', '')}' AND Thang = {data.get('thang', '')} AND Nam = {data.get('nam', '')}"
             # print(query)
             cur.execute(query)
             cur.commit()

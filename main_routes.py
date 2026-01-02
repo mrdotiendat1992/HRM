@@ -511,7 +511,7 @@ def danhsachdangkytuyendung():
             if ketqua["ketqua"]:
                 flash("Cập nhật thông tin ứng viên thành công !!!")
             else:
-                flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]}")
+                flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']}")
             
         except Exception as e:
             flash(f"Cập nhật thông tin ứng viên thất bại ({e})")
@@ -674,57 +674,57 @@ def nhapthongtinlaodongmoi():
                 file_path = os.path.join(FOLDER_AVATAR, request.form.get("masothe") + ".jpg")
                 file.save(file_path)
                 anh = f"'{file_path}'"
-            masothe = f"'{request.form.get("masothe")}'"
-            thechamcong = f"'{int(request.form.get("masothe"))}'"
-            hoten = f"N'{request.form.get("hoten")}'"
-            ngaysinh = f"'{request.form.get("ngaysinh")}'" if request.form.get("ngaysinh") else "NULL"
-            gioitinh = f"N'{request.form.get("gioitinh")}'"
-            cmt = f"'{request.form.get("cmt")}'"
-            cccd = f"'{request.form.get("cccd")}'"
-            ngaycapcccd = f"'{request.form.get("ngaycap")}'" if request.form.get("ngaycap") else "NULL"
-            noicapcccd = f"N'{request.form.get("noicap")}'" if request.form.get("noicap") else "NULL"
-            thuongtru = f"N'{request.form.get("thuongtru")}'" if request.form.get("thuongtru") else "NULL"
-            noisinh = f"N'{request.form.get("noisinh")}'" if request.form.get("noisinh") else "NULL"
-            tamtru = f"N'{request.form.get("tamtru")}'" if request.form.get("tamtru") else "NULL"
-            quoctich = f"N'{request.form.get("quoctich")}'" if request.form.get("quoctich") else "NULL"
-            dantoc = f"N'{request.form.get("dantoc")}'" if request.form.get("dantoc") else "NULL"
-            tongiao = f"N'{request.form.get("tongiao")}'" if request.form.get("tongiao") else "NULL"
-            hocvan = f"N'{request.form.get("hocvan")}'" if request.form.get("hocvan") else "NULL"
-            thonxom = f"N'{request.form.get("thonxom")}'" if request.form.get("thonxom") else "NULL"
-            phuongxa = f"N'{request.form.get("phuongxa")}'" if request.form.get("phuongxa") else "NULL"
-            quanhuyen = f"N'{request.form.get("quanhuyen")}'" if request.form.get("quanhuyen") else "NULL"
-            tinhthanhpho = f"N'{request.form.get("tinhthanhpho")}'" if request.form.get("tinhthanhpho") else "NULL"
-            nganhang = f"N'{request.form.get("nganhang")}'" if request.form.get("nganhang") else "NULL"
-            sotaikhoan = f"'{request.form.get("sotaikhoan")}'" if request.form.get("sotaikhoan") else "NULL"
-            dienthoai = f"'{request.form.get("dienthoai")}'" if request.form.get("dienthoai") else "NULL"
-            sobhxh = f"'{request.form.get("sobhxh")}'" if request.form.get("sobhxh") else 'NULL'
-            masothue = f"'{request.form.get("masothue")}'" if request.form.get("masothue") else 'NULL'
-            connho = f"N'{request.form.get("connho")}'" if request.form.get("connho") else 'NULL'
-            tencon1 = f"N'{request.form.get("tenconnho1")}'" if request.form.get("tenconnho1") else 'NULL'
-            ngaysinhcon1 = f"'{request.form.get("ngaysinhcon1")}'" if request.form.get("ngaysinhcon1") else 'NULL'
-            tencon2 = f"N'{request.form.get("tenconnho2")}'" if request.form.get("tenconnho2") else 'NULL'
-            ngaysinhcon2 = f"'{request.form.get("ngaysinhcon2")}'" if request.form.get("ngaysinhcon2") else 'NULL'
-            tencon3 = f"N'{request.form.get("tenconnho3")}'" if request.form.get("tenconnho3") else 'NULL'
-            ngaysinhcon3 = f"'{request.form.get("ngaysinhcon3")}'" if request.form.get("ngaysinhcon3") else 'NULL'
-            tencon4 = f"N'{request.form.get("tenconnho4")}'" if request.form.get("tenconnho4") else 'NULL'
-            ngaysinhcon4 = f"'{request.form.get("ngaysinhcon4")}'" if request.form.get("ngaysinhcon4") else 'NULL'
-            tencon5 = f"N'{request.form.get("tenconnho5")}'" if request.form.get("tenconnho5") else 'NULL'
-            ngaysinhcon5 = f"'{request.form.get("ngaysinhcon5")}'" if request.form.get("ngaysinhcon5") else 'NULL'
-            jobdetailvn = f"N'{request.form.get("vitri")}'"
-            line = f"'{request.form.get("line")}'"
+            masothe = f"'{request.form.get('masothe')}'"
+            thechamcong = f"'{int(request.form.get('masothe'))}'"
+            hoten = f"N'{request.form.get('hoten')}'"
+            ngaysinh = f"'{request.form.get('ngaysinh')}'" if request.form.get("ngaysinh") else "NULL"
+            gioitinh = f"N'{request.form.get('gioitinh')}'"
+            cmt = f"'{request.form.get('cmt')}'"
+            cccd = f"'{request.form.get('cccd')}'"
+            ngaycapcccd = f"'{request.form.get('ngaycap')}'" if request.form.get("ngaycap") else "NULL"
+            noicapcccd = f"N'{request.form.get('noicap')}'" if request.form.get("noicap") else "NULL"
+            thuongtru = f"N'{request.form.get('thuongtru')}'" if request.form.get("thuongtru") else "NULL"
+            noisinh = f"N'{request.form.get('noisinh')}'" if request.form.get("noisinh") else "NULL"
+            tamtru = f"N'{request.form.get('tamtru')}'" if request.form.get("tamtru") else "NULL"
+            quoctich = f"N'{request.form.get('quoctich')}'" if request.form.get("quoctich") else "NULL"
+            dantoc = f"N'{request.form.get('dantoc')}'" if request.form.get("dantoc") else "NULL"
+            tongiao = f"N'{request.form.get('tongiao')}'" if request.form.get("tongiao") else "NULL"
+            hocvan = f"N'{request.form.get('hocvan')}'" if request.form.get("hocvan") else "NULL"
+            thonxom = f"N'{request.form.get('thonxom')}'" if request.form.get("thonxom") else "NULL"
+            phuongxa = f"N'{request.form.get('phuongxa')}'" if request.form.get("phuongxa") else "NULL"
+            quanhuyen = f"N'{request.form.get('quanhuyen')}'" if request.form.get("quanhuyen") else "NULL"
+            tinhthanhpho = f"N'{request.form.get('tinhthanhpho')}'" if request.form.get("tinhthanhpho") else "NULL"
+            nganhang = f"N'{request.form.get('nganhang')}'" if request.form.get("nganhang") else "NULL"
+            sotaikhoan = f"'{request.form.get('sotaikhoan')}'" if request.form.get("sotaikhoan") else "NULL"
+            dienthoai = f"'{request.form.get('dienthoai')}'" if request.form.get("dienthoai") else "NULL"
+            sobhxh = f"'{request.form.get('sobhxh')}'" if request.form.get("sobhxh") else 'NULL'
+            masothue = f"'{request.form.get('masothue')}'" if request.form.get("masothue") else 'NULL'
+            connho = f"N'{request.form.get('connho')}'" if request.form.get("connho") else 'NULL'
+            tencon1 = f"N'{request.form.get('tenconnho1')}'" if request.form.get("tenconnho1") else 'NULL'
+            ngaysinhcon1 = f"'{request.form.get('ngaysinhcon1')}'" if request.form.get("ngaysinhcon1") else 'NULL'
+            tencon2 = f"N'{request.form.get('tenconnho2')}'" if request.form.get("tenconnho2") else 'NULL'
+            ngaysinhcon2 = f"'{request.form.get('ngaysinhcon2')}'" if request.form.get("ngaysinhcon2") else 'NULL'
+            tencon3 = f"N'{request.form.get('tenconnho3')}'" if request.form.get("tenconnho3") else 'NULL'
+            ngaysinhcon3 = f"'{request.form.get('ngaysinhcon3')}'" if request.form.get("ngaysinhcon3") else 'NULL'
+            tencon4 = f"N'{request.form.get('tenconnho4')}'" if request.form.get("tenconnho4") else 'NULL'
+            ngaysinhcon4 = f"'{request.form.get('ngaysinhcon4')}'" if request.form.get("ngaysinhcon4") else 'NULL'
+            tencon5 = f"N'{request.form.get('tenconnho5')}'" if request.form.get("tenconnho5") else 'NULL'
+            ngaysinhcon5 = f"'{request.form.get('ngaysinhcon5')}'" if request.form.get("ngaysinhcon5") else 'NULL'
+            jobdetailvn = f"N'{request.form.get('vitri')}'"
+            line = f"'{request.form.get('line')}'"
             factory = f"'{current_user.macongty}'"
-            hccategory = f"N'{request.form.get("hccategory")}'"
-            gradecode = f"N'{request.form.get("gradecode")}'"
-            department = f"N'{request.form.get("phongban")}'"
-            chucvu = f"N'{request.form.get("chucvu")}'"
-            employeetype = f"N'{request.form.get("loailaodong")}'"
-            sectioncode = f"N'{request.form.get("mabophan")}'"
-            sectiondescription = f"N'{request.form.get("bophan")}'"
-            jobdetailen = f"N'{request.form.get("vitrien")}'"
-            positioncode = f"N'{request.form.get("mavitri")}'"
-            positioncodedescription = f"N'{request.form.get("tenvitri")}'"
-            nguoithan = f"N'{request.form.get("nguoithan")}'" if request.form.get("nguoithan") else 'NULL'
-            sdtnguoithan = f"N'{request.form.get("sdtnguoithan")}'" if request.form.get("sdtnguoithan") else 'NULL'
+            hccategory = f"N'{request.form.get('hccategory')}'"
+            gradecode = f"N'{request.form.get('gradecode')}'"
+            department = f"N'{request.form.get('phongban')}'"
+            chucvu = f"N'{request.form.get('chucvu')}'"
+            employeetype = f"N'{request.form.get('loailaodong')}'"
+            sectioncode = f"N'{request.form.get('mabophan')}'"
+            sectiondescription = f"N'{request.form.get('bophan')}'"
+            jobdetailen = f"N'{request.form.get('vitrien')}'"
+            positioncode = f"N'{request.form.get('mavitri')}'"
+            positioncodedescription = f"N'{request.form.get('tenvitri')}'"
+            nguoithan = f"N'{request.form.get('nguoithan')}'" if request.form.get("nguoithan") else 'NULL'
+            sdtnguoithan = f"N'{request.form.get('sdtnguoithan')}'" if request.form.get("sdtnguoithan") else 'NULL'
             luongcoban = 'NULL'
             tongphucap = 'NULL'
             kieuhopdong = 'NULL'
@@ -1482,7 +1482,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -1499,7 +1499,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -1516,7 +1516,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -1537,7 +1537,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -1554,7 +1554,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -1575,7 +1575,7 @@ def dieuchuyen():
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
                     else:
-                        flash(f"Điều chuyển thất bại, lí do: {ketqua["lido"]}, query: {ketqua["query"]} !!!")
+                        flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Điều chuyển thất bại, lí do: {e}")
                 return redirect(f"/muc6_1")
@@ -3528,7 +3528,7 @@ def muc7_1_20():
 
         for row in danhsach:
             data = [y for y in row[:-1]]
-            data[7] = datetime.strptime(data[7],"%Y-%m-%d")
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d")
             sheet.append(data)
 
         # Tạo kiểu định dạng ngày
@@ -3536,7 +3536,7 @@ def muc7_1_20():
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyệt qua các ô trong khu vực G7:H10000
         for row in range(4, 50001):  # Bắt đầu từ dòng 7 đến dòng 10000
-            for col in ['H']:
+            for col in ['F']:
                 cell = sheet[f"{col}{row}"]
                 
                 try:
