@@ -2121,7 +2121,7 @@ def laydanhsachphepton(mst=None):
         if mst:
             query += f" AND MST = '{mst}'"
 
-        query += " ORDER BY CAST(MST AS INT) asc"
+        query += " ORDER BY CAST(MST AS INT) asc, NAM DESC,THANG DESC"
         rows = cursor.execute(query).fetchall()
         conn.close()
         result = []
