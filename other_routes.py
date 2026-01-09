@@ -5657,7 +5657,7 @@ def hcname_delete():
 @login_required
 def tuoi_nghi_huu():
     danh_sach = lay_tuoi_nghi_huu()
-    print(danh_sach)
+    # print(danh_sach)
     return render_template("tuoi_nghi_huu.html", danh_sach=danh_sach)
 
 @app.route("/tuoi_nghi_huu/edit", methods=["POST"])
