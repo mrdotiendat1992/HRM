@@ -5653,3 +5653,42 @@ def hcname_delete():
         flash("Xóa thành công!")
     return redirect(url_for("hcname"))
     
+@app.route("/tuoi_nghi_huu", methods=["GET"])
+@login_required
+def tuoi_nghi_huu():
+    danh_sach = lay_tuoi_nghi_huu()
+    print(danh_sach)
+    return render_template("tuoi_nghi_huu.html", danh_sach=danh_sach)
+
+@app.route("/tuoi_nghi_huu/edit", methods=["POST"])
+@login_required
+def sua_tuoi_nghi_huu():
+    if request.method == "POST":
+        id = request.form.get("id")
+        nam = request.form.get("nam")
+        thang = request.form.get("thang")
+        query = f"""UPDATE Tuoi_nghi_huu SET nam = {nam}, thang = {thang} WHERE id = {id}"""
+        print(query)
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        try:
+            cursor.execute(query)
+            cursor.commit()
+        except Exception as e:
+            conn.rollback()
+            flash("Cập nhật thất bại!")
+        finally:
+            conn.close()
+        flash("Cập nhật thành công!")
+    return redirect(url_for("tuoi_nghi_huu"))
+
+@app.route("/laythongtinnghihuu", methods=["POST"])
+def lay_thong_tin_nghihuu():
+    danh_sach = lay_tuoi_nghi_huu()
+    gioitinh = request.args.get("gioitinh")
+
+    danh_sach_nghi_huu = [
+        item for item in danh_sach if item[1] == gioitinh
+    ]
+
+    return jsonify(danh_sach_nghi_huu)

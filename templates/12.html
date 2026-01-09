@@ -4,228 +4,272 @@
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <link rel="icon" href="/static/img/logo.ico">
-        <title>{% block title %}{% endblock title %}</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
 
-        <style>
-            {% block style %}
-            #bangcalamviec {
-                position: absolute;
-                left: -200px;
-                font-size: 8px;
-            }
-            #bangcalamviec th, td {
-                white-space: nowrap;
-            }
-            .alert {
-                position:fixed;
-                top: 200px;
-                width:200px;
-                right:20px;
-            }
-            {% endblock style %}
-        </style>
-    </head>
-    <body>
-        <!--[if lt IE 7]>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/static/img/logo.ico">
+    <title>{% block title %}{% endblock title %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/css/bootstrap-select.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta3/dist/js/bootstrap-select.min.js"></script>
+
+    <style>
+        {
+            % block style %
+        }
+
+        #bangcalamviec {
+            position: absolute;
+            left: -200px;
+            font-size: 8px;
+        }
+
+        #bangcalamviec th,
+        td {
+            white-space: nowrap;
+        }
+
+        .alert {
+            position: fixed;
+            top: 200px;
+            width: 200px;
+            right: 20px;
+        }
+
+            {
+            % endblock style %
+        }
+    </style>
+</head>
+
+<body>
+    <!--[if lt IE 7]>
             <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
         <![endif]-->
-        <div class="container-fluid">
-            <div class="row">
-                <nav class="navbar navbar-expand-lg bg-body-tertiary">
-                    <div class="container-fluid">
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <a class="navbar-brand" href="/">
-                            <img src="/static/img/logo.png" alt="Logo" width="60" class="d-inline-block align-text-top">
-                        </a>
-                        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                            <span class="navbar-toggler-icon"></span>
-                        </button>
-                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                            <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="gap:20px; flex-wrap:wrap; max-width:80%">
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Đăng ký làm thêm giờ
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" >
-                                        <li><a class="dropdown-item" href="/dangki_tangca_web">Đăng ký làm thêm giờ</a></li>
-                                        <li><a class="dropdown-item" href="/duieu_tangca_web">Dữ liệu cũ</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Dữ liệu chấm công
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/chamcong_sang_web">Chấm công sáng</a></li>
-                                        <li><a class="dropdown-item" href="/chamcong_goc_web">Dữ liệu chấm công gốc</a></li>
-                                    </ul>
-                                </div>
+    <div class="container-fluid">
+        <div class="row">
+            <nav class="navbar navbar-expand-lg bg-body-tertiary">
+                <div class="container-fluid">
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">
+                        <img src="/static/img/logo.png" alt="Logo" width="60" class="d-inline-block align-text-top">
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="gap:20px; flex-wrap:wrap; max-width:80%">
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Đăng ký làm thêm giờ
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/dangki_tangca_web">Đăng ký làm thêm giờ</a></li>
+                                    <li><a class="dropdown-item" href="/duieu_tangca_web">Dữ liệu cũ</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Dữ liệu chấm công
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/chamcong_sang_web">Chấm công sáng</a></li>
+                                    <li><a class="dropdown-item" href="/chamcong_goc_web">Dữ liệu chấm công gốc</a></li>
+                                </ul>
+                            </div>
 
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Bảng công
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/bangcong_thang_web">Bảng chấm công tổng hợp</a></li>
-                                        <li><a class="dropdown-item" href="/bangcong_hanhchinh_web">Bảng chấm công hành chính</a></li>
-                                        <li><a class="dropdown-item" href="/bangcong5ngay_web">Bảng chấm công chi tiết chưa chốt</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongchot_web">Bảng chấm công chi tiết chốt</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongchotquakhu_web">Bảng chấm công chi tiết quá khứ</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongtrangoai_web">Bảng công tổng hợp trả ngoài</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongchunhatchuachot_web">Bảng chấm công chi tiết Chủ Nhật chưa chốt</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongchunhatchot_web">Bảng chấm công chi tiết Chủ Nhật chốt</a></li>
-                                        <li><a class="dropdown-item" href="/bangcongchunhatquakhu_web">Bảng chấm công chi tiết Chủ Nhật quá khứ</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Đăng ký đi làm
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/dangky_ngayle_web">Đăng ký ngày lễ</a></li>
-                                        <li><a class="dropdown-item" href="/dangky_chunhat_web">Đăng ký Chủ nhật</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Tăng ca
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/tangcachedo_web">Bảng làm thêm giờ chế độ</a></li>
-                                        <li><a class="dropdown-item" href="/tangcangay_web">Bảng làm thêm giờ ban ngày</a></a></li>
-                                        <li><a class="dropdown-item" href="/tangcadem_web">Bảng làm thêm giờ ban đêm</a></li>
-                                        <li><a class="dropdown-item" href="/tangca_ngayle_web">Bảng làm thêm giờ ngày lễ</a></a></li>
-                                        <li><a class="dropdown-item" href="/tangca_chunhat_web">Bảng làm thêm giờ chủ nhật</a></li>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Ca 
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangcalamviec">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-sm mb-0">
-                                                <thead>
-                                                    <tr class="bg-primary">
-                                                        <th>Ca</th>
-                                                        <th>Giờ vào HC</th>
-                                                        <th>Giờ ra HC</th>
-                                                        <th>Giờ bắt đầu ăn trưa</th>
-                                                        <th>Giờ kết thúc ăn trưa</th>
-                                                        <th>Giờ tăng ca 100%</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="calamviec">
-                                                    <!-- Dynamic content will be loaded here -->
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </ul>
-                                </div>
-                                <div class="dropdown">
-                                    <button class="btn btn-info btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Các loại nghỉ khác
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangnghikhac">
-                                        <img src="/static/img/manghikhac.png">
-                                    </ul>
-                                </div>   
-                                
-                                {% if 'HRD' in current_user.phongban %}
-                                <div class="dropdown">
-                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                        Chấm công tay
-                                    </button>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                        <li><a class="dropdown-item" href="/chamcongtay">Chấm công tay</a></li>
-                                        <li><a class="dropdown-item" href="/chamcongtaycn">Chấm công tay chủ nhật</a></li>
-                                    </ul>
-                                </div>
-                                {% endif %} 
-
-                                {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or 
-                                (current_user.macongty=='NT2' and current_user.masothe==2176) or 
-                                (current_user.macongty=='NT2' and current_user.masothe==1369) or 
-                                current_user.phanquyen == 'sa' %}
-                                    <div>
-                                        <a class="btn btn-primary btn-sm" href="/phanquyenthuky">Phân quyền thư ký</a>
-                                        <a class="btn btn-primary btn-sm" href="/capnhat_phepton">Cập nhật phép tồn</a>
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Bảng công
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/bangcong_thang_web">Bảng chấm công tổng hợp</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/bangcong_hanhchinh_web">Bảng chấm công hành
+                                            chính</a></li>
+                                    <li><a class="dropdown-item" href="/bangcong5ngay_web">Bảng chấm công chi tiết chưa
+                                            chốt</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchot_web">Bảng chấm công chi tiết
+                                            chốt</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchotquakhu_web">Bảng chấm công chi tiết
+                                            quá khứ</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongtrangoai_web">Bảng công tổng hợp trả
+                                            ngoài</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchunhatchuachot_web">Bảng chấm công chi
+                                            tiết Chủ Nhật chưa chốt</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchunhatchot_web">Bảng chấm công chi tiết
+                                            Chủ Nhật chốt</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchunhatquakhu_web">Bảng chấm công chi
+                                            tiết Chủ Nhật quá khứ</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Đăng ký đi làm
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/dangky_ngayle_web">Đăng ký ngày lễ</a></li>
+                                    <li><a class="dropdown-item" href="/dangky_chunhat_web">Đăng ký Chủ nhật</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Tăng ca
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/tangcachedo_web">Bảng làm thêm giờ chế độ</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/tangcangay_web">Bảng làm thêm giờ ban
+                                            ngày</a></a></li>
+                                    <li><a class="dropdown-item" href="/tangcadem_web">Bảng làm thêm giờ ban đêm</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/tangca_ngayle_web">Bảng làm thêm giờ ngày
+                                            lễ</a></a></li>
+                                    <li><a class="dropdown-item" href="/tangca_chunhat_web">Bảng làm thêm giờ chủ
+                                            nhật</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-info btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ca
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangcalamviec">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-sm mb-0">
+                                            <thead>
+                                                <tr class="bg-primary">
+                                                    <th>Ca</th>
+                                                    <th>Giờ vào HC</th>
+                                                    <th>Giờ ra HC</th>
+                                                    <th>Giờ bắt đầu ăn trưa</th>
+                                                    <th>Giờ kết thúc ăn trưa</th>
+                                                    <th>Giờ tăng ca 100%</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="calamviec">
+                                                <!-- Dynamic content will be loaded here -->
+                                            </tbody>
+                                        </table>
                                     </div>
-                                {% endif %}
+                                </ul>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-info btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Các loại nghỉ khác
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" id="bangnghikhac">
+                                    <img src="/static/img/manghikhac.png">
+                                </ul>
+                            </div>
 
-                                {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
-                                    or (current_user.masothe==2176 and current_user.macongty=='NT2')
-                                    or (current_user.macongty=='NT2' and current_user.masothe==1369)
-                                    or current_user.phanquyen == 'sa' %}       
-                                    <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
-                                {% endif %}
-                                {% if "HRD" in current_user.phongban %}       
-                                    <a href="/thoivu" class="btn btn-primary btn-sm">Thời vụ</a>
-                                {% endif %}
-                                {% if "HRD" in current_user.phongban %}       
-                                    <a href="/hcname" class="btn btn-primary btn-sm">Headcount name</a>
-                                {% endif %}
-                                
-                                <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
-                                    <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b> 
-                                    <form action="/logout" method="POST"><button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button></form>
-                                </li>
-                            </ul>
-                        </div>
+                            {% if 'HRD' in current_user.phongban %}
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Chấm công tay
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a class="dropdown-item" href="/chamcongtay">Chấm công tay</a></li>
+                                    <li><a class="dropdown-item" href="/chamcongtaycn">Chấm công tay chủ nhật</a></li>
+                                </ul>
+                            </div>
+                            {% endif %}
+
+                            {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or
+                            (current_user.macongty=='NT2' and current_user.masothe==2176) or
+                            (current_user.macongty=='NT2' and current_user.masothe==1369) or
+                            current_user.phanquyen == 'sa' %}
+                            <div>
+                                <a class="btn btn-primary btn-sm" href="/phanquyenthuky">Phân quyền thư ký</a>
+                                <a class="btn btn-primary btn-sm" href="/capnhat_phepton">Cập nhật phép tồn</a>
+                            </div>
+                            {% endif %}
+
+                            {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
+                            or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                            or (current_user.macongty=='NT2' and current_user.masothe==1369)
+                            or current_user.phanquyen == 'sa' %}
+                            <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
+                            {% endif %}
+                            {% if "HRD" in current_user.phongban %}
+                            <a href="/thoivu" class="btn btn-primary btn-sm">Thời vụ</a>
+                            {% endif %}
+                            {% if "HRD" in current_user.phongban %}
+                            <a href="/hcname" class="btn btn-primary btn-sm">Headcount name</a>
+                            <a href="/tuoi_nghi_huu" class="btn btn-primary btn-sm">Tuổi nghỉ hưu</a>
+                            {% endif %}
+
+                            <li class="nav-item" style="position: absolute; right: 10px;display:flex; gap:10px;">
+                                <b>| {{current_user.hoten}} | {{current_user.masothe}} | {{current_user.phongban}}</b>
+                                <form action="/logout" method="POST"><button type="submit"
+                                        class="btn btn-danger btn-sm"><i class="fas fa-sign-out-alt"></i></button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
-                </nav>
-            </div>
-        </div>  
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="alert" role="alert" style="margin-left: 500px;display: fixed; border: 1px solid #f5c6cb;
+                </div>
+            </nav>
+        </div>
+    </div>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert" role="alert" style="margin-left: 500px;display: fixed; border: 1px solid #f5c6cb;
                                 border-radius: 5px;
                                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                                 transition: opacity 0.5s ease, transform 0.5s ease;
                                 transform: translateY(-20px);">
-                    {{ messages[0] }}
-                </div>
-            {% endif %}
-        {% endwith %}
-        {% block content %}
-        
-        {% endblock content %}
-        
-        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        {{ messages[0] }}
+    </div>
+    {% endif %}
+    {% endwith %}
+    {% block content %}
 
-        <script>
-            document.addEventListener('DOMContentLoaded', (event) => {
-                const bangcalamviec = document.getElementById('calamviec');
-                
-                axios({
-                    method: 'post',
-                    url: '/laybangcalamviec'
-                }).then(function(response) {
-                    let data = response.data["data"];
-                    //console.log(data)
-            
-                    // Now, iterate over the array and populate the table
-                    data.forEach(element => {
-                        let giovaohc = element['Giờ vào hành chính'].substring(0, 5);
-                        let giorahc = element['Giờ ra hành chính'].substring(0, 5);
-                        let giobatdau = element['Giờ bắt đầu ăn trưa'].substring(0, 5);
-                        let gioketthuc = element['Giờ kết thúc ăn trưa'].substring(0, 5);
-                        let giotangca = element['Giờ tăng ca 100%'].substring(0, 5);
-                        bangcalamviec.innerHTML += `
+    {% endblock content %}
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const bangcalamviec = document.getElementById('calamviec');
+
+            axios({
+                method: 'post',
+                url: '/laybangcalamviec'
+            }).then(function (response) {
+                let data = response.data["data"];
+                //console.log(data)
+
+                // Now, iterate over the array and populate the table
+                data.forEach(element => {
+                    let giovaohc = element['Giờ vào hành chính'].substring(0, 5);
+                    let giorahc = element['Giờ ra hành chính'].substring(0, 5);
+                    let giobatdau = element['Giờ bắt đầu ăn trưa'].substring(0, 5);
+                    let gioketthuc = element['Giờ kết thúc ăn trưa'].substring(0, 5);
+                    let giotangca = element['Giờ tăng ca 100%'].substring(0, 5);
+                    bangcalamviec.innerHTML += `
                             <tr>
                                 <td><b>${element['Tên ca']}</b></td>
                                 <td>${giovaohc}</td>
@@ -234,12 +278,13 @@
                                 <td>${gioketthuc}</td>
                                 <td>${giotangca}</td>
                             </tr>`;
-                    });
-                }).catch(function(error) {
-                    console.error('Error fetching data:', error);
                 });
+            }).catch(function (error) {
+                console.error('Error fetching data:', error);
             });
-            
-        </script>
-    </body>
+        });
+
+    </script>
+</body>
+
 </html>

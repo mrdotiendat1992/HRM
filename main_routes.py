@@ -1323,6 +1323,39 @@ def danhsachsaphethanhopdong():
         flash("Tải file thành công !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
+@app.route("/muc3_5", methods=["GET","POST"])
+@login_required
+@roles_required('hr','sa','gd')
+def danhsachsapnghihuu():
+    if request.method == "GET":
+        danhsach = laydanhsachsapnghihuu()
+        current_page = request.args.get(get_page_parameter(), type=int, default=1)
+        per_page = 10
+        total = len(danhsach)
+        start = (current_page - 1) * per_page
+        end = start + per_page
+        paginated_rows = danhsach[start:end]
+        pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+        return render_template("/3_5.html",
+                               danhsach=paginated_rows,
+                               pagination=pagination,
+                               total = total)
+
+    elif request.method == "POST":
+        try:
+            # tải danh sách sắp nghỉ hưu xuống excel
+            # MST, Ho_ten, Chuc_danh, Gioi_tinh, Chuyen, Bo_phan, Ngay_sinh, Ngay_nghi_huu, So_thang_con_lai
+            danhsach = laydanhsachsapnghihuu()
+            df = pd.DataFrame(danhsach)
+            df.columns = ["MST", "Ho_ten", "Chuc_danh", "Gioi_tinh", "Chuyen", "Bo_phan", "Ngay_sinh", "Ngay_nghi_huu", "So_thang_con_lai"]
+            thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+            df.to_excel(os.path.join(FOLDER_XUAT, f"sapnghihuu_{thoigian}.xlsx"), index=False)
+            flash("Tải file thành công !!!")
+            return send_file(os.path.join(FOLDER_XUAT, f"sapnghihuu_{thoigian}.xlsx"), as_attachment=True)
+        except Exception as e:
+            flash(str(e))
+            return redirect("/muc3_5")
+
 @app.route("/muc5_1_1", methods=["GET","POST"])
 @login_required
 @roles_required('sa','tbp','gd')

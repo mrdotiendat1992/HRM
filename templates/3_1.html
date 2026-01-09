@@ -1,41 +1,46 @@
-{% extends  "base.html" %}
+{% extends "base.html" %}
 {% block style%}
 <style>
-label, input, select {
-    font-weight: bold;
-    color: #4e73df;
-}
-label {
-    width:120px;
-    margin-left: 10px;
-}
-input, select {
-    margin-left: 10px;
-    width: 150px;
-}
-.image-upload-wrapper {
-    width: 200px;
-    height: 200px;
-    border: 2px dashed #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
+    label,
+    input,
+    select {
+        font-weight: bold;
+        color: #4e73df;
+    }
 
-.image-upload-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
+    label {
+        width: 120px;
+        margin-left: 10px;
+    }
 
-#anh {
-    display: none;
-}
+    input,
+    select {
+        margin-left: 10px;
+        width: 150px;
+    }
 
+    .image-upload-wrapper {
+        width: 200px;
+        height: 200px;
+        border: 2px dashed #ccc;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        overflow: hidden;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+    }
+
+    .image-upload-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    #anh {
+        display: none;
+    }
 </style>
 {% endblock style %}
 {% block content %}
@@ -50,7 +55,7 @@ input, select {
 
             <label for="masothe">Mã số thẻ</label>
             <input type="text" id="masothe" name="masothe" readonly value={{masothe}}>
-            
+
         </div>
 
         <hr />
@@ -68,7 +73,7 @@ input, select {
             <input type="date" id="ngaycap" name="ngaycap">
             <label for="noicap">Nơi cấp</label>
             <input type="text" id="noicap" name="noicap">
-        </div>        
+        </div>
         <div class="form-group">
             <label for="hoten">Họ và tên</label>
             <input type="text" id="hoten" name="hoten">
@@ -106,7 +111,7 @@ input, select {
         <hr />
 
         <h5>Thông tin tuyển dụng</h5>
-        
+
         <div class="form-group">
             <label for="dantoc">Dân tộc</label>
             <input type="text" id="dantoc" name="dantoc">
@@ -125,16 +130,16 @@ input, select {
             <input type="text" id="sobhxh" name="sobhxh">
         </div>
 
-        
+
         <div class="form-group">
             <label for="dienthoai">Điện thoại</label>
             <input type="text" id="dienthoai" name="dienthoai">
             <label for="masothue">Mã số thuế</label>
-            <input type="text" id="masothue" name="masothue">        
+            <input type="text" id="masothue" name="masothue">
             <label for="connho">Có con nhỏ</label>
             <input type="text" id="connho" name="connho">
         </div>
-       
+
         <div class="form-group">
             <label for="tenconnho1">Tên con nhỏ 1</label>
             <input type="text" id="tenconnho1" name="tenconnho1">
@@ -175,7 +180,7 @@ input, select {
         </div>
 
         <hr />
-        
+
         <h5> Thống tin vị trí làm việc </h5>
 
         <div class="form-group">
@@ -254,7 +259,7 @@ input, select {
             return formattedDate
         }
 
-        document.getElementById("scan-qrcode").addEventListener("change", function() {
+        document.getElementById("scan-qrcode").addEventListener("change", function () {
             var scanqrcode = document.getElementById("scan-qrcode").value
             var newvalue = scanqrcode.replace(/'/g, '');
             document.getElementById("scan-qrcode").value = newvalue
@@ -293,19 +298,73 @@ input, select {
                     document.getElementById("tamtru").value = diachi_data;
                     document.getElementById("noisinh").value = diachi_data;
                     document.getElementById("noicap").value = "Cục cảnh sát";
-                    
+
                 } else {
                     alert("Thông tin CCCD không chính xác. Vui lòng nhập lại.");
                 }
                 document.getElementById("quoctich").value = "Việt Nam";
+
+                axios({
+                    method: 'post',
+                    url: '/laythongtinnghihuu',
+                    params: {
+                        gioitinh: document.getElementById("gioitinh").value
+                    }
+                })
+                    .then(function (response) {
+                        const data = response.data;
+
+                        if (!data || data.length === 0) {
+                            //console.log("Không có dữ liệu tuổi nghỉ hưu");
+                            return;
+                        }
+
+                        const nam_nghihuu = data[0][2];   // số năm
+                        const thang_nghihuu = data[0][3]; // số tháng
+
+                        const ngaysinhStr = document.getElementById("ngaysinh").value;
+                        if (!ngaysinhStr) {
+                            //console.log("Chưa nhập ngày sinh");
+                            return;
+                        }
+
+                        const ngaySinh = new Date(ngaysinhStr);
+
+                        // 👉 Ngày đủ tuổi nghỉ hưu
+                        const ngayNghiHuu = new Date(ngaySinh);
+                        ngayNghiHuu.setFullYear(ngayNghiHuu.getFullYear() + nam_nghihuu);
+                        ngayNghiHuu.setMonth(ngayNghiHuu.getMonth() + thang_nghihuu);
+
+                        const homNay = new Date();
+
+                        // 👉 Số tháng còn lại đến nghỉ hưu
+                        const soThangConLai =
+                            (ngayNghiHuu.getFullYear() - homNay.getFullYear()) * 12 +
+                            (ngayNghiHuu.getMonth() - homNay.getMonth());
+
+                        //console.log("Ngày nghỉ hưu:", ngayNghiHuu.toLocaleDateString());
+                        //console.log("Số tháng còn lại:", soThangConLai);
+
+                        // 👉 Cảnh báo trong vòng 1 năm
+                        if (soThangConLai <= 12 && soThangConLai >= 0) {
+                            alert("⚠️ Người lao động sẽ đến tuổi nghỉ hưu trong vòng 1 năm tới!");
+                        } else if (soThangConLai < 0) {
+                            alert("ℹ️ Người lao động đã quá tuổi nghỉ hưu");
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+
+
                 axios({
                     method: 'post',
                     url: '/laythongtincccd?cccd=' + document.getElementById("cccd").value
                 })
-                    .then(function(response) {
+                    .then(function (response) {
                         data = response.data
-                        console.log(data)
-                        alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
+                        //console.log(data)
+                        alert("Tìm thấy ứng viên có CCCD " + document.getElementById("cccd").value + " trùng thông tin")
                         document.getElementById("dantoc").value = data["Dân tộc"].replace(/'/g, '');;
                         document.getElementById("tongiao").value = data["Tôn giáo"];
                         document.getElementById("dienthoai").value = data["Số điện thoại"];
@@ -361,21 +420,21 @@ input, select {
                             document.getElementById("sdtnguoithan").value = data["SĐT người thân"];
                         }
                     })
-                    .catch(function(error) {
-                        alert("Không có ứng viên nào trùng CCCD "+ document.getElementById("cccd").value)
+                    .catch(function (error) {
+                        alert("Không có ứng viên nào trùng CCCD " + document.getElementById("cccd").value)
                     })
             }
         })
-        
-        document.getElementById("cccd").addEventListener("change", function() {
+
+        document.getElementById("cccd").addEventListener("change", function () {
             axios({
                 method: 'post',
                 url: '/laythongtincccd?cccd=' + document.getElementById("cccd").value
             })
-                .then(function(response) {
+                .then(function (response) {
                     data = response.data
-                    console.log(data)
-                    alert("Tìm thấy ứng viên có CCCD "+ document.getElementById("cccd").value +" trùng thông tin")
+                    //console.log(data)
+                    alert("Tìm thấy ứng viên có CCCD " + document.getElementById("cccd").value + " trùng thông tin")
                     document.getElementById("dantoc").value = data["Dân tộc"].replace(/'/g, '');;
                     document.getElementById("tongiao").value = data["Tôn giáo"];
                     document.getElementById("dienthoai").value = data["Số điện thoại"];
@@ -433,7 +492,7 @@ input, select {
                 })
 
         })
-        document.getElementById("vitri").addEventListener("change", function() {
+        document.getElementById("vitri").addEventListener("change", function () {
             var vitri = document.getElementById("vitri").value
             axios({
                 method: 'post',
@@ -442,49 +501,49 @@ input, select {
                 .then(function (response) {
                     var data = response.data
                     if (response.data != "") {
-                        console.log(data)
+                        //console.log(data)
                         if (Array.isArray(data)) {
                             var select = document.getElementById('line');
                             select.innerHTML = ''; // Clear existing options
-                            data.forEach(function(item) {
+                            data.forEach(function (item) {
                                 var option = document.createElement('option');
                                 option.value = item; // Assuming item has a 'value' property
                                 option.text = item; // Assuming item has a 'text' property
                                 select.appendChild(option);
                             });
                         }
-                        var chuyenmoi=data[0]
+                        var chuyenmoi = data[0]
                         axios({
                             method: 'post',
-                            url: '/check_hcname?vitri=' + vitri+"&line="+chuyenmoi
+                            url: '/check_hcname?vitri=' + vitri + "&line=" + chuyenmoi
                         })
-                        .then(function (response) {
-                            var data = response.data
-                            if (response.data != "") {
-                                console.log(data)
-                                data = response.data
-                                document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                                document.getElementById("gradecode").value = data["Grade_code"]; // 3
-                                document.getElementById("mabophan").value = data["Section_code"]; // 4
-                                document.getElementById("hccategory").value = data["HC_category"]; // 5
-                                document.getElementById("phongban").value = data["Department"]; // 6
-                                document.getElementById("bophan").value = data["Section_description"]; // 7
-                                document.getElementById("loailaodong").value = data["Employee_type"]; // 8
-                                document.getElementById("mavitri").value = data["Position_code"]; // 9
-                                document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
-                                document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
-                                axios({
-                                    method: 'post',
-                                    url: '/laycatheoline?line=' + data["Line"]
-                                })
-                                .then(function (response) {
-                                    document.getElementById("calamviec").value = response.data['Ca']
-                                })
-                            }
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+                            .then(function (response) {
+                                var data = response.data
+                                if (response.data != "") {
+                                    //console.log(data)
+                                    data = response.data
+                                    document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                                    document.getElementById("gradecode").value = data["Grade_code"]; // 3
+                                    document.getElementById("mabophan").value = data["Section_code"]; // 4
+                                    document.getElementById("hccategory").value = data["HC_category"]; // 5
+                                    document.getElementById("phongban").value = data["Department"]; // 6
+                                    document.getElementById("bophan").value = data["Section_description"]; // 7
+                                    document.getElementById("loailaodong").value = data["Employee_type"]; // 8
+                                    document.getElementById("mavitri").value = data["Position_code"]; // 9
+                                    document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
+                                    document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
+                                    axios({
+                                        method: 'post',
+                                        url: '/laycatheoline?line=' + data["Line"]
+                                    })
+                                        .then(function (response) {
+                                            document.getElementById("calamviec").value = response.data['Ca']
+                                        })
+                                }
+                            })
+                            .catch(function (error) {
+                                console.log(error);
+                            });
                     }
                 })
                 .catch(function (error) {
@@ -492,33 +551,33 @@ input, select {
                 });
         })
 
-        document.getElementById("line").addEventListener("change", function() {
+        document.getElementById("line").addEventListener("change", function () {
             var vitri = document.getElementById("vitri").value
             var chuyen = document.getElementById("line").value
             axios({
                 method: 'post',
-                url: '/check_hcname?vitri=' + vitri+"&line="+chuyen
+                url: '/check_hcname?vitri=' + vitri + "&line=" + chuyen
             })
-            .then(function (response) {
-                var data = response.data
-                if (response.data != "") {
-                    data = response.data
-                    console.log(data)
-                    document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                    document.getElementById("gradecode").value = data["Grade_code"]; // 3
-                    document.getElementById("mabophan").value = data["Section_code"]; // 4
-                    document.getElementById("hccategory").value = data["HC_category"]; // 5
-                    document.getElementById("phongban").value = data["Department"]; // 6
-                    document.getElementById("bophan").value = data["Section_description"]; // 7
-                    document.getElementById("loailaodong").value = data["Employee_type"]; // 8
-                    document.getElementById("mavitri").value = data["Position_code"]; // 9
-                    document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
-                    document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+                .then(function (response) {
+                    var data = response.data
+                    if (response.data != "") {
+                        data = response.data
+                        //console.log(data)
+                        document.getElementById("vitrien").value = data["Detail_job_title_EN"];
+                        document.getElementById("gradecode").value = data["Grade_code"]; // 3
+                        document.getElementById("mabophan").value = data["Section_code"]; // 4
+                        document.getElementById("hccategory").value = data["HC_category"]; // 5
+                        document.getElementById("phongban").value = data["Department"]; // 6
+                        document.getElementById("bophan").value = data["Section_description"]; // 7
+                        document.getElementById("loailaodong").value = data["Employee_type"]; // 8
+                        document.getElementById("mavitri").value = data["Position_code"]; // 9
+                        document.getElementById("tenvitri").value = data["Position_code_description"]; // 10
+                        document.getElementById("chucvu").value = data["Chuc_vu"]; // 11
+                    }
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
         })
 
         // Function to format the number with commas as thousand separators
@@ -536,29 +595,29 @@ input, select {
                 return false;
             }
         }
-        document.getElementById("thonxom").addEventListener("change", function() {
-            document.getElementById("thuongtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("tamtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("noisinh").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            
+        document.getElementById("thonxom").addEventListener("change", function () {
+            document.getElementById("thuongtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("tamtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("noisinh").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+
         })
-        document.getElementById("phuongxa").addEventListener("change", function() {
-            document.getElementById("thuongtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("tamtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("noisinh").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            
+        document.getElementById("phuongxa").addEventListener("change", function () {
+            document.getElementById("thuongtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("tamtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("noisinh").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+
         })
-        document.getElementById("quanhuyen").addEventListener("change", function() {
-            document.getElementById("thuongtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("tamtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("noisinh").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            
+        document.getElementById("quanhuyen").addEventListener("change", function () {
+            document.getElementById("thuongtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("tamtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("noisinh").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+
         })
-        document.getElementById("tinhthanhpho").addEventListener("change", function() {
-            document.getElementById("thuongtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("tamtru").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            document.getElementById("noisinh").value = document.getElementById("thonxom").value+","+document.getElementById("phuongxa").value+","+document.getElementById("quanhuyen").value+","+document.getElementById("tinhthanhpho").value
-            
+        document.getElementById("tinhthanhpho").addEventListener("change", function () {
+            document.getElementById("thuongtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("tamtru").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+            document.getElementById("noisinh").value = document.getElementById("thonxom").value + "," + document.getElementById("phuongxa").value + "," + document.getElementById("quanhuyen").value + "," + document.getElementById("tinhthanhpho").value
+
         })
     </script>
     <script>
@@ -566,13 +625,13 @@ input, select {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('previewImage').src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
         }
-    
+
         // gắn sự kiện onchange khi DOM đã sẵn sàng
         document.addEventListener("DOMContentLoaded", function () {
             document.getElementById('anh').addEventListener('change', previewImage);

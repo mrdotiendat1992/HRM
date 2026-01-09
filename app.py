@@ -5996,3 +5996,41 @@ def get_dashboard_data():
         }
     except:
         return {}
+
+def lay_tuoi_nghi_huu():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROM Tuoi_nghi_huu")
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return [tuple(row) for row in rows]
+
+    except Exception as e:
+        print(e)
+        return [(1,"NAM",0,0),(2,"Nữ",0,0)]
+
+def laydanhsachsapnghihuu():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(""" SELECT MST, Ho_ten, Chuc_danh, Gioi_tinh, Chuyen, Bo_phan, Ngay_sinh, Ngay_nghi_huu, So_thang_con_lai
+                            FROM 
+                            VW_danh_sach_sap_nghi_huu 
+                            where So_thang_con_lai <= 6 and So_thang_con_lai > 0
+                            and Trang_thai_lam_viec = N'Đang làm việc'
+                            order by so_thang_con_lai asc, mst asc, gioi_tinh asc, ho_ten asc, chuc_danh asc, chuyen asc, bo_phan asc  
+                        """)
+        rows = cursor.fetchall()
+
+        conn.close()
+
+        return [tuple(row) for row in rows]
+
+    except Exception as e:
+        print(e)
+        return []

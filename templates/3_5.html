@@ -19,7 +19,7 @@
     }
 
     .content {
-        width: 1500px;
+        width: auto;
     }
 
     h5,
@@ -46,9 +46,18 @@
         margin-left: 10px;
         width: 150px;
     }
+
+    .warning {
+        background-color: yellow;
+    }
+
+    .danger {
+        background-color: red;
+    }
 </style>
 {% endblock style %}
 {% block content %}
+<h1>Danh sách sắp nghỉ hưu trong vòng 6 tháng</h1>
 <div class="scroll-container">
     <div class="content">
         <div style="display: flex; align-items: center;">
@@ -65,33 +74,27 @@
                     <th></th>
                     <th>Mã số thẻ</th>
                     <th>Họ tên</th>
-                    <th>Chức danh</th>
-                    <th>Chuyền tổ</th>
-                    <th>Phòng ban</th>
-                    <th>Loại HĐ</th>
-                    <th>Ngày hết hạn HĐ</th>
-                    <th>Ngày hết hạn HĐ thử việc</th>
-                    <th>Ngày hết hạn HĐ XĐTH 1</th>
-                    <th>Ngày hết hạn HĐ XĐTH 2</th>
-                    <th>Trạng thái</th>
+                    <th>Chuyền</th>
+                    <th>Ngày sinh</th>
+                    <th>Ngày nghỉ hưu</th>
+                    <th>Tháng còn lại</th>
                 </tr>
             </thead>
 
             <tbody>
                 {% for row in danhsach %}
                 <tr data-info='{{ row  | safe }}'>
-                    <td><a class="fas fa-fw fa-eye  view-details"></a></td>
+                    <td>{{loop.index}}</td>
                     <td>{{row[0]}}</td>
-                    <td>{{row[2]}}</td>
-                    <td>{{row[42]}}</td>
-                    <td>{{row[50]}}</td>
-                    <td>{{row[46]}}</td>
-                    <td>{{row[39]}}</td>
-                    <td class="date_en">{{row[41]}}</td>
-                    <td class="date_en">{{row[63]}}</td>
-                    <td class="date_en">{{row[65]}}</td>
-                    <td class="date_en">{{row[67]}}</td>
-                    <td>{{row[60]}}</td>
+                    <td>{{row[1]}}</td>
+                    <td>{{row[4]}}</td>
+                    <td class="date_en">{{row[6]}}</td>
+                    <td class="date_en">{{row[7]}}</td>
+                    {% if row[8] == 1 %}
+                    <td class="danger">{{row[8]}}</td>
+                    {% else %}
+                    <td class="warning">{{row[8]}}</td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </tbody>
