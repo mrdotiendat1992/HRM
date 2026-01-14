@@ -3037,10 +3037,11 @@ def bangcong_tong_web():
             mst = request.args.get("mst")
             bophan = request.args.get("bophan")
             chuyen = request.args.get("chuyen")
-            if (nam < 2025 or (nam == 2025 and thang > 6)):
-                danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
-            else:
-                danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+            # if (nam < 2025 or (nam == 2025 and thang > 6)):
+            #     danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
+            # else:
+            #     danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+            danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
             count = len(danhsach)
             page = request.args.get(get_page_parameter(), type=int, default=1)
             per_page = 15
