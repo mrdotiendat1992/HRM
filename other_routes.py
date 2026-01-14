@@ -3103,11 +3103,12 @@ def bangcong_tong_web():
         sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
-            if (nam < 2025 or (nam == 2025 and thang > 6)):
-                data = [y for y in row]
-            else:
-                # Chỉ lấy các cột cần thiết và sắp xếp lại thứ tự
-                data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            # if (nam < 2025 or (nam == 2025 and thang > 6)):
+            #     data = [y for y in row]
+            # else:
+            #     # Chỉ lấy các cột cần thiết và sắp xếp lại thứ tự
+            #     data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            data = [y for y in row]
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
@@ -3117,46 +3118,63 @@ def bangcong_tong_web():
         number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyệt qua các ô trong khu vực G7:H10000
         
-        if (nam < 2025 or (nam == 2025 and thang > 6)):
-            for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-                for col in ['G', 'H']:
-                    cell = sheet[f"{col}{row}"]
+        # if (nam < 2025 or (nam == 2025 and thang > 6)):
+        #     for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        #         for col in ['G', 'H']:
+        #             cell = sheet[f"{col}{row}"]
                     
-                    try:
-                        cell.style = date_style
-                    except ValueError:
-                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
-                    cell = sheet[f"{col}{row}"]
-                    if cell.value and int(cell.value) > 0:
-                        try:
-                            cell.style = number_style
-                        except ValueError:
-                            pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
-            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+        #             try:
+        #                 cell.style = date_style
+        #             except ValueError:
+        #                 pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+        #         for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+        #             cell = sheet[f"{col}{row}"]
+        #             if cell.value and int(cell.value) > 0:
+        #                 try:
+        #                     cell.style = number_style
+        #                 except ValueError:
+        #                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+        #     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        #     workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        #     return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
                         
-        else:
-            for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
-                for col in ['G', 'H']:
-                    cell = sheet[f"{col}{row}"]
-                    try:
-                        cell.style = date_style
-                    except ValueError:
-                        pass  # Nế
-                for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'W', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK']:
-                    cell = sheet[f"{col}{row}"]
-                    if cell.value and int(cell.value) > 0:
-                        try:
-                            cell.style = number_style
-                        except ValueError:
-                            pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+        # else:
+        #     for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+        #         for col in ['G', 'H']:
+        #             cell = sheet[f"{col}{row}"]
+        #             try:
+        #                 cell.style = date_style
+        #             except ValueError:
+        #                 pass  # Nế
+        #         for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'W', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK']:
+        #             cell = sheet[f"{col}{row}"]
+        #             if cell.value and int(cell.value) > 0:
+        #                 try:
+        #                     cell.style = number_style
+        #                 except ValueError:
+        #                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
 
-            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
-            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
-            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
-    
+        #     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        #     workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        #     return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
+                try:
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
 @app.route("/bangcongtrangoai_web", methods=["GET","POST"])
 @login_required
 def bangcongtrangoai_web():
