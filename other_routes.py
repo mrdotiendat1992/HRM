@@ -3048,13 +3048,17 @@ def bangcong_tong_web():
             end = start + per_page
             paginated_rows = danhsach[start:end]
             pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
-            if (nam < 2025 or (nam == 2025 and thang > 6)):
-                return render_template("bangcong_thang_web_sau_072025.html",
-                                    danhsach=paginated_rows, 
-                                    pagination=pagination,
-                                    count=count)
-            else:
-                return render_template("bangcong_thang_web.html",
+            # if (nam < 2025 or (nam == 2025 and thang > 6)):
+            #     return render_template("bangcong_thang_web_sau_072025.html",
+            #                         danhsach=paginated_rows, 
+            #                         pagination=pagination,
+            #                         count=count)
+            # else:
+            #     return render_template("bangcong_thang_web.html",
+            #                         danhsach=paginated_rows, 
+            #                         pagination=pagination,
+            #                         count=count)
+            return render_template("bangcong_thang_web_sau_072025.html",
                                     danhsach=paginated_rows, 
                                     pagination=pagination,
                                     count=count)
@@ -3068,12 +3072,15 @@ def bangcong_tong_web():
         mst = request.form.get("mst")
         bophan = request.form.get("bophan")
         chuyen = request.form.get("chuyen")
-        if (nam < 2025 or (nam == 2025 and thang > 6)):
-            danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
-            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
-        else:
-            danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
-            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP)
+        # if (nam < 2025 or (nam == 2025 and thang > 6)):
+        #     danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
+        #     workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
+        # else:
+        #     danhsach = lay_bangcongthang_web(mst,bophan,chuyen,thang,nam)
+        #     workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP)
+
+        danhsach = lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
 
         sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
