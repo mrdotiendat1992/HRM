@@ -3379,13 +3379,13 @@ def muc7_1_17():
                     cell.style = date_style
                 except ValueError:
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
-        for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ']:
-            cell = sheet[f"{col}{row}"]
-            if cell.value and int(cell.value) > 0:
-                try:
-                    cell.style = number_style
-                except ValueError:
-                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ']:
+                cell = sheet[f"{col}{row}"]
+                if cell.value and int(cell.value) > 0:
+                    try:
+                        cell.style = number_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
