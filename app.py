@@ -1208,6 +1208,19 @@ def laydanhsachtheomst(mst):
     except Exception as e:
         flash(f"Lỗi khi lấy danh sách nhân viên theo MST: {e}")
         return []
+
+def lay_thongtin_nhanvien(mst, nhamay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT TOP(1) * FROM Danh_sach_CBCNV WHERE MST = '{mst}' AND Factory = '{nhamay}'"
+        
+        user = cursor.execute(query).fetchone()
+        conn.close()
+        return lay_user(user)
+    except Exception as e:
+        flash(f"Lỗi khi lấy danh sách nhân viên theo MST: {e}")
+        return []
     
 def laydanhsachtheothechamcong(mst):
     try:

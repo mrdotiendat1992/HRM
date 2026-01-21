@@ -5718,3 +5718,235 @@ def lay_thong_tin_nghihuu():
     ]
 
     return jsonify(danh_sach_nghi_huu)
+
+@app.route("/qrcode/nhap_diemdanhbu_hp", methods=["GET"])
+def nhap_diemdanhbu_hp():
+    return render_template("nhap_diemdanhbu_hp.html")
+
+@app.route("/qrcode/dangky_diemdanhbu_hp", methods=["POST"])
+def dangky_diemdanhbu_hp():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        loaidiemdanh = forms.get("loaidiemdanh")
+        ngay = forms.get("ngay")
+        gio = forms.get("gio")
+        lido = forms.get("lido")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Diem_danh_bu
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, loaidiemdanh=loaidiemdanh, ngay=ngay, gio=gio, lido=lido, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký điểm danh thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký điểm danh thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_diemdanhbu_hp")
+
+@app.route("/qrcode/nhap_diemdanhbu_na", methods=["GET"])
+def nhap_diemdanhbu_na():
+    return render_template("nhap_diemdanhbu_na.html")
+
+@app.route("/qrcode/dangky_diemdanhbu_na", methods=["POST"])
+def dangky_diemdanhbu_na():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        loaidiemdanh = forms.get("loaidiemdanh")
+        ngay = forms.get("ngay")
+        gio = forms.get("gio")
+        lido = forms.get("lido")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Diem_danh_bu
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, loaidiemdanh=loaidiemdanh, ngay=ngay, gio=gio, lido=lido, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký điểm danh thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký điểm danh thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_diemdanhbu_na")
+
+@app.route("/qrcode/nhap_xinnghiphep_hp", methods=["GET"])
+def nhap_xinnghiphep_hp():
+    return render_template("nhap_xinnghiphep_hp.html")
+
+@app.route("/qrcode/dangky_nghiphep_hp", methods=["POST"])
+def dangky_nghiphep_hp():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        ngay = forms.get("ngay")
+        sophut = forms.get("sophut")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Xin_nghi_phep
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký nghỉ phép thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký nghỉ phép thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_xinnghiphep_hp")
+
+@app.route("/qrcode/nhap_xinnghiphep_na", methods=["GET"])
+def nhap_xinnghiphep_na():
+    return render_template("nhap_xinnghiphep_na.html") 
+
+@app.route("/qrcode/dangky_nghiphep_na", methods=["POST"])
+def dangky_nghiphep_na():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        ngay = forms.get("ngay")
+        sophut = forms.get("sophut")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Xin_nghi_phep
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký nghỉ phép thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký nghỉ phép thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_xinnghiphep_na")
+
+@app.route("/qrcode/nhap_xinnghikhongluong_hp", methods=["GET"])
+def nhap_xinnghikhongluong_hp():
+    return render_template("nhap_xinnghikhongluong_hp.html")
+
+@app.route("/qrcode/dangky_nghikhongluong_hp", methods=["POST"])
+def dangky_nghikhongluong_hp():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        ngay = forms.get("ngay")
+        sophut = forms.get("sophut")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Xin_nghi_khong_luong
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký nghỉ phép thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký nghỉ phép thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_xinnghikhongluong_hp")
+
+@app.route("/qrcode/nhap_xinnghikhongluong_na", methods=["GET"])
+def nhap_xinnghikhongluong_na():
+    return render_template("nhap_xinnghikhongluong_na.html") 
+
+@app.route("/qrcode/dangky_nghikhongluong_na", methods=["POST"])
+def dangky_nghikhongluong_na():
+    if request.method == "POST":
+        forms = request.form
+        nhamay = forms.get("nhamay")
+        machamcong = forms.get("machamcong")
+        ngay = forms.get("ngay")
+        sophut = forms.get("sophut")
+        nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
+        if nhanvien:
+            hoten = nhanvien["Họ tên"]
+            chucdanh = nhanvien["Job title VN"]
+            phongban = nhanvien["Department"]
+            chuyen = nhanvien["Line"]
+            query = """
+                INSERT INTO Xin_nghi_khong_luong
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+            """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+            try:
+                cursor.execute(query)
+                cursor.commit()
+            except Exception as e:
+                print(e)
+                conn.rollback()
+                flash("Đăng ký nghỉ phép thất bại!")
+            finally:
+                conn.close()
+            flash("Đăng ký nghỉ phép thành công!")
+        else:
+            flash("Không tìm thấy thông tin nhân viên!")
+        return redirect("/qrcode/nhap_xinnghikhongluong_na")
