@@ -1079,9 +1079,15 @@ def lay_user(user):
                 "Ngày kí HĐ không thời hạn": datetime.strptime(user[69],"%Y-%m-%d").strftime("%d/%m/%Y") if user[69] else "",
                 "Ghi chú": user[71] if user[71] else ""
             }
-            if current_user.phanquyen=='hr':
-                return data
-            else:
+            try:
+                if current_user.phanquyen=='hr':
+                    return data
+                else:
+                    data["Lương cơ bản"] = 0
+                    data["Phụ cấp"] = 0
+                    data["Tiền phụ cấp"] = 0
+                    return data
+            except Exception as e:
                 data["Lương cơ bản"] = 0
                 data["Phụ cấp"] = 0
                 data["Tiền phụ cấp"] = 0
