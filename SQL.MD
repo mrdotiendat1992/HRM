@@ -64,5 +64,10 @@
 
 ## Mục 12:
 ```
+    bangcong_hanhchinh_web: BANG_CONG_TONG_THUC_TE
+    bangcong_thang_web:     BANG_TONG_CONG_CA_THANG_THUC_TE
+    bangcong5ngay_web:      BANG_CHAM_CONG_TU_DONG_THUC_TE
+    bangcongchot_web:       BANG_CHAM_CONG_THUC_TE
+    bangcongchotquakhu_web: Bang_cham_cong_qua_khu_thuc_te
 
 ```
