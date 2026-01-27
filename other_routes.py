@@ -4843,7 +4843,7 @@ def chuyen_trang_thai_yctd():
         trangthaimoi = data['trangthai']
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        if trangthaimoi == "Chưa kiểm tra":
+        if trangthaimoi == "Chờ kiểm tra":
             query = f"""update Yeu_cau_tuyen_dung 
                         set Trang_thai_yeu_cau = N'{trangthaimoi}',
                         Trang_thai_thuc_hien = N'Chưa tuyển',
@@ -5741,7 +5741,7 @@ def dangky_diemdanhbu_hp():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Diem_danh_bu
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, loaidiemdanh=loaidiemdanh, ngay=ngay, gio=gio, lido=lido, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -5781,7 +5781,7 @@ def dangky_diemdanhbu_na():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Diem_danh_bu
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', N'{loaidiemdanh}', '{ngay}', '{gio}', N'{lido}', N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, loaidiemdanh=loaidiemdanh, ngay=ngay, gio=gio, lido=lido, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -5819,7 +5819,7 @@ def dangky_nghiphep_hp():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Xin_nghi_phep
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -5857,7 +5857,7 @@ def dangky_nghiphep_na():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Xin_nghi_phep
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -5895,7 +5895,7 @@ def dangky_nghikhongluong_hp():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Xin_nghi_khong_luong
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
@@ -5933,7 +5933,7 @@ def dangky_nghikhongluong_na():
             chuyen = nhanvien["Line"]
             query = """
                 INSERT INTO Xin_nghi_khong_luong
-                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chưa kiểm tra', GETDATE(),NULL)
+                VALUES ('{nhamay}', '{machamcong}', N'{hoten}', N'{chucdanh}', '{chuyen}', '{phongban}', '{ngay}', '{sophut}', NULL, N'Chờ kiểm tra', GETDATE(),NULL)
             """.format(nhamay=nhamay, machamcong=machamcong, ngay=ngay, sophut=sophut, hoten=hoten, chucdanh=chucdanh, phongban=phongban, chuyen=chuyen)
             conn = pyodbc.connect(url_database_pyodbc)
             cursor = conn.cursor()
