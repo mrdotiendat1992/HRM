@@ -3577,7 +3577,10 @@ def them_dangky_tangca(cursor, conn, nhamay, mst, hoten, chucdanh, chuyen,
                        phongban, ngay, giotangcasang, giotangcasangthucte, 
                        giotangca, giotangcathucte, giotangcadem, giotangcademthucte, 
                        ca, giovao, giora, hrpheduyet):
-    query = f"""INSERT INTO Dang_ky_tang_ca VALUES ('{nhamay}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}',"""
+    query = f"""INSERT INTO Dang_ky_tang_ca 
+                (Nha_may,MST,Ho_ten,Chuc_vu,Chuyen_to,Bo_phan,Ngay_dang_ky,Tang_ca_sang,Tang_ca_sang_thuc_te,
+                Gio_tang_ca,Gio_tang_ca_thuc_te,Tang_ca_dem,Tang_ca_dem_thuc_te,Ca,Gio_vao,Gio_ra,HR) 
+                VALUES ('{nhamay}','{mst}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}',"""
     if giotangcasang:
         query += f"'{giotangcasang}',"
     else:
