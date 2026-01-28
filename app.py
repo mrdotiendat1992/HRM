@@ -4267,7 +4267,7 @@ def themtaikhoanmoi(masothe,hoten,department,gradecode):
     try: 
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"insert into Nhanvien values ('{current_user.macongty}','{masothe}',N'{hoten}','{department}','{gradecode}','user','1',NULL,NULL,NULL)"
+        query = f"insert into Nhanvien values ('{current_user.macongty}','{masothe}',N'{hoten}','{department}','{gradecode}','user','1',NULL,NULL,NULL,NULL)"
         # app.logger.info(query)
         cursor.execute(query)
         conn.commit()
