@@ -5730,7 +5730,7 @@ def dangky_diemdanhbu_hp():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_diemdanhbu_hp")
         loaidiemdanh = forms.get("loaidiemdanh")
@@ -5774,7 +5774,7 @@ def dangky_diemdanhbu_na():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_diemdanhbu_na")
         loaidiemdanh = forms.get("loaidiemdanh")
@@ -5818,7 +5818,7 @@ def dangky_nghiphep_hp():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghiphep_hp")
         ngay = forms.get("ngay")
@@ -5860,7 +5860,7 @@ def dangky_nghiphep_na():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghiphep_na")
         ngay = forms.get("ngay")
@@ -5902,7 +5902,7 @@ def dangky_nghikhongluong_hp():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghikhongluong_hp")
         ngay = forms.get("ngay")
@@ -5944,7 +5944,7 @@ def dangky_nghikhongluong_na():
         nhamay = forms.get("nhamay")
         try:
             machamcong = machamcong = int(forms.get("machamcong"))
-        else:
+        except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghikhongluong_na")
         ngay = forms.get("ngay")
