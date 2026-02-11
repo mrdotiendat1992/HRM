@@ -5728,7 +5728,11 @@ def dangky_diemdanhbu_hp():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_diemdanhbu_hp")
         loaidiemdanh = forms.get("loaidiemdanh")
         ngay = forms.get("ngay")
         gio = forms.get("gio")
@@ -5768,7 +5772,11 @@ def dangky_diemdanhbu_na():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_diemdanhbu_na")
         loaidiemdanh = forms.get("loaidiemdanh")
         ngay = forms.get("ngay")
         gio = forms.get("gio")
@@ -5808,7 +5816,11 @@ def dangky_nghiphep_hp():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_xinnghiphep_hp")
         ngay = forms.get("ngay")
         sophut = forms.get("sophut")
         nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
@@ -5846,7 +5858,11 @@ def dangky_nghiphep_na():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_xinnghiphep_na")
         ngay = forms.get("ngay")
         sophut = forms.get("sophut")
         nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
@@ -5884,7 +5900,11 @@ def dangky_nghikhongluong_hp():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_xinnghikhongluong_hp")
         ngay = forms.get("ngay")
         sophut = forms.get("sophut")
         nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
@@ -5922,7 +5942,11 @@ def dangky_nghikhongluong_na():
     if request.method == "POST":
         forms = request.form
         nhamay = forms.get("nhamay")
-        machamcong = forms.get("machamcong")
+        try:
+            machamcong = machamcong = int(forms.get("machamcong"))
+        else:
+            flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
+            return redirect("/qrcode/nhap_xinnghikhongluong_na")
         ngay = forms.get("ngay")
         sophut = forms.get("sophut")
         nhanvien = lay_thongtin_nhanvien(machamcong, nhamay)
