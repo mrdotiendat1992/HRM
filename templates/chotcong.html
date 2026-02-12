@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-sm-3">
                     <label for="mst" class="form-label">Mã số thẻ</label>
-                    <input id="mst" name="mst" placeholder="Nhập mã số thẻ" type="text" class="form-control"/>
+                    <input id="mst" name="mst" placeholder="Nhập mã số thẻ" type="text" class="form-control" onchange="loaddulieu()"/>
                 </div>
                 <div class="col-sm-1">
                     <label class="form-label d-block">&nbsp;</label>
@@ -405,11 +405,9 @@
                 }
             });
         }
-
-        $(document).ready(function () {
-            
-            $('#timdulieuchotcong').click(function () {
-                $('#loading_spinner').show();
+        
+        function loaddulieu() {
+            $('#loading_spinner').show();
                 $('#dulieulayve').empty();
                 var tungay = $('#tungay').val();
                 var denngay = $('#denngay').val();
@@ -656,9 +654,13 @@
                         console.error(error);
                     }
                 });
-            });
-        
+        }
 
+        $(document).ready(function () {
+            
+            $('#timdulieuchotcong').click(function () {
+                loaddulieu()
+            });
     
         $(document).on('click', '.toggle-section', function () {
             var target = $(this).data('target');
