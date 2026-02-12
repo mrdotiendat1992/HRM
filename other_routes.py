@@ -5729,7 +5729,7 @@ def dangky_diemdanhbu_hp():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_diemdanhbu_hp")
@@ -5773,7 +5773,7 @@ def dangky_diemdanhbu_na():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_diemdanhbu_na")
@@ -5817,7 +5817,7 @@ def dangky_nghiphep_hp():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghiphep_hp")
@@ -5859,7 +5859,7 @@ def dangky_nghiphep_na():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghiphep_na")
@@ -5901,7 +5901,7 @@ def dangky_nghikhongluong_hp():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghikhongluong_hp")
@@ -5943,7 +5943,7 @@ def dangky_nghikhongluong_na():
         forms = request.form
         nhamay = forms.get("nhamay")
         try:
-            machamcong = machamcong = int(forms.get("machamcong"))
+            machamcong = int(forms.get("machamcong"))
         except:
             flash("Sai mã số thẻ nhân viên! Vui lòng nhập lại")
             return redirect("/qrcode/nhap_xinnghikhongluong_na")
