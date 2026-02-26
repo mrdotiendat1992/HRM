@@ -1483,7 +1483,8 @@ def capnhatthongtinungvien(id,
                         sdtnguoithan,
                         luuhoso,
                         ghichu,
-                        cccd
+                        cccd,
+                        kenhtuyendung
                         ):
     
     conn = pyodbc.connect(url_database_pyodbc)
@@ -1516,7 +1517,8 @@ def capnhatthongtinungvien(id,
     SDT_nguoi_than = '{sdtnguoithan}',
     Luu_ho_so = N'{luuhoso}',
     Ghi_chu = N'{ghichu}',
-    CCCD = '{cccd}'
+    CCCD = '{cccd}',
+    kenh_tuyen_dung = N'{kenhtuyendung}'
     WHERE 
     ID = '{id}' AND Nha_may = N'{current_user.macongty}'"""
     try:  
