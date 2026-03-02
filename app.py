@@ -1723,6 +1723,32 @@ def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tun
             flash(str(e))
             return []
 
+def laydanhsachchamcongngaylechuachot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM Bang_cham_cong_tu_dong_ngay_le WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
+        if mst: 
+            query += f" AND MST = '{mst}'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE N'%{phongban}%'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        return rows
+    except Exception as e:
+            flash(str(e))
+            return []
+
 def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -1757,6 +1783,35 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM Bang_cham_cong_chu_nhat WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
+        if mst: 
+            query += f" AND MST = '{mst}'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE '%{phongban}%'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        # 
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        result = []
+        for row in rows:
+            result.append(row)
+        return result
+    except Exception as e:
+        flash(str(e))
+        return []
+
+def laydanhsachchamcongngaylechot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM Bang_cham_cong_ngay_le WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
         if mst: 
             query += f" AND MST = '{mst}'"
         if chuyen: 
@@ -1847,7 +1902,40 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, t
     except Exception as e:
         flash(str(e))
         return []
-    
+
+def laydanhsachchamcongngaylechotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+    try:
+        # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
+        #     return []
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"SELECT * FROM Bang_cham_cong_ngay_le_qua_khu WHERE Nha_may = '{current_user.macongty}' AND CONG_KHAI = 'OK'"
+        if mst: 
+            query += f" AND MST = '{mst}'"
+        if chuyen: 
+            query += f" AND Chuyen_to = '{chuyen}'"
+        if phongban:
+            query += f" AND Bo_phan LIKE '%{phongban}%'"
+        if phanloai:
+            query += f" AND Phan_loai LIKE N'%{phanloai}%'"
+        if tungay:
+            query += f" AND Ngay >= '{tungay}'"
+        if denngay:
+            query += f" AND Ngay <= '{denngay}'"
+        else:
+            query = f"SELECT TOP (10) * FROM Bang_cham_cong_ngay_le_qua_khu WHERE Nha_may = '{current_user.macongty}'"
+        query +=" ORDER BY Ngay DESC, Bo_phan ASC, Chuyen_to ASC, MST ASC"
+        # flash(query)
+        rows = cursor.execute(query).fetchall()
+        conn.close()
+        result = []
+        for row in rows:
+            result.append(row)
+        return result
+    except Exception as e:
+        flash(str(e))
+        return []
+
 def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None,mstquanly=None,mstthuky=None):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
