@@ -2947,12 +2947,13 @@ def muc7_1_12():
 @login_required
 def muc7_1_13():
     if request.method == "GET":
-        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
-        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
+        thang = request.args.get("thang") if request.args.get("thang") else datetime.now().month
+        nam = request.args.get("nam") if request.args.get("nam") else datetime.now().year
         mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
         danhsach = lay_tangcangayle(thang,nam,mst,bophan,chuyen)
+        print(danhsach)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
