@@ -5022,6 +5022,8 @@ def chamcongtaycn():
             formatted_row[3] = datetime.strptime(formatted_row[3], '%Y-%m-%d').strftime('%d/%m/%Y') if formatted_row[3] else ""
             formatted_row[5] = formatted_row[5][:5] if formatted_row[5] else ""
             formatted_row[6] = formatted_row[6][:5] if formatted_row[6] else ""
+            formatted_row[11] = formatted_row[11][:5] if formatted_row[11] else ""
+            formatted_row[12] = formatted_row[12][:5] if formatted_row[12] else ""
             formatted_rows.append(tuple(formatted_row))
 
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
@@ -5050,7 +5052,7 @@ def delete_chamcongtaycn():
 
 @app.route("/tai_sample_chamcongtaycn", methods=["POST"])
 def tai_sample_chamcongtaycn():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -5104,17 +5106,17 @@ def tailen_chamcongtaycn():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO CHAM_CONG_TAY_CHU_NHAT (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_TANG_CA_200, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO CHAM_CONG_TAY_CHU_NHAT (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_TANG_CA_200, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC,GIO_VAO_THUC_TE, GIO_RA_THUC_TE,PHUT_TANG_CA_200_THUC_TE)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
             cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 
             conn.close()    
         except Exception as e:
-            flash(e)
+            flash(str(e))
                 
     return redirect("/chamcongtaycn")
 
@@ -6019,6 +6021,8 @@ def chamcongtayle():
             formatted_row[4] = datetime.strptime(formatted_row[4], '%Y-%m-%d').strftime('%d/%m/%Y') if formatted_row[4] else ""
             formatted_row[6] = formatted_row[6][:5] if formatted_row[6] else ""
             formatted_row[7] = formatted_row[7][:5] if formatted_row[7] else ""
+            formatted_row[11] = formatted_row[11][:5] if formatted_row[11] else ""
+            formatted_row[12] = formatted_row[12][:5] if formatted_row[12] else ""
             formatted_rows.append(tuple(formatted_row))
 
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
@@ -6047,7 +6051,7 @@ def delete_chamcongtayle():
 
 @app.route("/tai_sample_chamcongtayle", methods=["POST"])
 def tai_sample_chamcongtayle():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_LE", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_LE", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE","GIO_RA_THUC_TE"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -6101,16 +6105,15 @@ def tailen_chamcongtayle():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO CHAM_CONG_TAY_NGAY_LE (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_TANG_CA_LE, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO CHAM_CONG_TAY_NGAY_LE (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_TANG_CA_LE, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC,GIO_VAO_THUC_TE,GIO_RA_THUC_TE)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_LE", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_LE", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE","GIO_RA_THUC_TE"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
             cursor.executemany(insert_query, normalized_data_rows)
-
             conn.commit() 
             conn.close()    
         except Exception as e:
-            flash(e)
+            flash(str(e))
                 
     return redirect("/chamcongtayle")
