@@ -62,26 +62,26 @@ def laythongtincccd():
                     "SĐT người thân": employee[16],
                     "Kênh tuyển dụng": employee[17], 
                     "Kinh nghiệm": employee[18],
-                    "Mức lương": employee[19], 
-                    "Ngày có thể nhận việc": employee[20],
-                    "Con nhỏ": employee[21],
-                    "Tên con 1": employee[22],
-                    "Ngày sinh con 1": employee[23],
-                    "Tên con 2": employee[24],
-                    "Ngày sinh con 2": employee[25],
-                    "Tên con 3": employee[26],
-                    "Ngày sinh con 3": employee[27],
-                    "Tên con 4": employee[28],
-                    "Ngày sinh con 4": employee[29],
-                    "Tên con 5": employee[30],
-                    "Ngày sinh con 5": employee[31],
-                    "Ngày gửi": employee[32],
-                    "Trạng thái": employee[33],
-                    "Ngày cập nhật": employee[34],
-                    "Ngày hẹn đi làm": employee[35],
-                    "Hiệu suất": employee[36],
-                    "Loại máy": employee[37],
-                    "Ghi chú": employee[38]
+                    # "Mức lương": employee[19], 
+                    "Ngày có thể nhận việc": employee[19],
+                    "Con nhỏ": employee[20],
+                    "Tên con 1": employee[21],
+                    "Ngày sinh con 1": employee[22],
+                    "Tên con 2": employee[23],
+                    "Ngày sinh con 2": employee[24],
+                    "Tên con 3": employee[25],
+                    "Ngày sinh con 3": employee[26],
+                    "Tên con 4": employee[27],
+                    "Ngày sinh con 4": employee[28],
+                    "Tên con 5": employee[29],
+                    "Ngày sinh con 5": employee[30],
+                    "Ngày gửi": employee[31],
+                    "Trạng thái": employee[32],
+                    "Ngày cập nhật": employee[33],
+                    "Ngày hẹn đi làm": employee[34],
+                    "Hiệu suất": employee[35],
+                    "Loại máy": employee[36],
+                    "Ghi chú": employee[37]
                 }
                 return jsonify(employee_dict)
             else:
@@ -3655,7 +3655,7 @@ def dangky_dilam_chunhat():
                     else:
                         flash(f"Thêm làm Chủ nhật  thất bại !!!")       
             except Exception as e:
-                flash(e)
+                flash(str(e))
         return redirect("/dangky_chunhat_web")
 
 @app.route("/hr_pheduyet_dangky_dilam_chunhat", methods=["POST"])
