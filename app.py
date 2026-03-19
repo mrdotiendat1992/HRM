@@ -1398,7 +1398,7 @@ def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
         result = []
         for row in rows:
             result.append({
-                "ID": row[39],
+                "ID": row[38],
                 "Nhà máy": row[0],
                 "Vị trí tuyển dụng": row[1],
                 "Họ tên": row[2],
@@ -1521,6 +1521,7 @@ def capnhatthongtinungvien(id,
     kenh_tuyen_dung = N'{kenhtuyendung}'
     WHERE 
     ID = '{id}' AND Nha_may = N'{current_user.macongty}'"""
+    print(query)
     try:  
         cursor.execute(query)
         conn.commit()
