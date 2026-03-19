@@ -1077,7 +1077,8 @@ def lay_user(user):
                 "Ngày kí HĐ xác định thời hạn lần 2": datetime.strptime(user[67],"%Y-%m-%d").strftime("%d/%m/%Y") if user[67] else "",
                 "Ngày hết hạn HĐ xác định thời hạn lần 2": datetime.strptime(user[68],"%Y-%m-%d").strftime("%d/%m/%Y") if user[68] else "",
                 "Ngày kí HĐ không thời hạn": datetime.strptime(user[69],"%Y-%m-%d").strftime("%d/%m/%Y") if user[69] else "",
-                "Ghi chú": user[71] if user[71] else ""
+                "Ghi chú": user[71] if user[71] else "",
+                "COST_ID": user[74] if user[74] else ""
             }
             try:
                 if current_user.phanquyen=='hr':
