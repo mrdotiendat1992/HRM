@@ -95,6 +95,7 @@
     <h4>HỒ SƠ NHÂN VIÊN</h4>
     <div class="row">
         <div class="col-3" style="border-radius:10px; border: solid gray 1px;margin-bottom:20px;">
+            <h3>MST: {{nhanvien["MST"]}}</h3>
             <br>
             {% if nhanvien["Giới tính"]=="Nam" %}
                 <img style="width:100px;" class="card-img-top" src="static/img/undraw_profile.svg" alt="Card image cap">
@@ -102,7 +103,11 @@
                 <img style="width:100px;" class="card-img-top" src="static/img/undraw_profile_1.svg" alt="Card image cap">
             {% endif %}
             <hr/>
-            <h3>Department: {{nhanvien["Department"]}}</h3>
+            <h4>Department: {{nhanvien["Department"]}}</h4>
+            <div >
+                <strong>Cost ID:</strong>
+                <span class="check">{{nhanvien["COST_ID"]}}</span>
+            </div>
             <div >
                 <strong>Section code:</strong>
                 <span class="check">{{nhanvien["Section code"]}}</span>
