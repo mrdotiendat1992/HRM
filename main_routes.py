@@ -6,210 +6,154 @@ from app import *
 #          MAIN ROUTES           #
 ##################################
 
+# from functools import wraps
+from flask import g, flash
+from flask_login import current_user
+
+# ── Helpers ───────────────────────────────────────────────────────────────────
+
+def _sum_don(counts: dict) -> dict:
+    """Thêm key 'Tổng' vào dict đếm đơn."""
+    counts["Tổng"] = sum(counts.values())
+    return counts
+
+
+def _lay_don_ca_nhan(macongty, masothe) -> dict:
+    """
+    Gom tất cả thông tin cá nhân vào 1 lần — lý tưởng nhất nên
+    gộp thành 1 stored-procedure / query trả về nhiều result-set.
+    Hiện tại vẫn gọi hàm cũ nhưng đã tách riêng để dễ tối ưu sau.
+    """
+    def _nhom(fn_chua, fn_da, fn_duyet, fn_tuchoi):
+        c = fn_chua(macongty, masothe)
+        d = fn_da(macongty, masothe)
+        p = fn_duyet(macongty, masothe)
+        r = fn_tuchoi(macongty, masothe)
+        return {"Chưa kiểm tra": c, "Đã kiểm tra": d,
+                "Đã phê duyệt": p, "Bị từ chối": r, "Tổng": c + d + p + r}
+
+    ddb  = _nhom(lay_soluong_diemdanhbu_chuakiemtra,   lay_soluong_diemdanhbu_dakiemtra,
+                 lay_soluong_diemdanhbu_dapheduyet,    lay_soluong_diemdanhbu_bituchoi)
+    nphep = _nhom(lay_soluong_xinnghiphep_chuakiemtra,  lay_soluong_xinnghiphep_dakiemtra,
+                  lay_soluong_xinnghiphep_dapheduyet,   lay_soluong_xinnghiphep_bituchoi)
+    nkl   = _nhom(lay_soluong_xinnghikhongluong_chuakiemtra, lay_soluong_xinnghikhongluong_dakiemtra,
+                  lay_soluong_xinnghikhongluong_dapheduyet,  lay_soluong_xinnghikhongluong_bituchoi)
+    nkhac = _nhom(lay_soluong_xinnghikhac_chuakiemtra, lay_soluong_xinnghikhac_dakiemtra,
+                  lay_soluong_xinnghikhac_dapheduyet,  lay_soluong_xinnghikhac_bituchoi)
+
+    return {
+        "Điểm danh bù":       ddb,
+        "Xin nghỉ phép":      nphep,
+        "Xin nghỉ không lương": nkl,
+        "Xin nghỉ khác":      nkhac,
+        "Tổng":               ddb["Tổng"] + nphep["Tổng"] + nkl["Tổng"] + nkhac["Tổng"],
+        "Lỗi chấm công":      lay_soluong_loichamcong(macongty, masothe),
+    }
+
+
+# Map phanquyen → phòng ban cần truyền (None = toàn công ty)
+_TUYEN_DUNG_PHONGBAN = {
+    "gd":  None,
+    "td":  None,
+    "sa":  None,
+}
+
+def _lay_tuyen_dung(macongty, phanquyen, phongban) -> dict:
+    """
+    Trả về dict thông báo tuyển dụng theo quyền.
+    gd  → chỉ cần đếm 'chờ phê duyệt'
+    tbp / thư ký → theo phòng ban
+    td / sa → toàn công ty
+    """
+    if phanquyen == "gd":
+        return {"Tuyển dụng chờ phê duyệt": lay_soluong_yeucautuyendung_chopheduyet(macongty, None)}
+
+    # Xác định scope phòng ban
+    if phanquyen in ("td", "sa"):
+        pb = None
+    elif phanquyen == "tbp" or kiemtra_danhsach_thuki():
+        pb = phongban
+    else:
+        return {}
+
+    return {
+        "Tuyển dụng chờ kiểm tra":  lay_soluong_yeucautuyendung_chokiemtra(macongty, pb),
+        "Tuyển dụng chờ phê duyệt": lay_soluong_yeucautuyendung_chopheduyet(macongty, pb),
+        "Tuyển dụng được duyệt":    lay_soluong_yeucautuyendung_dapheduyet(macongty, pb),
+        "Tuyển dụng bị từ chối":    lay_soluong_yeucautuyendung_bituchoi(macongty, pb),
+    }
+
+
+# ── before_request ─────────────────────────────────────────────────────────────
+
 @app.before_request
 def run_before_every_request():
-    """Mỗi lần load trang, sẽ xử lý các tác vụ:
-    - Kiểm tra người dùng đã đăng nhập chưa
-    - Cập nhật thông báo cho người dùng
-    - Cập nhật thông tin có bật function 12 không    
-    """
+    """Kiểm tra đăng nhập, gom thông báo vào g.notice."""
+    if not current_user.is_authenticated:
+        return
+
+    f12  = trang_thai_function_12()
+    mact = current_user.macongty
+    mast = current_user.masothe
+
+    notice = {"f12": f12, "db": url_database_pyodbc, "Tổng": 0}
+
     try:
-        if current_user.is_authenticated:
-            f12 = trang_thai_function_12()
-            g.notice={"f12":f12, "db":url_database_pyodbc ,"Tổng":0}
-            
-            # Kiểm tra xem có phải quản lý không
-            laquanly = la_quanly(current_user.macongty,current_user.masothe)
-            if laquanly:
-                quanly_soluong_diemdanhbu = lay_soluong_diemdanhbu_quanly_canduyet(current_user.macongty,current_user.masothe)
-                quanly_soluong_xinnghiphep = lay_soluong_xinnghiphep_quanly_canduyet(current_user.macongty,current_user.masothe)
-                quanly_soluong_xinnghikhongluong = lay_soluong_xinnghikhongluong_quanly_canduyet(current_user.macongty,current_user.masothe)
-                quanly_soluong_xinnghikhac = lay_soluong_xinnghikhac_quanly_canduyet(current_user.macongty,current_user.masothe)
-                g.notice["Quản lý"]={"Điểm danh bù":quanly_soluong_diemdanhbu,
-                    "Xin nghỉ phép": quanly_soluong_xinnghiphep,
-                    "Xin nghỉ không lương": quanly_soluong_xinnghikhongluong,
-                    "Xin nghỉ khác": quanly_soluong_xinnghikhac,
-                    "Số thông báo": quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong + quanly_soluong_xinnghikhac
-                    }
-                g.notice["Tổng"] = g.notice["Tổng"] + quanly_soluong_diemdanhbu + quanly_soluong_xinnghiphep + quanly_soluong_xinnghikhongluong + quanly_soluong_xinnghikhac
+        # ── Quản lý ──────────────────────────────────────────────────────────
+        if la_quanly(mact, mast):
+            ql = {
+                "Điểm danh bù":       lay_soluong_diemdanhbu_quanly_canduyet(mact, mast),
+                "Xin nghỉ phép":      lay_soluong_xinnghiphep_quanly_canduyet(mact, mast),
+                "Xin nghỉ không lương": lay_soluong_xinnghikhongluong_quanly_canduyet(mact, mast),
+                "Xin nghỉ khác":      lay_soluong_xinnghikhac_quanly_canduyet(mact, mast),
+            }
+            ql["Số thông báo"] = sum(ql.values())
+            notice["Quản lý"]  = ql
+            notice["Tổng"]    += ql["Số thông báo"]
+        else:
+            notice["Quản lý"] = {}
+
+        # ── Thư ký ───────────────────────────────────────────────────────────
+        if la_thuky(mact, mast):
+            chuyen = lay_danhsach_chuyen_thuky_quanly(mact, mast)
+            tk = {
+                "Danh sách lỗi thẻ":    lay_soluong_loithe_thuky_canxuly(mact, mast),
+                "Điểm danh bù":         lay_soluong_diemdanhbu_thuky_cankiemtra(mact, mast),
+                "Xin nghỉ phép":        lay_soluong_xinnghiphep_thuky_cankiemtra(mact, mast),
+                "Xin nghỉ không lương": lay_soluong_xinnghikhongluong_thuky_cankiemtra(mact, mast),
+                "Xin nghỉ khác":        lay_soluong_xinnghikhac_thuky_cankiemtra(mact, mast),
+                "Line":                 chuyen[0] if len(chuyen) == 1 else "",
+            }
+            tk["Số thông báo"] = (tk["Danh sách lỗi thẻ"] + tk["Điểm danh bù"]
+                                  + tk["Xin nghỉ phép"] + tk["Xin nghỉ không lương"])
+            notice["Thư ký"]   = tk
+            notice["Tổng"]    += tk["Số thông báo"] + tk["Xin nghỉ khác"]
+        else:
+            notice["Thư ký"] = {}
+
+        # ── Cá nhân ──────────────────────────────────────────────────────────
+        notice["personal"] = _lay_don_ca_nhan(mact, mast)
+
+        # ── Tuyển dụng ───────────────────────────────────────────────────────
+        td = _lay_tuyen_dung(mact, current_user.phanquyen, current_user.phongban)
+        for k, v in td.items():
+            if v > 0:
+                notice[k]       = v
+                notice["Tổng"] += v
             else:
-                g.notice["Quản lý"]={}
-            lathuky= la_thuky(current_user.macongty,current_user.masothe)
-            if lathuky:
-                cac_chuyen_thuky_quanly = lay_danhsach_chuyen_thuky_quanly(current_user.macongty,current_user.masothe)
-                # flash(cac_chuyen_thuky_quanly)
-                thuky_soluong_loithe = lay_soluong_loithe_thuky_canxuly(current_user.macongty,current_user.masothe)
-                thuky_soluong_diemdanhbu = lay_soluong_diemdanhbu_thuky_cankiemtra(current_user.macongty,current_user.masothe)
-                thuky_soluong_xinnghiphep = lay_soluong_xinnghiphep_thuky_cankiemtra(current_user.macongty,current_user.masothe)
-                thuky_soluong_xinnghikhongluong = lay_soluong_xinnghikhongluong_thuky_cankiemtra(current_user.macongty,current_user.masothe)
-                thuky_soluong_xinnghikhac = lay_soluong_xinnghikhac_thuky_cankiemtra(current_user.macongty,current_user.masothe)
-                
-                g.notice["Thư ký"]={"Danh sách lỗi thẻ":thuky_soluong_loithe,
-                                    "Điểm danh bù":thuky_soluong_diemdanhbu,
-                                    "Xin nghỉ phép": thuky_soluong_xinnghiphep,
-                                    "Xin nghỉ không lương": thuky_soluong_xinnghikhongluong,
-                                    "Xin nghỉ khác": thuky_soluong_xinnghikhac,
-                                    "Line":cac_chuyen_thuky_quanly[0] if len(cac_chuyen_thuky_quanly)==1 else "",
-                                    "Số thông báo":thuky_soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong}
-                g.notice["Tổng"] = g.notice["Tổng"] + thuky_soluong_loithe + thuky_soluong_diemdanhbu + thuky_soluong_xinnghiphep + thuky_soluong_xinnghikhongluong + thuky_soluong_xinnghikhac
-            else:
-                g.notice["Thư ký"]={}
+                notice.setdefault(k, 0)
 
-            so_don_diemdanhbu_chuakiemtra = lay_soluong_diemdanhbu_chuakiemtra(current_user.macongty,current_user.masothe)
-            so_don_diemdanhbu_dakiemtra = lay_soluong_diemdanhbu_dakiemtra(current_user.macongty,current_user.masothe)
-            so_don_diemdanhbu_dapheduyet = lay_soluong_diemdanhbu_dapheduyet(current_user.macongty,current_user.masothe)
-            so_don_diemdanhbu_bituchoi = lay_soluong_diemdanhbu_bituchoi(current_user.macongty,current_user.masothe)        
-            so_don_diemdanhbu = sum([so_don_diemdanhbu_chuakiemtra,so_don_diemdanhbu_dakiemtra,so_don_diemdanhbu_dapheduyet,so_don_diemdanhbu_bituchoi])
-
-            so_don_xinnghiphep_chuakiemtra = lay_soluong_xinnghiphep_chuakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghiphep_dakiemtra = lay_soluong_xinnghiphep_dakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghiphep_dapheduyet = lay_soluong_xinnghiphep_dapheduyet(current_user.macongty,current_user.masothe)
-            so_don_xinnghiphep_bituchoi = lay_soluong_xinnghiphep_bituchoi(current_user.macongty,current_user.masothe)        
-            so_don_xinnghiphep = sum([so_don_xinnghiphep_chuakiemtra,so_don_xinnghiphep_dakiemtra,so_don_xinnghiphep_dapheduyet,so_don_xinnghiphep_bituchoi])
-            
-            so_don_xinnghikhongluong_chuakiemtra = lay_soluong_xinnghikhongluong_chuakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhongluong_dakiemtra = lay_soluong_xinnghikhongluong_dakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhongluong_dapheduyet = lay_soluong_xinnghikhongluong_dapheduyet(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhongluong_bituchoi = lay_soluong_xinnghikhongluong_bituchoi(current_user.macongty,current_user.masothe)        
-            so_don_xinnghikhongluong = sum([so_don_xinnghikhongluong_chuakiemtra,so_don_xinnghikhongluong_dakiemtra,so_don_xinnghikhongluong_dapheduyet,so_don_xinnghikhongluong_bituchoi])
-            
-            so_don_xinnghikhac_chuakiemtra = lay_soluong_xinnghikhac_chuakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhac_dakiemtra = lay_soluong_xinnghikhac_dakiemtra(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhac_dapheduyet = lay_soluong_xinnghikhac_dapheduyet(current_user.macongty,current_user.masothe)
-            so_don_xinnghikhac_bituchoi = lay_soluong_xinnghikhac_bituchoi(current_user.macongty,current_user.masothe)        
-            so_don_xinnghikhac = so_don_xinnghikhac_chuakiemtra + so_don_xinnghikhac_dakiemtra + so_don_xinnghikhac_dapheduyet + so_don_xinnghikhac_bituchoi
-            
-            so_don = so_don_diemdanhbu + so_don_xinnghiphep + so_don_xinnghikhongluong + so_don_xinnghikhac
-            so_lan_loi_cham_cong = lay_soluong_loichamcong(current_user.macongty,current_user.masothe)                
-            
-            g.notice["personal"]={
-                "Điểm danh bù":{
-                                "Chưa kiểm tra":so_don_diemdanhbu_chuakiemtra,
-                                "Đã kiểm tra": so_don_diemdanhbu_dakiemtra,
-                                "Đã phê duyệt": so_don_diemdanhbu_dapheduyet,
-                                "Bị từ chối": so_don_diemdanhbu_bituchoi,
-                                "Tổng": so_don_diemdanhbu
-                            },
-                "Xin nghỉ phép":{
-                                "Chưa kiểm tra":so_don_xinnghiphep_chuakiemtra,
-                                "Đã kiểm tra": so_don_xinnghiphep_dakiemtra,
-                                "Đã phê duyệt": so_don_xinnghiphep_dapheduyet,
-                                "Tổng": so_don_xinnghiphep,
-                                "Bị từ chối": so_don_xinnghiphep_bituchoi,
-                            },
-                "Xin nghỉ không lương":{
-                                "Chưa kiểm tra":so_don_xinnghikhongluong_chuakiemtra,
-                                "Đã kiểm tra": so_don_xinnghikhongluong_dakiemtra,
-                                "Đã phê duyệt": so_don_xinnghikhongluong_dapheduyet,
-                                "Tổng": so_don_xinnghikhongluong,
-                                "Bị từ chối": so_don_xinnghikhongluong_bituchoi,
-                            },
-                "Xin nghỉ khác":{
-                                "Chưa kiểm tra":so_don_xinnghikhac_chuakiemtra,
-                                "Đã kiểm tra": so_don_xinnghikhac_dakiemtra,
-                                "Đã phê duyệt": so_don_xinnghikhac_dapheduyet,
-                                "Tổng": so_don_xinnghikhac,
-                                "Bị từ chối": so_don_xinnghikhac_bituchoi,
-                            },
-                "Tổng":so_don,
-                "Lỗi chấm công": so_lan_loi_cham_cong
-                                }
-
-            if current_user.phanquyen=='gd':
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty, None)
-                if soluong_yeucautuyendung_chopheduyet > 0:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
-                else:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
-
-            elif current_user.phanquyen=='tbp':
-                soluong_yeucautuyendung_chokiemtra_tbp = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_chokiemtra_tbp > 0:
-                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra_tbp
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra_tbp
-                else:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
-
-                soluong_yeucautuyendung_dapheduyet_tbp = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_dapheduyet_tbp > 0:
-                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet_tbp
-                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet_tbp
-                else:
-                    g.notice["Tuyển dụng được duyệt"] = 0
-
-                soluong_yeucautuyendung_bituchoi_tbp = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_bituchoi_tbp > 0:
-                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi_tbp   
-                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi_tbp
-                else:
-                    g.notice["Tuyển dụng bị từ chối"] = 0
-            
-            elif (current_user.phanquyen=='td' or current_user.phanquyen=='sa'):
-                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,None)
-                if soluong_yeucautuyendung_chokiemtra > 0:
-                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra
-                else:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
-
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,None)
-                if soluong_yeucautuyendung_chopheduyet > 0:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
-                else:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
-
-                soluong_yeucautuyendung_dapheduyet = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,None)
-                if soluong_yeucautuyendung_dapheduyet > 0:
-                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet
-                else:
-                    g.notice["Tuyển dụng được duyệt"] = 0
-
-                soluong_yeucautuyendung_bituchoi = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,None)
-                if soluong_yeucautuyendung_bituchoi > 0:
-                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi  
-                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
-                else:
-                    g.notice["Tuyển dụng bị từ chối"] = 0
-
-            elif kiemtra_danhsach_thuki() == True:
-                soluong_yeucautuyendung_chokiemtra = lay_soluong_yeucautuyendung_chokiemtra(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_chokiemtra > 0:
-                    g.notice["Tuyển dụng chờ kiểm tra"] = soluong_yeucautuyendung_chokiemtra
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chokiemtra
-                else:
-                    g.notice["Tuyển dụng chờ kiểm tra"] = 0
-
-                soluong_yeucautuyendung_chopheduyet = lay_soluong_yeucautuyendung_chopheduyet(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_chopheduyet > 0:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = soluong_yeucautuyendung_chopheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_chopheduyet
-                else:
-                    g.notice["Tuyển dụng chờ phê duyệt"] = 0
-
-                soluong_yeucautuyendung_dapheduyet = lay_soluong_yeucautuyendung_dapheduyet(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_dapheduyet > 0:
-                    g.notice["Tuyển dụng được duyệt"] = soluong_yeucautuyendung_dapheduyet
-                    g.notice["Tổng"] += soluong_yeucautuyendung_dapheduyet
-                else:
-                    g.notice["Tuyển dụng được duyệt"] = 0
-
-                soluong_yeucautuyendung_bituchoi = lay_soluong_yeucautuyendung_bituchoi(current_user.macongty,current_user.phongban)
-                if soluong_yeucautuyendung_bituchoi > 0:
-                    g.notice["Tuyển dụng bị từ chối"] = soluong_yeucautuyendung_bituchoi   
-                    g.notice["Tổng"] += soluong_yeucautuyendung_bituchoi
-                else:
-                    g.notice["Tuyển dụng bị từ chối"] = 0
-    except Exception as e:  
+    except Exception as e:
         flash(f"Lỗi cập nhật thông tin chuông: {e}")
-        f12 = trang_thai_function_12()    
-        g.notice={"f12":f12,"db":url_database_pyodbc }
-            
+        notice = {"f12": f12, "db": url_database_pyodbc}
+
+    g.notice = notice
+
+
 @app.context_processor
 def inject_notice():
-    return dict(notice=getattr(g, 'notice', {}),personal = getattr(g, 'personal', {}))
+    return dict(notice=getattr(g, "notice", {}),
+                personal=getattr(g, "personal", {}))
 
 @app.route('/unauthorized')
 def unauthorized():
@@ -225,23 +169,26 @@ def unauthorized():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
     if request.method == "POST":
-        try:
-            macongty = request.form['macongty']
-            masothe = request.form['masothe']
-            matkhau = request.form['matkhau']
-            user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()    
-            if user and user.matkhau == matkhau:
-                if login_user(user):    
-                    app.logger.info(f"Nguoi dung {masothe} o {macongty} vua  dang nhap thanh cong !!!")
-                    next_page = request.form.get('next', type=str)
-                    if next_page and next_page != '/login':
-                        return redirect(next_page)
-                    return redirect(url_for('home'))
-            return redirect(url_for("login"))
-        except Exception as e:
-            app.logger.error(f'Nguoi dung {masothe} o {macongty} dang nhap that bai: {e} !!!')
-            return redirect(url_for("login"))
+        macongty = request.form.get("macongty", "").strip()
+        masothe  = request.form.get("masothe",  "").strip()
+        matkhau  = request.form.get("matkhau",  "")
+
+        user = Nhanvien.query.filter_by(masothe=masothe, macongty=macongty).first()
+
+        if user and user.matkhau == matkhau and login_user(user):
+            app.logger.info(f"[LOGIN OK] {masothe}@{macongty}")
+            next_page = request.form.get("next") or ""
+            return redirect(next_page if next_page and next_page != "/login"
+                            else url_for("home"))
+
+        app.logger.warning(f"[LOGIN FAIL] {masothe}@{macongty}")
+        flash("Sai thông tin đăng nhập.", "danger")
+        return redirect(url_for("login"))
+
     return render_template("login.html")
 
 @app.route("/logout", methods=["POST"])

@@ -1,842 +1,868 @@
 <!DOCTYPE html>
 <html lang="vn">
-
 <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="icon" type="image/x-icon" href="static/img/logo.ico">
+  <title>{% block title %}HomeMate{% endblock title %}</title>
 
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" type="image/x-icon" href="static/img/logo.ico">
-    <title>{% block title %}HomeMate{% endblock title %}</title>
-    <!-- Custom fonts for this template-->
-    <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link
-        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-        rel="stylesheet">
-    <!-- Custom styles for this template-->
-    <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    {% block style %}
-    <style>
-        .collapse-item {
-            display: inline-flex;
-            align-items: center;
-            overflow: hidden;
-        }
+  <!-- Fonts & Icons -->
+  <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700;800;900&display=swap" rel="stylesheet">
 
-        .scroll-text {
-            display: inline-block;
-            white-space: nowrap;
-            animation: scroll-text 5s linear infinite;
-        }
+  <!-- Vendor CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="static/css/sb-admin-2.min.css" rel="stylesheet">
 
-        @keyframes scroll-text {
-            0% {
-                transform: translateX(100%);
-            }
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
 
-            100% {
-                transform: translateX(-100%);
-            }
-        }
-    </style>
-    {% endblock style %}
+<style>
+/* ═══════════════════════════════════════════
+   CSS Variables
+═══════════════════════════════════════════ */
+:root {
+  --primary:       #4e73df;
+  --primary-dark:  #2e59d9;
+  --primary-light: #eef2ff;
+  --success:       #1cc88a;
+  --danger:        #e74a3b;
+  --warning:       #f6c23e;
+  --sidebar-w:     224px;
+  --topbar-h:      60px;
+  --radius:        10px;
+  --radius-sm:     6px;
+  --shadow-sm:     0 2px 8px rgba(0,0,0,.07);
+  --shadow-md:     0 4px 20px rgba(0,0,0,.10);
+  --shadow-lg:     0 8px 32px rgba(0,0,0,.13);
+  --transition:    all .22s cubic-bezier(.4,0,.2,1);
+  --font:          'Nunito', sans-serif;
+}
+
+/* ═══════════════════════════════════════════
+   Reset / Base
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  font-family: var(--font);
+  background: #f0f2f8;
+  color: #3d3d3d;
+  overflow-x: hidden;
+}
+a { transition: var(--transition); }
+
+/* ═══════════════════════════════════════════
+   Sidebar
+═══════════════════════════════════════════ */
+.sidebar {
+  background: linear-gradient(180deg, #4e73df 0%, #224abe 100%) !important;
+  box-shadow: 3px 0 20px rgba(78,115,223,.25);
+  width: var(--sidebar-w) !important;
+  min-height: 100vh;
+}
+
+/* Brand */
+.sidebar-brand {
+  padding: 1.2rem 1rem;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  transition: var(--transition);
+}
+.sidebar-brand:hover { background: rgba(255,255,255,.06); }
+#logo { width: 38px; height: auto; filter: drop-shadow(0 2px 6px rgba(0,0,0,.2)); }
+
+/* Nav links */
+.sidebar .nav-item .nav-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px;
+  color: rgba(255,255,255,.75);
+  font-weight: 600;
+  font-size: .82rem;
+  letter-spacing: .02em;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1px 8px 1px 0;
+  transition: var(--transition);
+}
+.sidebar .nav-item .nav-link:hover,
+.sidebar .nav-item.active .nav-link {
+  color: #fff;
+  background: rgba(255,255,255,.15);
+  transform: translateX(3px);
+}
+.sidebar .nav-item .nav-link i {
+  font-size: .85rem;
+  width: 16px;
+  text-align: center;
+  color: rgba(255,255,255,.6);
+  transition: var(--transition);
+}
+.sidebar .nav-item .nav-link:hover i { color: #fff; }
+
+/* Sidebar heading */
+.sidebar-heading {
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  padding: 12px 20px 4px;
+}
+
+/* Dividers */
+.sidebar-divider {
+  border-top: 1px solid rgba(255,255,255,.12);
+  margin: 6px 16px;
+}
+
+/* Collapse inner panels */
+.collapse-inner {
+  background: rgba(255,255,255,.97) !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: var(--shadow-md);
+  margin: 4px 10px;
+  padding: 6px 0 !important;
+  border: 1px solid rgba(78,115,223,.12);
+}
+.collapse-header {
+  font-size: .65rem;
+  font-weight: 800;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--primary);
+  padding: 4px 14px 6px;
+  margin: 0;
+}
+.collapse-item {
+  display: flex !important;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px !important;
+  font-size: .8rem;
+  color: #555 !important;
+  border-radius: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: var(--transition);
+}
+.collapse-item:hover {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+  padding-left: 18px !important;
+}
+.collapse-item b { color: var(--primary); min-width: 28px; }
+
+/* Scrollable nav area */
+#sidebar-scroll {
+  overflow-y: auto;
+  max-height: calc(100vh - 120px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.2) transparent;
+}
+#sidebar-scroll::-webkit-scrollbar { width: 4px; }
+#sidebar-scroll::-webkit-scrollbar-track { background: transparent; }
+#sidebar-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+
+/* Sidebar toggle button */
+#sidebarToggle {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,.15);
+  border: none !important;
+  border-radius: 50%;
+  color: rgba(255,255,255,.7);
+  transition: var(--transition);
+}
+#sidebarToggle:hover { background: rgba(255,255,255,.25); }
+
+/* ═══════════════════════════════════════════
+   Topbar
+═══════════════════════════════════════════ */
+.topbar {
+  height: var(--topbar-h) !important;
+  background: #fff !important;
+  box-shadow: var(--shadow-sm) !important;
+  border-bottom: 1px solid rgba(78,115,223,.08);
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Brand name */
+.topbar-brand {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: var(--primary);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  background: linear-gradient(135deg, var(--primary), #6f42c1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  user-select: none;
+}
+
+/* Topbar divider */
+.topbar-divider {
+  width: 1px;
+  height: 34px;
+  background: rgba(0,0,0,.1);
+  margin: 0 12px;
+}
+
+/* Topbar icon buttons */
+.nav-item .nav-link {
+  padding: 8px 10px;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+}
+.nav-item .nav-link:hover { background: var(--primary-light); }
+
+/* Bell badge */
+.badge-counter {
+  font-size: .65rem;
+  font-weight: 700;
+  padding: 2px 5px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* Dropdown menus */
+.dropdown-menu {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  animation: dropIn .18s ease;
+  overflow: hidden;
+}
+@keyframes dropIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dropdown-list {
+  width: 340px !important;
+  padding: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.dropdown-list .dropdown-header {
+  background: linear-gradient(135deg, var(--primary), #224abe);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 10px 16px;
+}
+.dropdown-list .dropdown-item {
+  border-left: 3px solid transparent;
+  padding: 10px 14px;
+  font-size: .82rem;
+  color: #444;
+  transition: var(--transition);
+}
+.dropdown-list .dropdown-item:hover {
+  background: var(--primary-light);
+  border-left-color: var(--primary);
+  padding-left: 18px;
+}
+
+/* Icon circles in notifications */
+.icon-circle {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+}
+.icon-circle.bg-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dark)); }
+.icon-circle.bg-success  { background: linear-gradient(135deg, #1cc88a, #17a673); }
+.icon-circle.bg-danger   { background: linear-gradient(135deg, #e74a3b, #be2617); }
+.icon-circle i { font-size: .8rem; }
+
+/* User dropdown */
+.user-info { line-height: 1.2; }
+.user-info .name { font-weight: 700; font-size: .88rem; color: #333; }
+.user-info .meta { font-size: .72rem; color: #888; }
+.img-profile {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-light);
+  transition: var(--transition);
+}
+#userDropdown:hover .img-profile {
+  border-color: var(--primary);
+  transform: scale(1.05);
+}
+
+/* QR Dropdown */
+.qr-btn {
+  background: var(--primary-light) !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  padding: 6px 10px !important;
+  transition: var(--transition) !important;
+}
+.qr-btn:hover { background: #dde4fb !important; }
+.qr-btn img { border-radius: 4px; }
+
+/* ═══════════════════════════════════════════
+   Flash Alert
+═══════════════════════════════════════════ */
+.flash-wrapper {
+  position: fixed;
+  top: 72px;
+  right: 24px;
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 420px;
+}
+.flash-alert {
+  background: #fff;
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  animation: slideIn .3s ease;
+  transition: opacity .4s ease, transform .4s ease;
+  font-size: .87rem;
+  color: #333;
+}
+.flash-alert .flash-icon {
+  color: var(--success);
+  font-size: 1rem;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+.flash-alert .close {
+  margin-left: auto;
+  font-size: 1rem;
+  color: #aaa;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+.flash-alert.fade-out { opacity: 0; transform: translateX(20px); }
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ═══════════════════════════════════════════
+   Page Content
+═══════════════════════════════════════════ */
+#content-wrapper { background: #f0f2f8; }
+.container-fluid { padding: 20px 24px; }
+
+.page-heading {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #333;
+  letter-spacing: .01em;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.page-heading::before {
+  content: '';
+  width: 4px; height: 20px;
+  background: linear-gradient(180deg, var(--primary), #6f42c1);
+  border-radius: 4px;
+  display: inline-block;
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+.card:hover { box-shadow: var(--shadow-md); }
+
+/* ═══════════════════════════════════════════
+   Footer
+═══════════════════════════════════════════ */
+.sticky-footer {
+  background: #fff !important;
+  border-top: 1px solid rgba(0,0,0,.06);
+  padding: 10px 0;
+  font-size: .78rem;
+  color: #aaa;
+}
+.sticky-footer b { color: #bbb; font-weight: 400; }
+
+/* ═══════════════════════════════════════════
+   Modals
+═══════════════════════════════════════════ */
+.modal-content {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+.modal-header {
+  background: linear-gradient(135deg, var(--primary), #224abe);
+  color: #fff;
+  border: none;
+  padding: 14px 20px;
+}
+.modal-header .modal-title { font-weight: 800; font-size: .95rem; }
+.modal-header .close { color: rgba(255,255,255,.8); text-shadow: none; opacity: 1; }
+.modal-header .close:hover { color: #fff; }
+.modal-footer { border-top: 1px solid #f0f0f0; padding: 12px 20px; }
+.modal-body { padding: 20px; }
+.form-control {
+  border-radius: var(--radius-sm);
+  border: 1px solid #e0e0e0;
+  font-family: var(--font);
+  transition: var(--transition);
+}
+.form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(78,115,223,.15);
+}
+
+/* ═══════════════════════════════════════════
+   Scroll-to-top
+═══════════════════════════════════════════ */
+.scroll-to-top {
+  background: var(--primary);
+  box-shadow: var(--shadow-md);
+  border-radius: 50%;
+  width: 40px; height: 40px;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+}
+.scroll-to-top:hover { background: var(--primary-dark); transform: translateY(-2px); }
+.scroll-to-top i { color: #fff; font-size: .9rem; }
+
+/* ═══════════════════════════════════════════
+   Sidebar text scroll animation
+═══════════════════════════════════════════ */
+.scroll-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: scroll-text 5s linear infinite;
+}
+@keyframes scroll-text {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(-100%); }
+}
+
+/* ═══════════════════════════════════════════
+   Page load fade-in
+═══════════════════════════════════════════ */
+#content { animation: pageFade .35s ease; }
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+{% block style %}{% endblock style %}
 </head>
 
 <body id="page-top">
+<div id="wrapper">
 
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+  <!-- ═══ SIDEBAR ═══ -->
+  <ul class="navbar-nav sidebar sidebar-dark accordion" id="accordionSidebar">
 
-        <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
-            <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
-                <div class="sidebar-brand-icon">
-                    <i><img src="static/img/logo_white.png" alt="logo" id="logo" style="width:30%; height:100%"></i>
-                </div>
-            </a>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider my-0">
-
-            <!-- Nav Item - Dashboard -->
-            <li class="nav-item active">
-                <a class="nav-link" href="/dashboard">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Mục lục
-            </div>
-            <div style="overflow: hidden; max-height: 60vh; overflow-y: auto;">
-                <!-- Nav Item - Tuyen dung Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseZero"
-                        aria-expanded="true" aria-controls="collapseZero">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>1. Sơ đồ tổ chức</span>
-                    </a>
-                    <div id="collapseZero" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Sơ đồ tổ chức</h6>
-                            <a class="collapse-item" href="#"><b>1.1</b></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Tuyen dung Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseOne"
-                        aria-expanded="true" aria-controls="collapseOne">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>2. Tuyển dụng</span>
-                    </a>
-                    <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Tuyển dụng</h6>
-                            <a class="collapse-item" href="/muc2_1"><b>2.1</b> <i>Danh sách ứng viên</i></a>
-                            <a class="collapse-item" href="/muc2_2"></i><b>2.2</b><i> Yêu cầu tuyển dụng</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Nhan viec Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                        aria-expanded="true" aria-controls="collapseTwo">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>3. Nhận việc</span>
-                    </a>
-                    <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Nhận việc</h6>
-                            <a class="collapse-item" href="/muc3_1"><b>3.1</b><i> Nhập mới thông tin</i></a>
-                            <a class="collapse-item" href="/muc3_2"><b>3.2</b><i> Chỉnh sửa thông tin</i></a>
-                            <a class="collapse-item" href="/muc3_3"><b>3.3</b><i> Quản lý hợp đồng</i></a>
-                            <a class="collapse-item" href="/muc3_4"><b>3.4</b><i> DS sắp hết hạn HĐ</i></a>
-                            <a class="collapse-item" href="/muc3_5"><b>3.5</b><i> DS sắp nghỉ hưu</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Dao tao Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseThree"
-                        aria-expanded="true" aria-controls="collapseThree">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>4. Đào tạo</span>
-                    </a>
-                    <div id="collapseThree" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Đào tạo</h6>
-                            <a class="collapse-item" href="#"><b>4.1</b></a>
-                        </div>
-                    </div>
-                </li>
-
-
-                <!-- Nav Item - Danh gia hieu qua Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFour"
-                        aria-expanded="true" aria-controls="collapseFour">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>5. Đánh giá hiệu quả</span>
-                    </a>
-                    <div id="collapseFour" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Đánh giá hiệu quả</h6>
-                            <a class="collapse-item"><b>5.1</b> <i>KPI</i></a>
-                            <a class="collapse-item" href="/muc5_1_1"><b>5.1.1</b><i> Upload new KPI</i></a>
-                            <a class="collapse-item" href="/muc5_1_2"><b>5.1.2</b><i> Approve KPI</i></a>
-                            <a class="collapse-item" href="/muc5_1_3_1"><b>5.1.3</b><i> KPI report</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Phat trien su nghiep Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseFive"
-                        aria-expanded="true" aria-controls="collapseFive">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>6. Phát triển sự nghiệp</span>
-                    </a>
-                    <div id="collapseFive" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Phát triển sự nghiệp</h6>
-                            <a class="collapse-item" href="/muc6_1"><b>6.1</b> <i>Đổi chức vụ, bộ phận</i></a>
-                            <a class="collapse-item" href="/muc6_2"><b>6.2</b> <i>Lịch sử điều chuyển</i></a>
-                            <a class="collapse-item" href="/muc6_3"><b>6.3</b> <i>Lịch sử công việc</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Luong thuong phuc loi Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSix"
-                        aria-expanded="true" aria-controls="collapseSix">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>7. Lương, thưởng, phúc lợi</span>
-                    </a>
-                    <div id="collapseSix" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Lương, thưởng</h6>
-                            <p class="collapse-item"><b>7.1</b> Chấm công</p>
-                            <a class="collapse-item" style="align-items: center; overflow: hidden; display: flex;"
-                                href="/muc7_1_1"> <b>7.1.1</b> <i
-                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left:4px">
-                                    Đổi ca làm việc</i></a>
-                            <a class="collapse-item" style="align-items: center; overflow: hidden; display: flex;"
-                                href="/muc7_1_2"> <b>7.1.2</b> <i
-                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left:4px">
-                                    Lỗi chấm công</i></a>
-                            <a class="collapse-item" style="align-items: center; overflow: hidden; display: flex;"
-                                href="/muc7_1_8"> <b>7.1.3</b> <i
-                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left:4px">
-                                    Làm thêm giờ</i></a>
-                            <a class="collapse-item" style="align-items: center; overflow: hidden; display: flex;"
-                                href="/muc7_1_14"> <b>7.1.4</b> <i
-                                    style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-left:4px">
-                                    Bảng chấm công</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Gan ket Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSeven"
-                        aria-expanded="true" aria-controls="collapseSeven">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>8. Gắn kết</span>
-                    </a>
-                    <div id="collapseSeven" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Gắn kết</h6>
-                            <a class="collapse-item" href="/muc8_1"><b>8.1</b> <i>Góp ý, khiếu nại</i></a>
-                            <a class="collapse-item" href="/muc8_2"><b>8.2</b> <i>Cập nhật khiếu nại</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Gan ket Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseEight"
-                        aria-expanded="true" aria-controls="collapseEight">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>9. Tuân thủ chính sách</span>
-                    </a>
-                    <div id="collapseEight" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Tuân thủ chính sách</h6>
-                            <a class="collapse-item" href="/muc9_1"><b>9.1</b> <i>Xử lý kỉ luật</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Gan ket Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseNine"
-                        aria-expanded="true" aria-controls="collapseNine">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>10. Quản lý nghỉ việc</span>
-                    </a>
-                    <div id="collapseNine" class="collapse" aria-labelledby="headingTwo"
-                        data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Quản lý nghỉ việc</h6>
-                            <a class="collapse-item" href="/muc10_1"><b>10.1</b> <i>Phỏng vấn nghỉ việc</i></a>
-                            <a class="collapse-item" href="/muc10_2"><b>10.2</b> <i>Nhận đơn nghỉ việc</i></a>
-                            <a class="collapse-item" href="/muc10_3"><b>10.3</b> <i>In chấm dứt hợp đồng</i></a>
-                            <a class="collapse-item" href="#"><b>10.4</b> <i>Bàn giao</i></a>
-                        </div>
-                    </div>
-                </li>
-
-                <!-- Nav Item - Gan ket Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTen"
-                        aria-expanded="true" aria-controls="collapseTen">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span>11. Kết nối cựu nhân viên</span>
-                    </a>
-                    <div id="collapseTen" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                        <div class="bg-white py-2 collapse-inner rounded">
-                            <h6 class="collapse-header">Kết nối cựu nhân viên</h6>
-                            <a class="collapse-item" href="#"><b>11.1</b></a>
-                        </div>
-                    </div>
-                </li>
-
-                {% if notice["f12"]=="1" %}
-                <!-- Nav Item - KHong kiem xuong Collapse Menu -->
-                <li class="nav-item">
-                    <a class="nav-link" href="/muc12">
-                        <i class="fas fa-fw fa-cog"></i>
-                        <span><b>12</b></span>
-                    </a>
-                </li>
-                {% endif %}
-            </div>
-            <!-- Divider -->
-            <hr class="sidebar-divider d-none d-md-block">
-
-            <!-- Sidebar Toggler (Sidebar) -->
-            <div class="text-center d-none d-md-inline">
-                <button class="rounded-circle border-0" id="sidebarToggle"></button>
-            </div>
-
-            <!-- Sidebar Message -->
-
-        </ul>
-        <!-- End of Sidebar -->
-
-        <!-- Content Wrapper -->
-        <div id="content-wrapper" class="d-flex flex-column">
-
-            <!-- Main Content -->
-            <div id="content">
-
-                <!-- Topbar -->
-                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
-                    <!-- Sidebar Toggle (Topbar) -->
-                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
-                        <i class="fa fa-bars"></i>
-                    </button>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="static/img/qr/linkphanmem.png" alt="qr_phanmem" style="width:30px; height:30px;">
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="width: 200px;">
-                            <a class="dropdown-item" href="/qr_code?qr=hp_diemdanhbu"><b>Điểm danh bù HP</b></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/qr_code?qr=hp_xinnghiphep"><b>Xin nghỉ phép HP</b></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/qr_code?qr=hp_xinnghikhongluong"><b>Xin nghỉ không lương
-                                    HP</b></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/qr_code?qr=na_diemdanhbu"><b>Điểm danh bù NA</b></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/qr_code?qr=na_xinnghiphep"><b>Xin nghỉ phép NA</b></a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/qr_code?qr=na_xinnghikhongluong"><b>Xin nghỉ không lương
-                                    NA</b></a>
-                        </div>
-                    </div>
-                    {% if notice['personal'] %}
-                    <div class="btn-group dropright">
-                        <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
-                            aria-expanded="false">
-                            <i class="fas fa-bell fa-fw"></i>
-                            <span class="badge badge-danger badge-counter">{{ notice['personal']['Lỗi chấm công']
-                                }}</span>
-                        </button>
-                        <div class="dropdown-menu">
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_2?mst={{current_user.masothe}}">Lỗi chấm công
-                                    <span class="badge badge-danger badge-counter">{{ notice['personal']["Lỗi chấm
-                                        công"] }}</span></a>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_3?mst={{current_user.masothe}}">Điểm danh bù
-                                    <span class="badge badge-primary badge-counter">{{ notice['personal']["Điểm danh bù"]["Tổng"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra:
-                                    <span class="badge badge-danger badge-counter">{{ notice['personal']["Điểm danh bù"]["Chưa kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra:
-                                    <span class="badge badge-warning badge-counter">{{ notice['personal']["Điểm danh bù"]["Đã kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt:
-                                    <span class="badge badge-success badge-counter">{{ notice['personal']["Điểm danh bù"]["Đã phê duyệt"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_3?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{
-                                    notice['personal']["Điểm danh bù"]["Bị từ chối"] }}</a>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_4?mst={{current_user.masothe}}">Xin nghỉ phép
-                                    <span class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Tổng"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra:
-                                    <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Chưa kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra:
-                                    <span class="badge badge-warning badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Đã kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt:
-                                    <span class="badge badge-success badge-counter">{{ notice['personal']["Xin nghỉ phép"]["Đã phê duyệt"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_4?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{
-                                    notice['personal']["Xin nghỉ phép"]["Bị từ chối"] }}</a>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item" href="/muc7_1_5?mst={{current_user.masothe}}">Xin nghỉ không
-                                    lương <span class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ không lương"]["Tổng"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Chờ+kiểm+tra">Chưa kiểm tra:
-                                    <span class="badge badge-danger badge-counter">{{ notice['personal']["Xin nghỉ không lương"]["Chưa kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Đã+kiểm+tra">Đã kiểm tra:
-                                    <span class="badge badge-warning badge-counter">{{ notice['personal']["Xin nghỉ không lương"]["Đã kiểm tra"] }}</span></a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Đã+phê+duyệt">Đã phê duyệt:
-                                    {{ notice['personal']["Xin nghỉ không lương"]["Đã phê duyệt"] }}</a>
-                                <a class="dropdown-item small"
-                                    href="/muc7_1_5?mst={{current_user.masothe}}&trangthai=Bị+từ+chối">Bị từ chối: {{
-                                    notice['personal']["Xin nghỉ không lương"]["Bị từ chối"] }}</a>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <div class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle"
-                                    href="/muc7_1_6?mst={{current_user.masothe}}">Xin nghỉ khác <span
-                                        class="badge badge-primary badge-counter">{{ notice['personal']["Xin nghỉ khác"]["Tổng"] }}</span></a>
-                            </div>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-center small text-gray-500" href="#">Xem tất cả thông báo</a>
-                        </div>
-                    </div>
-                    {% endif %}
-                    <div class="d-none d-sm-inline-block" style="margin-left:25%;">
-                        <h1
-                            style="margin-top:10px;margin-bottom:2px;text-align:center;color:#4e73df;font-weight: bold;font: sans-serif;">
-                            <b>H o m e M a t e</b>
-                        </h1>
-                    </div>
-                    <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-
-                        <div class="topbar-divider d-none d-sm-block"></div>
-
-
-                        <!-- Nav Item - Alerts -->
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <!-- Counter - Alerts -->
-                                <span class="badge badge-danger badge-counter">{{notice["Tổng"]}}</span>
-                            </a>
-
-                            <!-- Dropdown - Alerts -->
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Thông báo
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    {% if notice["Quản lý"] %}
-                                    {% if notice["Quản lý"]["Điểm danh bù"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_3?mstquanly={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Điểm danh bù"]}}
-                                                đơn điểm danh bù cần bạn phê duyệt</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Quản lý"]["Xin nghỉ phép"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_4?mstquanly={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ
-                                                phép"]}} đơn xin nghỉ phép cần bạn phê duyệt</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Quản lý"]["Xin nghỉ không lương"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_5?mstquanly={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ không
-                                                lương"]}} đơn xin nghỉ không lương cần bạn phê duyệt</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Quản lý"]["Xin nghỉ khác"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_6?mstquanly={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-primary">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Quản lý"]["Xin nghỉ
-                                                khác"]}} đơn xin nghỉ khác cần bạn phê duyệt</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% endif %}
-
-                                    {% if notice["Thư ký"] %}
-                                    {% if notice["Thư ký"]["Điểm danh bù"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_3?mstthuky={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Điểm danh bù"]}}
-                                                đơn điểm danh bù cần bạn kiểm tra.</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Thư ký"]["Xin nghỉ phép"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_4?mstthuky={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ phép"]}}
-                                                đơn xin nghỉ phép cần bạn kiểm tra.</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Thư ký"]["Xin nghỉ không lương"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_5?mstthuky={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ không
-                                                lương"]}} đơn xin nghỉ không lương cần bạn kiểm tra.</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Thư ký"]["Xin nghỉ khác"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_6?mstthuky={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <span class="font-weight-bold">Đang có {{notice["Thư ký"]["Xin nghỉ khác"]}}
-                                                đơn xin nghỉ khác cần bạn kiểm tra.</span>
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% if notice["Thư ký"]["Danh sách lỗi thẻ"] %}
-                                    <a class="dropdown-item d-flex align-items-center"
-                                        href="/muc7_1_2?mstthuky={{current_user.masothe}}">
-                                        <div class="mr-3">
-                                            <div class="icon-circle bg-success">
-                                                <i class="fas fa-file-alt text-white"></i>
-                                            </div>
-                                        </div>
-                                        <div>
-                                            {% if not notice["Thư ký"]["Line"] %}
-                                            <span class="font-weight-bold">Các chuyền bạn quản lý có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử lý !!!</span>
-                                            {% else %}
-                                            <span class="font-weight-bold">Chuyền {{notice["Thư ký"]["Line"]}} của bạn
-                                                có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} trường hợp lỗi thẻ chưa xử
-                                                lý !!!</span>
-                                            {% endif %}
-                                        </div>
-                                    </a>
-                                    {% endif %}
-                                    {% endif %}
-                                    {% if notice["Tuyển dụng chờ kiểm tra"] %}
-                                    {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or
-                                    current_user.phanquyen == "td" %}
-                                    <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
-                                        {% else %}
-                                        <a class="dropdown-item d-flex align-items-center"
-                                            href="/muc2_2?phongban={{current_user.phongban}}">
-                                            {% endif %}
-                                            <div class="mr-3">
-                                                <div class="icon-circle bg-danger">
-                                                    <i class="fas fa-file-alt text-white"></i>
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <span class="font-weight-bold">Có {{notice["Tuyển dụng chờ kiểm tra"]}}
-                                                    yêu cầu tuyển dụng chưa kiểm tra !!!</span>
-                                            </div>
-                                        </a>
-                                        {% endif %}
-                                        {% if notice["Tuyển dụng chờ phê duyệt"] %}
-                                        {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or
-                                        current_user.phanquyen == "td" %}
-                                        <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
-                                            {% else %}
-                                            <a class="dropdown-item d-flex align-items-center"
-                                                href="/muc2_2?phongban={{current_user.phongban}}">
-                                                {% endif %}
-                                                <div class="mr-3">
-                                                    <div class="icon-circle bg-danger">
-                                                        <i class="fas fa-file-alt text-white"></i>
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <span class="font-weight-bold">Có {{notice["Tuyển dụng chờ phê duyệt"]}} yêu cầu tuyển dụng chưa phê duyệt !!!</span>
-                                                </div>
-                                            </a>
-                                            {% endif %}
-                                            {% if notice["Tuyển dụng được duyệt"] %}
-                                            {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd" or
-                                            current_user.phanquyen == "td" %}
-                                            <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
-                                                {% else %}
-                                                <a class="dropdown-item d-flex align-items-center"
-                                                    href="/muc2_2?phongban={{current_user.phongban}}">
-                                                    {% endif %}
-                                                    <div class="mr-3">
-                                                        <div class="icon-circle bg-danger">
-                                                            <i class="fas fa-file-alt text-white"></i>
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <span class="font-weight-bold">Có {{notice["Tuyển dụng được duyệt"]}} yêu cầu tuyển dụng đã phê duyệt !!!</span>
-                                                    </div>
-                                                </a>
-                                                {% endif %}
-                                                {% if notice["Tuyển dụng bị từ chối"] %}
-                                                {% if current_user.phanquyen == "sa" or current_user.phanquyen == "gd"
-                                                or current_user.phanquyen == "td" %}
-                                                <a class="dropdown-item d-flex align-items-center" href="/muc2_2">
-                                                    {% else %}
-                                                    <a class="dropdown-item d-flex align-items-center"
-                                                        href="/muc2_2?phongban={{current_user.phongban}}">
-                                                        {% endif %}
-                                                        <div class="mr-3">
-                                                            <div class="icon-circle bg-danger">
-                                                                <i class="fas fa-file-alt text-white"></i>
-                                                            </div>
-                                                        </div>
-                                                        <div>
-                                                            <span class="font-weight-bold">Có {{notice["Tuyển dụng bị từ chối"]}} yêu cầu tuyển dụng bị từ chối !!!</span>
-                                                        </div>
-                                                    </a>
-                                                    {% endif %}
-
-                                                </a>
-                                                <a class="dropdown-item text-center small text-gray-500" href="#">Xem
-                                                    tất cả thông báo</a>
-                            </div>
-                        </li>
-
-
-                        <!-- Nav Item - User Information -->
-                        <li class="nav-item dropdown no-arrow">
-                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span
-                                    class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.hoten}}</b></span>
-                                <span
-                                    class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.masothe}}</b></span>
-                                <span
-                                    class="mr-2 d-none d-lg-inline text-gray-600 small"><b>{{current_user.phongban}}</b></span>
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small"><img
-                                        class="img-profile rounded-circle" src="static/img/undraw_profile.svg"
-                                        alt="profile.svg">
-                                </span>
-                            </a>
-                            <!-- Dropdown - User Information -->
-                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="userDropdown">
-                                <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Đổi mật khẩu
-                                </a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" data-toggle="modal" data-target="#doiMatkhauModal">
-                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Đăng xuất
-                                </a>
-                                {% if current_user.phanquyen=="sa" %}
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="/admin">
-                                    <i class="fas fa-user-secret fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Quản trị hệ thống
-                                </a>
-                                {% endif %}
-                            </div>
-
-                        </li>
-
-                    </ul>
-
-                </nav>
-                <!-- End of Topbar -->
-
-                <!-- Begin Page Content -->
-                <div class="container-fluid">
-                    {% with messages = get_flashed_messages() %}
-                    {% if messages %}
-                    <div class="alert alert-success alert-dismissible fade show" role="alert" style="margin-left: 500px;display: fixed; border: 1px solid #f5c6cb;
-                                                border-radius: 5px;
-                                                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                                                transition: opacity 0.5s ease, transform 0.5s ease;
-                                                transform: translateY(-20px);">
-                        {{ messages[0] }}
-                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    {% endif %}
-                    {% endwith %}
-                    <!-- Page Heading -->
-                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">{{page}}</h1>
-                    </div>
-                    <!-- End of Page Heading -->
-
-                    <!-- Content Row -->
-                    <div class="row" style="margin-left: 10px;">
-                        {% block nav %}
-
-                        {% endblock nav %}
-                        {% block content %}
-
-                        {% endblock content %}
-                    </div>
-                    <!-- End of Content Row -->
-                </div>
-                <!-- End of Main Content -->
-            </div>
-            <!-- Footer -->
-            <footer class="sticky-footer bg-white">
-
-                <div class="container my-auto">
-                    <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; 2024</span>
-                    </div>
-                    <b>{{url_database_pyodbc}} </b>
-                </div>
-            </footer>
-            <!-- End of Footer -->
-
-        </div>
-        <!-- End of Content Wrapper -->
-
-    </div>
-    <!-- End of Page Wrapper -->
-
-    <!-- Scroll to Top Button-->
-    <a class="scroll-to-top rounded" href="#page-top">
-        <i class="fas fa-angle-up"></i>
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/home">
+      <div class="sidebar-brand-icon rotate-n-15">
+        <img src="static/img/logo_white.png" alt="logo" id="logo">
+      </div>
     </a>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Đổi mật khẩu</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="/doimatkhau">
-                        <div class='form-group'>
-                            <input type="text" class="form-control" id="macongty" name="macongty" hidden
-                                value={{current_user.macongty}}>
-                            <input type="text" class="form-control" id="masothe_doi" name="masothe_doi" hidden
-                                value={{current_user.masothe}}>
-                            <input type="password" class="form-control" id="matkhaumoi" name="matkhaumoi"
-                                placeholder="Nhập mật khẩu mới">
-                        </div>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Quay lại</button>
-                    <input type="submit" class="btn btn-primary" value="Đổi"></input>
-                    </form>
-                </div>
-            </div>
+    <hr class="sidebar-divider my-0">
+
+    <li class="nav-item active">
+      <a class="nav-link" href="/dashboard">
+        <i class="fas fa-fw fa-tachometer-alt"></i>
+        <span>Dashboard</span>
+      </a>
+    </li>
+
+    <hr class="sidebar-divider">
+    <div class="sidebar-heading">Mục lục</div>
+
+    <div id="sidebar-scroll">
+      {% set menu = [
+        ("collapseZero",  "1. Sơ đồ tổ chức",       "fa-sitemap",    [("1.1", "#", "Sơ đồ tổ chức")]),
+        ("collapseOne",   "2. Tuyển dụng",            "fa-user-plus",  [("2.1", "/muc2_1", "Danh sách ứng viên"), ("2.2", "/muc2_2", "Yêu cầu tuyển dụng")]),
+        ("collapseTwo",   "3. Nhận việc",             "fa-briefcase",  [("3.1", "/muc3_1", "Nhập mới thông tin"), ("3.2", "/muc3_2", "Chỉnh sửa thông tin"), ("3.3", "/muc3_3", "Quản lý hợp đồng"), ("3.4", "/muc3_4", "DS sắp hết hạn HĐ"), ("3.5", "/muc3_5", "DS sắp nghỉ hưu")]),
+        ("collapseThree", "4. Đào tạo",               "fa-graduation-cap", [("4.1", "#", "")]),
+        ("collapseFour",  "5. Đánh giá hiệu quả",    "fa-chart-line", [("5.1", "#", "KPI"), ("5.1.1", "/muc5_1_1", "Upload new KPI"), ("5.1.2", "/muc5_1_2", "Approve KPI"), ("5.1.3", "/muc5_1_3_1", "KPI report")]),
+        ("collapseFive",  "6. Phát triển sự nghiệp", "fa-rocket",     [("6.1", "/muc6_1", "Đổi chức vụ, bộ phận"), ("6.2", "/muc6_2", "Lịch sử điều chuyển"), ("6.3", "/muc6_3", "Lịch sử công việc")]),
+        ("collapseSix",   "7. Lương, thưởng, phúc lợi","fa-coins",   [("7.1", "#", "Chấm công"), ("7.1.1", "/muc7_1_1", "Đổi ca làm việc"), ("7.1.2", "/muc7_1_2", "Lỗi chấm công"), ("7.1.3", "/muc7_1_8", "Làm thêm giờ"), ("7.1.4", "/muc7_1_14", "Bảng chấm công")]),
+        ("collapseSeven", "8. Gắn kết",               "fa-handshake", [("8.1", "/muc8_1", "Góp ý, khiếu nại"), ("8.2", "/muc8_2", "Cập nhật khiếu nại")]),
+        ("collapseEight", "9. Tuân thủ chính sách",  "fa-shield-alt", [("9.1", "/muc9_1", "Xử lý kỉ luật")]),
+        ("collapseNine",  "10. Quản lý nghỉ việc",   "fa-door-open",  [("10.1", "/muc10_1", "Phỏng vấn nghỉ việc"), ("10.2", "/muc10_2", "Nhận đơn nghỉ việc"), ("10.3", "/muc10_3", "In chấm dứt hợp đồng"), ("10.4", "#", "Bàn giao")]),
+        ("collapseTen",   "11. Kết nối cựu nhân viên","fa-users",     [("11.1", "#", "")]),
+      ] %}
+
+      {% for id, label, icon, items in menu %}
+      <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#{{id}}"
+           aria-expanded="false" aria-controls="{{id}}">
+          <i class="fas fa-fw {{icon}}"></i>
+          <span>{{label}}</span>
+        </a>
+        <div id="{{id}}" class="collapse" data-parent="#accordionSidebar">
+          <div class="collapse-inner">
+            {% for num, url, name in items %}
+            <a class="collapse-item" href="{{url}}">
+              <b>{{num}}</b>
+              {% if name %}<i>{{name}}</i>{% endif %}
+            </a>
+            {% endfor %}
+          </div>
         </div>
+      </li>
+      {% endfor %}
+
+      {% if notice["f12"] == "1" %}
+      <li class="nav-item">
+        <a class="nav-link" href="/muc12">
+          <i class="fas fa-fw fa-star"></i>
+          <span><b>12</b></span>
+        </a>
+      </li>
+      {% endif %}
     </div>
-    <div class="modal fade" id="doiMatkhauModal" tabindex="-1" role="dialog" aria-labelledby="doiMatkhauModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="doiMatkhauModalLabel">Bạn muốn đăng xuất?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Chọn đồng ý để kết thúc phiên làm việc.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Quay lại</button>
-                    <form action="logout" method="POST">
-                        <input type="submit" class="btn btn-primary" value="Đăng xuất"></input>
-                    </form>
-                </div>
-            </div>
+
+    <hr class="sidebar-divider d-none d-md-block">
+    <div class="text-center d-none d-md-inline">
+      <button class="rounded-circle border-0" id="sidebarToggle"></button>
+    </div>
+  </ul>
+  <!-- End Sidebar -->
+
+  <!-- ═══ CONTENT WRAPPER ═══ -->
+  <div id="content-wrapper" class="d-flex flex-column">
+    <div id="content">
+
+      <!-- ═══ TOPBAR ═══ -->
+      <nav class="navbar navbar-expand navbar-light topbar mb-4 static-top">
+
+        <!-- Mobile toggle -->
+        <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+          <i class="fa fa-bars" style="color: var(--primary);"></i>
+        </button>
+
+        <!-- QR Dropdown -->
+        <div class="dropdown mr-2">
+          <button class="btn qr-btn dropdown-toggle" type="button" data-toggle="dropdown">
+            <img src="static/img/qr/linkphanmem.png" alt="qr" style="width:26px;height:26px;border-radius:4px;">
+          </button>
+          <div class="dropdown-menu shadow" style="min-width:220px;border-radius:var(--radius);">
+            {% set qr_links = [
+              ("hp_diemdanhbu",       "Điểm danh bù HP"),
+              ("hp_xinnghiphep",      "Xin nghỉ phép HP"),
+              ("hp_xinnghikhongluong","Xin nghỉ không lương HP"),
+              ("na_diemdanhbu",       "Điểm danh bù NA"),
+              ("na_xinnghiphep",      "Xin nghỉ phép NA"),
+              ("na_xinnghikhongluong","Xin nghỉ không lương NA"),
+            ] %}
+            {% for qr, label in qr_links %}
+              <a class="dropdown-item" href="/qr_code?qr={{qr}}" style="font-size:.84rem;font-weight:600;">
+                <i class="fas fa-qrcode mr-2" style="color:var(--primary);opacity:.7;"></i>{{label}}
+              </a>
+              {% if not loop.last %}<div class="dropdown-divider" style="margin:2px 0;"></div>{% endif %}
+            {% endfor %}
+          </div>
         </div>
+
+        <!-- Personal bell -->
+        {% if notice['personal'] %}
+        <div class="btn-group dropright mr-2">
+          <button class="btn btn-light dropdown-toggle d-flex align-items-center gap-1"
+                  style="border-radius:var(--radius-sm);padding:6px 10px;font-size:.82rem;font-weight:700;"
+                  data-toggle="dropdown">
+            <i class="fas fa-user-clock" style="color:var(--primary);"></i>
+            <span class="badge badge-danger ml-1" style="border-radius:10px;">{{ notice['personal']['Lỗi chấm công'] }}</span>
+          </button>
+          <div class="dropdown-menu shadow" style="min-width:280px;border-radius:var(--radius);padding:0;overflow:hidden;">
+            <div style="background:linear-gradient(135deg,var(--primary),#224abe);color:#fff;padding:10px 14px;font-size:.75rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;">
+              Thông báo cá nhân
+            </div>
+
+            {% set personal_items = [
+              ("Lỗi chấm công",       "/muc7_1_2", "danger",  "fa-exclamation-circle", ""),
+              ("Điểm danh bù",        "/muc7_1_3", "primary", "fa-clock", "Tổng"),
+              ("Xin nghỉ phép",       "/muc7_1_4", "primary", "fa-umbrella-beach", "Tổng"),
+              ("Xin nghỉ không lương","/muc7_1_5", "primary", "fa-calendar-times", "Tổng"),
+              ("Xin nghỉ khác",       "/muc7_1_6", "primary", "fa-calendar-alt", "Tổng"),
+            ] %}
+            {% for key, url, color, icon, sub in personal_items %}
+              {% set val = notice['personal'][key][sub] if sub else notice['personal'][key] %}
+              <a class="dropdown-item d-flex align-items-center" href="{{url}}?mst={{current_user.masothe}}"
+                 style="padding:9px 14px;border-left:3px solid transparent;transition:var(--transition);"
+                 onmouseover="this.style.borderLeftColor='var(--{{color}})'"
+                 onmouseout="this.style.borderLeftColor='transparent'">
+                <div class="icon-circle bg-{{color}} mr-3" style="width:30px;height:30px;">
+                  <i class="fas {{icon}} text-white" style="font-size:.7rem;"></i>
+                </div>
+                <span style="font-size:.82rem;">{{key}}</span>
+                <span class="badge badge-{{color}} ml-auto">{{val}}</span>
+              </a>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+
+        <!-- Brand -->
+        <div class="d-none d-sm-inline-block" style="position:absolute;left:50%;transform:translateX(-50%);">
+          <h1 style="margin-top:10px;margin-bottom:2px;text-align:center;color:#4e73df;font-weight:bold;font-family:sans-serif;">
+            <b>H o m e M a t e</b>
+          </h1>
+        </div>
+
+        <!-- Right nav -->
+        <ul class="navbar-nav ml-auto align-items-center">
+          <div class="topbar-divider"></div>
+
+          <!-- Notifications bell -->
+          <li class="nav-item dropdown no-arrow mx-1">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#"
+               id="alertsDropdown" data-toggle="dropdown">
+              <i class="fas fa-bell fa-fw" style="color:#888;"></i>
+              {% if notice["Tổng"] > 0 %}
+              <span class="badge badge-danger badge-counter">{{notice["Tổng"]}}</span>
+              {% endif %}
+            </a>
+
+            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow" aria-labelledby="alertsDropdown">
+              <h6 class="dropdown-header">Thông báo hệ thống</h6>
+
+              {# Quản lý #}
+              {% if notice["Quản lý"] %}
+                {% for key, url_suffix in [("Điểm danh bù","/muc7_1_3?mstquanly="),("Xin nghỉ phép","/muc7_1_4?mstquanly="),("Xin nghỉ không lương","/muc7_1_5?mstquanly="),("Xin nghỉ khác","/muc7_1_6?mstquanly=")] %}
+                  {% if notice["Quản lý"][key] %}
+                  <a class="dropdown-item d-flex align-items-center" href="{{url_suffix}}{{current_user.masothe}}">
+                    <div class="mr-3"><div class="icon-circle bg-primary"><i class="fas fa-file-alt text-white"></i></div></div>
+                    <div style="font-size:.82rem;"><span class="font-weight-bold">{{notice["Quản lý"][key]}} đơn {{key|lower}} cần phê duyệt</span></div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+              {% endif %}
+
+              {# Thư ký #}
+              {% if notice["Thư ký"] %}
+                {% for key, url_suffix in [("Điểm danh bù","/muc7_1_3?mstthuky="),("Xin nghỉ phép","/muc7_1_4?mstthuky="),("Xin nghỉ không lương","/muc7_1_5?mstthuky="),("Xin nghỉ khác","/muc7_1_6?mstthuky=")] %}
+                  {% if notice["Thư ký"][key] %}
+                  <a class="dropdown-item d-flex align-items-center" href="{{url_suffix}}{{current_user.masothe}}">
+                    <div class="mr-3"><div class="icon-circle bg-success"><i class="fas fa-file-alt text-white"></i></div></div>
+                    <div style="font-size:.82rem;"><span class="font-weight-bold">{{notice["Thư ký"][key]}} đơn {{key|lower}} cần kiểm tra</span></div>
+                  </a>
+                  {% endif %}
+                {% endfor %}
+                {% if notice["Thư ký"]["Danh sách lỗi thẻ"] %}
+                <a class="dropdown-item d-flex align-items-center" href="/muc7_1_2?mstthuky={{current_user.masothe}}">
+                  <div class="mr-3"><div class="icon-circle bg-success"><i class="fas fa-id-card text-white"></i></div></div>
+                  <div style="font-size:.82rem;">
+                    {% if not notice["Thư ký"]["Line"] %}
+                    <span class="font-weight-bold">Các chuyền có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} lỗi thẻ chưa xử lý</span>
+                    {% else %}
+                    <span class="font-weight-bold">Chuyền {{notice["Thư ký"]["Line"]}} có {{notice["Thư ký"]["Danh sách lỗi thẻ"]}} lỗi thẻ</span>
+                    {% endif %}
+                  </div>
+                </a>
+                {% endif %}
+              {% endif %}
+
+              {# Tuyển dụng #}
+              {% set td_url = "/muc2_2" if current_user.phanquyen in ("sa","gd","td") else "/muc2_2?phongban=" ~ current_user.phongban %}
+              {% for td_key in ["Tuyển dụng chờ kiểm tra","Tuyển dụng chờ phê duyệt","Tuyển dụng được duyệt","Tuyển dụng bị từ chối"] %}
+                {% if notice.get(td_key) %}
+                <a class="dropdown-item d-flex align-items-center" href="{{td_url}}">
+                  <div class="mr-3"><div class="icon-circle bg-danger"><i class="fas fa-users text-white"></i></div></div>
+                  <div style="font-size:.82rem;"><span class="font-weight-bold">{{notice[td_key]}} {{td_key|lower}}</span></div>
+                </a>
+                {% endif %}
+              {% endfor %}
+
+              <a class="dropdown-item text-center small text-gray-500 py-2" href="#" style="font-size:.75rem;">
+                Xem tất cả thông báo →
+              </a>
+            </div>
+          </li>
+
+          <!-- User dropdown -->
+          <li class="nav-item dropdown no-arrow">
+            <a class="nav-link dropdown-toggle d-flex align-items-center gap-2" href="#"
+               id="userDropdown" data-toggle="dropdown">
+              <div class="user-info d-none d-lg-block text-right mr-2">
+                <div class="name">{{current_user.hoten}}</div>
+                <div class="meta">{{current_user.masothe}} · {{current_user.phongban}}</div>
+              </div>
+              <img class="img-profile" src="static/img/undraw_profile.svg" alt="avatar">
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow" aria-labelledby="userDropdown"
+                 style="min-width:200px;border-radius:var(--radius);padding:6px 0;">
+              <div style="padding:12px 16px 10px;border-bottom:1px solid #f0f0f0;">
+                <div style="font-weight:800;font-size:.9rem;color:#333;">{{current_user.hoten}}</div>
+                <div style="font-size:.75rem;color:#888;">{{current_user.masothe}} · {{current_user.phongban}}</div>
+              </div>
+              <a class="dropdown-item" data-toggle="modal" data-target="#logoutModal"
+                 style="font-size:.84rem;padding:9px 16px;">
+                <i class="fas fa-key fa-sm mr-2" style="color:var(--primary);"></i>Đổi mật khẩu
+              </a>
+              <a class="dropdown-item" data-toggle="modal" data-target="#doiMatkhauModal"
+                 style="font-size:.84rem;padding:9px 16px;">
+                <i class="fas fa-sign-out-alt fa-sm mr-2" style="color:var(--danger);"></i>Đăng xuất
+              </a>
+              {% if current_user.phanquyen == "sa" %}
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="/admin" style="font-size:.84rem;padding:9px 16px;">
+                <i class="fas fa-user-secret fa-sm mr-2" style="color:#6f42c1;"></i>Quản trị hệ thống
+              </a>
+              {% endif %}
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- End Topbar -->
+
+      <!-- ═══ FLASH ═══ -->
+      {% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <div class="flash-wrapper" id="flashWrapper">
+        <div class="flash-alert" id="flashAlert">
+          <i class="fas fa-check-circle flash-icon"></i>
+          <span>{{ messages[0] }}</span>
+          <button class="close" onclick="dismissFlash()">&times;</button>
+        </div>
+      </div>
+      {% endif %}
+      {% endwith %}
+
+      <!-- ═══ MAIN CONTENT ═══ -->
+      <div class="container-fluid">
+        {% if page %}
+        <div class="page-heading">{{page}}</div>
+        {% endif %}
+        <div class="row" style="margin-left:0;">
+          {% block nav %}{% endblock nav %}
+          {% block content %}{% endblock content %}
+        </div>
+      </div>
+
+    </div><!-- end #content -->
+
+    <!-- Footer -->
+    <footer class="sticky-footer">
+      <div class="container my-auto text-center">
+        <span>Copyright &copy; 2024 HomeMate</span>
+        <b style="display:block;font-size:.72rem;">{{url_database_pyodbc}}</b>
+      </div>
+    </footer>
+  </div><!-- end content-wrapper -->
+</div><!-- end wrapper -->
+
+<!-- Scroll-to-top -->
+<a class="scroll-to-top rounded" href="#page-top">
+  <i class="fas fa-angle-up"></i>
+</a>
+
+<!-- ═══ MODAL: Đổi mật khẩu ═══ -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-key mr-2"></i>Đổi mật khẩu</h5>
+        <button class="close text-white" type="button" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <form method="POST" action="/doimatkhau">
+        <div class="modal-body">
+          <input type="hidden" name="macongty"    value="{{current_user.macongty}}">
+          <input type="hidden" name="masothe_doi" value="{{current_user.masothe}}">
+          <div class="form-group mb-0">
+            <label style="font-size:.82rem;font-weight:700;color:#555;">Mật khẩu mới</label>
+            <input type="password" class="form-control" name="matkhaumoi" placeholder="Nhập mật khẩu mới">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light btn-sm" type="button" data-dismiss="modal">Quay lại</button>
+          <button type="submit" class="btn btn-primary btn-sm px-4">Đổi</button>
+        </div>
+      </form>
     </div>
-    <!-- Bootstrap core JavaScript-->
-    <script src="static/vendor/jquery/jquery.min.js"></script>
-    <script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  </div>
+</div>
 
-    <!-- Core plugin JavaScript-->
-    <script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+<!-- ═══ MODAL: Đăng xuất ═══ -->
+<div class="modal fade" id="doiMatkhauModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất</h5>
+        <button class="close text-white" type="button" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <div class="modal-body" style="font-size:.87rem;color:#555;">
+        Chọn <b>Đồng ý</b> để kết thúc phiên làm việc.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light btn-sm" type="button" data-dismiss="modal">Quay lại</button>
+        <form action="logout" method="POST">
+          <button type="submit" class="btn btn-danger btn-sm px-4">Đăng xuất</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
-    <!-- Custom scripts for all pages-->
-    <script src="static/js/sb-admin-2.min.js"></script>
+<!-- Scripts -->
+<script src="static/vendor/jquery/jquery.min.js"></script>
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="static/vendor/jquery-easing/jquery.easing.min.js"></script>
+<script src="static/js/sb-admin-2.min.js"></script>
 
-    <!-- Page level custom scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script>
-        setTimeout(function () {
-            var alert = document.querySelector('.alert');
-            if (alert) {
-                alert.classList.remove('show');
-                alert.classList.add('fade');
-                setTimeout(function () {
-                    alert.remove();
-                }, 1000); // Wait for the fade-out transition to complete
-            }
-        }, 10000); // 10 seconds
-    </script>
+<script>
+// Flash auto-dismiss
+function dismissFlash() {
+  var el = document.getElementById('flashAlert');
+  if (!el) return;
+  el.classList.add('fade-out');
+  setTimeout(function() {
+    var w = document.getElementById('flashWrapper');
+    if (w) w.remove();
+  }, 420);
+}
+setTimeout(dismissFlash, 8000);
+
+// Highlight active sidebar link
+(function() {
+  var path = window.location.pathname;
+  document.querySelectorAll('.collapse-item').forEach(function(a) {
+    if (a.getAttribute('href') === path) {
+      a.style.background = 'var(--primary-light)';
+      a.style.color = 'var(--primary)';
+      a.style.fontWeight = '700';
+      // open parent collapse
+      var collapse = a.closest('.collapse');
+      if (collapse) {
+        collapse.classList.add('show');
+        var toggle = document.querySelector('[data-target="#' + collapse.id + '"]');
+        if (toggle) toggle.setAttribute('aria-expanded', 'true');
+      }
+    }
+  });
+})();
+</script>
+
+{% block scripts %}{% endblock scripts %}
 </body>
-
 </html>
