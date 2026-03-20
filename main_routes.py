@@ -587,539 +587,309 @@ def tuyendungchitiet():
 @login_required
 @roles_required('hr','sa','gd')
 def nhapthongtinlaodongmoi():
-    
+
     if request.method == "GET":
         try:
-            data= request.args.get("data")
-            masothe = checkformatmst(int(laymasothemoi())+1)
-            cacvitri= laycacvitri()
-            cacto = laycacto()
-            cacca = laycacca()
-            data=request.args.get("scan-qrcode")
-            datenow = datetime.now()
-            macongty = current_user.macongty 
-            return render_template("3_1.html", 
-                                    page="3.1 Nhập thông tin lao động mới",
-                                    qrcccd=data,
-                                    masothe=masothe,
-                                    ngaybatdau=datenow,
-                                    cacvitri=cacvitri,
-                                    cacto=cacto,
-                                    cacca=cacca,
-                                    macongty=macongty)
+            masothe  = checkformatmst(int(laymasothemoi()) + 1)
+            cacvitri = laycacvitri()
+            cacto    = laycacto()
+            cacca    = laycacca()
+            return render_template(
+                "3_1.html",
+                page        = "3.1 Nhập thông tin lao động mới",
+                qrcccd      = request.args.get("scan-qrcode"),
+                masothe     = masothe,
+                ngaybatdau  = datetime.now(),
+                cacvitri    = cacvitri,
+                cacto       = cacto,
+                cacca       = cacca,
+                macongty    = current_user.macongty,
+            )
         except Exception as e:
             flash(f"Lỗi lấy thông tin lao động mới ({e})")
             app.logger.error(f"Lỗi lấy thông tin lao động mới ({e})")
             return redirect(url_for("home"))
-    elif request.method == "POST":
-        try:
-            # flash(request.files, request.form)
-            anh = "NULL"
-            file = request.files.get("anh")
-            # flash(file)
-            if file:
-                file_path = os.path.join(FOLDER_AVATAR, request.form.get("masothe") + ".jpg")
-                file.save(file_path)
-                anh = f"'{file_path}'"
-            masothe = f"'{request.form.get('masothe')}'"
-            thechamcong = f"'{int(request.form.get('masothe'))}'"
-            hoten = f"N'{request.form.get('hoten')}'"
-            ngaysinh = f"'{request.form.get('ngaysinh')}'" if request.form.get("ngaysinh") else "NULL"
-            gioitinh = f"N'{request.form.get('gioitinh')}'"
-            cmt = f"'{request.form.get('cmt')}'"
-            cccd = f"'{request.form.get('cccd')}'"
-            ngaycapcccd = f"'{request.form.get('ngaycap')}'" if request.form.get("ngaycap") else "NULL"
-            noicapcccd = f"N'{request.form.get('noicap')}'" if request.form.get("noicap") else "NULL"
-            thuongtru = f"N'{request.form.get('thuongtru')}'" if request.form.get("thuongtru") else "NULL"
-            noisinh = f"N'{request.form.get('noisinh')}'" if request.form.get("noisinh") else "NULL"
-            tamtru = f"N'{request.form.get('tamtru')}'" if request.form.get("tamtru") else "NULL"
-            quoctich = f"N'{request.form.get('quoctich')}'" if request.form.get("quoctich") else "NULL"
-            dantoc = f"N'{request.form.get('dantoc')}'" if request.form.get("dantoc") else "NULL"
-            tongiao = f"N'{request.form.get('tongiao')}'" if request.form.get("tongiao") else "NULL"
-            hocvan = f"N'{request.form.get('hocvan')}'" if request.form.get("hocvan") else "NULL"
-            thonxom = f"N'{request.form.get('thonxom')}'" if request.form.get("thonxom") else "NULL"
-            phuongxa = f"N'{request.form.get('phuongxa')}'" if request.form.get("phuongxa") else "NULL"
-            quanhuyen = f"N'{request.form.get('quanhuyen')}'" if request.form.get("quanhuyen") else "NULL"
-            tinhthanhpho = f"N'{request.form.get('tinhthanhpho')}'" if request.form.get("tinhthanhpho") else "NULL"
-            nganhang = f"N'{request.form.get('nganhang')}'" if request.form.get("nganhang") else "NULL"
-            sotaikhoan = f"'{request.form.get('sotaikhoan')}'" if request.form.get("sotaikhoan") else "NULL"
-            dienthoai = f"'{request.form.get('dienthoai')}'" if request.form.get("dienthoai") else "NULL"
-            sobhxh = f"'{request.form.get('sobhxh')}'" if request.form.get("sobhxh") else 'NULL'
-            masothue = f"'{request.form.get('masothue')}'" if request.form.get("masothue") else 'NULL'
-            connho = f"N'{request.form.get('connho')}'" if request.form.get("connho") else 'NULL'
-            tencon1 = f"N'{request.form.get('tenconnho1')}'" if request.form.get("tenconnho1") else 'NULL'
-            ngaysinhcon1 = f"'{request.form.get('ngaysinhcon1')}'" if request.form.get("ngaysinhcon1") else 'NULL'
-            tencon2 = f"N'{request.form.get('tenconnho2')}'" if request.form.get("tenconnho2") else 'NULL'
-            ngaysinhcon2 = f"'{request.form.get('ngaysinhcon2')}'" if request.form.get("ngaysinhcon2") else 'NULL'
-            tencon3 = f"N'{request.form.get('tenconnho3')}'" if request.form.get("tenconnho3") else 'NULL'
-            ngaysinhcon3 = f"'{request.form.get('ngaysinhcon3')}'" if request.form.get("ngaysinhcon3") else 'NULL'
-            tencon4 = f"N'{request.form.get('tenconnho4')}'" if request.form.get("tenconnho4") else 'NULL'
-            ngaysinhcon4 = f"'{request.form.get('ngaysinhcon4')}'" if request.form.get("ngaysinhcon4") else 'NULL'
-            tencon5 = f"N'{request.form.get('tenconnho5')}'" if request.form.get("tenconnho5") else 'NULL'
-            ngaysinhcon5 = f"'{request.form.get('ngaysinhcon5')}'" if request.form.get("ngaysinhcon5") else 'NULL'
-            jobdetailvn = f"N'{request.form.get('vitri')}'"
-            line = f"'{request.form.get('line')}'"
-            factory = f"'{current_user.macongty}'"
-            hccategory = f"N'{request.form.get('hccategory')}'"
-            gradecode = f"N'{request.form.get('gradecode')}'"
-            department = f"N'{request.form.get('phongban')}'"
-            chucvu = f"N'{request.form.get('chucvu')}'"
-            employeetype = f"N'{request.form.get('loailaodong')}'"
-            sectioncode = f"N'{request.form.get('mabophan')}'"
-            sectiondescription = f"N'{request.form.get('bophan')}'"
-            jobdetailen = f"N'{request.form.get('vitrien')}'"
-            positioncode = f"N'{request.form.get('mavitri')}'"
-            positioncodedescription = f"N'{request.form.get('tenvitri')}'"
-            nguoithan = f"N'{request.form.get('nguoithan')}'" if request.form.get("nguoithan") else 'NULL'
-            sdtnguoithan = f"N'{request.form.get('sdtnguoithan')}'" if request.form.get("sdtnguoithan") else 'NULL'
-            luongcoban = 'NULL'
-            tongphucap = 'NULL'
-            kieuhopdong = 'NULL'
 
-            ngaybatdauthuviec = 'NULL'
-            ngayvao = 'GETDATE()'
-            ngayketthuc = 'NULL'
-            ngayketthucthuviec = 'NULL'
-            ngaybatdauhdcthl1 = "NULL"
-            ngayketthuchdcthl1 = "NULL"
-            ngaybatdauhdcthl2 = "NULL"
-            ngayketthuchdcthl2 = "NULL"
-            ngaybatdauhdvth = "NULL"
-            diachimoi = "NULL"
+    # ── POST ──────────────────────────────────────────────────────────────────
+    def _s(key):
+        """Lấy giá trị text, trả về None nếu rỗng."""
+        v = request.form.get(key, "").strip()
+        return v if v else None
 
-            nhanvienmoi = f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},\
-                        {gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},\
-                        {thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},\
-                        {tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},\
-                        {sotaikhoan},{connho},{tencon1},{ngaysinhcon1},{tencon2},{ngaysinhcon2},\
-                        {tencon3},{ngaysinhcon3},{tencon4},{ngaysinhcon4},{tencon5},{ngaysinhcon5},\
-                        {anh},{nguoithan}, {sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},\
-                        {jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},\
-                        {sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},\
-                        {positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},\
-                        {ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',{ngaybatdauthuviec},{ngayketthucthuviec},\
-                        {ngaybatdauhdcthl1},{ngayketthuchdcthl1},{ngaybatdauhdcthl2},{ngayketthuchdcthl2},\
-                        {ngaybatdauhdvth},'N', '', GETDATE(), {diachimoi})"   
-                      
-            ketqua = themnhanvienmoi(nhanvienmoi)
-            if ketqua["ketqua"]:
-                flash("Thêm lao động mới thành công !!!")
-                ca = laycatheochuyen(request.form.get("line"))
-                thangdangkycalamviec(
-                    request.form.get("masothe"),
-                    ca,
-                    ca,
-                    datetime.now().date().strftime("%Y-%m-%d"), 
-                    datetime(2054, 12, 31).date().strftime("%Y-%m-%d")  
-                )
-                # flash(f"Tạo ca mặc định cho người mới là {ca} thành công !!!")  
-                themtaikhoanmoi(
-                    int(request.form.get("masothe")),
-                    request.form.get("hoten"),
-                    request.form.get("phongban"),
-                    request.form.get("gradecode")
-                )              
-            else:
-                flash(f"Thêm lao động mới thất bại {ketqua['lido']}!!!")
-        except Exception as e:
-            flash(f"Them lao dong moi that bai: {e} !!!")
-        finally:
-            return redirect("/muc3_1")
+    def _sql_nstr(key):  return f"N'{_s(key)}'"       if _s(key) else "NULL"
+    def _sql_str(key):   return f"'{_s(key)}'"         if _s(key) else "NULL"
+    def _sql_date(key):  return f"'{_s(key)}'"         if _s(key) else "NULL"
+
+    try:
+        # ── Ảnh ──
+        anh  = "NULL"
+        file = request.files.get("anh")
+        if file and file.filename:
+            file_path = os.path.join(FOLDER_AVATAR, _s("masothe") + ".jpg")
+            file.save(file_path)
+            anh = f"'{file_path}'"
+
+        # ── Định danh ──
+        masothe      = f"'{_s('masothe')}'"
+        thechamcong  = f"'{int(_s('masothe'))}'"
+
+        # ── CCCD / cá nhân ──
+        hoten         = _sql_nstr("hoten")
+        ngaysinh      = _sql_date("ngaysinh")
+        gioitinh      = _sql_nstr("gioitinh")
+        cmt           = _sql_str("cmt")
+        cccd          = _sql_str("cccd")
+        ngaycapcccd   = _sql_date("ngaycap")
+        noicapcccd    = _sql_nstr("noicap")
+        thuongtru     = _sql_nstr("thuongtru")
+        noisinh       = _sql_nstr("noisinh")
+        tamtru        = _sql_nstr("tamtru")
+        quoctich      = _sql_nstr("quoctich")
+        dantoc        = _sql_nstr("dantoc")
+        tongiao       = _sql_nstr("tongiao")
+        hocvan        = _sql_nstr("hocvan")
+        thonxom       = _sql_nstr("thonxom")
+        phuongxa      = _sql_nstr("phuongxa")
+        quanhuyen     = _sql_nstr("quanhuyen")
+        tinhthanhpho  = _sql_nstr("tinhthanhpho")
+        nguoithan     = _sql_nstr("nguoithan")
+        sdtnguoithan  = _sql_nstr("sdtnguoithan")
+
+        # ── Tài chính / liên hệ ──
+        nganhang      = _sql_nstr("nganhang")
+        sotaikhoan    = _sql_str("sotaikhoan")
+        dienthoai     = _sql_str("dienthoai")
+        sobhxh        = _sql_str("sobhxh")
+        masothue      = _sql_str("masothue")
+
+        # ── Con nhỏ ──
+        connho        = _sql_nstr("connho")
+        tencon        = [_sql_nstr(f"tenconnho{i}")  for i in range(1, 6)]
+        ngaysinhcon   = [_sql_date(f"ngaysinhcon{i}") for i in range(1, 6)]
+
+        # ── Vị trí ──
+        jobdetailvn          = _sql_nstr("vitri")
+        line                 = _sql_str("line")
+        factory              = f"'{current_user.macongty}'"
+        hccategory           = _sql_nstr("hccategory")
+        gradecode            = _sql_nstr("gradecode")
+        department           = _sql_nstr("phongban")
+        chucvu               = _sql_nstr("chucvu")
+        employeetype         = _sql_nstr("loailaodong")
+        sectioncode          = _sql_nstr("mabophan")
+        sectiondescription   = _sql_nstr("bophan")
+        jobdetailen          = _sql_nstr("vitrien")
+        positioncode         = _sql_nstr("mavitri")
+        positioncodedescription = _sql_nstr("tenvitri")
+
+        # ── NTID ──
+        cost_id                = _sql_str("ntid")
+
+        # ── Cố định ──
+        luongcoban  = 'NULL'
+        tongphucap  = 'NULL'
+        kieuhopdong = 'NULL'
+        ngayvao     = 'GETDATE()'
+        diachimoi   = 'NULL'
+        for _null_var in [
+            'ngaybatdauthuviec','ngayketthuc','ngayketthucthuviec',
+            'ngaybatdauhdcthl1','ngayketthuchdcthl1',
+            'ngaybatdauhdcthl2','ngayketthuchdcthl2','ngaybatdauhdvth',
+        ]:
+            locals()[_null_var]  # just reference — set below
+        (ngaybatdauthuviec, ngayketthuc, ngayketthucthuviec,
+         ngaybatdauhdcthl1, ngayketthuchdcthl1,
+         ngaybatdauhdcthl2, ngayketthuchdcthl2, ngaybatdauhdvth) = ['NULL'] * 8
+
+        nhanvienmoi = (
+            f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},"
+            f"{gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},"
+            f"{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},"
+            f"{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},"
+            f"{sotaikhoan},{connho},"
+            f"{tencon[0]},{ngaysinhcon[0]},{tencon[1]},{ngaysinhcon[1]},"
+            f"{tencon[2]},{ngaysinhcon[2]},{tencon[3]},{ngaysinhcon[3]},"
+            f"{tencon[4]},{ngaysinhcon[4]},"
+            f"{anh},{nguoithan},{sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},"
+            f"{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},"
+            f"{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},"
+            f"{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},"
+            f"{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',"
+            f"{ngaybatdauthuviec},{ngayketthucthuviec},"
+            f"{ngaybatdauhdcthl1},{ngayketthuchdcthl1},"
+            f"{ngaybatdauhdcthl2},{ngayketthuchdcthl2},"
+            f"{ngaybatdauhdvth},'N','',GETDATE(),{diachimoi},"
+            f"{congtytraluong},{doituongchiuchiphi},{phongban10},{phanloailaodong},{msnv},{cost_id})"
+        )
+
+        ketqua = themnhanvienmoi(nhanvienmoi)
+        if ketqua["ketqua"]:
+            flash("Thêm lao động mới thành công !!!")
+            ca = laycatheochuyen(request.form.get("line"))
+            thangdangkycalamviec(
+                request.form.get("masothe"), ca, ca,
+                datetime.now().date().strftime("%Y-%m-%d"),
+                datetime(2054, 12, 31).strftime("%Y-%m-%d"),
+            )
+            themtaikhoanmoi(
+                int(request.form.get("masothe")),
+                request.form.get("hoten"),
+                request.form.get("phongban"),
+                request.form.get("gradecode"),
+            )
+        else:
+            flash(f"Thêm lao động mới thất bại: {ketqua['lido']}")
+
+    except Exception as e:
+        flash(f"Thêm lao động mới thất bại: {e}")
+        app.logger.error(f"Thêm lao động mới thất bại: {e}")
+    finally:
+        return redirect("/muc3_1")
         
-@app.route("/muc3_2", methods=["GET","POST"])
+@app.route("/muc3_2", methods=["GET", "POST"])
 @login_required
-@roles_required('hr','sa','gd')
+@roles_required('hr', 'sa', 'gd')
 def thaydoithongtinlaodong():
-    
+
     if request.method == "GET":
         return render_template("3_2.html", page="3.2 Thay đổi thông tin người lao động")
-    else:
+
+    # ── POST ──────────────────────────────────────────────────────────────────
+    try:
+        mst = request.form.get("mst", "").strip()
+
+        # ── Ảnh ──
+        anh = None
+        file = request.files.get("anh")
+        if file and file.filename:
+            file_path = os.path.join(FOLDER_AVATAR, mst + ".jpg")
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            file.save(file_path)
+            anh = file_path
+
+        def _v(key):
+            """Trả về giá trị string, None nếu rỗng."""
+            v = request.form.get(key, "").strip()
+            return v if v else None
+
+        def _num(key):
+            v = _v(key)
+            return v.replace(",", "") if v else None
+
+        # ── Map: form_key → (col_name, is_nvarchar) ──
+        FIELD_MAP = [
+            # Cá nhân
+            ("cccd",                    "CCCD",                       False),
+            ("ngaycapcccd",             "Ngay_cap",                   False),
+            ("noicapcccd",              "Noi_cap",                    True),
+            ("hoten",                   "Ho_ten",                     True),
+            ("ngaysinh",                "Ngay_sinh",                  False),
+            ("gioitinh",                "Gioi_tinh",                  True),
+            ("cmt",                     "CMT",                        True),
+            ("quoctich",                "Quoc_tich",                  True),
+            ("dienthoai",               "Sdt",                        False),
+            ("thonxom",                 "Thon_xom",                   True),
+            ("phuongxa",                "Phuong_xa",                  True),
+            ("quanhuyen",               "Quan_huyen",                 True),
+            ("tinhthanhpho",            "Tinh_TP",                    True),
+            ("thuongtru",               "Dia_chi_thuong_tru",         True),
+            ("tamtru",                  "Dia_chi_tam_tru",            True),
+            ("noisinh",                 "Noi_sinh",                   True),
+            ("dantoc",                  "Dan_toc",                    True),
+            ("tongiao",                 "Ton_giao",                   True),
+            ("hocvan",                  "Trinh_do",                   True),
+            ("masothue",                "Ma_so_thue",                 False),
+            ("nganhang",                "Ngan_hang",                  True),
+            ("sotaikhoan",              "So_tai_khoan",               False),
+            ("diachimoi",               "Dia_chi_moi",                True),
+            ("connho",                  "Con_nho",                    True),
+            # Con nhỏ
+            ("tenconnho1",              "Ten_con_nho_1",              True),
+            ("tenconnho2",              "Ten_con_nho_2",              True),
+            ("tenconnho3",              "Ten_con_nho_3",              True),
+            ("tenconnho4",              "Ten_con_nho_4",              True),
+            ("tenconnho5",              "Ten_con_nho_5",              True),
+            ("ngaysinhcon1",            "Ngay_sinh_con_nho_1",        False),
+            ("ngaysinhcon2",            "Ngay_sinh_con_nho_2",        False),
+            ("ngaysinhcon3",            "Ngay_sinh_con_nho_3",        False),
+            ("ngaysinhcon4",            "Ngay_sinh_con_nho_4",        False),
+            ("ngaysinhcon5",            "Ngay_sinh_con_nho_5",        False),
+            ("nguoithan",               "Nguoi_than",                 True),
+            ("sdtnguoithan",            "Sdt_Nguoithan",              False),
+            # Vị trí
+            ("jobtitlevn",              "Job_title_VN",               True),
+            ("jobtitleen",              "Job_title_EN",               False),
+            ("positioncode",            "Position_code",              False),
+            ("positioncodedescription", "Position_code_description",  False),
+            ("chucvu",                  "Chuc_vu",                    True),
+            ("line",                    "Line",                       False),
+            ("department",              "Department",                 False),
+            ("sectioncode",             "Section_code",               False),
+            ("sectiondescription",      "Section_description",        False),
+            ("hccategory",              "Headcount_category",         False),
+            ("employeetype",            "Emp_type",                   False),
+            ("gradecode",               "Grade_code",                 False),
+            ("factory",                 "Factory",                    False),
+            # Hợp đồng
+            ("kieuhopdong",             "Loai_hop_dong",              True),
+            ("ngaybatdau",              "Ngay_ky_HD",                 False),
+            ("ngayketthuc",             "Ngay_het_han_HD",            False),
+            ("phucap",                  "Phu_cap",                    True),
+            # Ngày tháng / trạng thái
+            ("trangthai",               "Trang_thai_lam_viec",        True),
+            ("ngayvao",                 "Ngay_vao",                   False),
+            ("ngaynghi",                "Ngay_nghi",                  False),
+            ("ngaykyhdtv",              "Ngay_ky_HDTV",               False),
+            ("ngayhethanhdtv",          "Ngay_het_han_HDTV",          False),
+            ("COST_ID",                 "COST_ID",                    False),
+        ]
+
+        # ── Xây dựng SET clause ──
+        set_parts = []
+
+        # Các trường thông thường từ FIELD_MAP
+        for form_key, col, is_nv in FIELD_MAP:
+            val = _v(form_key)
+            if val:
+                prefix = "N" if is_nv else ""
+                set_parts.append(f"{col} = {prefix}'{val}'")
+            else:
+                set_parts.append(f"{col} = NULL")
+
+        # The_cham_cong: ép kiểu int
         try:
-            mst = request.form.get("mst")
-            anh = "NULL"
-            file = request.files.get("anh")
-            if file:
-                file_path = os.path.join(FOLDER_AVATAR, mst + ".jpg")
-                if os.path.exists(file_path):
-                    os.remove(file_path)
-                file.save(file_path)
-            
-                anh = f"'{file_path}'"
-            trangthailamviec = request.form.get("trangthai")
-            thechamcong = request.form.get("thechamcong")
-            cccd = request.form.get("cccd")
-            ngaycapcccd = request.form.get("ngaycapcccd")
-            noicapcccd = request.form.get("noicapcccd")
-            hoten = request.form.get("hoten")
-            ngaysinh = request.form.get("ngaysinh")
-            gioitinh = request.form.get("gioitinh")
-            cmt = request.form.get("cmt")
-            quoctich = request.form.get("quoctich")
-            dienthoai = request.form.get("dienthoai")
-            thonxom = request.form.get("thonxom")
-            phuongxa = request.form.get("phuongxa")
-            quanhuyen = request.form.get("quanhuyen")
-            tinhthanhpho = request.form.get("tinhthanhpho")
-            thuongtru = request.form.get("thuongtru")
-            tamtru = request.form.get("tamtru")
-            noisinh = request.form.get("noisinh")
-            dantoc = request.form.get("dantoc")
-            tongiao = request.form.get("tongiao")
-            hocvan = request.form.get("hocvan")
-            masothue = request.form.get("masothue")
-            nganhang = request.form.get("nganhang")
-            sotaikhoan = request.form.get("sotaikhoan")
-            diachimoi = request.form.get("diachimoi")
-            connho = request.form.get("connho")
-            
-            tenconnho1 = request.form.get("tenconnho1")
-            tenconnho2 = request.form.get("tenconnho2")
-            tenconnho3 = request.form.get("tenconnho3")
-            tenconnho4 = request.form.get("tenconnho4")
-            tenconnho5 = request.form.get("tenconnho5")
-            ngaysinhcon1 = request.form.get("ngaysinhcon1")
-            ngaysinhcon2 = request.form.get("ngaysinhcon2")
-            ngaysinhcon3 = request.form.get("ngaysinhcon3")
-            ngaysinhcon4 = request.form.get("ngaysinhcon4")
-            ngaysinhcon5 = request.form.get("ngaysinhcon5")
-            jobtitlevn = request.form.get("jobtitlevn") 
-            jobtitleen = request.form.get("jobtitleen") 
-            positioncode = request.form.get("positioncode")
-            positioncodedescription = request.form.get("positioncodedescription")
-            chucvu =  request.form.get("chucvu")
-            line = request.form.get("line")
-            department = request.form.get("department")
-            sectioncode = request.form.get("sectioncode")
-            sectiondescription = request.form.get("sectiondescription")
-            hccategory = request.form.get("hccategory")
-            employeetype = request.form.get("employeetype")
-            gradecode = request.form.get("gradecode")
-            factory = request.form.get("factory")
-            kieuhopdong = request.form.get("kieuhopdong")
-            ngaybatdau = request.form.get("ngaybatdau")
-            ngayketthuc = request.form.get("ngayketthuc")
-            mucluong = request.form.get("mucluong").replace(',','')
-            phucap = request.form.get("phucap").replace(',','')
-            tienphucap = request.form.get("tienphucap")
-            nguoithan = request.form.get("nguoithan")
-            sdtnguoithan = request.form.get("sdtnguoithan")
-            ngayvao = request.form.get("ngayvao")
-            ngaynghi = request.form.get("ngaynghi")
-            ngaykyhdtv = request.form.get("ngaykyhdtv")
-            ngayhethanhdtv = request.form.get("ngayhethanhdtv")
-            
-            query = f"UPDATE Danh_sach_CBCNV SET "
-            if thechamcong:
-                query += f"The_cham_cong = '{thechamcong}',"
-            else:
-                query += f"The_cham_cong = NULL,"
-                
-            if cccd: 
-                query += f"CCCD = '{cccd}',"
-            else:
-                query += f"CCCD = NULL,"
-                
-            if ngaycapcccd: 
-                query += f"Ngay_cap = '{ngaycapcccd}',"
-            else:
-                query += f"Ngay_cap = NULL,"
-            
-            if noicapcccd: 
-                query += f"Noi_cap = N'{noicapcccd}',"
-            else:
-                query += f"Noi_cap = NULL,"
+            tcc = int(mst) if mst else None
+        except (ValueError, TypeError):
+            tcc = None
+        set_parts.append(f"The_cham_cong = {tcc}" if tcc is not None else "The_cham_cong = NULL")
 
-            if hoten: 
-                query += f"Ho_ten = N'{hoten}',"
-            else:
-                query += f"Ho_ten = NULL,"
-                
-            if ngaysinh: 
-                query += f"Ngay_sinh = '{ngaysinh}',"
-            else:
-                query += f"Ngay_sinh = NULL,"
-                
-            if gioitinh: 
-                query += f"Gioi_tinh = N'{gioitinh}',"
-            else:
-                query += f"Gioi_tinh = NULL,"
-                    
-            if cmt: 
-                query += f"CMT = N'{cmt}',"
-            else:
-                query += f"CMT = NULL,"   
-                
-            if quoctich: 
-                query += f"Quoc_tich = N'{quoctich}',"
-            else:
-                query += f"Quoc_tich = NULL," 
-                
-            if dienthoai: 
-                query += f"Sdt = N'{dienthoai}',"
-            else:
-                query += f"Sdt = NULL,"
-                
-            if thonxom: 
-                query += f"Thon_xom = N'{thonxom}',"
-            else:
-                query += f"Thon_xom = NULL,"
-                
-            if phuongxa: 
-                query += f"Phuong_xa = N'{phuongxa}',"
-                
-            if quanhuyen: 
-                query += f"Quan_huyen = N'{quanhuyen}',"
-            else:
-                query += f"Quan_huyen = NULL,"
-                
-            if tinhthanhpho: 
-                query += f"Tinh_TP = N'{tinhthanhpho}',"
-            else:
-                query += f"Tinh_TP = NULL,"
-            
-            if thuongtru:
-                query += f"Dia_chi_thuong_tru = N'{thuongtru}',"
-            else:
-                query += f"Dia_chi_thuong_tru = NULL,"
-                
-            if tamtru:
-                query += f"Dia_chi_tam_tru = N'{tamtru}',"
-            else:
-                query += f"Dia_chi_tam_tru = NULL,"
-                
-            if noisinh:
-                query += f"Noi_sinh = N'{noisinh}',"
-            else:
-                query += f"Noi_sinh = NULL,"
-            
-            if dantoc: 
-                query += f"Dan_toc = N'{dantoc}',"
-            else:
-                query += f"Dan_toc = NULL,"
-                    
-            if tongiao: 
-                query += f"Ton_giao = N'{tongiao}',"
-            else:
-                query += f"Ton_giao = NULL,"
-                    
-            if hocvan: 
-                query += f"Trinh_do = N'{hocvan}',"
-            else:
-                query += f"Trinh_do = NULL,"
-                
-            if masothue: 
-                query += f"Ma_so_thue = N'{masothue}',"
-            else:
-                query += f"Ma_so_thue = NULL,"   
-                
-            if nganhang: 
-                query += f"Ngan_hang = N'{nganhang}',"
-            else:
-                query += f"Ngan_hang = NULL,"   
-                
-            if sotaikhoan: 
-                query += f"So_tai_khoan = N'{sotaikhoan}',"
-            else:
-                query += f"So_tai_khoan = NULL,"
-                
-            if diachimoi: 
-                query += f"Dia_chi_moi = N'{diachimoi}',"
-            else:
-                query += f"Dia_chi_moi = NULL,"
-                
-            if connho: 
-                query += f"Con_nho = N'{connho}',"
-            else:
-                query += f"Con_nho = NULL,"
+        # Các cột số (cần strip dấu phẩy)
+        for form_key, col in [("mucluong", "Luong_co_ban"), ("tongphucap", "Tong_phu_cap")]:
+            val = _num(form_key)
+            set_parts.append(f"{col} = '{val}'" if val else f"{col} = NULL")
 
-            if tenconnho1: 
-                query += f"Ten_con_nho_1 = N'{tenconnho1}',"
-            else:
-                query += f"Ten_con_nho_1 = NULL,"
-            
-            if tenconnho2: 
-                query += f"Ten_con_nho_2 = N'{tenconnho2}',"
-            else:
-                query += f"Ten_con_nho_2 = NULL,"
-                
-            if tenconnho3: 
-                query += f"Ten_con_nho_3 = N'{tenconnho3}',"
-            else:
-                query += f"Ten_con_nho_3 = NULL,"
-                
-            if tenconnho4: 
-                query += f"Ten_con_nho_4 = N'{tenconnho4}',"
-            else:
-                query += f"Ten_con_nho_4 = NULL,"
-            
-            if tenconnho5: 
-                query += f"Ten_con_nho_5 = N'{tenconnho5}',"
-            else:
-                query += f"Ten_con_nho_5 = NULL,"
-            
-            if ngaysinhcon1: 
-                query += f"Ngay_sinh_con_nho_1 = '{ngaysinhcon1}',"
-            else:
-                query += f"Ngay_sinh_con_nho_1 = NULL,"
-            
-            if ngaysinhcon2: 
-                query += f"Ngay_sinh_con_nho_2 = '{ngaysinhcon2}',"
-            else:
-                query += f"Ngay_sinh_con_nho_2 = NULL,"
-                
-            if ngaysinhcon3: 
-                query += f"Ngay_sinh_con_nho_3 = '{ngaysinhcon3}',"
-            else:
-                query += f"Ngay_sinh_con_nho_3 = NULL,"
-                
-            if ngaysinhcon4: 
-                query += f"Ngay_sinh_con_nho_4 = '{ngaysinhcon4}',"
-            else:
-                query += f"Ngay_sinh_con_nho_4 = NULL,"
-                
-            if ngaysinhcon5: 
-                query += f"Ngay_sinh_con_nho_5 = '{ngaysinhcon5}',"
-            else:
-                query += f"Ngay_sinh_con_nho_5 = NULL,"
-            
-            if nguoithan:
-                query += f"Nguoi_than = N'{nguoithan}',"
-            else:
-                query += f"Nguoi_than = NULL," 
-                
-            if sdtnguoithan:
-                query += f"Sdt_Nguoithan = '{sdtnguoithan}',"
-            else:
-                query += f"Sdt_Nguoithan = NULL," 
-            
-            if jobtitlevn: 
-                query += f"Job_title_VN = N'{jobtitlevn}',"
-            else:
-                query += f"Job_title_VN = NULL,"
-                
-            if jobtitleen: 
-                query += f"Job_title_EN = '{jobtitleen}',"
-            else:
-                query += f"Job_title_EN = NULL,"
-                
-            if positioncode: 
-                query += f"Position_code = '{positioncode}',"
-            else:
-                query += f"Position_code = NULL,"
-            
-            if positioncodedescription: 
-                query += f"Position_code_description = '{positioncodedescription}',"
-            else:
-                query += f"Position_code_description = NULL,"  
-            
-            if chucvu: 
-                query += f"Chuc_vu = N'{chucvu}',"
-            else:
-                query += f"Chuc_vu = NULL," 
-                
-            if line: 
-                query += f"Line = '{line}',"
-            else:
-                query += f"Line = NULL,"     
-            
-            if department: 
-                query += f"Department = '{department}',"
-            else:
-                query += f"Department = NULL,"  
-                
-            if sectioncode: 
-                query += f"Section_code = '{sectioncode}',"
-            else:
-                query += f"Section_code = NULL,"     
-            
-            if sectiondescription: 
-                query += f"Section_description = '{sectiondescription}',"
-            else:
-                query += f"Section_description = NULL," 
-                
-            if hccategory: 
-                query += f"Headcount_category = '{hccategory}',"
-            else:
-                query += f"Headcount_category = NULL," 
-                
-            if employeetype: 
-                query += f"Emp_type = '{employeetype}',"
-            else:
-                query += f"Emp_type = NULL," 
-                
-            if gradecode: 
-                query += f"Grade_code = '{gradecode}',"
-            else:
-                query += f"Grade_code = NULL," 
-                
-            if factory: 
-                query += f"Factory = '{factory}',"
-            else:
-                query += f"Factory = NULL,"
-                
-            if kieuhopdong:
-                query += f"Loai_hop_dong = N'{kieuhopdong}',"
-            else:
-                query += f"Loai_hop_dong = NULL,"
-                
-            if ngaybatdau:
-                query += f"Ngay_ky_HD = '{ngaybatdau}',"
-            else:
-                query += f"Ngay_ky_HD = NULL,"
-            
-            if ngayketthuc:
-                query += f"Ngay_het_han_HD = '{ngayketthuc}',"
-            else:
-                query += f"Ngay_het_han_HD = NULL,"
-                
-            if mucluong:
-                query += f"Luong_co_ban = '{mucluong}',"
-            else:
-                query += f"Luong_co_ban = NULL,"
-                
-            if phucap:
-                query += f"Phu_cap = N'{phucap}',"
-            else:
-                query += f"Phu_cap = NULL,"
-                
-            if tienphucap:
-                query += f"Tong_phu_cap = '{tienphucap}',"
-            else:
-                query += f"Tong_phu_cap = NULL,"
-            if trangthailamviec:
-                query += f"Trang_thai_lam_viec = N'{trangthailamviec}',"
-            else:
-                query += f"Trang_thai_lam_viec = NULL,"
-            if ngayvao:
-                query += f"Ngay_vao = '{ngayvao}',"
-            else:
-                query += f"Ngay_vao = NULL,"
-            if ngaynghi:
-                query += f"Ngay_nghi = '{ngaynghi}',"
-            else:
-                query += f"Ngay_nghi = NULL,"
-            if ngaykyhdtv:
-                query += f"Ngay_ky_HDTV = '{ngaykyhdtv}',"
-            else:
-                query += f"Ngay_ky_HDTV = NULL,"
-            if ngayhethanhdtv:
-                query += f"Ngay_het_han_HDTV = '{ngayhethanhdtv}',"
-            else:
-                query += f"Ngay_het_han_HDTV = NULL,"
-            if anh:
-                query += f"Anh_chan_dung = {anh},"
-            else:
-                query += f"Anh_chan_dung = NULL,"
-            query = query[:-1] + f" WHERE MST = '{mst}' AND Factory='{current_user.macongty}'"
-            conn = pyodbc.connect(url_database_pyodbc)
-            cursor = conn.cursor()
-            cursor.execute(query)
-            conn.commit()
-            conn.close()
-            flash("Cập nhật thông tin người lao động thành công !!!")
-        except Exception as e:
-            flash(f"Cập nhật thông tin người lao động thất bại: {e} !!!")
-        return redirect("/muc3_2")
+        # Ảnh
+        set_parts.append(f"Anh_chan_dung = '{anh}'" if anh else "Anh_chan_dung = NULL")
+
+        query = (
+            "UPDATE Danh_sach_CBCNV SET "
+            + ", ".join(set_parts)
+            + f" WHERE MST = '{mst}' AND Factory = '{current_user.macongty}'"
+        )
+
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        cursor.execute(query)
+        conn.commit()
+        conn.close()
+        flash("Cập nhật thông tin người lao động thành công !!!")
+
+    except Exception as e:
+        flash(f"Cập nhật thông tin người lao động thất bại: {e}")
+        app.logger.error(f"muc3_2 POST error: {e}")
+
+    return redirect("/muc3_2")
     
 @app.route("/muc3_3", methods=["GET","POST"])
 @login_required
