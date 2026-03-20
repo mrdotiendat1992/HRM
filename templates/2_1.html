@@ -1,360 +1,572 @@
-{% extends  "base.html" %}
-{% block style%}
+{% extends "base.html" %}
+{% block style %}
 <style>
-    table, th, td {
-        font-size: 12px;
-        font-weight:bold;
+    /* ── CSS Variables ── */
+    :root {
+        --brand:      #3a5bd9;
+        --brand-dk:   #2442b8;
+        --brand-lt:   #eef1fc;
+        --accent:     #00c9a7;
+        --danger:     #e74a3b;
+        --warn:       #f6c23e;
+        --warn-dk:    #7a5000;
+        --dark:       #2d3748;
+        --txt:        #3d4e7a;
+        --txt-muted:  #8a9bc2;
+        --border:     #dde3f3;
+        --row-alt:    #f7f9ff;
+        --row-hover:  #edf0fb;
+        --white:      #ffffff;
+        --shadow-sm:  0 1px 4px rgba(58,91,217,.10);
+        --shadow-md:  0 4px 16px rgba(58,91,217,.14);
+        --radius:     6px;
+    }
+
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; }
+
+    /* ── Override container của base.html ── */
+    /* Đảm bảo wrapper cha không chặn overflow */
+    #content-wrapper,
+    #page-content-wrapper,
+    .container-fluid,
+    main,
+    .main-content {
+        overflow: visible !important;
+        max-width: none !important;
+    }
+
+    /* ── Page Layout ── */
+    .uv-page { padding: 14px 18px 0 18px; }
+
+    /* Tbl-section */
+    .tbl-section { padding: 0 0 18px 0; }
+
+    /* ══════════════════════════════════════
+       FILTER BAR
+    ══════════════════════════════════════ */
+    .filter-card {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        margin-bottom: 10px;
+        box-shadow: var(--shadow-sm);
+    }
+    .filter-bar { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; }
+    .filter-item { display: flex; flex-direction: column; gap: 3px; }
+    .filter-item label {
+        font-size: 9px; font-weight: 800;
+        color: var(--txt-muted); text-transform: uppercase; letter-spacing: .6px;
+    }
+    .filter-item input {
+        font-size: 11px; font-weight: 600; color: var(--txt);
+        padding: 4px 8px; width: 130px;
+        border: 1.5px solid var(--border); border-radius: 4px;
+        background: var(--white); transition: border-color .15s;
+    }
+    .filter-item input[type=date] { width: 138px; }
+    .filter-item input:focus {
+        outline: none; border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(58,91,217,.12);
+    }
+    .btn-reset {
+        font-size: 11px; font-weight: 700; padding: 4px 14px;
+        background: var(--brand); color: #fff; border: none;
+        border-radius: 4px; cursor: pointer; white-space: nowrap;
+        transition: background .15s;
+    }
+    .btn-reset:hover { background: var(--brand-dk); }
+
+    /* ══════════════════════════════════════
+       TOOLBAR
+    ══════════════════════════════════════ */
+    .toolbar {
+        display: flex; align-items: center; gap: 10px;
+        flex-wrap: wrap; margin-bottom: 8px;
+    }
+    .toolbar .total {
+        font-size: 13px; font-weight: 800; color: var(--brand);
+        background: var(--brand-lt); padding: 3px 10px;
+        border-radius: 20px; white-space: nowrap;
+    }
+    .toolbar .pag-wrap { flex: 1; min-width: 0; }
+    .toolbar .pag-wrap .pagination { font-size: 11px; margin: 0; }
+    .btn-export {
+        font-size: 11px; font-weight: 700; padding: 4px 14px;
+        background: #1cc88a; color: #fff; border: none;
+        border-radius: 4px; cursor: pointer; white-space: nowrap;
+        transition: background .15s;
+    }
+    .btn-export:hover { background: #17a673; }
+
+    /* ══════════════════════════════════════
+       TABLE WRAPPER — scroll cả 2 chiều
+    ══════════════════════════════════════ */
+    .tbl-wrap {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: scroll;
+        overflow-y: auto;
+        max-height: calc(100vh - 220px);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-md);
+        background: var(--white);
+        display: block;          /* quan trọng: block thay vì inline */
+        -webkit-overflow-scrolling: touch;
+    }
+    /* Scrollbar styling */
+    .tbl-wrap::-webkit-scrollbar        { height: 8px; width: 6px; }
+    .tbl-wrap::-webkit-scrollbar-track  { background: #f1f3f9; border-radius: 4px; }
+    .tbl-wrap::-webkit-scrollbar-thumb  { background: #b0bddf; border-radius: 4px; }
+    .tbl-wrap::-webkit-scrollbar-thumb:hover { background: var(--brand); }
+
+    /* ══════════════════════════════════════
+       TABLE
+    ══════════════════════════════════════ */
+    .tbl-uv {
         border-collapse: collapse;
+        font-size: 11px;
+        color: var(--txt);
+        width: max-content;
+        min-width: 100%;
     }
-    th {
-        text-align: center;
-        color: white;
-    }
-    td, th {
+
+    /* Header */
+    .tbl-uv thead th {
+        background: var(--brand);
+        color: #fff;
+        padding: 6px 8px;
+        font-size: 10px; font-weight: 700;
+        letter-spacing: .3px;
         white-space: nowrap;
+        border-right: 1px solid rgba(255,255,255,.15);
+        border-bottom: 2px solid var(--brand-dk);
+        position: sticky; top: 0; z-index: 3;
+        user-select: none;
+    }
+    .tbl-uv thead th:first-child { border-radius: 0; }
+
+    /* Rows */
+    .tbl-uv tbody tr { transition: background .1s; }
+    .tbl-uv tbody tr:nth-child(even) td { background: var(--row-alt); }
+    .tbl-uv tbody tr:hover td { background: var(--row-hover) !important; }
+
+    /* Cells */
+    .tbl-uv td {
+        padding: 2px 5px;
+        border-right: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+        white-space: nowrap;
+        max-width: 150px;
+        overflow: hidden;
+    }
+
+    /* Inputs inside cells */
+    .tbl-uv td input[type=text],
+    .tbl-uv td input[type=date] {
+        border: none;
+        background: transparent;
+        color: var(--txt);
+        font-size: 11px; font-weight: 600;
+        padding: 1px 2px;
+        width: 100%; min-width: 0;
         overflow: hidden;
         text-overflow: ellipsis;
-        max-width: 200px; /* Adjust based on your requirement */
+        white-space: nowrap;
     }
-    td, label, p, input, h5 {
-        color: #4e73df;
-        font-weight: bold;
+    .tbl-uv td select {
+        border: none; background: transparent;
+        color: var(--txt); font-size: 11px; font-weight: 600;
+        padding: 1px 1px; width: 100%;
     }
-    input, select, label {
-        width: auto;
-        font-weight: bold;
+    .tbl-uv td input:focus,
+    .tbl-uv td select:focus {
+        outline: 2px solid var(--brand);
+        background: #fff; border-radius: 3px;
     }
-    .pagination {
+
+    /* Readonly cells */
+    .td-ro {
+        color: var(--txt-muted) !important;
         font-size: 10px;
-        margin-left: 50px;
-        margin-right: 50px;
-    }
-    td input {
-        border: none;
-        background-color: transparent;
-    }
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 10;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgb(0,0,0);
-        background-color: rgba(0,0,0,0.4);
-    }
-    .modal-content {
-        background-color: #fefefe;
-        margin: 15% auto;
-        padding: 20px;
-        border: 1px solid #888;
-        width: 30%;
-    }
-    .close {
-        color: #aaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-    }
-    .close:hover,
-    .close:focus {
-        color: black;
-        text-decoration: none;
-        cursor: pointer;
-    }
-    .scroll-container {
-        width: 100%;
-        overflow-x: scroll;
+        text-align: center;
     }
 
-    .content {
-        width: auto;
+    /* Sticky first column */
+    .col-sticky {
+        position: sticky; left: 0; z-index: 2;
+        background: var(--white);
+        box-shadow: 2px 0 5px rgba(58,91,217,.08);
+        min-width: 120px;
     }
+    .tbl-uv thead th.col-sticky { z-index: 4; background: var(--brand); }
+    .tbl-uv tbody tr:nth-child(even) .col-sticky { background: var(--row-alt); }
+    .tbl-uv tbody tr:hover .col-sticky           { background: var(--row-hover) !important; }
 
-    td.sticky_2 {
-        position: sticky;
-        left: 0;
-        z-index: 1;
+    /* Column widths */
+    .w-name  { min-width: 120px; }
+    .w-vitri { min-width: 130px; }
+    .w-sdt   { min-width:  96px; }
+    .w-ts    { min-width:  80px; text-align: center; }
+    .w-cccd  { min-width: 110px; }
+    .w-std   { min-width:  70px; }
+    .w-addr  { min-width: 140px; }
+    .w-code  { min-width:  90px; }
+    .w-bank  { min-width:  90px; }
+    .w-date  { min-width:  90px; }
+    .w-date2 { min-width:  92px; }
+    .w-con   { min-width:  90px; }
+    .w-ns    { min-width:  90px; }
+    .w-hs    { min-width:  60px; }
+    .w-may   { min-width:  80px; }
+    .w-lhs   { min-width:  60px; }
+    .w-gc    { min-width: 110px; }
+    .w-btn   { min-width:  46px; text-align: center; }
+
+    /* ══════════════════════════════════════
+       TRẠNG THÁI BADGE
+    ══════════════════════════════════════ */
+    .ts-badge {
+        display: inline-flex; align-items: center; justify-content: center;
+        padding: 2px 9px; border-radius: 10px;
+        font-size: 10px; font-weight: 700; cursor: pointer;
+        user-select: none; white-space: nowrap;
+        transition: filter .15s;
     }
+    .ts-badge:hover { filter: brightness(.9); }
+    .ts-dat      { background: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+    .ts-khongdat { background: #f3f4f6; color: #374151; border: 1px solid #9ca3af; }
+    .ts-luuhs    { background: #fef3c7; color: var(--warn-dk); border: 1px solid var(--warn); }
+    .ts-chua     { background: var(--brand-lt); color: var(--brand); border: 1px solid #c7d2f5; }
 
+    /* ══════════════════════════════════════
+       NÚT LƯU
+    ══════════════════════════════════════ */
+    .btn-save {
+        background: var(--brand); color: #fff;
+        border: none; border-radius: 4px;
+        padding: 3px 10px; font-size: 10px; font-weight: 700;
+        cursor: pointer; white-space: nowrap;
+        transition: background .15s, transform .1s;
+    }
+    .btn-save:hover  { background: var(--brand-dk); }
+    .btn-save:active { transform: scale(.95); }
+
+    /* ══════════════════════════════════════
+       MODAL TRẠNG THÁI
+    ══════════════════════════════════════ */
+    .modal-overlay {
+        display: none; position: fixed; inset: 0; z-index: 5000;
+        background: rgba(20,30,70,.45);
+        align-items: center; justify-content: center;
+        backdrop-filter: blur(2px);
+    }
+    .modal-overlay.show { display: flex; }
+    .modal-box {
+        background: var(--white);
+        border-radius: 10px; padding: 28px 24px;
+        width: 310px;
+        box-shadow: 0 20px 60px rgba(20,30,70,.25);
+        animation: popIn .18s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popIn {
+        from { transform: scale(.88) translateY(10px); opacity: 0; }
+        to   { transform: scale(1)   translateY(0);    opacity: 1; }
+    }
+    .modal-header {
+        display: flex; align-items: center; justify-content: space-between;
+        margin-bottom: 16px;
+    }
+    .modal-title { font-size: 14px; font-weight: 800; color: var(--brand); }
+    .modal-close {
+        font-size: 20px; cursor: pointer; color: #bbb;
+        line-height: 1; transition: color .15s;
+        background: none; border: none; padding: 0;
+    }
+    .modal-close:hover { color: var(--dark); }
+    .modal-label {
+        font-size: 10px; font-weight: 700; color: var(--txt-muted);
+        text-transform: uppercase; letter-spacing: .5px;
+        display: block; margin-bottom: 5px;
+    }
+    .modal-select {
+        width: 100%; padding: 7px 10px;
+        border: 1.5px solid var(--border); border-radius: 5px;
+        font-size: 12px; font-weight: 600; color: var(--txt);
+        margin-bottom: 16px;
+    }
+    .modal-select:focus { outline: none; border-color: var(--brand); }
+    .modal-submit {
+        width: 100%; padding: 8px;
+        background: var(--brand); color: #fff;
+        border: none; border-radius: 5px;
+        font-size: 12px; font-weight: 700; cursor: pointer;
+        transition: background .15s;
+    }
+    .modal-submit:hover { background: var(--brand-dk); }
+
+    /* ── Flash messages ── */
+    .flash-wrap { margin-bottom: 8px; }
+    .flash-wrap .alert { font-size: 12px; padding: 6px 12px; border-radius: 4px; }
 </style>
-{% endblock style %}
-{% block content %} 
-<div class="scroll-container">
-    <div class="content">
-        <div class="container mt-3">
-            <form method="GET" action="/muc2_1" class="row g-2 align-items-center">
-                <div class="col-md-2">
-                    <label for="hoten" class="form-label">Họ tên</label>
-                    <input class="form-control form-control-sm" id="hoten" name="hoten" type="text"
-                           onchange="this.form.submit()" placeholder="Họ tên"
-                           value="{{ request.args.get('hoten', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <label for="vitri" class="form-label">Vị trí</label>
-                    <input class="form-control form-control-sm" id="vitri" name="vitri" type="text"
-                           onchange="this.form.submit()" placeholder="Vị trí"
-                           value="{{ request.args.get('vitri', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <label for="sdt" class="form-label">Số điện thoại</label>
-                    <input class="form-control form-control-sm" id="sdt" name="sdt" type="text"
-                           onchange="this.form.submit()" placeholder="Số điện thoại"
-                           value="{{ request.args.get('sdt', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <label for="cccd" class="form-label">CCCD</label>
-                    <input class="form-control form-control-sm" id="cccd" name="cccd" type="text"
-                           onchange="this.form.submit()" placeholder="CCCD"
-                           value="{{ request.args.get('cccd', '') }}">
-                </div>
-                <div class="col-md-2">
-                    <label for="ngaygui" class="form-label">Ngày ứng tuyển</label>
-                    <input class="form-control form-control-sm" id="ngaygui" name="ngaygui" type="date"
-                           onchange="this.form.submit()" value="{{ request.args.get('ngaygui', '') }}">
-                </div>
-                <div class="col-md-2 d-flex align-items-end">
-                    <a href="/muc2_1" class="btn btn-primary btn-sm w-100">Tất cả</a>
-                </div>
-            </form>
-        
-            <div class="row mt-3 align-items-center">
-                <div class="col-md-2">
-                    <h5 class="mb-0">Tổng: {{ count }}</h5>
-                </div>
-                <div class="col-md-6">
-                    <div class="pagination">{{ pagination.links }}</div>
-                </div>
-                <div class="col-md-4 text-end">
-                    <form method="POST" action="/export_dsdktt" class="d-inline">
-                        <input name="sdt" type="hidden" value="{{ request.args.get('sdt', '') }}">
-                        <input name="cccd" type="hidden" value="{{ request.args.get('cccd', '') }}">
-                        <input name="ngaygui" type="hidden" value="{{ request.args.get('ngaygui', '') }}">
-                        <input name="hoten" type="hidden" value="{{ request.args.get('hoten', '') }}">
-                        <input name="vitri" type="hidden" value="{{ request.args.get('vitri', '') }}">
-                        <button class="btn btn-success btn-sm" type="submit">
-                            <i class="fa fa-download"></i> Tải xuống
-                        </button>
-                    </form>
-                </div>
-            </div>
+{% endblock %}
+
+{% block content %}
+<div class="uv-page">
+
+    {# ── Flash ── #}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-wrap">
+        {% for msg in messages %}
+        <div class="alert alert-info alert-dismissible fade show mb-1" role="alert">
+            {{ msg }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        
-        <table class="table table-bordered table-hover table-sm">
-            <tr class="bg-primary">
-                <th class="sticky_2">Họ và tên</th>
-                <th>Vị trí tuyển dụng</th>
-                <th>Số điện thoại</th>
-                <th>Trạng thái</th>
-                <th>CCCD</th>
-                <th>Dân tộc</th>
-                <th>Trình độ</th>
-                <th>Địa chỉ</th>
-                <th>Kênh tuyển dụng</th>
-                <th>Ngày hẹn đi làm</th>
-                <th>Ngày nhận việc</th>
-                <th>Kinh nghiệm</th>
-                <th>Có con nhỏ</th>
-                <th>Tên con nhỏ 1</th>
-                <th>Ngày sinh con nhỏ 1</th>
-                <th>Tên con nhỏ 2</th>
-                <th>Ngày sinh con nhỏ 2</th>
-                <th>Tên con nhỏ 3</th>
-                <th>Ngày sinh con nhỏ 3</th>
-                <th>Tên con nhỏ 4</th>
-                <th>Ngày sinh con nhỏ 4</th>
-                <th>Tên con nhỏ 5</th>
-                <th>Ngày sinh con nhỏ 5</th>
-                <th>Người thân</th>
-                <th>SĐT người thân</th>
-                <th>Ngày gửi</th>
-                <th>Ngày cập nhật</th>
-                <th>Hiệu suất</th>
-                <th>Loại máy</th>
-                <th>Lưu hồ sơ</th>
-                <th>Ghi chú</th>
-                <th></th>
-            </tr>
-            {% for user in danhsach %}
-                <form action="/muc2_1" method="POST">
-                    <tr data-info='{{ user | safe }}'>
-                        <input type="text" name="id" id="id" hidden value="{{ user['ID'] }}">
-                        <td class="sticky_2"><input type="text" name="hoten" id="hoten" value="{{ user["Họ tên"] }}"></input></td>
-                        <td><input type="text" name="vitrituyendung" id="vitrituyendung" value="{{ user['Vị trí tuyển dụng'] }}"></input></td>
-                        <td class="user-phone"><input type="text" name="sdt" id="sdt" value="{{ user['Số điện thoại'] }}"></input></td>
-                        {% if user["Trạng thái"] == "Đạt" %}
-                        <td style= "background-color: green; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
-                        {% elif user["Trạng thái"] == "Không đạt" %}
-                        <td style= "background-color: black; color: white; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
-                        {% elif user["Trạng thái"] == "Lưu hồ sơ" %}
-                        <td style= "background-color: yellow; color: red; text-align: center;"><b class="status" onclick="openModal(this)">{{ user["Trạng thái"] }}</b></td>
-                        {% else %}
-                        <td><b class="status" onclick="openModal(this)">Không</b></td>
-                        {% endif %}
-                        <td><input type="text" name="cccd" id="cccd" value="{{ user['CCCD'] }}"></input></td>
-                        <td><input type="text" name="dantoc" id="dantoc" value="{{ user['Dân tộc'] }}"></input></td>
-                        <td><input type="text" name="hocvan" id="hocvan" value="{{ user['Học vấn'] }}"></input></td>
-                        <td><input type="text" name="diachi" id="diachi" value="{{ user['Tạm trú'] }}"></input></td>
-                        <td><input type="text" name="kenhtuyendung" id="kenhtuyendung" value="{{ user['Kênh tuyển dụng'] }}"></input></td>
-                        <td><input type="date" name="ngayhendilam" class="ngayhen_dilam" value="{{ user['Ngày hẹn đi làm'] }}"></td>
-                        <td>{{ user["Ngày nhận việc"] }}</td>
-                        <td>{{ user["Kinh nghiệm"] }}</td>
-                        <td><input type="text" name="connho" value="{{ user['Có con nhỏ'] }}"></td>
-                        <td><input type="text" name="tenconnho1" value="{{ user['Tên con 1'] }}"></td>
-                        <td><input type="text" name="ngaysinhcon1" value="{{ user['Ngày sinh con 1'] }}"></td>
-                        <td><input type="text" name="tenconnho2" value="{{ user['Tên con 2'] }}"></td>
-                        <td><input type="text" name="ngaysinhcon2" value="{{ user['Ngày sinh con 2'] }}"></td>
-                        <td><input type="text" name="tenconnho3" value="{{ user['Tên con 3'] }}"></td>
-                        <td><input type="text" name="ngaysinhcon3" value="{{ user['Ngày sinh con 3'] }}"></td>
-                        <td><input type="text" name="tenconnho4" value="{{ user['Tên con 4'] }}"></td>
-                        <td><input type="text" name="ngaysinhcon4" value="{{ user['Ngày sinh con 4'] }}"></td>
-                        <td><input type="text" name="tenconnho5" value="{{ user['Tên con 5'] }}"></td>
-                        <td><input type="text" name="ngaysinhcon5" value="{{ user['Ngày sinh con 5'] }}"></td>
-                        <td><input type="text" name="nguoithan" value="{{ user["Tên người thân"] }}"></td>
-                        <td><input type="text" name="sdtnguoithan" value="{{ user["SĐT người thân"] }}"></td>
-                        <td>{{ user["Ngày gửi"] }}</td>
-                        {% if user["Ngày cập nhật"] %}
-                        <td>{{ user["Ngày cập nhật"] }}</td>
-                        {% else %}
-                        <td><input type="date" name="ngaycapnhat"></td>
-                        {% endif %}
-                        {% if user["Hiệu suất"] %}
-                        <td><input type="text" name="hieusuat" value="{{ user['Hiệu suất'] }}"></td>
-                        {% else %}
-                        <td><input type="text" name="hieusuat"></td>
-                        {% endif %}
-                        {% if user["Loại máy"] %}
-                        <td><input type="text" name="loaimay" value="{{ user['Loại máy'] }}"></td>
-                        {% else %}
-                        <td><input type="text" name="loaimay"></td>
-                        {% endif %}
-                        {% if user["Lưu hồ sơ"]=='Có' %}
-                        <td>
-                            <select name="luuhoso">
-                                <option value="Không">Không</option>
-                                <option value="Có" selected>Có</option>
-                            </select>
-                        </td>
-                        {% else %}
-                        <td>
-                            <select name="luuhoso">
-                                <option value="Không" selected>Không</option>
-                                <option value="Có">Có</option>
-                            </select>
-                        </td>
-                        {% endif %}
-                        {% if user["Ghi chú"] %}
-                        <td><input type="text" name="ghichu" value="{{ user['Ghi chú'] }}"></td>
-                        {% else %}
-                        <td><input type="text" name="ghichu"></td>
-                        {% endif %}
-                        <td><input type="submit" value="Lưu" class="btn btn-primary btn-sm"></input></td>
-                    </tr>
-                </form>
-            {% endfor %}
-        </table>
-        <!-- The Modal -->
-    <div id="myModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeModal()">&times;</span>
-            <form id="statusForm" onsubmit="submitForm(event)">
-                <input type="hidden" id="phone" name="phone">
-                <div class="form-group">
-                    <label for="newStatus">Trạng thái mới:</label>
-                    <select id="newStatus" name="newStatus">
-                        <option value="Đạt">Đạt</option>
-                        <option value="Không đạt">Không đạt</option>
-                        <option value="Lưu hồ sơ">Lưu hồ sơ</option>
-                    </select>
-                </div>
-                <hr />
-                <input class ="btn btn-primary" type="submit" value="Cập nhật"></input>
-            </form>
-        </div>
+        {% endfor %}
     </div>
+    {% endif %}
+    {% endwith %}
+
+    {# ══════════════════════════════════════
+       BỘ LỌC
+    ══════════════════════════════════════ #}
+    <div class="filter-card">
+        <form method="GET" action="/muc2_1" class="filter-bar">
+            {% for fname, lbl, ftype in [
+                ('hoten',   'Họ tên',        'text'),
+                ('vitri',   'Vị trí',        'text'),
+                ('sdt',     'Số ĐT',         'text'),
+                ('cccd',    'CCCD',          'text'),
+                ('ngaygui', 'Ngày ứng tuyển','date')
+            ] %}
+            <div class="filter-item">
+                <label>{{ lbl }}</label>
+                <input name="{{ fname }}" type="{{ ftype }}"
+                       onchange="this.form.submit()"
+                       value="{{ request.args.get(fname, '') }}"
+                       placeholder="{{ lbl }}">
+            </div>
+            {% endfor %}
+            <a href="/muc2_1" class="btn-reset">Tất cả</a>
+        </form>
+    </div>
+
+    {# ══════════════════════════════════════
+       TOOLBAR
+    ══════════════════════════════════════ #}
+    <div class="toolbar">
+        <span class="total">{{ count }} ứng viên</span>
+        <div class="pag-wrap">{{ pagination.links }}</div>
+        <form method="POST" action="/export_dsdktt" class="d-inline">
+            {% for k in ['sdt','cccd','ngaygui','hoten','vitri'] %}
+            <input name="{{ k }}" type="hidden" value="{{ request.args.get(k,'') }}">
+            {% endfor %}
+            <button class="btn-export" type="submit">
+                <i class="fa fa-download me-1"></i>Xuất Excel
+            </button>
+        </form>
+    </div>
+
+    {# ══════════════════════════════════════
+       BẢNG
+    ══════════════════════════════════════ #}
+    <div class="tbl-section">
+    <div class="tbl-wrap" id="tbl-wrap">
+    <table class="tbl-uv">
+        <thead>
+            <tr>
+                <th class="col-sticky w-name">Họ và tên</th>
+                <th class="w-vitri">Vị trí</th>
+                <th class="w-sdt">SĐT</th>
+                <th class="w-ts">Trạng thái</th>
+                <th class="w-cccd">CCCD</th>
+                <th class="w-std">Dân tộc</th>
+                <th class="w-std">Tôn giáo</th>
+                <th class="w-std">Quốc tịch</th>
+                <th class="w-std">Trình độ</th>
+                <th class="w-addr">Nơi sinh</th>
+                <th class="w-addr">Địa chỉ tạm trú</th>
+                <th class="w-code">Số BHXH</th>
+                <th class="w-code">Mã số thuế</th>
+                <th class="w-bank">Ngân hàng</th>
+                <th class="w-code">Số TK</th>
+                <th class="w-con">Người thân</th>
+                <th class="w-sdt">SĐT người thân</th>
+                <th class="w-std">Kênh TD</th>
+                <th class="w-std">Kinh nghiệm</th>
+                <th class="w-date">Ngày nhận việc</th>
+                <th class="w-std">Con nhỏ</th>
+                {% for i in range(1,6) %}
+                <th class="w-con">Tên con {{ i }}</th>
+                <th class="w-ns">NS con {{ i }}</th>
+                {% endfor %}
+                <th class="w-date">Ngày gửi</th>
+                <th class="w-date">Ngày CN</th>
+                <th class="w-date2">Ngày hẹn</th>
+                <th class="w-hs">Hiệu suất</th>
+                <th class="w-may">Loại máy</th>
+                <th class="w-lhs">Lưu HS</th>
+                <th class="w-gc">Ghi chú</th>
+                <th class="w-btn"></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for u in danhsach %}
+        <form action="/muc2_1" method="POST">
+        <input type="hidden" name="id" value="{{ u['ID'] }}">
+        <tr>
+            {# Họ tên - sticky #}
+            <td class="col-sticky w-name">
+                <input type="text" name="hoten" value="{{ u['Ho_ten'] or '' }}">
+            </td>
+
+            {# Vị trí #}
+            <td class="w-vitri">
+                <input type="text" name="vitrituyendung" value="{{ u['Vi_tri_ung_tuyen'] or '' }}">
+            </td>
+
+            {# SĐT #}
+            <td class="w-sdt user-phone">
+                <input type="text" name="sdt" value="{{ u['Sdt'] or '' }}">
+            </td>
+
+            {# Trạng thái badge #}
+            <td class="w-ts">
+                {% set ts = u['Trang_thai'] or '' %}
+                {% if ts == 'Đạt' %}
+                    <span class="ts-badge ts-dat"      onclick="openModal(this)">{{ ts }}</span>
+                {% elif ts == 'Không đạt' %}
+                    <span class="ts-badge ts-khongdat" onclick="openModal(this)">{{ ts }}</span>
+                {% elif ts == 'Lưu hồ sơ' %}
+                    <span class="ts-badge ts-luuhs"    onclick="openModal(this)">{{ ts }}</span>
+                {% else %}
+                    <span class="ts-badge ts-chua"     onclick="openModal(this)">Chưa</span>
+                {% endif %}
+            </td>
+
+            <td class="w-cccd"><input type="text" name="cccd"         value="{{ u['CCCD'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="dantoc"        value="{{ u['Dan_toc'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="tongiao"       value="{{ u['Ton_giao'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="quoctich"      value="{{ u['Quoc_tich'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="hocvan"        value="{{ u['Trinh_do'] or '' }}"></td>
+            <td class="w-addr"><input type="text" name="noisinh"       value="{{ u['Noi_sinh'] or '' }}"></td>
+            <td class="w-addr"><input type="text" name="diachi"        value="{{ u['Dia_chi_tam_tru'] or '' }}"></td>
+            <td class="w-code"><input type="text" name="sobhxh"        value="{{ u['So_BHXH'] or '' }}"></td>
+            <td class="w-code"><input type="text" name="masothue"      value="{{ u['Ma_so_thue'] or '' }}"></td>
+            <td class="w-bank"><input type="text" name="nganhang"      value="{{ u['Ngan_hang'] or '' }}"></td>
+            <td class="w-code"><input type="text" name="sotaikhoan"    value="{{ u['So_tai_khoan'] or '' }}"></td>
+            <td class="w-con"> <input type="text" name="nguoithan"     value="{{ u['Nguoi_than'] or '' }}"></td>
+            <td class="w-sdt"> <input type="text" name="sdtnguoithan"  value="{{ u['SDT_nguoi_than'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="kenhtuyendung" value="{{ u['Kenh_tuyen_dung'] or '' }}"></td>
+            <td class="w-std"> <input type="text" name="kinhnghiem"    value="{{ u['Kinh_nghiem'] or '' }}"></td>
+            <td class="w-date"><input type="text" name="ngaynhanviec"  value="{{ u['Ngay_co_the_nhan_viec'] or '' }}" placeholder="dd/mm/yyyy"></td>
+            <td class="w-std"> <input type="text" name="connho"        value="{{ u['Con_nho'] or '' }}"></td>
+
+            {% for i in range(1,6) %}
+            <td class="w-con"><input type="text" name="tenconnho{{ i }}"   value="{{ u['Ho_ten_con_'~i] or '' }}"></td>
+            <td class="w-ns"> <input type="text" name="ngaysinhcon{{ i }}" value="{{ u['Ngay_sinh_con_'~i] or '' }}"></td>
+            {% endfor %}
+
+            {# Readonly: Ngày gửi, Ngày cập nhật #}
+            <td class="w-date td-ro">{{ u['Ngay_gui_thong_tin'] or '—' }}</td>
+            <td class="w-date td-ro">{{ u['Ngay_cap_nhat'] or '—' }}</td>
+
+            {# Ngày hẹn đi làm #}
+            <td class="w-date2"><input type="text" name="ngayhendilam" value="{{ u['Ngay_hen_di_lam'] or '' }}" placeholder="dd/mm/yyyy"></td>
+
+            <td class="w-hs"><input type="text" name="hieusuat" value="{{ u['Hieu_suat'] or '' }}"></td>
+            <td class="w-may"><input type="text" name="loaimay"  value="{{ u['Loai_may'] or '' }}"></td>
+
+            <td class="w-lhs">
+                <select name="luuhoso">
+                    <option value="Không" {{ 'selected' if (u['Luu_ho_so'] or '') != 'Có' }}>Không</option>
+                    <option value="Có"    {{ 'selected' if (u['Luu_ho_so'] or '') == 'Có'  }}>Có</option>
+                </select>
+            </td>
+
+            <td class="w-gc"><input type="text" name="ghichu" value="{{ u['Ghi_chu'] or '' }}"></td>
+
+            <td class="w-btn">
+                <button type="submit" class="btn-save">Lưu</button>
+            </td>
+        </tr>
+        </form>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>{# end tbl-wrap #}
+    </div>{# end tbl-section #}
+
+</div>{# end uv-page #}
+
+{# ══════════════════════════════════════
+   MODAL TRẠNG THÁI
+══════════════════════════════════════ #}
+<div id="myModal" class="modal-overlay" onclick="onOverlayClick(event)">
+    <div class="modal-box">
+        <div class="modal-header">
+            <span class="modal-title">Cập nhật trạng thái</span>
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+        </div>
+        <form onsubmit="submitStatus(event)">
+            <input type="hidden" id="modal-phone">
+            <label class="modal-label">Trạng thái mới</label>
+            <select id="newStatus" class="modal-select">
+                <option>Đạt</option>
+                <option>Không đạt</option>
+                <option>Lưu hồ sơ</option>
+            </select>
+            <button type="submit" class="modal-submit">Xác nhận cập nhật</button>
+        </form>
     </div>
 </div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-    function openModal(element) {
-        var modal = document.getElementById("myModal");
-        var phone = element.closest("tr").querySelector(".user-phone").value;
-        document.getElementById("phone").value = phone;
-        modal.style.display = "block";
+    /* ── Modal ── */
+    function openModal(el) {
+        const phoneInput = el.closest("tr").querySelector(".user-phone input");
+        document.getElementById("modal-phone").value = phoneInput ? phoneInput.value : "";
+        document.getElementById("myModal").classList.add("show");
     }
-
     function closeModal() {
-        var modal = document.getElementById("myModal");
-        modal.style.display = "none";
+        document.getElementById("myModal").classList.remove("show");
+    }
+    function onOverlayClick(e) {
+        if (e.target === document.getElementById("myModal")) closeModal();
+    }
+    function submitStatus(e) {
+        e.preventDefault();
+        const phone  = document.getElementById("modal-phone").value;
+        const status = document.getElementById("newStatus").value;
+        axios.post(`/capnhattrangthaiungvien?sdt=${encodeURIComponent(phone)}&trangthaimoi=${encodeURIComponent(status)}`)
+            .then(() => { closeModal(); location.reload(); })
+            .catch(() => alert("Cập nhật trạng thái thất bại!"));
     }
 
-    function submitForm(event) {
-        event.preventDefault();
-        var phone = document.getElementById("phone").value;
-        var newStatus = document.getElementById("newStatus").value;
-        var data = { phone: phone, newStatus: newStatus };
+    /* ── Fix thanh kéo ngang ──
+       Tính chiều rộng thực còn lại (viewport - sidebar)
+       rồi gán thẳng vào .tbl-wrap bằng JS
+    ── */
+    function fixTableWidth() {
+        const wrap = document.getElementById('tbl-wrap');
+        if (!wrap) return;
 
-        axios({
-            method: 'post',
-            url: '/capnhattrangthaiungvien?sdt=' + phone + '&trangthaimoi=' + newStatus,
-        })
-            .then(function (response) {
-                console.log(response.data);
-                closeModal();
-                location.reload();
-                alert("Cập nhật thành công");
-            })
-            .catch(function (error) {
-                console.log(error);
-                alert("Cập nhật thất bại");
-            });
+        // Lấy vị trí bên trái của wrap so với viewport
+        const rect    = wrap.getBoundingClientRect();
+        const leftPos = rect.left;
+
+        // Chiều rộng khả dụng = viewport width - khoảng cách trái - padding phải 18px
+        const available = window.innerWidth - leftPos - 18;
+
+        wrap.style.width    = available + 'px';
+        wrap.style.maxWidth = available + 'px';
     }
-    function changeFormatDate(date){
-        if(date == 'None') return "";
-        try{
-            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-        } catch {
-            return "";    
-    }}
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('.date_en').forEach((element) => {
-            element.textContent = changeFormatDate(element.textContent);
-        });
-        const input = document.querySelector('input[name="chucdanh"]');
-        const suggestions = document.createElement('ul');
-        suggestions.className = 'list-group';
-        input.parentNode.appendChild(suggestions);
 
-        input.addEventListener('input', () => {
-            const query = input.value;
-            if (query.length > 0) {
-                suggestions.style.display = 'block';
-                axios({
-                    method: 'post',
-                    url: '/timcacchucdanh?tutimkiem=' + query
-                })
-                    .then(function (response) {
-                        suggestions.innerHTML = '';
-                        response.data.forEach(element => {
-                            const suggestion = document.createElement('li');
-                            suggestion.className = 'list-group-item';
-                            suggestion.textContent = element;
-                            suggestion.addEventListener('click', () => {
-                                input.value = suggestion.textContent;
-                                suggestions.innerHTML = '';
-                            });
-                            suggestions.appendChild(suggestion);
-                        });
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    });
-                } else {
-                    suggestions.innerHTML = '';
-                }
-            });
-    });
+    document.addEventListener('DOMContentLoaded', fixTableWidth);
+    window.addEventListener('resize', fixTableWidth);
 </script>
-{% endblock content %}
+{% endblock %}

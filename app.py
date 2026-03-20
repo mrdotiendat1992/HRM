@@ -1379,74 +1379,201 @@ def layhcname(jobtitle,line):
 
 def laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri):
     try:
-        conn = pyodbc.connect(url_database_pyodbc)
+        conn   = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT * FROM Dang_ky_thong_tin_OK WHERE Nha_may = '{current_user.macongty}'"
+
+        query = f"SELECT * FROM Dang_ky_thong_tin WHERE Nha_may = '{current_user.macongty}'"
         if sdt:
-            query += f"AND Sdt LIKE '%{sdt}%'"
+            query += f" AND Sdt LIKE '%{sdt}%'"
         if cccd:
-            query += f"AND CCCD LIKE '%{cccd}%'"
+            query += f" AND CCCD LIKE '%{cccd}%'"
         if ngaygui:
-            query += f"AND Ngay_gui_thong_tin =  '{ngaygui}'"
+            query += f" AND Ngay_gui_thong_tin = '{ngaygui}'"
         if hoten:
-            query += f"AND Ho_ten LIKE N'%{hoten}%'"
+            query += f" AND Ho_ten LIKE N'%{hoten}%'"
         if vitri:
-            query += f"AND Vi_tri_ung_tuyen LIKE N'%{vitri}%'"  
-        query+= " ORDER BY Ngay_gui_thong_tin DESC"
-        
-        rows =  cursor.execute(query).fetchall()
+            query += f" AND Vi_tri_ung_tuyen LIKE N'%{vitri}%'"
+        query += " ORDER BY Ngay_gui_thong_tin DESC"
+
+        rows = cursor.execute(query).fetchall()
         conn.close()
+
+        def _date(val):
+            """Chuyển 'YYYY-MM-DD' → 'DD/MM/YYYY', trả '' nếu rỗng/lỗi."""
+            if val and "-" in str(val):
+                try:
+                    return datetime.strptime(str(val), '%Y-%m-%d').strftime("%d/%m/%Y")
+                except ValueError:
+                    return str(val)
+            return ""
+
         result = []
         for row in rows:
             result.append({
-                "ID": row[38],
-                "Nhà máy": row[0],
-                "Vị trí tuyển dụng": row[1],
-                "Họ tên": row[2],
-                "Số điện thoại": row[3],
-                "CCCD": row[4],
-                "Dân tộc": row[5],
-                "Tôn giáo": row[6],
-                "Quốc tịch": row[7],
-                "Học vấn": row[8],
-                "Nơi sinh": row[9],
-                "Tạm trú": row[10],
-                "Số BHXH": row[11],
-                "Mã số thuế": row[12],
-                "Ngân hàng": row[13],
-                "Số tài khoản": row[14],
-                "Tên người thân": row[15],
-                "SĐT người thân": row[16],
-                "Kênh tuyển dụng": row[17],
-                "Kinh nghiệm": row[18],
-                # "Mức lương": row[19],
-                "Ngày nhận việc": datetime.strptime(row[19], '%Y-%m-%d').strftime("%d/%m/%Y") if (row[19] and "-" in row[20]) else "",
-                "Có con nhỏ": row[20],
-                "Tên con 1": row[21],
-                "Ngày sinh con 1": row[22] if row[22] else "",
-                "Tên con 2": row[23],
-                "Ngày sinh con 2": row[24] if row[24] else "",
-                "Tên con 3": row[25],
-                "Ngày sinh con 3": row[26] if row[26] else "",
-                "Tên con 4": row[27],
-                "Ngày sinh con 4": row[28] if row[28] else "",
-                "Tên con 5": row[29],
-                "Ngày sinh con 5": row[30] if row[30] else "",
-                "Ngày gửi": datetime.strptime(row[31], '%Y-%m-%d').strftime("%d/%m/%Y") if (row[31] and "-" in row[31]) else "",
-                "Trạng thái": row[32],
-                "Ngày cập nhật": datetime.strptime(row[33], '%Y-%m-%d').strftime("%d/%m/%Y") if (row[33] and "-" in row[33]) else "",
-                "Ngày hẹn đi làm": datetime.strptime(row[34], '%Y-%m-%d').strftime("%d/%m/%Y") if (row[34] and "-" in row[34]) else "",
-                "Hiệu suất": row[35],
-                "Loại máy": row[36],
-                "Ghi chú": row[37], 
-                "Lưu hồ sơ": row[39]
+                # ── Readonly ──
+                "ID":                  row[38],
+                "Nha_may":             row[0],
+                "Ngay_gui_thong_tin":  _date(row[31]),
+                "Ngay_cap_nhat":       _date(row[33]),
+                "Trang_thai":          row[32],
+
+                # ── Editable ──
+                "Vi_tri_ung_tuyen":         row[1],
+                "Ho_ten":                   row[2],
+                "Sdt":                      row[3],
+                "CCCD":                     row[4],
+                "Dan_toc":                  row[5],
+                "Ton_giao":                 row[6],
+                "Quoc_tich":                row[7],
+                "Trinh_do":                 row[8],
+                "Noi_sinh":                 row[9],
+                "Dia_chi_tam_tru":          row[10],
+                "So_BHXH":                  row[11],
+                "Ma_so_thue":               row[12],
+                "Ngan_hang":                row[13],
+                "So_tai_khoan":             row[14],
+                "Nguoi_than":               row[15],
+                "SDT_nguoi_than":           row[16],
+                "Kenh_tuyen_dung":          row[17],
+                "Kinh_nghiem":              row[18],
+                "Ngay_co_the_nhan_viec":    _date(row[19]),
+                "Con_nho":                  row[20],
+                "Ho_ten_con_1":             row[21],
+                "Ngay_sinh_con_1":          row[22] or "",
+                "Ho_ten_con_2":             row[23],
+                "Ngay_sinh_con_2":          row[24] or "",
+                "Ho_ten_con_3":             row[25],
+                "Ngay_sinh_con_3":          row[26] or "",
+                "Ho_ten_con_4":             row[27],
+                "Ngay_sinh_con_4":          row[28] or "",
+                "Ho_ten_con_5":             row[29],
+                "Ngay_sinh_con_5":          row[30] or "",
+                "Ngay_hen_di_lam":          _date(row[34]),
+                "Hieu_suat":                row[35],
+                "Loai_may":                 row[36],
+                "Ghi_chu":                  row[37],
+                "Luu_ho_so":                row[39],
             })
         return result
+
     except Exception as e:
         flash(str(e))
         return []
     
-def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
+def capnhatthongtinungvien(form_data: dict, id: str, macongty: str):
+
+    DATE_COLS = {
+        "ngaynhanviec",
+        "ngaysinhcon1", "ngaysinhcon2", "ngaysinhcon3", "ngaysinhcon4", "ngaysinhcon5",
+        "ngayhendilam",
+    }
+
+    def _v(key):
+        v = form_data.get(key, "")
+        v = v.strip() if isinstance(v, str) else ""
+        return v if v else None
+
+    def _parse_date(val):
+        """
+        Chấp nhận cả dd/mm/yyyy lẫn yyyy-mm-dd.
+        Trả về chuỗi yyyy-mm-dd cho SQL Server, hoặc None nếu rỗng/lỗi.
+        """
+        if not val:
+            return None
+        val = val.strip()
+        # dd/mm/yyyy → yyyy-mm-dd
+        if "/" in val:
+            try:
+                return datetime.strptime(val, "%d/%m/%Y").strftime("%Y-%m-%d")
+            except ValueError:
+                return None
+        # yyyy-mm-dd → giữ nguyên
+        if "-" in val:
+            try:
+                datetime.strptime(val, "%Y-%m-%d")
+                return val
+            except ValueError:
+                return None
+        return None
+
+    # ── FIELD_MAP ──────────────────────────────────────────────────────────────
+    FIELD_MAP = [
+        ("vitrituyendung",  "Vi_tri_ung_tuyen",   True),
+        ("hoten",           "Ho_ten",             True),
+        ("sdt",             "Sdt",                False),
+        ("cccd",            "CCCD",               False),
+        ("dantoc",          "Dan_toc",            True),
+        ("tongiao",         "Ton_giao",           True),
+        ("quoctich",        "Quoc_tich",          True),
+        ("hocvan",          "Trinh_do",           True),
+        ("noisinh",         "Noi_sinh",           True),
+        ("diachi",          "Dia_chi_tam_tru",    True),
+        ("sobhxh",          "So_BHXH",            False),
+        ("masothue",        "Ma_so_thue",         False),
+        ("nganhang",        "Ngan_hang",          True),
+        ("sotaikhoan",      "So_tai_khoan",       False),
+        ("nguoithan",       "Nguoi_than",         True),
+        ("sdtnguoithan",    "SDT_nguoi_than",     False),
+        ("kenhtuyendung",   "Kenh_tuyen_dung",    True),
+        ("kinhnghiem",      "Kinh_nghiem",        True),
+        ("ngaynhanviec",    "Ngay_co_the_nhan_viec", False),  # date
+        ("connho",          "Con_nho",            True),
+        ("tenconnho1",      "Ho_ten_con_1",       True),
+        ("ngaysinhcon1",    "Ngay_sinh_con_1",    False),     # date
+        ("tenconnho2",      "Ho_ten_con_2",       True),
+        ("ngaysinhcon2",    "Ngay_sinh_con_2",    False),     # date
+        ("tenconnho3",      "Ho_ten_con_3",       True),
+        ("ngaysinhcon3",    "Ngay_sinh_con_3",    False),     # date
+        ("tenconnho4",      "Ho_ten_con_4",       True),
+        ("ngaysinhcon4",    "Ngay_sinh_con_4",    False),     # date
+        ("tenconnho5",      "Ho_ten_con_5",       True),
+        ("ngaysinhcon5",    "Ngay_sinh_con_5",    False),     # date
+        ("trangthai",       "Trang_thai",         True),
+        ("ngayhendilam",    "Ngay_hen_di_lam",    False),     # date
+        ("loaimay",         "Loai_may",           False),
+        ("ghichu",          "Ghi_chu",            True),
+        ("luuhoso",         "Luu_ho_so",          True),
+    ]
+
+    set_parts = []
+    params    = []
+
+    for form_key, col, _ in FIELD_MAP:
+        set_parts.append(f"{col} = ?")
+        if form_key in DATE_COLS:
+            params.append(_parse_date(_v(form_key)))
+        else:
+            params.append(_v(form_key))
+
+    # Hieu_suat: float
+    hs_raw = _v("hieusuat")
+    try:
+        hs = float(hs_raw) if hs_raw else None
+    except (ValueError, TypeError):
+        hs = None
+    set_parts.append("Hieu_suat = ?")
+    params.append(hs)
+
+    # Ngay_cap_nhat tự động
+    set_parts.append("Ngay_cap_nhat = CAST(GETDATE() AS DATE)")
+
+    params += [id, macongty]
+
+    query = (
+        "UPDATE Dang_ky_thong_tin SET "
+        + ", ".join(set_parts)
+        + " WHERE ID = ? AND Nha_may = ?"
+    )
+
+    try:
+        conn   = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
+        conn.commit()
+        conn.close()
+        return {"ketqua": True}
+    except Exception as e:
+        return {"ketqua": False, "lido": str(e), "query": query}
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1460,77 +1587,134 @@ def capnhattrangthaimoiungvien(sdt, trangthai, luuhoso):
     except Exception as e:
         return False
     
-def capnhatthongtinungvien(id,
-                        sdt,
-                        ngayhendilam,
-                        hieusuat,
-                        loaimay,
-                        vitrituyendung,
-                        hocvan,
-                        diachi,
-                        dantoc,
-                        connho,
-                        tencon1,
-                        ngaysinhcon1,
-                        tencon2,
-                        ngaysinhcon2,
-                        tencon3,
-                        ngaysinhcon3,
-                        tencon4,
-                        ngaysinhcon4,
-                        tencon5,
-                        ngaysinhcon5,
-                        nguoithan,
-                        sdtnguoithan,
-                        luuhoso,
-                        ghichu,
-                        cccd,
-                        kenhtuyendung
-                        ):
-    
-    conn = pyodbc.connect(url_database_pyodbc)
-    cursor = conn.cursor()
-    if not hieusuat.isdigit():
-        hieusuat = 0 
-    query = f"""
-    UPDATE Dang_ky_thong_tin 
-    SET 
-    Sdt = '{sdt}',
-    Ngay_hen_di_lam = '{ngayhendilam}',
-    Hieu_suat = '{hieusuat}',
-    Loai_may = N'{loaimay}',
-    Vi_tri_ung_tuyen=N'{vitrituyendung}',
-    Trinh_do=N'{hocvan}',
-    Dia_chi_tam_tru=N'{diachi}', 
-    Dan_toc = N'{dantoc}',
-    Con_nho = N'{connho}',
-    Ho_ten_con_1 = N'{tencon1}',
-    Ngay_sinh_con_1 = '{ngaysinhcon1}',
-    Ho_ten_con_2 = N'{tencon2}',
-    Ngay_sinh_con_2 = '{ngaysinhcon2}',
-    Ho_ten_con_3 = N'{tencon3}',
-    Ngay_sinh_con_3 = '{ngaysinhcon3}',
-    Ho_ten_con_4 = N'{tencon4}',
-    Ngay_sinh_con_4 = '{ngaysinhcon4}',
-    Ho_ten_con_5 = N'{tencon5}',
-    Ngay_sinh_con_5 = '{ngaysinhcon5}',
-    Nguoi_than = N'{nguoithan}',
-    SDT_nguoi_than = '{sdtnguoithan}',
-    Luu_ho_so = N'{luuhoso}',
-    Ghi_chu = N'{ghichu}',
-    CCCD = '{cccd}',
-    kenh_tuyen_dung = N'{kenhtuyendung}'
-    WHERE 
-    ID = '{id}' AND Nha_may = N'{current_user.macongty}'"""
-    print(query)
-    try:  
-        cursor.execute(query)
+def capnhatthongtinungvien(form_data: dict, id: str, macongty: str):
+
+    DATE_COLS = {
+        "ngaynhanviec",
+        "ngaysinhcon1", "ngaysinhcon2", "ngaysinhcon3", "ngaysinhcon4", "ngaysinhcon5",
+        "ngayhendilam",
+    }
+
+    def _v(key):
+        v = form_data.get(key, "")
+        v = v.strip() if isinstance(v, str) else ""
+        return v if v else None
+
+    def _parse_date(val):
+        """Chấp nhận dd/mm/yyyy, yyyy-mm-dd, hoặc date object. Trả None nếu lỗi."""
+        if val is None:
+            return None
+        # Nếu đã là date object (pyodbc trả về)
+        if hasattr(val, 'strftime'):
+            return val.strftime("%Y-%m-%d")
+        val = str(val).strip()
+        if not val:
+            return None
+        # dd/mm/yyyy
+        if "/" in val:
+            try:
+                return datetime.strptime(val, "%d/%m/%Y").strftime("%Y-%m-%d")
+            except ValueError:
+                pass
+        # yyyy-mm-dd
+        if "-" in val:
+            try:
+                datetime.strptime(val[:10], "%Y-%m-%d")
+                return val[:10]
+            except ValueError:
+                pass
+        # Không parse được → trả None thay vì để lỗi
+        app.logger.warning(f"_parse_date: không parse được giá trị '{val}', set NULL")
+        return None
+
+    FIELD_MAP = [
+        ("vitrituyendung",  "Vi_tri_ung_tuyen",      True),
+        ("hoten",           "Ho_ten",                True),
+        ("sdt",             "Sdt",                   False),
+        ("cccd",            "CCCD",                  False),
+        ("dantoc",          "Dan_toc",               True),
+        ("tongiao",         "Ton_giao",              True),
+        ("quoctich",        "Quoc_tich",             True),
+        ("hocvan",          "Trinh_do",              True),
+        ("noisinh",         "Noi_sinh",              True),
+        ("diachi",          "Dia_chi_tam_tru",       True),
+        ("sobhxh",          "So_BHXH",               False),
+        ("masothue",        "Ma_so_thue",            False),
+        ("nganhang",        "Ngan_hang",             True),
+        ("sotaikhoan",      "So_tai_khoan",          False),
+        ("nguoithan",       "Nguoi_than",            True),
+        ("sdtnguoithan",    "SDT_nguoi_than",        False),
+        ("kenhtuyendung",   "Kenh_tuyen_dung",       True),
+        ("kinhnghiem",      "Kinh_nghiem",           True),
+        ("ngaynhanviec",    "Ngay_co_the_nhan_viec", False),
+        ("connho",          "Con_nho",               True),
+        ("tenconnho1",      "Ho_ten_con_1",          True),
+        ("ngaysinhcon1",    "Ngay_sinh_con_1",       False),
+        ("tenconnho2",      "Ho_ten_con_2",          True),
+        ("ngaysinhcon2",    "Ngay_sinh_con_2",       False),
+        ("tenconnho3",      "Ho_ten_con_3",          True),
+        ("ngaysinhcon3",    "Ngay_sinh_con_3",       False),
+        ("tenconnho4",      "Ho_ten_con_4",          True),
+        ("ngaysinhcon4",    "Ngay_sinh_con_4",       False),
+        ("tenconnho5",      "Ho_ten_con_5",          True),
+        ("ngaysinhcon5",    "Ngay_sinh_con_5",       False),
+        ("trangthai",       "Trang_thai",            True),
+        ("ngayhendilam",    "Ngay_hen_di_lam",       False),
+        ("loaimay",         "Loai_may",              False),
+        ("ghichu",          "Ghi_chu",               True),
+        ("luuhoso",         "Luu_ho_so",             True),
+    ]
+
+    set_parts = []
+    params    = []
+
+    for form_key, col, _ in FIELD_MAP:
+        set_parts.append(f"{col} = ?")
+        if form_key in DATE_COLS:
+            raw = _v(form_key)
+            parsed = _parse_date(raw)
+            # Log để debug
+            app.logger.debug(f"DATE col={col} raw='{raw}' → parsed='{parsed}'")
+            params.append(parsed)
+        else:
+            params.append(_v(form_key))
+
+    # Hieu_suat: float
+    hs_raw = _v("hieusuat")
+    try:
+        hs = float(hs_raw) if hs_raw else None
+    except (ValueError, TypeError):
+        hs = None
+    set_parts.append("Hieu_suat = ?")
+    params.append(hs)
+
+    # Ngay_cap_nhat tự động
+    set_parts.append("Ngay_cap_nhat = CAST(GETDATE() AS DATE)")
+
+    params += [id, macongty]
+
+    query = (
+        "UPDATE Dang_ky_thong_tin SET "
+        + ", ".join(set_parts)
+        + " WHERE ID = ? AND Nha_may = ?"
+    )
+
+    # Log full params để debug
+    app.logger.debug(f"UPDATE params: {list(zip([p[1] for p in FIELD_MAP] + ['Hieu_suat'], params))}")
+
+    try:
+        conn   = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        cursor.execute(query, params)
         conn.commit()
         conn.close()
-        return {"ketqua":True}
+        return {"ketqua": True}
     except Exception as e:
-        return {"ketqua":True, "lido":e, "query":query}
-    
+        # Log chi tiết params khi lỗi
+        app.logger.error(f"capnhatthongtinungvien FAILED")
+        app.logger.error(f"Query: {query}")
+        app.logger.error(f"Params ({len(params)}): {params}")
+        return {"ketqua": False, "lido": str(e), "query": query}  
 def themnhanvienmoi(nhanvienmoi):
     conn = pyodbc.connect(url_database_pyodbc)
     cursor = conn.cursor()

@@ -366,105 +366,56 @@ def dashboard():
     data = get_dashboard_data()
     return render_template("dashboard.html", page="Dashboard", data=data)
 
-@app.route("/muc2_1", methods=["GET","POST"])
+@app.route("/muc2_1", methods=["GET", "POST"])
 @login_required
-@roles_required('hr','tnc','sa','gd','td','tbp')
+@roles_required('hr', 'tnc', 'sa', 'gd', 'td', 'tbp')
 def danhsachdangkytuyendung():
+
     if request.method == "GET":
         try:
-            hoten = request.args.get("hoten")
-            vitri = request.args.get("vitri")
-            sdt = request.args.get("sdt")
-            cccd = request.args.get("cccd")
+            hoten   = request.args.get("hoten")
+            vitri   = request.args.get("vitri")
+            sdt     = request.args.get("sdt")
+            cccd    = request.args.get("cccd")
             ngaygui = request.args.get("ngaygui")
-            rows = laydanhsachdangkytuyendung(sdt,cccd,ngaygui,hoten,vitri)
-            count = len(rows)
-            current_page = request.args.get(get_page_parameter(), type=int, default=1)
-            per_page = 10
-            total = len(rows)
-            start = (current_page - 1) * per_page
-            end = start + per_page
-            paginated_rows = rows[start:end]
-            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
 
-            return render_template("2_1.html", 
-                                page="2.1 Danh sách ứng viên",
-                                danhsach=paginated_rows, 
-                                pagination=pagination,
-                                count=count)
+            rows  = laydanhsachdangkytuyendung(sdt, cccd, ngaygui, hoten, vitri)
+            count = len(rows)
+
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page     = 10
+            start        = (current_page - 1) * per_page
+            pagination   = Pagination(page=current_page, per_page=per_page,
+                                      total=count, css_framework='bootstrap4')
+
+            return render_template("2_1.html",
+                                   page="2.1 Danh sách ứng viên",
+                                   danhsach=rows[start: start + per_page],
+                                   pagination=pagination,
+                                   count=count)
         except Exception as e:
-            flash(f"Lỗi lấy danh sách ứng viên ({e})")
-            app.logger.error(f"Lỗi lấy danh sách ứng viên ({e})")
+            flash(f"Lỗi lấy danh sách ứng viên: {e}")
+            app.logger.error(f"muc2_1 GET: {e}")
             return redirect(url_for("home"))
-        
-    if request.method == "POST":
-        try:
-            id = request.form.get("id")
-            hoten = request.form.get("hoten")
-            sdt = request.form.get("sdt")
-            vitrituyendung = request.form.get("vitrituyendung")
-            hocvan = request.form.get("hocvan")
-            diachi = request.form.get("diachi")
-            ngayhendilam = request.form.get("ngayhendilam")
-            hieusuat = request.form.get("hieusuat")
-            loaimay = request.form.get("loaimay")
-            cccd = request.form.get("cccd")
-            dantoc = request.form.get("dantoc")
-            connho = request.form.get("connho")
-            tencon1 = request.form.get("tenconnho1")
-            ngaysinhcon1 = request.form.get("ngaysinhcon1")
-            tencon2 = request.form.get("tenconnho2")
-            ngaysinhcon2 = request.form.get("ngaysinhcon2")
-            tencon3 = request.form.get("tenconnho3")
-            ngaysinhcon3 = request.form.get("ngaysinhcon3")
-            tencon4 = request.form.get("tenconnho4")
-            ngaysinhcon4 = request.form.get("ngaysinhcon4")
-            tencon5 = request.form.get("tenconnho5")
-            ngaysinhcon5 = request.form.get("ngaysinhcon5")
-            nguoithan = request.form.get("nguoithan")
-            sdtnguoithan = request.form.get("sdtnguoithan")
-            ngayhendilam = request.form.get("ngayhendilam")
-            luuhoso = request.form.get("luuhoso")
-            ghichu = request.form.get("ghichu")
-            cccd = request.form.get("cccd")
-            kenhtuyendung = request.form.get("kenhtuyendung")
-            ketqua = capnhatthongtinungvien(id,
-                                sdt,
-                                ngayhendilam,
-                                hieusuat,
-                                loaimay,
-                                vitrituyendung,
-                                hocvan,
-                                diachi,
-                                dantoc,
-                                connho,
-                                tencon1,
-                                ngaysinhcon1,
-                                tencon2,
-                                ngaysinhcon2,
-                                tencon3,
-                                ngaysinhcon3,
-                                tencon4,
-                                ngaysinhcon4,
-                                tencon5,
-                                ngaysinhcon5,
-                                nguoithan,
-                                sdtnguoithan,
-                                luuhoso,
-                                ghichu,
-                                cccd,
-                                kenhtuyendung
-                                )
-            if ketqua["ketqua"]:
-                flash("Cập nhật thông tin ứng viên thành công !!!")
-            else:
-                flash(f"Cập nhật thông tin ứng viên thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']}")
-            
-        except Exception as e:
-            flash(f"Cập nhật thông tin ứng viên thất bại ({e})")
-            app.logger.error(f"Cập nhật thông tin ứng viên thất bại ({e})")
-        finally:
-            return redirect(f"muc2_1")
+
+    # POST
+    try:
+        ketqua = capnhatthongtinungvien(
+            form_data = request.form,
+            id        = request.form.get("id", "").strip(),
+            macongty  = current_user.macongty,
+        )
+        if ketqua["ketqua"]:
+            flash("Cập nhật thông tin ứng viên thành công !!!")
+        else:
+            flash(f"Cập nhật thất bại — {ketqua.get('lido')}")
+            app.logger.error(f"muc2_1 POST: {ketqua.get('lido')}")
+    except Exception as e:
+        flash(f"Lỗi: {e}")
+        app.logger.error(f"muc2_1 POST exception: {e}")
+
+    return redirect("/muc2_1")
+
 @app.route("/muc2_2", methods=["GET","POST"])
 @login_required
 def dangkytuyendung():
