@@ -563,25 +563,18 @@ def nhapthongtinlaodongmoi():
 
     # ── POST ──────────────────────────────────────────────────────────────────
     def _s(key):
-        """Trả về string đã strip, None nếu rỗng."""
         v = request.form.get(key, "").strip()
         return v if v else None
 
     def _sql_nstr(key):
-        """nvarchar — N'...' hoặc NULL."""
         v = _s(key)
         return f"N'{v}'" if v else "NULL"
 
     def _sql_str(key):
-        """varchar / ASCII — '...' hoặc NULL."""
         v = _s(key)
         return f"'{v}'" if v else "NULL"
 
     def _sql_date(key):
-        """
-        Chỉ chấp nhận yyyy-mm-dd (từ <input type=date>).
-        Trả NULL nếu rỗng hoặc sai định dạng.
-        """
         v = _s(key)
         if not v:
             return "NULL"
@@ -603,7 +596,7 @@ def nhapthongtinlaodongmoi():
 
         # ── Định danh ────────────────────────────────────────────────────────
         masothe     = f"'{_s('masothe')}'"
-        thechamcong = str(int(_s('masothe')))   # int, không quotes
+        thechamcong = str(int(_s('masothe')))  # int, không quotes
 
         # ── Cá nhân ──────────────────────────────────────────────────────────
         hoten        = _sql_nstr("hoten")
@@ -654,55 +647,65 @@ def nhapthongtinlaodongmoi():
         positioncode            = _sql_nstr("mavitri")
         positioncodedescription = _sql_nstr("tenvitri")
 
-        # ── NTID / chi phí ───────────────────────────────────────────────────
-        cost_id            = _sql_str("ntid")
-        congtytraluong     = _sql_str("congtytraluong")
-        doituongchiuchiphi = _sql_str("doituongchiuchiphi")
-        phongban10         = _sql_str("phongban10")
-        phanloailaodong    = _sql_str("phanloailaodong")
-        msnv               = _sql_str("msnv")
+        # ── COST_ID ──────────────────────────────────────────────────────────
+        cost_id = _sql_str("ntid")
 
         # ── Cố định ──────────────────────────────────────────────────────────
         luongcoban  = "NULL"
         tongphucap  = "NULL"
         kieuhopdong = "NULL"
         diachimoi   = "NULL"
-        nd          = "NULL"   # null date — dùng cho tất cả cột date chưa có giá trị
+        nd          = "NULL"  # null date
 
-        # ── Tổng hợp VALUES ──────────────────────────────────────────────────
+        # ── INSERT VALUES (75 cột đúng thứ tự) ───────────────────────────────
         nhanvienmoi = (
-            f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},"
-            f"{gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},"
-            f"{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},"
-            f"{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},"
-            f"{sotaikhoan},{connho},"
-            # Con nhỏ 1-5
+            # 1-2: Định danh
+            f"({masothe},{thechamcong},"
+            # 3-6: Cá nhân cơ bản
+            f"{hoten},{dienthoai},{ngaysinh},{gioitinh},"
+            # 7-11: CCCD + địa chỉ thường trú
+            f"{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},"
+            # 12-15: Địa chỉ chi tiết
+            f"{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},"
+            # 16-21: Cá nhân khác
+            f"{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},"
+            # 22-25: Tài chính
+            f"{sobhxh},{masothue},{nganhang},{sotaikhoan},"
+            # 26: Con nhỏ
+            f"{connho},"
+            # 27-36: Con nhỏ 1-5
             f"{tencon[0]},{ngaysinhcon[0]},"
             f"{tencon[1]},{ngaysinhcon[1]},"
             f"{tencon[2]},{ngaysinhcon[2]},"
             f"{tencon[3]},{ngaysinhcon[3]},"
             f"{tencon[4]},{ngaysinhcon[4]},"
-            # Ảnh, người thân
+            # 37-39: Ảnh, người thân
             f"{anh},{nguoithan},{sdtnguoithan},"
-            # Hợp đồng
+            # 40-42: Hợp đồng
             f"{kieuhopdong},GETDATE(),{nd},"
-            # Vị trí
-            f"{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},"
-            f"{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},"
+            # 43-55: Vị trí
+            f"{jobdetailvn},{hccategory},{gradecode},{factory},"
+            f"{department},{chucvu},{sectioncode},{sectiondescription},"
+            f"{line},{employeetype},{jobdetailen},"
             f"{positioncode},{positioncodedescription},"
-            # Lương
-            f"{luongcoban},N'Không',{tongphucap},"
-            # Ngày tháng hành chính
+            # 56-58: Lương (Luong_co_ban, Phu_cap, Tong_phu_cap)
+            f"{luongcoban},{nd},{tongphucap},"
+            # 59-63: Ngày tháng hành chính
+            # Ngay_vao, Ngay_nghi, Trang_thai_lam_viec,
+            # Ngay_vao_noi_tham_nien, Mat_khau
             f"GETDATE(),NULL,N'Đang làm việc',GETDATE(),'1',"
-            # Các mốc hợp đồng — tất cả NULL khi mới tạo
-            f"{nd},{nd},"   # ngaybatdauthuviec, ngayketthucthuviec
-            f"{nd},{nd},"   # ngaybatdauhdcthl1, ngayketthuchdcthl1
-            f"{nd},{nd},"   # ngaybatdauhdcthl2, ngayketthuchdcthl2
-            f"{nd},"        # ngaybatdauhdvth
-            # Các cột còn lại
+            # 64-65: HDTV
+            f"{nd},{nd},"
+            # 66-67: HDXDTH Lần 1
+            f"{nd},{nd},"
+            # 68-69: HDXDTH Lần 2
+            f"{nd},{nd},"
+            # 70: HDKXDTH
+            f"{nd},"
+            # 71-74: Truong_BP, Ghi_chu, Time_Stamp, Dia_chi_moi
             f"'N','',GETDATE(),{diachimoi},"
-            f"{congtytraluong},{doituongchiuchiphi},{phongban10},"
-            f"{phanloailaodong},{msnv},{cost_id})"
+            # 75: COST_ID
+            f"{cost_id})"
         )
 
         app.logger.debug(f"muc3_1 INSERT values: {nhanvienmoi}")
