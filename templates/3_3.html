@@ -1,479 +1,953 @@
-{% extends  "base.html" %}
-{% block style%}
+{% extends "base.html" %}
+{% block style %}
 <style>
-    .list-card {
-        display: inline-block;
-        justify-content: left;
-        padding: 10px;
-        margin: 20px;
-    }
-    .card {
-        cursor: pointer;
-        border-radius: 5px;
-        padding: 10px;
-        width: 330px;
-        position: relative;
-        overflow: hidden;
-    }
-    .card:hover {
-        transform: scale(1.2);
-        transition: 0.5s;
+    @import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap');
+
+    :root {
+        --brand:       #3a5bd9;
+        --brand-dk:    #2442b8;
+        --brand-lt:    #eef1fc;
+        --txt:         #2d3748;
+        --txt-muted:   #7b8db0;
+        --border:      #e2e8f8;
+        --white:       #ffffff;
+        --bg:          #f5f7ff;
+        --radius:      10px;
+        --shadow:      0 2px 12px rgba(58,91,217,.10);
+        --shadow-lg:   0 8px 32px rgba(58,91,217,.16);
+
+        /* Contract type colors */
+        --thuviec:     #3b82f6;
+        --cothoihan:   #10b981;
+        --vothoihan:   #f59e0b;
+        --phuluc:      #ef4444;
+        --other:       #8b5cf6;
     }
 
-    label, input, select {
-        font-weight: bold;
-        color: #4e73df;
-        width: 150px;
+    * { box-sizing: border-box; }
+
+    body, .hd-page * {
+        font-family: 'Be Vietnam Pro', sans-serif;
     }
-    
-    
+
+    .hd-page {
+        padding: 16px 20px;
+        background: var(--bg);
+        min-height: 100vh;
+    }
+
+    /* ══════════════════════
+       SEARCH BAR
+    ══════════════════════ */
+    .search-bar {
+        display: flex; align-items: center; gap: 10px;
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 10px 14px;
+        margin-bottom: 16px;
+        box-shadow: var(--shadow);
+    }
+    .search-bar label {
+        font-size: 11px; font-weight: 700;
+        color: var(--txt-muted); text-transform: uppercase;
+        letter-spacing: .5px; white-space: nowrap;
+        width: auto;
+    }
+    .search-bar input {
+        font-size: 13px; font-weight: 600; color: var(--txt);
+        border: 1.5px solid var(--border); border-radius: 6px;
+        padding: 6px 12px; width: 200px;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .search-bar input:focus {
+        outline: none; border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(58,91,217,.12);
+    }
+    #tennhanvien {
+        font-size: 13px; font-weight: 700; color: var(--brand);
+        padding: 6px 12px; background: var(--brand-lt);
+        border-radius: 6px; min-width: 80px;
+    }
+    .btn-add {
+        display: inline-flex; align-items: center; gap: 6px;
+        background: var(--brand); color: #fff;
+        border: none; border-radius: 6px;
+        padding: 7px 14px; font-size: 12px; font-weight: 700;
+        cursor: pointer; transition: background .15s, transform .1s;
+        white-space: nowrap; margin-left: auto;
+    }
+    .btn-add:hover  { background: var(--brand-dk); }
+    .btn-add:active { transform: scale(.96); }
+
+    /* ══════════════════════
+       MAIN LAYOUT
+    ══════════════════════ */
+    .hd-layout {
+        display: grid;
+        grid-template-columns: 280px 1fr;
+        gap: 16px;
+        align-items: start;
+    }
+
+    /* ══════════════════════
+       CONTRACT CARDS
+    ══════════════════════ */
+    .card-list {
+        display: flex; flex-direction: column; gap: 8px;
+    }
+    .hd-card {
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        cursor: pointer;
+        position: relative; overflow: hidden;
+        transition: transform .18s, box-shadow .18s;
+        border: 2px solid transparent;
+    }
+    .hd-card::before {
+        content: ''; position: absolute;
+        inset: 0; opacity: .12;
+        background: linear-gradient(135deg, #fff 0%, transparent 60%);
+        pointer-events: none;
+    }
+    .hd-card:hover {
+        transform: translateX(4px);
+        box-shadow: var(--shadow-lg);
+    }
+    .hd-card.active { border-color: rgba(255,255,255,.6); }
+
+    .hd-card-type {
+        font-size: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .6px;
+        opacity: .85; margin-bottom: 4px;
+    }
+    .hd-card-title {
+        font-size: 13px; font-weight: 700;
+        color: #fff; margin-bottom: 2px;
+        line-height: 1.3;
+    }
+    .hd-card-sub {
+        font-size: 11px; color: rgba(255,255,255,.8);
+        margin-bottom: 4px;
+    }
+    .hd-card-date {
+        font-size: 10px; color: rgba(255,255,255,.7);
+        display: flex; align-items: center; gap: 4px;
+    }
+
+    /* Card colors */
+    .card-thuviec   { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+    .card-cothoihan { background: linear-gradient(135deg, #10b981, #047857); }
+    .card-vothoihan { background: linear-gradient(135deg, #f59e0b, #b45309); }
+    .card-phuluc    { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+    .card-other     { background: linear-gradient(135deg, #8b5cf6, #6d28d9); }
+
+    /* ══════════════════════
+       DETAIL PANEL
+    ══════════════════════ */
+    .detail-panel {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 20px 24px;
+        animation: slideIn .2s ease;
+    }
+    @keyframes slideIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-header {
+        display: flex; align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 16px; padding-bottom: 14px;
+        border-bottom: 2px solid var(--border);
+    }
+    .detail-type-badge {
+        display: inline-block; padding: 3px 10px;
+        border-radius: 20px; font-size: 10px; font-weight: 800;
+        text-transform: uppercase; letter-spacing: .5px;
+        color: #fff; margin-bottom: 6px;
+    }
+    .detail-name {
+        font-size: 20px; font-weight: 800; color: var(--txt);
+        line-height: 1.2;
+    }
+    .detail-actions {
+        display: flex; gap: 6px; flex-shrink: 0;
+    }
+    .action-btn {
+        display: inline-flex; align-items: center; gap: 5px;
+        padding: 6px 12px; border-radius: 6px;
+        font-size: 11px; font-weight: 700;
+        border: none; cursor: pointer;
+        transition: all .15s;
+    }
+    .btn-print { background: #e0f2fe; color: #0369a1; }
+    .btn-print:hover { background: #bae6fd; }
+    .btn-edit  { background: #dcfce7; color: #166534; }
+    .btn-edit:hover  { background: #bbf7d0; }
+    .btn-del   { background: #fee2e2; color: #991b1b; }
+    .btn-del:hover   { background: #fecaca; }
+
+    /* Info grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 20px;
+    }
+    .info-item { display: flex; flex-direction: column; gap: 2px; }
+    .info-label {
+        font-size: 9px; font-weight: 800; color: var(--txt-muted);
+        text-transform: uppercase; letter-spacing: .5px;
+    }
+    .info-value {
+        font-size: 13px; font-weight: 700; color: var(--txt);
+    }
+    .info-value.highlight {
+        font-size: 15px; color: var(--brand);
+    }
+
+    /* Date row */
+    .date-row {
+        display: flex; gap: 12px; margin-top: 12px;
+        padding-top: 12px; border-top: 1px solid var(--border);
+    }
+    .date-block {
+        flex: 1; background: var(--bg);
+        border-radius: 8px; padding: 10px 14px;
+    }
+    .date-block .info-label { margin-bottom: 4px; }
+    .date-block .info-value { font-size: 15px; }
+
+    .empty-state {
+        text-align: center; padding: 40px 20px; color: var(--txt-muted);
+    }
+    .empty-state i { font-size: 40px; margin-bottom: 10px; display: block; opacity: .3; }
+    .empty-state p { font-size: 13px; font-weight: 600; }
+
+    /* ══════════════════════
+       MODAL
+    ══════════════════════ */
+    .modal-overlay-hd {
+        display: none; position: fixed; inset: 0; z-index: 3000;
+        background: rgba(20,30,70,.5);
+        align-items: center; justify-content: center;
+        backdrop-filter: blur(3px);
+    }
+    .modal-overlay-hd.show { display: flex; }
+    .modal-hd {
+        background: var(--white);
+        border-radius: 14px; width: 620px; max-width: 95vw;
+        max-height: 90vh; overflow-y: auto;
+        box-shadow: 0 24px 64px rgba(20,30,70,.25);
+        animation: popUp .2s cubic-bezier(.34,1.56,.64,1);
+    }
+    @keyframes popUp {
+        from { transform: scale(.9) translateY(20px); opacity: 0; }
+        to   { transform: scale(1) translateY(0);     opacity: 1; }
+    }
+    .modal-hd-header {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 18px 24px 14px;
+        border-bottom: 1px solid var(--border);
+        position: sticky; top: 0; background: var(--white); z-index: 1;
+    }
+    .modal-hd-title {
+        font-size: 16px; font-weight: 800; color: var(--txt);
+        display: flex; align-items: center; gap: 8px;
+    }
+    .modal-hd-title span { color: var(--brand); }
+    .modal-close-btn {
+        width: 28px; height: 28px; border-radius: 50%;
+        border: none; background: var(--bg); cursor: pointer;
+        font-size: 16px; color: var(--txt-muted);
+        display: flex; align-items: center; justify-content: center;
+        transition: background .15s, color .15s;
+    }
+    .modal-close-btn:hover { background: #fee2e2; color: #ef4444; }
+
+    .modal-hd-body { padding: 20px 24px; }
+
+    /* File import strip */
+    .import-strip {
+        display: flex; align-items: center; gap: 8px;
+        background: var(--bg); border-radius: 8px;
+        padding: 10px 14px; margin-bottom: 18px;
+        border: 1px dashed var(--border);
+    }
+    .import-strip span { font-size: 11px; color: var(--txt-muted); font-weight: 600; }
+    .btn-sm-action {
+        font-size: 11px; font-weight: 700; padding: 5px 12px;
+        border-radius: 5px; border: none; cursor: pointer;
+        transition: all .15s;
+    }
+    .btn-dl-tpl  { background: #dbeafe; color: #1e40af; }
+    .btn-dl-tpl:hover  { background: #bfdbfe; }
+    .btn-upload  { background: #dcfce7; color: #166534; }
+    .btn-upload:hover  { background: #bbf7d0; }
+
+    /* Form sections */
+    .form-section {
+        margin-bottom: 18px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid var(--border);
+    }
+    .form-section:last-child { border-bottom: none; margin-bottom: 0; }
+    .section-title {
+        font-size: 10px; font-weight: 800; color: var(--brand);
+        text-transform: uppercase; letter-spacing: .6px;
+        margin-bottom: 12px;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .section-title::after {
+        content: ''; flex: 1; height: 1px;
+        background: var(--border);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px 14px;
+    }
+    .form-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .form-grid.cols-1 { grid-template-columns: 1fr; }
+    .span-2 { grid-column: span 2; }
+
+    .f-group { display: flex; flex-direction: column; gap: 3px; }
+    .f-group label {
+        font-size: 10px; font-weight: 700; color: var(--txt-muted);
+        text-transform: uppercase; letter-spacing: .4px;
+        width: auto;
+    }
+    .f-group input,
+    .f-group select {
+        font-size: 12px; font-weight: 600; color: var(--txt);
+        border: 1.5px solid var(--border); border-radius: 6px;
+        padding: 6px 10px; width: 100%;
+        background: var(--white);
+        transition: border-color .15s, box-shadow .15s;
+    }
+    .f-group input:focus,
+    .f-group select:focus {
+        outline: none; border-color: var(--brand);
+        box-shadow: 0 0 0 3px rgba(58,91,217,.10);
+    }
+    .f-group input[readonly] { background: var(--bg); color: var(--txt-muted); }
+
+    /* Contract type select highlight */
+    #form_loaihopdong {
+        font-weight: 700; color: var(--brand);
+    }
+
+    /* Số ngày inline */
+    .songay-wrap {
+        display: flex; gap: 6px; align-items: center;
+    }
+    .songay-wrap select { flex: 1; }
+    .songay-wrap input  { width: 70px !important; flex-shrink: 0; }
+
+    /* Autocomplete */
+    .autocomplete-wrap { position: relative; }
+    .suggestions {
+        position: absolute; top: 100%; left: 0; right: 0; z-index: 100;
+        background: var(--white);
+        border: 1px solid var(--border); border-top: none;
+        border-radius: 0 0 6px 6px;
+        max-height: 160px; overflow-y: auto;
+        box-shadow: 0 4px 16px rgba(0,0,0,.10);
+    }
+    .suggestions li {
+        list-style: none; padding: 7px 12px;
+        font-size: 12px; font-weight: 600; cursor: pointer;
+        transition: background .1s;
+    }
+    .suggestions li:hover { background: var(--brand-lt); color: var(--brand); }
+
+    /* Modal footer */
+    .modal-hd-footer {
+        padding: 14px 24px 18px;
+        display: flex; justify-content: flex-end; gap: 8px;
+        border-top: 1px solid var(--border);
+        position: sticky; bottom: 0;
+        background: var(--white);
+    }
+    .btn-cancel {
+        padding: 8px 18px; border-radius: 6px;
+        border: 1.5px solid var(--border);
+        background: var(--white); color: var(--txt-muted);
+        font-size: 12px; font-weight: 700; cursor: pointer;
+        transition: all .15s;
+    }
+    .btn-cancel:hover { border-color: var(--brand); color: var(--brand); }
+    .btn-save-hd {
+        padding: 8px 22px; border-radius: 6px;
+        border: none; background: var(--brand); color: #fff;
+        font-size: 12px; font-weight: 700; cursor: pointer;
+        transition: all .15s;
+        display: flex; align-items: center; gap: 6px;
+    }
+    .btn-save-hd:hover { background: var(--brand-dk); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .hd-layout { grid-template-columns: 1fr; }
+        .form-grid  { grid-template-columns: 1fr; }
+        .form-grid.cols-3 { grid-template-columns: 1fr 1fr; }
+        .span-2 { grid-column: span 1; }
+        .info-grid { grid-template-columns: 1fr; }
+    }
 </style>
-{% endblock style %}
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <div class="row">
-        <dic style="display: flex; align-items: center;">
-            <form method="GET">
-                <input id="mst" name="mst" placeholder="Mã số thẻ" value="{{ request.args.get('mst', '') }}" onchange="this.form.submit()"></input>
-            </form>
-            <div id="tennhanvien"></div>
-            <button type="submit" class="btn btn-primary btn-sm" title="Thêm hợp đồng mới" data-toggle="modal" data-target="#requestModal"><i class="fas fa-plus"></i></button>
+<div class="hd-page">
+
+    {# ── Search Bar ── #}
+    <div class="search-bar">
+        <label>Mã số thẻ</label>
+        <form method="GET" style="display:contents">
+            <input id="mst" name="mst"
+                   placeholder="Nhập mã số thẻ…"
+                   value="{{ request.args.get('mst', '') }}"
+                   onchange="this.form.submit()">
+        </form>
+        <div id="tennhanvien"></div>
+        <button class="btn-add" onclick="document.getElementById('modalHD').classList.add('show')">
+            ➕ Thêm hợp đồng
+        </button>
     </div>
-    <hr />
-    <div class="row">
-        <div class="col-3-sm">
-            <div class="list-card">
-                {% for row in danhsach %}
-                {% if row["Loại hợp đồng"]=='Hợp đồng thử việc' %}
-                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #3399ff; color: white;">
-                {% elif 'có thời hạn' in row["Loại hợp đồng"] %}
-                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #339933; color: white;">
-                {% elif row["Loại hợp đồng"]=='Hợp đồng vô thời hạn' %}
-                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ffcc00; color: white;">
-                {% elif row["Loại hợp đồng"]=='Phụ lục hợp đồng' %}
-                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: #ff4d4d; color: white;">
+
+    {# ── Main Layout ── #}
+    <div class="hd-layout">
+
+        {# ── Card List ── #}
+        <div class="card-list">
+            {% if not danhsach %}
+            <div style="text-align:center;padding:30px;color:var(--txt-muted);font-size:13px;font-weight:600;background:var(--white);border-radius:var(--radius);border:1px solid var(--border);">
+                <span style="font-size:32px;opacity:.2;display:block;margin-bottom:8px">📄</span>
+                Chưa có hợp đồng nào
+            </div>
+            {% endif %}
+            {% for row in danhsach %}
+                {% set loai = row["Loại hợp đồng"] %}
+                {% if loai == 'Hợp đồng thử việc' %}
+                    {% set cc = 'card-thuviec' %}{% set badge = 'Thử việc' %}
+                {% elif 'có thời hạn' in loai %}
+                    {% set cc = 'card-cothoihan' %}{% set badge = 'Có thời hạn' %}
+                {% elif loai == 'Hợp đồng vô thời hạn' %}
+                    {% set cc = 'card-vothoihan' %}{% set badge = 'Vô thời hạn' %}
+                {% elif loai == 'Phụ lục hợp đồng' %}
+                    {% set cc = 'card-phuluc' %}{% set badge = 'Phụ lục' %}
                 {% else %}
-                <div class="card" data-info='{{ row | tojson |safe }}' onclick="chitiethopdong(this)" style="background-color: purple ; color: white;">
+                    {% set cc = 'card-other' %}{% set badge = 'Khác' %}
                 {% endif %}
-                    <div class="card-body">
-                        <h5 class="card-title"><b>{{row["Loại hợp đồng"]}}</b></h5>
-                        <h6 class="card-subtitle"><i>{{row["Chức danh"]}}</i></h6>
-                        <p class="card-text">Bắt đầu: <b class="date_en">{{row["Ngày ký hợp đồng"]}}</b></p>
+                <div class="hd-card {{ cc }}"
+                     data-info='{{ row | tojson | safe }}'
+                     onclick="chitiethopdong(this)">
+                    <div class="hd-card-type">{{ badge }}</div>
+                    <div class="hd-card-title">{{ loai }}</div>
+                    <div class="hd-card-sub">{{ row["Chức danh"] or '—' }}</div>
+                    <div class="hd-card-date">
+                        📅
+                        <span class="date_en">{{ row["Ngày ký hợp đồng"] }}</span>
                     </div>
                 </div>
-                {% endfor %}
+            {% endfor %}
+        </div>
+
+        {# ── Detail Panel ── #}
+        {% if request.args.get('mst') %}
+        <div class="detail-panel" id="hd_chitiet">
+            <div class="empty-state" id="empty-hint">
+                👈
+                <p>Chọn một hợp đồng để xem chi tiết</p>
+            </div>
+            <div id="detail-content" style="display:none">
+                <div class="detail-header">
+                    <div>
+                        <div class="detail-type-badge" id="detail-badge" style="background:var(--brand)"></div>
+                        <div class="detail-name" id="hoten"></div>
+                        <div style="font-size:13px;color:var(--txt-muted);font-weight:600;margin-top:2px" id="chucdanh-display"></div>
+                    </div>
+                    <div class="detail-actions">
+                        <form action="/inhopdong" method="POST" style="display:contents">
+                            <input type="hidden" name="mst" value="{{ request.args.get('mst','') }}">
+                            <input type="hidden" id="idhopdongin" name="idhopdongin">
+                            <button type="submit" class="action-btn btn-print">
+                                🖨️ In
+                            </button>
+                        </form>
+                        <form action="/suahopdong" method="POST" style="display:contents">
+                            <input type="hidden" name="mst" value="{{ request.args.get('mst','') }}">
+                            <input type="hidden" id="idhopdongsua" name="idhopdongsua">
+                            <button type="submit" class="action-btn btn-edit">
+                                ✏️ Sửa
+                            </button>
+                        </form>
+                        <form action="/xoahopdong" method="POST" style="display:contents">
+                            <input type="hidden" name="mst" value="{{ request.args.get('mst','') }}">
+                            <input type="hidden" id="idhopdongxoa" name="idhopdongxoa">
+                            <button type="submit" class="action-btn btn-del">
+                                🗑️ Xoá
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Cấp bậc</span>
+                        <span class="info-value" id="capbac">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Chuyền</span>
+                        <span class="info-value" id="chuyen-display">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phòng ban</span>
+                        <span class="info-value" id="phongban">—</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Lương cơ bản</span>
+                        <span class="info-value highlight" id="luongcoban">—</span>
+                    </div>
+                    <div class="info-item span-2" style="grid-column:span 2">
+                        <span class="info-label">Phụ cấp</span>
+                        <span class="info-value" id="phucap">—</span>
+                    </div>
+                </div>
+
+                <div class="date-row">
+                    <div class="date-block">
+                        <div class="info-label">Ngày ký hợp đồng</div>
+                        <div class="info-value" id="ngayky">—</div>
+                    </div>
+                    <div class="date-block">
+                        <div class="info-label">Ngày hết hạn</div>
+                        <div class="info-value" id="ngayhethan">—</div>
+                    </div>
+                </div>
             </div>
         </div>
-        {% if request.args.get('mst') %}
-        <div class="col-3-sm">
-            <div id="hd_chitiet">
-                <h1 id="loaihopdong"></h1>
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <form action="/inhopdong" method="POST">
-                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
-                        <input type="hidden" id="idhopdongin" name="idhopdongin">
-                        <button class="btn btn-success btn-sm" type="submit" title="In hợp đồng"><i class="fas fa-print"></i></button>
-                    </form>
-                    <form action="/suahopdong" method="POST">
-                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
-                        <input type="hidden" id="idhopdongsua" name="idhopdongsua">
-                        <button class="btn btn-success btn-sm" type="submit" title="Sửa hợp đồng"><i class="fas fa-edit"></i></button>
-                    </form>
-                    <form action="/xoahopdong" method="POST">
-                        <input type="hidden" name="mst" value="{{request.args.get('mst', '')}}">
-                        <input type="hidden" id="idhopdongxoa" name="idhopdongxoa">
-                        <button class="btn btn-success btn-sm" type="submit" title="Xoá hợp đồng"><i class="fas fa-trash"></i></button>
-                    </form>
-                </div>
-                <hr>
-                <h3>Họ tên: <b id="hoten"></b></h3>
-                <h4>Chức danh: <b id="chucdanh"></b></h4>
-                <p>Cấp bậc: <b id="capbac"></b></p>
-                <p>Chuyền: <b id="chuyen"></b></p>
-                <p>Phòng ban: <b id="phongban"></b></p>
-                <p>Lương cơ bản: <b id="luongcoban"></b></p>
-                <p>Phụ cấp: <b id="phucap"></b></p>
-                <p>Ngày ký hợp đồng: <b id="ngayky"></b></p>
-                <p>Ngày hết hạn: <b id="ngayhethan"></b></p>
-            </div>
+        {% else %}
+        <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;color:var(--txt-muted)">
+            <span style="font-size:36px;opacity:.2;display:block;margin-bottom:10px">🔍</span>
+            <p style="font-size:13px;font-weight:600">Nhập mã số thẻ để xem hợp đồng</p>
         </div>
         {% endif %}
     </div>
-    <div class="modal fade bd-example-modal-lg" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="requestModalLabel">Hợp đồng lao động</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col">
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <form method="POST" action="/taifilethemhopdongmau">
-                                        <input type="submit" class="btn btn-primary btn-sm" value="Tải file mẫu"></input>
-                                    </form>
-                                    <form method="POST" action="/capnhathopdongtheofilemau" enctype = "multipart/form-data">
-                                        <input type="file" id="file" name="file">
-                                        <input type="submit" class="btn btn-success btn-sm" value="Cập nhật hợp đồng"></input>
-                                    </form>
-                                </div>
-                                <hr/>
-                                <div class="form-group">
-                                    <label for="masothe">Mã số thẻ</label>
-                                    <input type="text" id="masothe" name="masothe" onchange="kiemtrathongtinnld()">
-                                </div>
-                                <hr />
-                                <div>
-                                    <form method="POST">
-                                        <input type="text" id="form_manhanvien" name="form_manhanvien" hidden>
-                                        <input type="text" id="form_hovaten" name="form_hovaten" placeholder="Họ tên">
-                                        <input type="text" id="form_gioitinh" name="form_gioitinh" placeholder="Giới tính">
-                                        <input type="text" id="form_cccd" name="form_cccd"  placeholder="Căn cước công dân">
-                                        <input type="text" id="form_noicap_cccd" name="form_noicap_cccd"  placeholder="Nơi cấp CCCD">
-                                        <input type="text" id="form_thuongtru" name="form_thuongtru"  placeholder="Thường trú">
-                                        <input type="text" id="form_tamtru" name="form_tamtru"  placeholder="Tạm trú">
-                                        <div class="form-group">
-                                            <label for="form_ngaysinh">Ngày sinh</label>
-                                            <input type="date" id="form_ngaysinh" name="form_ngaysinh" readonly>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="form_ngaycapcccd">Ngày cấp CCCD</label>
-                                            <input type="date" id="form_ngaycapcccd" name="form_ngaycapcccd" readonly>
-                                        </div>
-                                <hr />
-                                <div class="col">
-                                    <div class="form-group">
-                                        <label for="form_loaihopdong">Loại hợp đồng</label>
-                                        <select id="form_loaihopdong" name="form_loaihopdong">
-                                            <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
-                                            <option value="Hợp đồng có thời hạn 28 ngày">Hợp đồng có thời hạn 28 ngày</option>
-                                            <option value="Hợp đồng có thời hạn 1 năm">Hợp đồng có thời hạn 1 năm</option>
-                                            <option value="Hợp đồng vô thời hạn">Hợp đồng vô thời hạn</option>
-                                            <option value="Phụ lục hợp đồng">Phụ lục hợp đồng</option>
-                                            <input type="number" id="form_songayhopdong" name="form_songayhopdong" min="0" style="width:60px;margin-left:10px;">
-                                        </select>
-                                    </div>
-                                    
-                                    <div class="form-group">
-                                        <label for="form_ngaykyhopdong">Ngày ký hợp đồng</label>
-                                        <input type="date" id="form_ngaykyhopdong" name="form_ngaykyhopdong">
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="form_ngayhethanhopdong">Ngày hết hạn hợp đồng</label>
-                                        <input type="date" id="form_ngayhethanhopdong" name="form_ngayhethanhopdong">
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="form-group">
-                                    <input name="chucdanh" id="chucdanh" placeholder="Chức danh">
-                                    <a class="btn btn-primary btn-sm" onclick="doivitri()"><i class="fas fa-search"></i></a>
-                                </div>
-                                <div class="form-group">
-                                    <input name="vitrien" id="vitrien" placeholder="Detail job title(EN)">
-                                    <select name="chuyen" id="chuyen"></select>
-                                    <input name="hccategory" id="hccategory" placeholder="Headcount category">
-                                    <input name="gradecode" id="gradecode" placeholder="Grade code">
-                                    <input name="department" id="department" placeholder="Department">
-                                    <input name="employeetype" id="employeetype" placeholder="Employee type">
-                                    <input name="sectioncode" id="sectioncode" placeholder="Section code">
-                                    <input name="sectiondescription" id="sectiondescription" placeholder="Section description">
-                                    <input name="positioncode" id="positioncode" placeholder="Position code">
-                                    <input name="positioncodedescription" id="positioncodedescription" placeholder="Position code description">
-                                    <input name="calamviec" id="calamviec" placeholder="Ca làm việc">
-                                </div>
-                                <hr/>
-                                <div class="form-group">
-                                    <label for="luongcoban">Lương cơ bản</label>
-                                    <input type="number" id="luongcoban" name="luongcoban" value=0>
-                                    <label for="phucap">Phụ cấp</label>
-                                    <input type="numer" name="phucap" id="phucap" value=0>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
-                    <input class="btn btn-primary" value="Thêm" onclick="return luuhopdong()" type="submit"></input>
-                </div>
+</div>
+
+{# ══════════════════════════════════
+   MODAL THÊM HỢP ĐỒNG
+══════════════════════════════════ #}
+<div id="modalHD" class="modal-overlay-hd" onclick="onModalOverlay(event)">
+<div class="modal-hd">
+
+    <div class="modal-hd-header">
+        <div class="modal-hd-title">
+            <span>📝</span>
+            Hợp đồng lao động
+        </div>
+        <button class="modal-close-btn" onclick="closeModalHD()">
+            ✕
+        </button>
+    </div>
+
+    <div class="modal-hd-body">
+
+        {# Import file strip #}
+        <div class="import-strip">
+            <span style="color:#16a34a;font-size:16px">📊</span>
+            <span>Cập nhật hàng loạt qua file mẫu:</span>
+            <form method="POST" action="/taifilethemhopdongmau" style="display:contents">
+                <button type="submit" class="btn-sm-action btn-dl-tpl">
+                    ⬇️ Tải mẫu
+                </button>
             </form>
+            <form method="POST" action="/capnhathopdongtheofilemau"
+                  enctype="multipart/form-data" style="display:contents">
+                <input type="file" id="file-import" name="file"
+                       style="display:none" onchange="this.form.submit()">
+                <button type="button" class="btn-sm-action btn-upload"
+                        onclick="document.getElementById('file-import').click()">
+                    ⬆️ Nhập file
+                </button>
+            </form>
+        </div>
+
+        <form method="POST" id="formHopDong" onsubmit="return luuhopdong()">
+        <input type="hidden" id="form_manhanvien" name="form_manhanvien">
+
+        {# 1. Thông tin nhân viên #}
+        <div class="form-section">
+            <div class="section-title">👤 Thông tin nhân viên</div>
+            <div class="form-grid">
+                <div class="f-group">
+                    <label>Mã số thẻ</label>
+                    <input type="text" id="masothe" name="masothe"
+                           placeholder="Nhập mã → tự điền"
+                           onchange="kiemtrathongtinnld()">
+                </div>
+                <div class="f-group">
+                    <label>Họ và tên</label>
+                    <input type="text" id="form_hovaten" name="form_hovaten" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Giới tính</label>
+                    <input type="text" id="form_gioitinh" name="form_gioitinh" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Ngày sinh</label>
+                    <input type="date" id="form_ngaysinh" name="form_ngaysinh" readonly>
+                </div>
+                <div class="f-group">
+                    <label>CCCD</label>
+                    <input type="text" id="form_cccd" name="form_cccd" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Ngày cấp CCCD</label>
+                    <input type="date" id="form_ngaycapcccd" name="form_ngaycapcccd" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Nơi cấp CCCD</label>
+                    <input type="text" id="form_noicap_cccd" name="form_noicap_cccd" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Thường trú</label>
+                    <input type="text" id="form_thuongtru" name="form_thuongtru" readonly>
+                </div>
+                <div class="f-group span-2">
+                    <label>Tạm trú</label>
+                    <input type="text" id="form_tamtru" name="form_tamtru" readonly>
+                </div>
             </div>
         </div>
+
+        {# 2. Loại hợp đồng #}
+        <div class="form-section">
+            <div class="section-title">📋 Loại hợp đồng</div>
+            <div class="form-grid">
+                <div class="f-group span-2">
+                    <label>Loại hợp đồng &amp; số ngày</label>
+                    <div class="songay-wrap">
+                        <select id="form_loaihopdong" name="form_loaihopdong">
+                            <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
+                            <option value="Hợp đồng có thời hạn 28 ngày">Hợp đồng có thời hạn 28 ngày</option>
+                            <option value="Hợp đồng có thời hạn 1 năm">Hợp đồng có thời hạn 1 năm</option>
+                            <option value="Hợp đồng vô thời hạn">Hợp đồng vô thời hạn</option>
+                            <option value="Phụ lục hợp đồng">Phụ lục hợp đồng</option>
+                        </select>
+                        <input type="number" id="form_songayhopdong" name="form_songayhopdong"
+                               min="0" placeholder="Số ngày">
+                    </div>
+                </div>
+                <div class="f-group">
+                    <label>Ngày ký hợp đồng</label>
+                    <input type="date" id="form_ngaykyhopdong" name="form_ngaykyhopdong">
+                </div>
+                <div class="f-group">
+                    <label>Ngày hết hạn</label>
+                    <input type="date" id="form_ngayhethanhopdong" name="form_ngayhethanhopdong">
+                </div>
+            </div>
+        </div>
+
+        {# 3. Vị trí #}
+        <div class="form-section">
+            <div class="section-title">💼 Vị trí &amp; bộ phận</div>
+            <div class="form-grid">
+                <div class="f-group autocomplete-wrap">
+                    <label>Chức danh (VN)</label>
+                    <div style="display:flex;gap:6px">
+                        <input name="chucdanh" id="chucdanh" placeholder="Nhập chức danh…" style="flex:1">
+                        <button type="button" class="btn-sm-action btn-dl-tpl"
+                                style="padding:6px 10px" onclick="doivitri()">
+                            🔍
+                        </button>
+                    </div>
+                    <ul class="suggestions" id="chucdanh-suggestions" style="display:none"></ul>
+                </div>
+                <div class="f-group">
+                    <label>Detail job title (EN)</label>
+                    <input name="vitrien" id="vitrien" placeholder="—" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Chuyền</label>
+                    <select name="chuyen" id="chuyen"></select>
+                </div>
+                <div class="f-group">
+                    <label>Headcount category</label>
+                    <input name="hccategory" id="hccategory" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Grade code</label>
+                    <input name="gradecode" id="gradecode" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Department</label>
+                    <input name="department" id="department" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Employee type</label>
+                    <input name="employeetype" id="employeetype" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Section code</label>
+                    <input name="sectioncode" id="sectioncode" readonly>
+                </div>
+                <div class="f-group span-2">
+                    <label>Section description</label>
+                    <input name="sectiondescription" id="sectiondescription" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Position code</label>
+                    <input name="positioncode" id="positioncode" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Position code description</label>
+                    <input name="positioncodedescription" id="positioncodedescription" readonly>
+                </div>
+                <div class="f-group">
+                    <label>Ca làm việc</label>
+                    <input name="calamviec" id="calamviec" readonly>
+                </div>
+            </div>
+        </div>
+
+        {# 4. Lương #}
+        <div class="form-section">
+            <div class="section-title">💰 Lương &amp; phụ cấp</div>
+            <div class="form-grid">
+                <div class="f-group">
+                    <label>Lương cơ bản (VNĐ)</label>
+                    <input type="number" id="luongcoban" name="luongcoban"
+                           value="0" min="0" step="100000">
+                </div>
+                <div class="f-group">
+                    <label>Phụ cấp (VNĐ)</label>
+                    <input type="number" name="phucap" id="phucap"
+                           value="0" min="0" step="100000">
+                </div>
+            </div>
+        </div>
+
+        </form>
+    </div>
+
+    <div class="modal-hd-footer">
+        <button class="btn-cancel" onclick="closeModalHD()">Huỷ</button>
+        <button class="btn-save-hd" onclick="luuhopdong()">
+            💾 Lưu hợp đồng
+        </button>
     </div>
 </div>
+</div>
+
 <script>
-    // Thêm dấu chấm vào phần nghìn trong số 
-    function formatNumberWithCommas(number) {
-        return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    /* ── Helpers ── */
+    function fmt(n) {
+        return Number(n).toLocaleString('vi-VN') + ' ₫';
     }
-    function changeDateFormat(dateString) {
-        // Tách các thành phần ngày, tháng, năm từ định dạng d/m/y
-        let [day, month, year] = dateString.split('/');
-        
-        // Chuyển đổi thành định dạng Y-m-d
-        let newFormat = `${year}-${month}-${day}`;
-        
-        return newFormat;
+    function fmtDate(d) {
+        if (!d) return '—';
+        try { return d.split('-')[2] + '/' + d.split('-')[1] + '/' + d.split('-')[0]; }
+        catch { return d || '—'; }
     }
-    
-    function chitiethopdong(element) {
-        var info = JSON.parse(element.dataset.info);
-        console.log(info)
-        document.getElementById('loaihopdong').textContent = info['Loại hợp đồng'];
-        document.getElementById('hoten').textContent = info['Họ tên'];
-        document.getElementById('chucdanh').textContent = info['Chức danh'];
-        document.getElementById('capbac').textContent = info['Cấp bậc'];
-        document.getElementById('chuyen').textContent = info['Chuyền'];
-        document.getElementById('phongban').textContent = info['Phòng ban'];
-        document.getElementById('luongcoban').textContent = formatNumberWithCommas(info['Lương cơ bản']) + ' VND';
-        document.getElementById('phucap').textContent = formatNumberWithCommas(info['Phụ cấp']) + ' VND';
-        document.getElementById('ngayky').textContent = changeFormatDate(info['Ngày ký hợp đồng']);
-        document.getElementById('ngayhethan').textContent = changeFormatDate(info['Ngày hết hạn hợp đồng']);
-        document.getElementById('idhopdongin').value = info['Số thứ tự'];
+    function changeDateFormat(s) {
+        if (!s || !s.includes('/')) return s || '';
+        const [d, m, y] = s.split('/');
+        return `${y}-${m}-${d}`;
+    }
+
+    /* ── Card colors map ── */
+    const TYPE_COLOR = {
+        'Hợp đồng thử việc':    '#3b82f6',
+        'Hợp đồng vô thời hạn': '#f59e0b',
+        'Phụ lục hợp đồng':     '#ef4444',
+    };
+    function typeColor(t) {
+        if (TYPE_COLOR[t]) return TYPE_COLOR[t];
+        if (t && t.includes('có thời hạn')) return '#10b981';
+        return '#8b5cf6';
+    }
+
+    /* ── Chi tiết hợp đồng ── */
+    function chitiethopdong(el) {
+        document.querySelectorAll('.hd-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+
+        const info = JSON.parse(el.dataset.info);
+        document.getElementById('empty-hint').style.display    = 'none';
+        document.getElementById('detail-content').style.display = 'block';
+
+        const badge = document.getElementById('detail-badge');
+        badge.textContent = info['Loại hợp đồng'];
+        badge.style.background = typeColor(info['Loại hợp đồng']);
+
+        document.getElementById('hoten').textContent         = info['Họ tên'] || '—';
+        document.getElementById('chucdanh-display').textContent = info['Chức danh'] || '—';
+        document.getElementById('capbac').textContent        = info['Cấp bậc'] || '—';
+        document.getElementById('chuyen-display').textContent = info['Chuyền'] || '—';
+        document.getElementById('phongban').textContent      = info['Phòng ban'] || '—';
+        document.getElementById('luongcoban').textContent    = fmt(info['Lương cơ bản'] || 0);
+        document.getElementById('phucap').textContent        = fmt(info['Phụ cấp'] || 0);
+        document.getElementById('ngayky').textContent        = fmtDate(info['Ngày ký hợp đồng']);
+        document.getElementById('ngayhethan').textContent    = fmtDate(info['Ngày hết hạn hợp đồng']);
+        document.getElementById('idhopdongin').value  = info['Số thứ tự'];
         document.getElementById('idhopdongsua').value = info['Số thứ tự'];
         document.getElementById('idhopdongxoa').value = info['Số thứ tự'];
     }
-    function kiemtrathongtinnld() {
-        axios({
-            method: 'post',
-            url: '/kiemtrathongtinnld?masothe=' + document.getElementById("masothe").value
-        })
-            .then(function (response) {
-                var data = response.data
-                if (response.data != "") {
-                    console.log(data)
-                    document.getElementById("form_manhanvien").value = data["MST"]; // 1
-                    document.getElementById("form_ngaysinh").value = changeDateFormat(data["Ngày sinh"]); //2
-                    document.getElementById("form_hovaten").value = data["Họ tên"]; //3
-                    document.getElementById("form_gioitinh").value = data["Giới tính"]; //4
-                    document.getElementById("form_cccd").value = data["CCCD"]; //6
-                    document.getElementById("form_noicap_cccd").value = data["Nơi cấp"]; //6
-                    document.getElementById("form_ngaycapcccd").value = changeDateFormat(data["Ngày cấp CCCD"]); //7
-                    document.getElementById("form_thuongtru").value = data["Thường trú"]; //10
-                    document.getElementById("form_tamtru").value = data["Tạm trú"]; //10
-                }  else {
-                    document.getElementById("form_manhanvien").value = ""; // 1
-                    document.getElementById("form_ngaysinh").value = ""; //2
-                    document.getElementById("form_hovaten").value = ""; //3
-                    document.getElementById("form_gioitinh").value = ""; //4
-                    document.getElementById("form_cccd").value = ""; //6
-                    document.getElementById("form_ngaycapcccd").value = ""; //7
-                    document.getElementById("form_thuongtru").value = ""; //10
-                    document.getElementById("form_tamtru").value = ""; //10
-                }
-            })
+
+    /* ── Modal ── */
+    function closeModalHD() {
+        document.getElementById('modalHD').classList.remove('show');
+    }
+    function onModalOverlay(e) {
+        if (e.target === document.getElementById('modalHD')) closeModalHD();
     }
 
-    function changeFormatDate(date){
-        try{
-            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-        } catch {
-            return "";    
-    }}
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('.date_en').forEach((element) => {
-            element.textContent = changeFormatDate(element.textContent);
-        });
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById("form_ngaykyhopdong").value = today;
-        calculateEndDate();
-        const input = document.querySelector('input[name="chucdanh"]');
-            const suggestions = document.createElement('ul');
-            suggestions.className = 'list-group';
-            input.parentNode.appendChild(suggestions);
-
-            input.addEventListener('input', () => {
-                const query = input.value;
-                if (query.length > 0) {
-                    suggestions.style.display = 'block';
-                    axios({
-                        method: 'post',
-                        url: '/timcacchucdanh?tutimkiem=' + query
-                    })
-                        .then(function (response) {
-                            suggestions.innerHTML = '';
-                            response.data.forEach(element => {
-                                const suggestion = document.createElement('li');
-                                suggestion.className = 'list-group-item';
-                                suggestion.textContent = element;
-                                suggestion.addEventListener('click', () => {
-                                    input.value = suggestion.textContent;
-                                    suggestions.innerHTML = '';
-                                });
-                                suggestions.appendChild(suggestion);
-                            });
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                        });
+    /* ── Kiểm tra NLĐ ── */
+    function kiemtrathongtinnld() {
+        axios.post('/kiemtrathongtinnld?masothe=' + document.getElementById('masothe').value)
+            .then(res => {
+                const d = res.data;
+                if (d) {
+                    document.getElementById('form_manhanvien').value   = d['MST'] || '';
+                    document.getElementById('form_ngaysinh').value     = changeDateFormat(d['Ngày sinh'] || '');
+                    document.getElementById('form_hovaten').value      = d['Họ tên'] || '';
+                    document.getElementById('form_gioitinh').value     = d['Giới tính'] || '';
+                    document.getElementById('form_cccd').value         = d['CCCD'] || '';
+                    document.getElementById('form_noicap_cccd').value  = d['Nơi cấp'] || '';
+                    document.getElementById('form_ngaycapcccd').value  = changeDateFormat(d['Ngày cấp CCCD'] || '');
+                    document.getElementById('form_thuongtru').value    = d['Thường trú'] || '';
+                    document.getElementById('form_tamtru').value       = d['Tạm trú'] || '';
                 } else {
-                    suggestions.innerHTML = '';
+                    ['form_manhanvien','form_ngaysinh','form_hovaten','form_gioitinh',
+                     'form_cccd','form_noicap_cccd','form_ngaycapcccd','form_thuongtru','form_tamtru']
+                    .forEach(id => document.getElementById(id).value = '');
                 }
             });
+    }
 
-    });
-
-    document.getElementById("form_loaihopdong").addEventListener("change", function() {
-        calculateEndDate();
-    });
-
-    document.getElementById("form_songayhopdong").addEventListener("change", function() {
-        calculateEndDate();
-    });
-
-    document.getElementById("form_ngaykyhopdong").addEventListener("change", function() {
-        calculateEndDate();
-    });
-
+    /* ── Tính ngày hết hạn ── */
     function calculateEndDate() {
-        const kieuhopdong = document.getElementById("form_loaihopdong").value;
-        const soNgay = document.getElementById("form_songayhopdong").value;
-        const ngayBatDau = document.getElementById("form_ngaykyhopdong").value;
-        const ngayKetThuc = document.getElementById("form_ngayhethanhopdong");
+        const loai    = document.getElementById('form_loaihopdong').value;
+        const soNgay  = document.getElementById('form_songayhopdong');
+        const start   = document.getElementById('form_ngaykyhopdong').value;
+        const endEl   = document.getElementById('form_ngayhethanhopdong');
 
-        if (ngayBatDau) {
-            const startDate = new Date(ngayBatDau);
-            let endDate;
+        if (!start) { endEl.value = ''; return; }
+        const d = new Date(start);
+        let end;
 
-            if (kieuhopdong === "Hợp đồng thử việc" && soNgay) {
-                endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + parseInt(soNgay)-1);
-            } else if (kieuhopdong === "Hợp đồng có thời hạn 28 ngày") {
-                endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate()+27);
-                document.getElementById("form_songayhopdong").value = 28;
-                document.getElementById("form_songayhopdong").readonly = true;
-            } else if (kieuhopdong === "Hợp đồng có thời hạn 1 năm") {
-                endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate()+364);
-                document.getElementById("form_songayhopdong").value = 365;
-                document.getElementById("form_songayhopdong").readonly = true;
-            } else if (kieuhopdong === "Hợp đồng vô thời hạn") {
-                document.getElementById("form_songayhopdong").value = "";
-                document.getElementById("form_songayhopdong").readonly = true;
-                ngayKetThuc.disabled = true;
-            }
-
-            if (endDate) {
-                ngayKetThuc.value = endDate.toISOString().split('T')[0];
-            } else {
-                ngayKetThuc.value = '';
-            }
-        } else {
-            ngayKetThuc.value = '';
+        if (loai === 'Hợp đồng thử việc' && soNgay.value) {
+            end = new Date(d); end.setDate(d.getDate() + parseInt(soNgay.value) - 1);
+        } else if (loai === 'Hợp đồng có thời hạn 28 ngày') {
+            end = new Date(d); end.setDate(d.getDate() + 27);
+            soNgay.value = 28;
+        } else if (loai === 'Hợp đồng có thời hạn 1 năm') {
+            end = new Date(d); end.setDate(d.getDate() + 364);
+            soNgay.value = 365;
+        } else if (loai === 'Hợp đồng vô thời hạn') {
+            soNgay.value = ''; endEl.value = ''; endEl.disabled = true; return;
         }
+        endEl.disabled = false;
+        endEl.value = end ? end.toISOString().split('T')[0] : '';
     }
 
+    /* ── Đổi vị trí ── */
     function doivitri() {
-        var vitri = document.getElementById("chucdanh").value
-        if (vitri && vitri.length < 5) {
-            document.getElementById("vitrien").value = "";
-            document.getElementById("gradecode").value = "";
-            document.getElementById("sectioncode").value = "";
-            document.getElementById("hccategory").value = "";
-            document.getElementById("department").value = "";
-            document.getElementById("sectiondescription").value = "";
-            document.getElementById("employeetype").value = "";
-            document.getElementById("positioncode").value = "";
-            document.getElementById("positioncodedescription").value = "";
-            document.getElementById("calamviec").value = "";
-        } else {
-        axios({
-            method: 'post',
-            url: '/check_line_from_detailjob?vitrimoi=' + vitri
-        })
-            .then(function (response) {
-                var data = response.data
-                if (response.data != "") {
-                    console.log(data)
-                    if (Array.isArray(data)) {
-                        var select = document.getElementById('chuyen');
-                        select.innerHTML = ''; // Clear existing options
-                        data.forEach(function(item) {
-                            var option = document.createElement('option');
-                            option.value = item; // Assuming item has a 'value' property
-                            option.text = item; // Assuming item has a 'text' property
-                            select.appendChild(option);
-                        });
-                    }
-                    var chuyenmoi=data[0]
-                    axios({
-                        method: 'post',
-                        url: '/check_hcname?vitri=' + vitri+"&line="+chuyenmoi
-                    })
-                    .then(function (response) {
-                        var data = response.data
-                        if (response.data != "") {
-                            console.log(data)
-                            data = response.data
-                            document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                            document.getElementById("gradecode").value = data["Grade_code"]; // 3
-                            document.getElementById("sectioncode").value = data["Section_code"]; // 4
-                            document.getElementById("hccategory").value = data["HC_category"]; // 5
-                            document.getElementById("department").value = data["Department"]; // 6
-                            document.getElementById("sectiondescription").value = data["Section_description"]; // 7
-                            document.getElementById("employeetype").value = data["Employee_type"]; // 8
-                            document.getElementById("positioncode").value = data["Position_code"]; // 9
-                            document.getElementById("positioncodedescription").value = data["Position_code_description"];
-                            axios({
-                                method: 'post',
-                                url: '/laycatheoline?line=' + data["Line"]
-                            })
-                            .then(function (response) {
-                                document.getElementById("calamviec").value = response.data['Ca']
-                            })
-                        }
-                    })
+        const vitri = document.getElementById('chucdanh').value;
+        if (!vitri || vitri.length < 2) return;
+        axios.post('/check_line_from_detailjob?vitrimoi=' + vitri)
+            .then(res => {
+                const data = res.data;
+                if (!data || !Array.isArray(data)) return;
+                const sel = document.getElementById('chuyen');
+                sel.innerHTML = '';
+                data.forEach(item => {
+                    const opt = document.createElement('option');
+                    opt.value = opt.text = item;
+                    sel.appendChild(opt);
+                });
+                loadHCInfo(vitri, data[0]);
+            });
+    }
+
+    function loadHCInfo(vitri, line) {
+        axios.post(`/check_hcname?vitri=${vitri}&line=${line}`)
+            .then(res => {
+                const d = res.data;
+                if (!d) return;
+                document.getElementById('vitrien').value              = d['Detail_job_title_EN'] || '';
+                document.getElementById('gradecode').value            = d['Grade_code'] || '';
+                document.getElementById('sectioncode').value          = d['Section_code'] || '';
+                document.getElementById('hccategory').value           = d['HC_category'] || '';
+                document.getElementById('department').value           = d['Department'] || '';
+                document.getElementById('sectiondescription').value   = d['Section_description'] || '';
+                document.getElementById('employeetype').value         = d['Employee_type'] || '';
+                document.getElementById('positioncode').value         = d['Position_code'] || '';
+                document.getElementById('positioncodedescription').value = d['Position_code_description'] || '';
+                if (d['Line']) {
+                    axios.post('/laycatheoline?line=' + d['Line'])
+                        .then(r => { document.getElementById('calamviec').value = r.data['Ca'] || ''; });
                 }
-            })
+            });
+    }
+
+    /* ── Lưu hợp đồng ── */
+    function luuhopdong() {
+        if (confirm('Bạn muốn lưu hợp đồng này?')) {
+            document.getElementById('formHopDong').submit();
         }
     }
 
-    document.getElementById("chuyen").addEventListener("change", function() {
-        var vitri = document.getElementById("chucdanh").value
-        var chuyen = document.getElementById("chuyen").value
-        axios({
-            method: 'post',
-            url: '/check_hcname?vitri=' + vitri+"&line="+chuyen
-        })
-        .then(function (response) {
-            var data = response.data
-            if (response.data != "") {
-                data = response.data
-                console.log(data)
-                document.getElementById("vitrien").value = data["Detail_job_title_EN"];
-                document.getElementById("gradecode").value = data["Grade_code"]; // 3
-                document.getElementById("sectioncode").value = data["Section_code"]; // 4
-                document.getElementById("hccategory").value = data["HC_category"]; // 5
-                document.getElementById("department").value = data["Department"]; // 6
-                document.getElementById("sectiondescription").value = data["Section_description"]; // 7
-                document.getElementById("employeetype").value = data["Employee_type"]; // 8
-                document.getElementById("positioncode").value = data["Position_code"]; // 9
-                document.getElementById("positioncodedescription").value = data["Position_code_description"];
-                axios({
-                    method: 'post',
-                    url: '/laycatheoline?line=' + data["Line"]
-                })
-                .then(function (response) {
-                    document.getElementById("calamviec").value = response.data['Ca']
-                })
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
+    /* ── Event listeners ── */
+    document.addEventListener('DOMContentLoaded', () => {
+        /* Format dates on cards */
+        document.querySelectorAll('.date_en').forEach(el => {
+            el.textContent = fmtDate(el.textContent.trim());
         });
-    })  
-    function luuhopdong() {
-        if (confirm("Bạn muốn lưu hợp đồng?")) {
-            return true;
-        } else {
-            return false;
-        }
-    } 
+
+        /* Default ngày ký = hôm nay */
+        document.getElementById('form_ngaykyhopdong').value =
+            new Date().toISOString().split('T')[0];
+        calculateEndDate();
+
+        /* Autocomplete chức danh */
+        const input = document.getElementById('chucdanh');
+        const sugg  = document.getElementById('chucdanh-suggestions');
+        input.addEventListener('input', () => {
+            const q = input.value;
+            if (q.length < 1) { sugg.style.display = 'none'; return; }
+            axios.post('/timcacchucdanh?tutimkiem=' + q)
+                .then(res => {
+                    sugg.innerHTML = '';
+                    if (!res.data.length) { sugg.style.display = 'none'; return; }
+                    res.data.forEach(item => {
+                        const li = document.createElement('li');
+                        li.textContent = item;
+                        li.onclick = () => { input.value = item; sugg.style.display = 'none'; };
+                        sugg.appendChild(li);
+                    });
+                    sugg.style.display = 'block';
+                });
+        });
+        document.addEventListener('click', e => {
+            if (!input.contains(e.target)) sugg.style.display = 'none';
+        });
+
+        /* Chuyền change */
+        document.getElementById('chuyen').addEventListener('change', function() {
+            loadHCInfo(document.getElementById('chucdanh').value, this.value);
+        });
+    });
+
+    document.getElementById('form_loaihopdong').addEventListener('change', calculateEndDate);
+    document.getElementById('form_songayhopdong').addEventListener('input', calculateEndDate);
+    document.getElementById('form_ngaykyhopdong').addEventListener('change', calculateEndDate);
 </script>
-{% endblock content %}
+{% endblock %}

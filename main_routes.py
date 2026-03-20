@@ -534,9 +534,9 @@ def tuyendungchitiet():
             app.logger.error(f"Lỗi thêm ứng viên ({e})")
             return redirect(url_for("home"))
         
-@app.route("/muc3_1", methods=["GET","POST"])
+@app.route("/muc3_1", methods=["GET", "POST"])
 @login_required
-@roles_required('hr','sa','gd')
+@roles_required('hr', 'sa', 'gd')
 def nhapthongtinlaodongmoi():
 
     if request.method == "GET":
@@ -547,32 +547,53 @@ def nhapthongtinlaodongmoi():
             cacca    = laycacca()
             return render_template(
                 "3_1.html",
-                page        = "3.1 Nhập thông tin lao động mới",
-                qrcccd      = request.args.get("scan-qrcode"),
-                masothe     = masothe,
-                ngaybatdau  = datetime.now(),
-                cacvitri    = cacvitri,
-                cacto       = cacto,
-                cacca       = cacca,
-                macongty    = current_user.macongty,
+                page       = "3.1 Nhập thông tin lao động mới",
+                qrcccd     = request.args.get("scan-qrcode"),
+                masothe    = masothe,
+                ngaybatdau = datetime.now(),
+                cacvitri   = cacvitri,
+                cacto      = cacto,
+                cacca      = cacca,
+                macongty   = current_user.macongty,
             )
         except Exception as e:
-            flash(f"Lỗi lấy thông tin lao động mới ({e})")
-            app.logger.error(f"Lỗi lấy thông tin lao động mới ({e})")
+            flash(f"Lỗi lấy thông tin lao động mới: {e}")
+            app.logger.error(f"muc3_1 GET error: {e}")
             return redirect(url_for("home"))
 
     # ── POST ──────────────────────────────────────────────────────────────────
     def _s(key):
-        """Lấy giá trị text, trả về None nếu rỗng."""
+        """Trả về string đã strip, None nếu rỗng."""
         v = request.form.get(key, "").strip()
         return v if v else None
 
-    def _sql_nstr(key):  return f"N'{_s(key)}'"       if _s(key) else "NULL"
-    def _sql_str(key):   return f"'{_s(key)}'"         if _s(key) else "NULL"
-    def _sql_date(key):  return f"'{_s(key)}'"         if _s(key) else "NULL"
+    def _sql_nstr(key):
+        """nvarchar — N'...' hoặc NULL."""
+        v = _s(key)
+        return f"N'{v}'" if v else "NULL"
+
+    def _sql_str(key):
+        """varchar / ASCII — '...' hoặc NULL."""
+        v = _s(key)
+        return f"'{v}'" if v else "NULL"
+
+    def _sql_date(key):
+        """
+        Chỉ chấp nhận yyyy-mm-dd (từ <input type=date>).
+        Trả NULL nếu rỗng hoặc sai định dạng.
+        """
+        v = _s(key)
+        if not v:
+            return "NULL"
+        try:
+            datetime.strptime(v, "%Y-%m-%d")
+            return f"'{v}'"
+        except ValueError:
+            app.logger.warning(f"_sql_date: key='{key}' value='{v}' không hợp lệ → NULL")
+            return "NULL"
 
     try:
-        # ── Ảnh ──
+        # ── Ảnh ──────────────────────────────────────────────────────────────
         anh  = "NULL"
         file = request.files.get("anh")
         if file and file.filename:
@@ -580,100 +601,114 @@ def nhapthongtinlaodongmoi():
             file.save(file_path)
             anh = f"'{file_path}'"
 
-        # ── Định danh ──
-        masothe      = f"'{_s('masothe')}'"
-        thechamcong  = f"'{int(_s('masothe'))}'"
+        # ── Định danh ────────────────────────────────────────────────────────
+        masothe     = f"'{_s('masothe')}'"
+        thechamcong = str(int(_s('masothe')))   # int, không quotes
 
-        # ── CCCD / cá nhân ──
-        hoten         = _sql_nstr("hoten")
-        ngaysinh      = _sql_date("ngaysinh")
-        gioitinh      = _sql_nstr("gioitinh")
-        cmt           = _sql_str("cmt")
-        cccd          = _sql_str("cccd")
-        ngaycapcccd   = _sql_date("ngaycap")
-        noicapcccd    = _sql_nstr("noicap")
-        thuongtru     = _sql_nstr("thuongtru")
-        noisinh       = _sql_nstr("noisinh")
-        tamtru        = _sql_nstr("tamtru")
-        quoctich      = _sql_nstr("quoctich")
-        dantoc        = _sql_nstr("dantoc")
-        tongiao       = _sql_nstr("tongiao")
-        hocvan        = _sql_nstr("hocvan")
-        thonxom       = _sql_nstr("thonxom")
-        phuongxa      = _sql_nstr("phuongxa")
-        quanhuyen     = _sql_nstr("quanhuyen")
-        tinhthanhpho  = _sql_nstr("tinhthanhpho")
-        nguoithan     = _sql_nstr("nguoithan")
-        sdtnguoithan  = _sql_nstr("sdtnguoithan")
+        # ── Cá nhân ──────────────────────────────────────────────────────────
+        hoten        = _sql_nstr("hoten")
+        ngaysinh     = _sql_date("ngaysinh")
+        gioitinh     = _sql_nstr("gioitinh")
+        cmt          = _sql_str("cmt")
+        cccd         = _sql_str("cccd")
+        ngaycapcccd  = _sql_date("ngaycap")
+        noicapcccd   = _sql_nstr("noicap")
+        thuongtru    = _sql_nstr("thuongtru")
+        noisinh      = _sql_nstr("noisinh")
+        tamtru       = _sql_nstr("tamtru")
+        quoctich     = _sql_nstr("quoctich")
+        dantoc       = _sql_nstr("dantoc")
+        tongiao      = _sql_nstr("tongiao")
+        hocvan       = _sql_nstr("hocvan")
+        thonxom      = _sql_nstr("thonxom")
+        phuongxa     = _sql_nstr("phuongxa")
+        quanhuyen    = _sql_nstr("quanhuyen")
+        tinhthanhpho = _sql_nstr("tinhthanhpho")
+        nguoithan    = _sql_nstr("nguoithan")
+        sdtnguoithan = _sql_nstr("sdtnguoithan")
 
-        # ── Tài chính / liên hệ ──
-        nganhang      = _sql_nstr("nganhang")
-        sotaikhoan    = _sql_str("sotaikhoan")
-        dienthoai     = _sql_str("dienthoai")
-        sobhxh        = _sql_str("sobhxh")
-        masothue      = _sql_str("masothue")
+        # ── Tài chính / liên hệ ──────────────────────────────────────────────
+        nganhang   = _sql_nstr("nganhang")
+        sotaikhoan = _sql_str("sotaikhoan")
+        dienthoai  = _sql_str("dienthoai")
+        sobhxh     = _sql_str("sobhxh")
+        masothue   = _sql_str("masothue")
 
-        # ── Con nhỏ ──
-        connho        = _sql_nstr("connho")
-        tencon        = [_sql_nstr(f"tenconnho{i}")  for i in range(1, 6)]
-        ngaysinhcon   = [_sql_date(f"ngaysinhcon{i}") for i in range(1, 6)]
+        # ── Con nhỏ ──────────────────────────────────────────────────────────
+        connho      = _sql_nstr("connho")
+        tencon      = [_sql_nstr(f"tenconnho{i}")  for i in range(1, 6)]
+        ngaysinhcon = [_sql_date(f"ngaysinhcon{i}") for i in range(1, 6)]
 
-        # ── Vị trí ──
-        jobdetailvn          = _sql_nstr("vitri")
-        line                 = _sql_str("line")
-        factory              = f"'{current_user.macongty}'"
-        hccategory           = _sql_nstr("hccategory")
-        gradecode            = _sql_nstr("gradecode")
-        department           = _sql_nstr("phongban")
-        chucvu               = _sql_nstr("chucvu")
-        employeetype         = _sql_nstr("loailaodong")
-        sectioncode          = _sql_nstr("mabophan")
-        sectiondescription   = _sql_nstr("bophan")
-        jobdetailen          = _sql_nstr("vitrien")
-        positioncode         = _sql_nstr("mavitri")
+        # ── Vị trí ───────────────────────────────────────────────────────────
+        jobdetailvn             = _sql_nstr("vitri")
+        line                    = _sql_str("line")
+        factory                 = f"'{current_user.macongty}'"
+        hccategory              = _sql_nstr("hccategory")
+        gradecode               = _sql_nstr("gradecode")
+        department              = _sql_nstr("phongban")
+        chucvu                  = _sql_nstr("chucvu")
+        employeetype            = _sql_nstr("loailaodong")
+        sectioncode             = _sql_nstr("mabophan")
+        sectiondescription      = _sql_nstr("bophan")
+        jobdetailen             = _sql_nstr("vitrien")
+        positioncode            = _sql_nstr("mavitri")
         positioncodedescription = _sql_nstr("tenvitri")
 
-        # ── NTID ──
-        cost_id                = _sql_str("ntid")
+        # ── NTID / chi phí ───────────────────────────────────────────────────
+        cost_id            = _sql_str("ntid")
+        congtytraluong     = _sql_str("congtytraluong")
+        doituongchiuchiphi = _sql_str("doituongchiuchiphi")
+        phongban10         = _sql_str("phongban10")
+        phanloailaodong    = _sql_str("phanloailaodong")
+        msnv               = _sql_str("msnv")
 
-        # ── Cố định ──
-        luongcoban  = 'NULL'
-        tongphucap  = 'NULL'
-        kieuhopdong = 'NULL'
-        ngayvao     = 'GETDATE()'
-        diachimoi   = 'NULL'
-        for _null_var in [
-            'ngaybatdauthuviec','ngayketthuc','ngayketthucthuviec',
-            'ngaybatdauhdcthl1','ngayketthuchdcthl1',
-            'ngaybatdauhdcthl2','ngayketthuchdcthl2','ngaybatdauhdvth',
-        ]:
-            locals()[_null_var]  # just reference — set below
-        (ngaybatdauthuviec, ngayketthuc, ngayketthucthuviec,
-         ngaybatdauhdcthl1, ngayketthuchdcthl1,
-         ngaybatdauhdcthl2, ngayketthuchdcthl2, ngaybatdauhdvth) = ['NULL'] * 8
+        # ── Cố định ──────────────────────────────────────────────────────────
+        luongcoban  = "NULL"
+        tongphucap  = "NULL"
+        kieuhopdong = "NULL"
+        diachimoi   = "NULL"
+        nd          = "NULL"   # null date — dùng cho tất cả cột date chưa có giá trị
 
+        # ── Tổng hợp VALUES ──────────────────────────────────────────────────
         nhanvienmoi = (
             f"({masothe},{thechamcong},{hoten},{dienthoai},{ngaysinh},"
             f"{gioitinh},{cccd},{ngaycapcccd},{noicapcccd},{cmt},{thuongtru},"
             f"{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},{dantoc},{quoctich},"
             f"{tongiao},{hocvan},{noisinh},{tamtru},{sobhxh},{masothue},{nganhang},"
             f"{sotaikhoan},{connho},"
-            f"{tencon[0]},{ngaysinhcon[0]},{tencon[1]},{ngaysinhcon[1]},"
-            f"{tencon[2]},{ngaysinhcon[2]},{tencon[3]},{ngaysinhcon[3]},"
+            # Con nhỏ 1-5
+            f"{tencon[0]},{ngaysinhcon[0]},"
+            f"{tencon[1]},{ngaysinhcon[1]},"
+            f"{tencon[2]},{ngaysinhcon[2]},"
+            f"{tencon[3]},{ngaysinhcon[3]},"
             f"{tencon[4]},{ngaysinhcon[4]},"
-            f"{anh},{nguoithan},{sdtnguoithan},{kieuhopdong},{ngayvao},{ngayketthuc},"
+            # Ảnh, người thân
+            f"{anh},{nguoithan},{sdtnguoithan},"
+            # Hợp đồng
+            f"{kieuhopdong},GETDATE(),{nd},"
+            # Vị trí
             f"{jobdetailvn},{hccategory},{gradecode},{factory},{department},{chucvu},"
             f"{sectioncode},{sectiondescription},{line},{employeetype},{jobdetailen},"
-            f"{positioncode},{positioncodedescription},{luongcoban},N'Không',{tongphucap},"
-            f"{ngayvao},NULL,N'Đang làm việc',{ngayvao},'1',"
-            f"{ngaybatdauthuviec},{ngayketthucthuviec},"
-            f"{ngaybatdauhdcthl1},{ngayketthuchdcthl1},"
-            f"{ngaybatdauhdcthl2},{ngayketthuchdcthl2},"
-            f"{ngaybatdauhdvth},'N','',GETDATE(),{diachimoi},"
-            f"{congtytraluong},{doituongchiuchiphi},{phongban10},{phanloailaodong},{msnv},{cost_id})"
+            f"{positioncode},{positioncodedescription},"
+            # Lương
+            f"{luongcoban},N'Không',{tongphucap},"
+            # Ngày tháng hành chính
+            f"GETDATE(),NULL,N'Đang làm việc',GETDATE(),'1',"
+            # Các mốc hợp đồng — tất cả NULL khi mới tạo
+            f"{nd},{nd},"   # ngaybatdauthuviec, ngayketthucthuviec
+            f"{nd},{nd},"   # ngaybatdauhdcthl1, ngayketthuchdcthl1
+            f"{nd},{nd},"   # ngaybatdauhdcthl2, ngayketthuchdcthl2
+            f"{nd},"        # ngaybatdauhdvth
+            # Các cột còn lại
+            f"'N','',GETDATE(),{diachimoi},"
+            f"{congtytraluong},{doituongchiuchiphi},{phongban10},"
+            f"{phanloailaodong},{msnv},{cost_id})"
         )
 
+        app.logger.debug(f"muc3_1 INSERT values: {nhanvienmoi}")
+
         ketqua = themnhanvienmoi(nhanvienmoi)
+
         if ketqua["ketqua"]:
             flash("Thêm lao động mới thành công !!!")
             ca = laycatheochuyen(request.form.get("line"))
@@ -690,10 +725,12 @@ def nhapthongtinlaodongmoi():
             )
         else:
             flash(f"Thêm lao động mới thất bại: {ketqua['lido']}")
+            app.logger.error(f"muc3_1 INSERT failed: {ketqua['lido']}")
 
     except Exception as e:
         flash(f"Thêm lao động mới thất bại: {e}")
-        app.logger.error(f"Thêm lao động mới thất bại: {e}")
+        app.logger.error(f"muc3_1 POST error: {e}")
+
     finally:
         return redirect("/muc3_1")
         
