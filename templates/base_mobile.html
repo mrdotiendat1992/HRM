@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="vn">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="icon" type="image/x-icon" href="static/img/logo.ico">
+  <title>{% block title %}HomeMate{% endblock %}</title>
+
+  <link href="static/vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.3/xlsx.full.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js" defer></script>
+
+<style>
+/* ═══════════════════════════════════════════
+   Variables
+═══════════════════════════════════════════ */
+:root {
+  --primary:        #4e73df;
+  --primary-dark:   #2e59d9;
+  --primary-light:  #eef2ff;
+  --success:        #1cc88a;
+  --danger:         #e74a3b;
+  --warning:        #f6c23e;
+  --bg:             #f0f2f8;
+  --card:           #ffffff;
+  --text:           #2d3142;
+  --muted:          #8a8fa8;
+  --border:         rgba(78,115,223,.12);
+  --topbar-h:       56px;
+  --bottomnav-h:    64px;
+  --radius:         12px;
+  --radius-sm:      8px;
+  --shadow:         0 2px 12px rgba(78,115,223,.10);
+  --shadow-lg:      0 8px 32px rgba(0,0,0,.13);
+  --transition:     all .2s cubic-bezier(.4,0,.2,1);
+  --font:           'Nunito', sans-serif;
+}
+
+/* ═══════════════════════════════════════════
+   Base Reset
+═══════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+}
+
+a { color: inherit; text-decoration: none; transition: var(--transition); }
+
+/* ═══════════════════════════════════════════
+   Layout shell
+═══════════════════════════════════════════ */
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* ═══════════════════════════════════════════
+   Top bar
+═══════════════════════════════════════════ */
+.m-topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 300;
+  height: var(--topbar-h);
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 8px;
+}
+
+.m-topbar-brand {
+  flex: 1;
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 900;
+  letter-spacing: .16em;
+  color: var(--primary);
+  font-family: var(--font);
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Icon button shared style */
+.m-icon-btn {
+  flex-shrink: 0;
+  position: relative;
+  width: 38px; height: 38px;
+  border: none; border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--muted);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .95rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.m-icon-btn:hover, .m-icon-btn:active { background: var(--primary-light); color: var(--primary); }
+
+.m-badge {
+  position: absolute;
+  top: 4px; right: 4px;
+  min-width: 16px; height: 16px;
+  padding: 0 4px;
+  background: var(--danger);
+  color: #fff;
+  font-size: .6rem;
+  font-weight: 800;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  line-height: 1;
+}
+
+/* ═══════════════════════════════════════════
+   Drawer (full-screen menu overlay)
+═══════════════════════════════════════════ */
+.m-drawer-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.45);
+  backdrop-filter: blur(3px);
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+.m-drawer-overlay.open { opacity: 1; pointer-events: all; }
+
+.m-drawer {
+  position: fixed;
+  top: 0; left: 0;
+  width: min(300px, 85vw);
+  height: 100dvh;
+  z-index: 500;
+  background: linear-gradient(175deg, #4e73df 0%, #1d3cb5 100%);
+  transform: translateX(-100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.m-drawer.open { transform: translateX(0); }
+
+/* Drawer header */
+.m-drawer-header {
+  padding: 20px 20px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255,255,255,.1);
+  flex-shrink: 0;
+}
+.m-drawer-logo {
+  width: 36px; height: 36px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+.m-drawer-title {
+  font-size: 1rem;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: .12em;
+}
+.m-drawer-close {
+  margin-left: auto;
+  width: 32px; height: 32px;
+  border: none; border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  color: #fff;
+  font-size: .85rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.m-drawer-close:hover { background: rgba(255,255,255,.25); }
+
+/* Drawer user card */
+.m-drawer-user {
+  margin: 12px 16px;
+  padding: 12px 14px;
+  background: rgba(255,255,255,.12);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.m-drawer-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,.4);
+  object-fit: cover;
+}
+.m-drawer-user-name {
+  font-size: .85rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+.m-drawer-user-meta {
+  font-size: .72rem;
+  color: rgba(255,255,255,.6);
+  margin-top: 1px;
+}
+
+/* Drawer nav scroll */
+.m-drawer-nav {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 0 16px;
+  scrollbar-width: none;
+}
+.m-drawer-nav::-webkit-scrollbar { display: none; }
+
+.m-drawer-section-title {
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  padding: 14px 20px 4px;
+}
+
+/* Accordion nav item */
+.m-nav-item {}
+
+.m-nav-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 20px;
+  background: none;
+  border: none;
+  color: rgba(255,255,255,.8);
+  font-family: var(--font);
+  font-size: .83rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-align: left;
+  transition: var(--transition);
+  border-radius: 0 30px 30px 0;
+  margin-right: 12px;
+}
+.m-nav-toggle:hover, .m-nav-toggle.active {
+  background: rgba(255,255,255,.14);
+  color: #fff;
+}
+.m-nav-toggle i.nav-icon {
+  width: 18px; text-align: center;
+  font-size: .82rem;
+  color: rgba(255,255,255,.55);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+.m-nav-toggle:hover i.nav-icon,
+.m-nav-toggle.active i.nav-icon { color: #fff; }
+.m-nav-toggle .nav-chevron {
+  margin-left: auto;
+  font-size: .7rem;
+  color: rgba(255,255,255,.4);
+  transition: transform .2s ease;
+  flex-shrink: 0;
+}
+.m-nav-toggle.active .nav-chevron { transform: rotate(180deg); }
+
+/* Sub-items panel */
+.m-nav-sub {
+  display: none;
+  background: rgba(0,0,0,.15);
+  margin: 2px 12px 2px 0;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  overflow: hidden;
+}
+.m-nav-sub.open { display: block; }
+
+.m-nav-sub a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px 9px 46px;
+  font-size: .78rem;
+  font-weight: 600;
+  color: rgba(255,255,255,.65);
+  transition: var(--transition);
+  border-left: 2px solid transparent;
+}
+.m-nav-sub a:hover, .m-nav-sub a.active-link {
+  color: #fff;
+  background: rgba(255,255,255,.08);
+  border-left-color: rgba(255,255,255,.5);
+}
+.m-nav-sub a b {
+  color: rgba(255,255,255,.5);
+  font-size: .72rem;
+  min-width: 26px;
+  flex-shrink: 0;
+}
+
+/* Drawer footer */
+.m-drawer-footer {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255,255,255,.1);
+  display: flex;
+  gap: 8px;
+}
+.m-drawer-footer-btn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,.12);
+  color: rgba(255,255,255,.8);
+  font-family: var(--font);
+  font-size: .78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  transition: var(--transition);
+}
+.m-drawer-footer-btn:hover { background: rgba(255,255,255,.2); color: #fff; }
+.m-drawer-footer-btn.danger { background: rgba(231,74,59,.25); color: #ff8a82; }
+.m-drawer-footer-btn.danger:hover { background: rgba(231,74,59,.4); color: #fff; }
+
+/* ═══════════════════════════════════════════
+   Notification sheet (slide-up panel)
+═══════════════════════════════════════════ */
+.m-sheet-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.4);
+  z-index: 600;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s ease;
+}
+.m-sheet-overlay.open { opacity: 1; pointer-events: all; }
+
+.m-sheet {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 700;
+  background: var(--card);
+  border-radius: 20px 20px 0 0;
+  max-height: 80dvh;
+  transform: translateY(100%);
+  transition: transform .28s cubic-bezier(.4,0,.2,1);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 -4px 32px rgba(0,0,0,.15);
+}
+.m-sheet.open { transform: translateY(0); }
+
+.m-sheet-handle {
+  width: 40px; height: 4px;
+  background: #e0e0e0;
+  border-radius: 2px;
+  margin: 12px auto 0;
+  flex-shrink: 0;
+}
+
+.m-sheet-header {
+  padding: 14px 20px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f0f0f0;
+  flex-shrink: 0;
+}
+.m-sheet-title {
+  font-size: .88rem;
+  font-weight: 800;
+  color: var(--text);
+}
+.m-sheet-close {
+  width: 28px; height: 28px;
+  border: none; border-radius: 50%;
+  background: #f0f0f0;
+  color: var(--muted);
+  font-size: .75rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.m-sheet-body {
+  overflow-y: auto;
+  flex: 1;
+  padding-bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+}
+
+/* Notification item */
+.m-notif-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f7f7f7;
+  transition: var(--transition);
+}
+.m-notif-item:active { background: var(--primary-light); }
+.m-notif-icon {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-size: .8rem;
+}
+.m-notif-icon.primary { background: #eef2ff; color: var(--primary); }
+.m-notif-icon.success { background: #e6fff5; color: var(--success); }
+.m-notif-icon.danger  { background: #fff0ef; color: var(--danger); }
+.m-notif-text { flex: 1; font-size: .82rem; color: var(--text); line-height: 1.4; }
+.m-notif-text b { font-weight: 800; }
+.m-notif-arrow { color: var(--muted); font-size: .7rem; flex-shrink: 0; }
+
+/* ═══════════════════════════════════════════
+   Personal notification sheet
+═══════════════════════════════════════════ */
+.m-personal-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid #f7f7f7;
+  transition: var(--transition);
+}
+.m-personal-item:active { background: var(--primary-light); }
+.m-personal-label { flex: 1; font-size: .83rem; color: var(--text); font-weight: 600; }
+.m-personal-badge {
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: .75rem;
+  font-weight: 800;
+}
+.m-personal-badge.danger  { background: #fff0ef; color: var(--danger); }
+.m-personal-badge.primary { background: #eef2ff; color: var(--primary); }
+
+/* ═══════════════════════════════════════════
+   QR sheet
+═══════════════════════════════════════════ */
+.m-qr-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 14px 16px;
+}
+.m-qr-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 8px;
+  background: var(--primary-light);
+  border-radius: var(--radius);
+  font-size: .76rem;
+  font-weight: 700;
+  color: var(--primary);
+  text-align: center;
+  cursor: pointer;
+  transition: var(--transition);
+  border: 1.5px solid transparent;
+}
+.m-qr-item:active { background: #dde4fb; border-color: var(--primary); }
+.m-qr-item i { font-size: 1.4rem; margin-bottom: 2px; }
+
+/* ═══════════════════════════════════════════
+   Page content
+═══════════════════════════════════════════ */
+#m-content {
+  flex: 1;
+  margin-top: var(--topbar-h);
+  margin-bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+  padding: 16px 12px;
+  animation: pageFade .3s ease;
+}
+
+@keyframes pageFade {
+  from { opacity: 0; transform: translateY(5px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.m-page-title {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.m-page-title::before {
+  content: '';
+  width: 3px; height: 16px;
+  background: linear-gradient(180deg, var(--primary), #6f42c1);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* Cards */
+.card {
+  border: none;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  background: var(--card);
+  margin-bottom: 12px;
+}
+
+/* Tables — make scrollable on mobile */
+.table-responsive { border-radius: var(--radius); overflow: hidden; }
+.table thead th {
+  background: var(--primary);
+  color: #fff;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 10px 10px;
+  white-space: nowrap;
+  border: none;
+}
+.table td {
+  font-size: .78rem;
+  padding: 9px 10px;
+  vertical-align: middle;
+  border-color: #f0f0f0;
+}
+.table tbody tr:hover { background: var(--primary-light); }
+
+/* Buttons */
+.btn { border-radius: var(--radius-sm) !important; font-family: var(--font) !important; font-weight: 700 !important; }
+.btn-primary { background: var(--primary) !important; border-color: var(--primary) !important; }
+.btn-primary:hover { background: var(--primary-dark) !important; }
+
+/* Form controls */
+.form-control {
+  border-radius: var(--radius-sm) !important;
+  border: 1.5px solid #e0e4f0 !important;
+  font-family: var(--font) !important;
+  font-size: .85rem !important;
+  height: 44px !important;
+  transition: var(--transition) !important;
+}
+.form-control:focus {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 3px rgba(78,115,223,.12) !important;
+}
+select.form-control { height: 44px !important; }
+
+/* Modals */
+.modal-content { border: none !important; border-radius: var(--radius) !important; overflow: hidden; }
+.modal-header { background: linear-gradient(135deg, var(--primary), #224abe); color: #fff; border: none; padding: 14px 18px; }
+.modal-header .modal-title { font-weight: 800; font-size: .9rem; }
+.modal-header .close { color: rgba(255,255,255,.8); text-shadow: none; opacity: 1; }
+
+/* ═══════════════════════════════════════════
+   Bottom navigation bar
+═══════════════════════════════════════════ */
+.m-bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 300;
+  height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  background: #fff;
+  border-top: 1px solid var(--border);
+  box-shadow: 0 -2px 16px rgba(78,115,223,.08);
+  display: flex;
+  align-items: stretch;
+}
+
+.m-bottom-tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font);
+  font-size: .6rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 8px 4px;
+  position: relative;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.m-bottom-tab i { font-size: 1.1rem; transition: var(--transition); }
+.m-bottom-tab:hover, .m-bottom-tab.active { color: var(--primary); }
+.m-bottom-tab.active i { transform: scale(1.1); }
+
+/* Active indicator pill */
+.m-bottom-tab.active::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  width: 28px; height: 3px;
+  background: var(--primary);
+  border-radius: 0 0 3px 3px;
+}
+
+/* Notification dot on tab */
+.m-tab-dot {
+  position: absolute;
+  top: 7px; right: calc(50% - 14px);
+  width: 8px; height: 8px;
+  background: var(--danger);
+  border-radius: 50%;
+  border: 1.5px solid #fff;
+}
+
+/* ═══════════════════════════════════════════
+   Flash alert
+═══════════════════════════════════════════ */
+.m-flash {
+  position: fixed;
+  top: calc(var(--topbar-h) + 8px);
+  left: 12px; right: 12px;
+  z-index: 9999;
+  background: #fff;
+  border-left: 4px solid var(--success);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: .83rem;
+  color: var(--text);
+  animation: slideDown .3s ease;
+  transition: opacity .4s ease, transform .4s ease;
+}
+.m-flash.fade-out { opacity: 0; transform: translateY(-10px); }
+.m-flash-icon { color: var(--success); font-size: .95rem; flex-shrink: 0; }
+.m-flash-close { margin-left: auto; font-size: .9rem; color: var(--muted); background: none; border: none; cursor: pointer; padding: 0; }
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════
+   Loading overlay
+═══════════════════════════════════════════ */
+.m-loading {
+  position: fixed; inset: 0;
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(4px);
+  z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+}
+.m-spinner {
+  width: 40px; height: 40px;
+  border: 3px solid rgba(78,115,223,.2);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin .85s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ═══════════════════════════════════════════
+   Scroll to top button
+═══════════════════════════════════════════ */
+.m-scroll-top {
+  position: fixed;
+  right: 14px;
+  bottom: calc(var(--bottomnav-h) + env(safe-area-inset-bottom) + 10px);
+  z-index: 200;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  box-shadow: 0 4px 14px rgba(78,115,223,.4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.m-scroll-top.visible { opacity: 1; transform: translateY(0); pointer-events: all; }
+</style>
+
+{% block style %}{% endblock %}
+</head>
+
+<body>
+<div id="app">
+
+  <!-- ═══ TOP BAR ═══ -->
+  <header class="m-topbar">
+
+    <!-- Hamburger / menu -->
+    <button class="m-icon-btn" id="menuBtn" onclick="openDrawer()" aria-label="Menu">
+      <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Brand -->
+    <span class="m-topbar-brand">H o m e M a t e</span>
+
+    <!-- QR button -->
+    <button class="m-icon-btn" onclick="openSheet('qr-sheet')" aria-label="QR">
+      <i class="fas fa-qrcode"></i>
+    </button>
+
+    <!-- Personal notifications -->
+    {% if notice['personal'] %}
+    <button class="m-icon-btn" onclick="openSheet('personal-sheet')" aria-label="Thông báo cá nhân">
+      <i class="fas fa-user-clock"></i>
+      {% if notice['personal']['Lỗi chấm công'] %}
+      <span class="m-badge">{{ notice['personal']['Lỗi chấm công'] }}</span>
+      {% endif %}
+    </button>
+    {% endif %}
+
+    <!-- System notifications -->
+    <button class="m-icon-btn" onclick="openSheet('notif-sheet')" aria-label="Thông báo">
+      <i class="fas fa-bell"></i>
+      {% if notice["Tổng"] > 0 %}
+      <span class="m-badge">{{ notice["Tổng"] if notice["Tổng"] < 100 else "99+" }}</span>
+      {% endif %}
+    </button>
+
+  </header>
+
+
+  <!-- ═══ DRAWER OVERLAY ═══ -->
+  <div class="m-drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <!-- ═══ DRAWER ═══ -->
+  <nav class="m-drawer" id="drawer" aria-label="Navigation menu">
+
+    <div class="m-drawer-header">
+      <img src="static/img/logo_white.png" alt="logo" class="m-drawer-logo">
+      <span class="m-drawer-title">HomeMate</span>
+      <button class="m-drawer-close" onclick="closeDrawer()" aria-label="Đóng">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- User info -->
+    <div class="m-drawer-user">
+      <img src="static/img/undraw_profile.svg" alt="avatar" class="m-drawer-avatar">
+      <div>
+        <div class="m-drawer-user-name">{{ current_user.hoten }}</div>
+        <div class="m-drawer-user-meta">{{ current_user.masothe }} · {{ current_user.phongban }}</div>
+      </div>
+    </div>
+
+    <!-- Nav scroll area -->
+    <div class="m-drawer-nav" id="drawer-nav">
+
+      <a href="/dashboard" class="m-nav-toggle" style="display:flex;align-items:center;gap:10px;padding:11px 20px;color:rgba(255,255,255,.85);font-size:.83rem;font-weight:700;border-radius:0 30px 30px 0;margin-right:12px;transition:var(--transition);">
+        <i class="fas fa-tachometer-alt nav-icon"></i>
+        Dashboard
+      </a>
+
+      <div class="m-drawer-section-title">Mục lục</div>
+
+      {% set menu = [
+        ("1. Sơ đồ tổ chức",       "fa-sitemap",        [("1.1", "#", "Sơ đồ tổ chức")]),
+        ("2. Tuyển dụng",            "fa-user-plus",      [("2.1", "/muc2_1", "Danh sách ứng viên"), ("2.2", "/muc2_2", "Yêu cầu tuyển dụng")]),
+        ("3. Nhận việc",             "fa-briefcase",      [("3.1", "/muc3_1", "Nhập mới thông tin"), ("3.2", "/muc3_2", "Chỉnh sửa thông tin"), ("3.3", "/muc3_3", "Quản lý hợp đồng"), ("3.4", "/muc3_4", "DS sắp hết hạn HĐ"), ("3.5", "/muc3_5", "DS sắp nghỉ hưu")]),
+        ("4. Đào tạo",               "fa-graduation-cap", [("4.1", "#", "")]),
+        ("5. Đánh giá hiệu quả",    "fa-chart-line",     [("5.1", "#", "KPI"), ("5.1.1", "/muc5_1_1", "Upload new KPI"), ("5.1.2", "/muc5_1_2", "Approve KPI"), ("5.1.3", "/muc5_1_3_1", "KPI report")]),
+        ("6. Phát triển sự nghiệp", "fa-rocket",         [("6.1", "/muc6_1", "Đổi chức vụ, bộ phận"), ("6.2", "/muc6_2", "Lịch sử điều chuyển"), ("6.3", "/muc6_3", "Lịch sử công việc")]),
+        ("7. Lương, thưởng, phúc lợi","fa-coins",        [("7.1", "#", "Chấm công"), ("7.1.1", "/muc7_1_1", "Đổi ca làm việc"), ("7.1.2", "/muc7_1_2", "Lỗi chấm công"), ("7.1.3", "/muc7_1_8", "Làm thêm giờ"), ("7.1.4", "/muc7_1_14", "Bảng chấm công")]),
+        ("8. Gắn kết",               "fa-handshake",     [("8.1", "/muc8_1", "Góp ý, khiếu nại"), ("8.2", "/muc8_2", "Cập nhật khiếu nại")]),
+        ("9. Tuân thủ chính sách",  "fa-shield-alt",     [("9.1", "/muc9_1", "Xử lý kỉ luật")]),
+        ("10. Quản lý nghỉ việc",   "fa-door-open",      [("10.1", "/muc10_1", "Phỏng vấn nghỉ việc"), ("10.2", "/muc10_2", "Nhận đơn nghỉ việc"), ("10.3", "/muc10_3", "In chấm dứt hợp đồng"), ("10.4", "#", "Bàn giao")]),
+        ("11. Kết nối cựu NV",      "fa-users",          [("11.1", "#", "")]),
+      ] %}
+
+      {% for label, icon, items in menu %}
+      <div class="m-nav-item">
+        <button class="m-nav-toggle" onclick="toggleNavSub(this)">
+          <i class="fas {{ icon }} nav-icon"></i>
+          <span>{{ label }}</span>
+          <i class="fas fa-chevron-down nav-chevron"></i>
+        </button>
+        <div class="m-nav-sub">
+          {% for num, url, name in items %}
+          <a href="{{ url }}">
+            <b>{{ num }}</b>
+            {% if name %}<span>{{ name }}</span>{% endif %}
+          </a>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+
+      {% if notice["f12"] == "1" %}
+      <a href="/muc12" class="m-nav-toggle" style="display:flex;align-items:center;gap:10px;">
+        <i class="fas fa-star nav-icon"></i>
+        <span><b>12</b></span>
+      </a>
+      {% endif %}
+
+    </div><!-- /drawer-nav -->
+
+    <!-- Footer actions -->
+    <div class="m-drawer-footer">
+      <button class="m-drawer-footer-btn" data-toggle="modal" data-target="#changePasswordModal" onclick="closeDrawer()">
+        <i class="fas fa-key"></i> Đổi mật khẩu
+      </button>
+      <button class="m-drawer-footer-btn danger" data-toggle="modal" data-target="#logoutModal" onclick="closeDrawer()">
+        <i class="fas fa-sign-out-alt"></i> Đăng xuất
+      </button>
+      {% if current_user.phanquyen == "sa" %}
+      <a href="/admin" class="m-drawer-footer-btn" style="text-decoration:none;" onclick="closeDrawer()">
+        <i class="fas fa-user-secret"></i> Admin
+      </a>
+      {% endif %}
+    </div>
+
+  </nav>
+
+
+  <!-- ═══ SYSTEM NOTIFICATION SHEET ═══ -->
+  <div class="m-sheet-overlay" id="notif-sheet-overlay" onclick="closeSheet('notif-sheet')"></div>
+  <div class="m-sheet" id="notif-sheet" role="dialog" aria-label="Thông báo hệ thống">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-header">
+      <span class="m-sheet-title">🔔 Thông báo hệ thống</span>
+      <button class="m-sheet-close" onclick="closeSheet('notif-sheet')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="m-sheet-body">
+
+      {% if notice["Quản lý"] %}
+        {% for key, url_suffix in [("Điểm danh bù","/muc7_1_3?mstquanly="),("Xin nghỉ phép","/muc7_1_4?mstquanly="),("Xin nghỉ không lương","/muc7_1_5?mstquanly="),("Xin nghỉ khác","/muc7_1_6?mstquanly=")] %}
+          {% if notice["Quản lý"][key] %}
+          <a href="{{ url_suffix }}{{ current_user.masothe }}" class="m-notif-item" onclick="closeSheet('notif-sheet')">
+            <div class="m-notif-icon primary"><i class="fas fa-file-alt"></i></div>
+            <div class="m-notif-text"><b>{{ notice["Quản lý"][key] }} đơn</b> {{ key|lower }} cần phê duyệt</div>
+            <i class="fas fa-chevron-right m-notif-arrow"></i>
+          </a>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+      {% if notice["Thư ký"] %}
+        {% for key, url_suffix in [("Điểm danh bù","/muc7_1_3?mstthuky="),("Xin nghỉ phép","/muc7_1_4?mstthuky="),("Xin nghỉ không lương","/muc7_1_5?mstthuky="),("Xin nghỉ khác","/muc7_1_6?mstthuky=")] %}
+          {% if notice["Thư ký"][key] %}
+          <a href="{{ url_suffix }}{{ current_user.masothe }}" class="m-notif-item" onclick="closeSheet('notif-sheet')">
+            <div class="m-notif-icon success"><i class="fas fa-file-alt"></i></div>
+            <div class="m-notif-text"><b>{{ notice["Thư ký"][key] }} đơn</b> {{ key|lower }} cần kiểm tra</div>
+            <i class="fas fa-chevron-right m-notif-arrow"></i>
+          </a>
+          {% endif %}
+        {% endfor %}
+        {% if notice["Thư ký"]["Danh sách lỗi thẻ"] %}
+        <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}" class="m-notif-item" onclick="closeSheet('notif-sheet')">
+          <div class="m-notif-icon success"><i class="fas fa-id-card"></i></div>
+          <div class="m-notif-text">
+            {% if not notice["Thư ký"]["Line"] %}
+            <b>Các chuyền</b> có {{ notice["Thư ký"]["Danh sách lỗi thẻ"] }} lỗi thẻ chưa xử lý
+            {% else %}
+            <b>Chuyền {{ notice["Thư ký"]["Line"] }}</b> có {{ notice["Thư ký"]["Danh sách lỗi thẻ"] }} lỗi thẻ
+            {% endif %}
+          </div>
+          <i class="fas fa-chevron-right m-notif-arrow"></i>
+        </a>
+        {% endif %}
+      {% endif %}
+
+      {% set td_url = "/muc2_2" if current_user.phanquyen in ("sa","gd","td") else "/muc2_2?phongban=" ~ current_user.phongban %}
+      {% for td_key in ["Tuyển dụng chờ kiểm tra","Tuyển dụng chờ phê duyệt","Tuyển dụng được duyệt","Tuyển dụng bị từ chối"] %}
+        {% if notice.get(td_key) %}
+        <a href="{{ td_url }}" class="m-notif-item" onclick="closeSheet('notif-sheet')">
+          <div class="m-notif-icon danger"><i class="fas fa-users"></i></div>
+          <div class="m-notif-text"><b>{{ notice[td_key] }}</b> {{ td_key|lower }}</div>
+          <i class="fas fa-chevron-right m-notif-arrow"></i>
+        </a>
+        {% endif %}
+      {% endfor %}
+
+      {% if not notice["Tổng"] %}
+      <div style="padding:40px 20px;text-align:center;color:var(--muted);font-size:.85rem;">
+        <i class="fas fa-check-circle" style="font-size:2rem;margin-bottom:10px;display:block;color:#c8d0e8;"></i>
+        Không có thông báo mới
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+
+  <!-- ═══ PERSONAL NOTIFICATION SHEET ═══ -->
+  <div class="m-sheet-overlay" id="personal-sheet-overlay" onclick="closeSheet('personal-sheet')"></div>
+  <div class="m-sheet" id="personal-sheet" role="dialog" aria-label="Thông báo cá nhân">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-header">
+      <span class="m-sheet-title">👤 Thông báo cá nhân</span>
+      <button class="m-sheet-close" onclick="closeSheet('personal-sheet')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="m-sheet-body">
+      {% if notice['personal'] %}
+        {% set personal_items = [
+          ("Lỗi chấm công",        "/muc7_1_2", "danger",  ""),
+          ("Điểm danh bù",         "/muc7_1_3", "primary", "Tổng"),
+          ("Xin nghỉ phép",        "/muc7_1_4", "primary", "Tổng"),
+          ("Xin nghỉ không lương", "/muc7_1_5", "primary", "Tổng"),
+          ("Xin nghỉ khác",        "/muc7_1_6", "primary", "Tổng"),
+        ] %}
+        {% for key, url, color, sub in personal_items %}
+          {% set val = notice['personal'][key][sub] if sub else notice['personal'][key] %}
+          <a href="{{ url }}?mst={{ current_user.masothe }}" class="m-personal-item" onclick="closeSheet('personal-sheet')">
+            <div class="m-notif-icon {{ color }}">
+              {% if color == 'danger' %}<i class="fas fa-exclamation-circle"></i>
+              {% elif key == 'Điểm danh bù' %}<i class="fas fa-clock"></i>
+              {% elif key == 'Xin nghỉ phép' %}<i class="fas fa-umbrella-beach"></i>
+              {% elif key == 'Xin nghỉ không lương' %}<i class="fas fa-calendar-times"></i>
+              {% else %}<i class="fas fa-calendar-alt"></i>
+              {% endif %}
+            </div>
+            <span class="m-personal-label">{{ key }}</span>
+            <span class="m-personal-badge {{ color }}">{{ val }}</span>
+            <i class="fas fa-chevron-right m-notif-arrow" style="margin-left:6px;"></i>
+          </a>
+        {% endfor %}
+      {% endif %}
+    </div>
+  </div>
+
+
+  <!-- ═══ QR SHEET ═══ -->
+  <div class="m-sheet-overlay" id="qr-sheet-overlay" onclick="closeSheet('qr-sheet')"></div>
+  <div class="m-sheet" id="qr-sheet" role="dialog" aria-label="QR Code">
+    <div class="m-sheet-handle"></div>
+    <div class="m-sheet-header">
+      <span class="m-sheet-title">📱 QR Liên kết</span>
+      <button class="m-sheet-close" onclick="closeSheet('qr-sheet')"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="m-sheet-body">
+      <div class="m-qr-grid">
+        {% set qr_links = [
+          ("hp_diemdanhbu",       "Điểm danh bù HP",       "fa-fingerprint"),
+          ("hp_xinnghiphep",      "Nghỉ phép HP",          "fa-umbrella-beach"),
+          ("hp_xinnghikhongluong","Nghỉ không lương HP",   "fa-calendar-times"),
+          ("na_diemdanhbu",       "Điểm danh bù NA",       "fa-fingerprint"),
+          ("na_xinnghiphep",      "Nghỉ phép NA",          "fa-umbrella-beach"),
+          ("na_xinnghikhongluong","Nghỉ không lương NA",   "fa-calendar-times"),
+        ] %}
+        {% for qr, label, icon in qr_links %}
+        <a href="/qr_code?qr={{ qr }}" class="m-qr-item" onclick="closeSheet('qr-sheet')">
+          <i class="fas {{ icon }}"></i>
+          {{ label }}
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══ MAIN CONTENT ═══ -->
+  <main id="m-content">
+
+    {% if page %}
+    <div class="m-page-title">{{ page }}</div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+  </main>
+
+
+  <!-- ═══ BOTTOM NAVIGATION ═══ -->
+  <nav class="m-bottom-nav" aria-label="Bottom navigation">
+    <a href="/dashboard"  class="m-bottom-tab {% if request.path == '/dashboard' %}active{% endif %}">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="/muc3_2" class="m-bottom-tab {% if request.path == '/muc3_2' %}active{% endif %}">
+      <i class="fas fa-users"></i>
+      <span>Nhân sự</span>
+    </a>
+    <a href="/muc7_1_14" class="m-bottom-tab {% if request.path == '/muc7_1_14' %}active{% endif %}">
+      <i class="fas fa-calendar-check"></i>
+      <span>Chấm công</span>
+      {% if notice['personal'] and notice['personal']['Lỗi chấm công'] %}
+      <span class="m-tab-dot"></span>
+      {% endif %}
+    </a>
+    <a href="/muc7_1_2" class="m-bottom-tab {% if request.path == '/muc7_1_2' %}active{% endif %}">
+      <i class="fas fa-exclamation-circle"></i>
+      <span>Lỗi thẻ</span>
+    </a>
+    <button class="m-bottom-tab" onclick="openDrawer()">
+      <i class="fas fa-bars"></i>
+      <span>Menu</span>
+    </button>
+  </nav>
+
+</div><!-- /#app -->
+
+
+<!-- ═══ SCROLL TO TOP ═══ -->
+<button class="m-scroll-top" id="scrollTopBtn" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Lên đầu trang">
+  <i class="fas fa-chevron-up"></i>
+</button>
+
+
+<!-- ═══ FLASH MESSAGE ═══ -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="m-flash" id="m-flash">
+  <i class="fas fa-check-circle m-flash-icon"></i>
+  <span>{{ messages[0] }}</span>
+  <button class="m-flash-close" onclick="dismissFlash()">&times;</button>
+</div>
+{% endif %}
+{% endwith %}
+
+
+<!-- ═══ LOADING OVERLAY (triggered by forms) ═══ -->
+<div class="m-loading" id="m-loading" style="display:none;">
+  <div class="m-spinner"></div>
+</div>
+
+
+<!-- ═══ MODAL: Đổi mật khẩu ═══ -->
+<div class="modal fade" id="changePasswordModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-key mr-2"></i>Đổi mật khẩu</h5>
+        <button class="close text-white" type="button" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <form method="POST" action="/doimatkhau" onsubmit="showLoading()">
+        <div class="modal-body">
+          <input type="hidden" name="macongty"    value="{{ current_user.macongty }}">
+          <input type="hidden" name="masothe_doi" value="{{ current_user.masothe }}">
+          <div class="form-group mb-0">
+            <label style="font-size:.82rem;font-weight:700;color:#555;">Mật khẩu mới</label>
+            <input type="password" class="form-control" name="matkhaumoi" placeholder="Nhập mật khẩu mới">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-light btn-sm" type="button" data-dismiss="modal">Quay lại</button>
+          <button type="submit" class="btn btn-primary btn-sm px-4">Đổi</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: Đăng xuất ═══ -->
+<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-sm" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-sign-out-alt mr-2"></i>Đăng xuất</h5>
+        <button class="close text-white" type="button" data-dismiss="modal"><span>&times;</span></button>
+      </div>
+      <div class="modal-body" style="font-size:.87rem;color:#555;">
+        Chọn <b>Đồng ý</b> để kết thúc phiên làm việc.
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-light btn-sm" type="button" data-dismiss="modal">Quay lại</button>
+        <form action="logout" method="POST" onsubmit="showLoading()">
+          <button type="submit" class="btn btn-danger btn-sm px-4">Đăng xuất</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Scripts -->
+<script src="static/vendor/jquery/jquery.min.js"></script>
+<script src="static/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ── Drawer ── */
+function openDrawer() {
+  document.getElementById('drawer').classList.add('open');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeDrawer() {
+  document.getElementById('drawer').classList.remove('open');
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Sheet (slide-up panels) ── */
+function openSheet(id) {
+  document.getElementById(id).classList.add('open');
+  document.getElementById(id + '-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSheet(id) {
+  document.getElementById(id).classList.remove('open');
+  document.getElementById(id + '-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ── Accordion nav ── */
+function toggleNavSub(btn) {
+  var sub = btn.nextElementSibling;
+  var isOpen = sub.classList.contains('open');
+  // Close all others
+  document.querySelectorAll('.m-nav-sub.open').forEach(function(el) {
+    el.classList.remove('open');
+    el.previousElementSibling.classList.remove('active');
+  });
+  if (!isOpen) {
+    sub.classList.add('open');
+    btn.classList.add('active');
+    // Smooth scroll to keep item visible
+    setTimeout(function() { btn.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 120);
+  }
+}
+
+/* ── Highlight active nav item based on current URL ── */
+(function() {
+  var path = window.location.pathname;
+  document.querySelectorAll('.m-nav-sub a').forEach(function(a) {
+    if (a.getAttribute('href') === path) {
+      a.classList.add('active-link');
+      var sub = a.closest('.m-nav-sub');
+      if (sub) {
+        sub.classList.add('open');
+        var toggle = sub.previousElementSibling;
+        if (toggle) toggle.classList.add('active');
+      }
+    }
+  });
+  // Bottom tabs
+  document.querySelectorAll('.m-bottom-tab').forEach(function(tab) {
+    var href = tab.getAttribute('href');
+    if (href && href === path) tab.classList.add('active');
+  });
+})();
+
+/* ── Swipe to close drawer ── */
+(function() {
+  var drawer = document.getElementById('drawer');
+  var startX = 0;
+  drawer.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+  drawer.addEventListener('touchend', function(e) {
+    if (e.changedTouches[0].clientX - startX < -60) closeDrawer();
+  }, { passive: true });
+})();
+
+/* ── Swipe down to close sheets ── */
+['notif-sheet', 'personal-sheet', 'qr-sheet'].forEach(function(id) {
+  var sheet = document.getElementById(id);
+  if (!sheet) return;
+  var startY = 0;
+  sheet.addEventListener('touchstart', function(e) { startY = e.touches[0].clientY; }, { passive: true });
+  sheet.addEventListener('touchend', function(e) {
+    if (e.changedTouches[0].clientY - startY > 80) closeSheet(id);
+  }, { passive: true });
+});
+
+/* ── Flash dismiss ── */
+function dismissFlash() {
+  var el = document.getElementById('m-flash');
+  if (!el) return;
+  el.classList.add('fade-out');
+  setTimeout(function() { if (el.parentNode) el.parentNode.removeChild(el); }, 420);
+}
+setTimeout(dismissFlash, 6000);
+
+/* ── Loading overlay ── */
+function showLoading() {
+  document.getElementById('m-loading').style.display = 'flex';
+}
+
+/* ── Scroll to top button ── */
+window.addEventListener('scroll', function() {
+  var btn = document.getElementById('scrollTopBtn');
+  if (window.scrollY > 200) btn.classList.add('visible');
+  else btn.classList.remove('visible');
+}, { passive: true });
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

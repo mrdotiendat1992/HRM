@@ -148,12 +148,20 @@ def run_before_every_request():
         notice = {"f12": f12, "db": url_database_pyodbc}
 
     g.notice = notice
+    override = request.cookies.get('view_override', '')
+    if override == 'desktop':
+        base = 'base.html'
+    elif override == 'mobile':
+        base = 'base_mobile.html'
+    else:
+        base = 'base_mobile.html' if is_mobile() else 'base.html'
 
 
 @app.context_processor
 def inject_notice():
     return dict(notice=getattr(g, "notice", {}),
-                personal=getattr(g, "personal", {}))
+                personal=getattr(g, "personal", {}),
+                )
 
 @app.route('/unauthorized')
 def unauthorized():

@@ -35,6 +35,12 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+MOBILE_AGENTS = ('android', 'iphone', 'ipad', 'ipod', 'mobile', 'blackberry', 'windows phone')
+
+def is_mobile():
+    ua = request.headers.get('User-Agent', '').lower()
+    return any(agent in ua for agent in MOBILE_AGENTS)
+    
 # model sử dụng khi đăng nhập
 class Nhanvien(UserMixin, db.Model):
     __tablename__ = 'Nhanvien'
