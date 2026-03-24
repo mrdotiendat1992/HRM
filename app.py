@@ -1,9 +1,12 @@
 # -*- encoding: utf-8 -*-
 
 from const import *
-from config import * 
+from config import *
+from extensions import db, login_manager, init_logging
+from models import nhanvien  # ensure model package is imported so SQLAlchemy knows it
+from models.nhanvien import Nhanvien  # re-export model for legacy imports from app
 
-app = Flask(__name__) 
+app = Flask(__name__)
 
 # Cấu hình kết nối SQL Server
 params = urllib.parse.quote_plus(
@@ -13,47 +16,22 @@ params = urllib.parse.quote_plus(
                 f"UID={database_user};"
                 f"PWD={database_password};"
             )
-app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"    
+app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "NAMTHUAN"
 
-# ORM
-db = SQLAlchemy(app)
-
-# Cấu hình log
-handler = RotatingFileHandler('app.log', backupCount=1, encoding='utf-8')
-handler.setLevel(logging.DEBUG)
-formatter = logging.Formatter(
-    '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
-)
-handler.setFormatter(formatter)
-app.logger.addHandler(handler)
-app.logger.setLevel(logging.DEBUG)
-
-# cấu hình login với flask_login
-login_manager = LoginManager()
+# Khởi tạo ORM & login
+db.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
-# model sử dụng khi đăng nhập
-class Nhanvien(UserMixin, db.Model):
-    __tablename__ = 'Nhanvien'
-    id = db.Column(db.Integer, primary_key=True)
-    macongty = db.Column(db.String(10), nullable=False)
-    masothe = db.Column(db.Integer, nullable=False)
-    hoten = db.Column(db.Unicode(50), nullable=False)
-    phongban = db.Column(db.String(10), nullable=False)
-    capbac = db.Column(db.String(10), nullable=False)
-    phanquyen = db.Column(db.String(10), nullable=False)
-    matkhau = db.Column(db.String(10), nullable=False)
+# Cấu hình log dùng hàm chung
+init_logging(app)
 
-    def __repr__(self):
-        return f"<User {self.hoten}>"
-    
-@login_manager.user_loader
-def load_user(user_id):
-    return Nhanvien.query.get(int(user_id))
-  
+# Đảm bảo context app cho các thao tác db khi chạy trực tiếp
+app.app_context().push()
+
+
 def doimatkhautaikhoan(macongty,mst,matkhau):
     try:
         current_user.matkhau = matkhau

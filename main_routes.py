@@ -7,8 +7,9 @@ from app import *
 ##################################
 
 # from functools import wraps
-from flask import g, flash
+from flask import g, flash, request, render_template
 from flask_login import current_user
+from jinja2 import TemplateNotFound
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -155,6 +156,26 @@ def inject_notice():
     return dict(notice=getattr(g, "notice", {}),
                 personal=getattr(g, "personal", {}))
 
+def _is_mobile() -> bool:
+    """Phát hiện truy cập từ thiết bị di động dựa vào User-Agent (đơn giản)."""
+    ua = (request.user_agent.string or "").lower()
+    return any(x in ua for x in ("iphone", "android", "ipad"))
+
+
+def _render_with_mobile_fallback(default_template: str, **context):
+    """Thử render template mobile/..., nếu không có thì dùng template mặc định.
+
+    Ví dụ: default_template="home.html" → ưu tiên "mobile/home.html".
+    """
+    if _is_mobile():
+        mobile_name = f"mobile/{default_template}"
+        try:
+            return render_template(mobile_name, **context)
+        except TemplateNotFound:
+            pass
+    return render_template(default_template, **context)
+
+
 @app.route('/unauthorized')
 def unauthorized():
     return render_template_string("<h1>Bạn không thể vào mục này, vui lòng chọn mục khác!!!</h1><h3>Ấn vào <a href='/'>đây</a> để quay lại trang chủ</h3>")
@@ -189,7 +210,7 @@ def login():
         flash("Sai thông tin đăng nhập.", "danger")
         return redirect(url_for("login"))
 
-    return render_template("login.html")
+    return _render_with_mobile_fallback("login.html")
 
 @app.route("/logout", methods=["POST"])
 def logout():
@@ -248,10 +269,15 @@ def home():
         songuoi_danglamviec = lay_soluong_danglamviec()
         songuoi_dangnghithaisan = lay_soluong_dangnghithaisan()
         flash(f"Xin chào {current_user.hoten} !!!")
-        return render_template("home.html", users=paginated_users,
-                            page="Trang chủ", pagination=pagination,count=count,
-                            songuoi_danglamviec=songuoi_danglamviec,
-                            songuoi_dangnghithaisan=songuoi_dangnghithaisan)
+        return _render_with_mobile_fallback(
+            "home.html",
+            users=paginated_users,
+            page="Trang chủ",
+            pagination=pagination,
+            count=count,
+            songuoi_danglamviec=songuoi_danglamviec,
+            songuoi_dangnghithaisan=songuoi_dangnghithaisan,
+        )
     else:
         try:
             mst = request.form.get("Mã số thẻ")
