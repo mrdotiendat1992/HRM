@@ -1,153 +1,111 @@
-<!doctype html>
-<html lang="vi">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Trang chủ - HRM Mobile</title>
-  <style>
-    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f5f5f5; }
-    .container { max-width: 480px; margin: 0 auto; padding: 16px 12px 32px; }
-    .user-bar { font-size: 13px; color: #444; margin-bottom: 10px; }
-    .user-bar span { font-weight: 600; }
-    .card { background: #fff; border-radius: 12px; padding: 14px 14px 10px; box-shadow: 0 3px 8px rgba(0,0,0,0.05); margin-bottom: 14px; }
-    .card-title { font-size: 14px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
-    .card-title span.icon { font-size: 16px; }
-    .menu { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 10px; margin-top: 4px; }
-    .menu a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; padding: 10px 6px; border-radius: 10px; border: none; text-decoration: none; font-size: 13px; font-weight: 500; background: #fff; color: #0077cc; box-shadow: 0 1px 4px rgba(0,0,0,0.06); position: relative; }
-    .menu a .icon { font-size: 18px; }
-    .menu a .badge { position: absolute; top: 6px; right: 8px; min-width: 18px; padding: 1px 5px; border-radius: 999px; background: #e53935; color: #fff; font-size: 11px; font-weight: 600; }
-    .menu a:active { opacity: 0.85; }
-    .logout { margin-top: 10px; }
-    .logout form { margin: 0; }
-    .logout button { width: 100%; padding: 10px 12px; border-radius: 999px; border: none; background: #e53935; color: #fff; font-weight: 600; font-size: 14px; }
-    .logout button:active { opacity: 0.9; }
-    .flash { margin-bottom: 8px; font-size: 13px; color: #1976d2; }
-  </style>
-</head>
-<body>
+{% extends "mobile/base.html" %}
+{% block title %}Trang chủ - HRM Mobile{% endblock %}
+{% block content %}
   {% set tk = notice.get('Thư ký', {}) %}
   {% set ql = notice.get('Quản lý', {}) %}
 
-  <div class="container">
-    <div class="user-bar">
-      <span>{{ current_user.hoten }}</span> • MST: <span>{{ current_user.masothe }}</span>
-    </div>
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        {% for category, message in messages %}
-          <div class="flash">{{ message }}</div>
-        {% endfor %}
-      {% endif %}
-    {% endwith %}
-
-    <div class="card">
-      <div class="card-title"><span class="icon">👤</span><span>Cá nhân</span></div>
-      <div class="menu">
-        <a href="/muc7_1_2?mst={{ current_user.masothe }}">
-          <span class="icon">⚠️</span>
-          <span>Lỗi chấm công</span>
-        </a>
-        <a href="/muc7_1_14?mst={{ current_user.masothe }}">
-          <span class="icon">📊</span>
-          <span>Bảng công</span>
-        </a>
-        <a href="/muc3_3?mst={{ current_user.masothe }}">
-          <span class="icon">📄</span>
-          <span>Hợp đồng</span>
-        </a>
-        <a href="/mail?mst={{ current_user.masothe }}">
-          <span class="icon">✉️</span>
-          <span>Mail</span>
-        </a>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
-      <div class="menu">
-        {# Lỗi chấm công - thư ký #}
-        {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
-        <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}">
-          <span class="icon">⚠️</span>
-          <span>Lỗi chấm công</span>
-          <span class="badge">{{ tk['Danh sách lỗi thẻ'] }}</span>
-        </a>
-        {% endif %}
-
-        {# Kiểm tra - thư ký #}
-        {% if tk.get('Điểm danh bù', 0) > 0 %}
-        <a href="/muc7_1_3?mstthuky={{ current_user.masothe }}">
-          <span class="icon">📝</span>
-          <span>Điểm danh - kiểm tra</span>
-          <span class="badge">{{ tk['Điểm danh bù'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if tk.get('Xin nghỉ phép', 0) > 0 %}
-        <a href="/muc7_1_4?mstthuky={{ current_user.masothe }}">
-          <span class="icon">📅</span>
-          <span>Nghỉ phép - kiểm tra</span>
-          <span class="badge">{{ tk['Xin nghỉ phép'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if tk.get('Xin nghỉ không lương', 0) > 0 %}
-        <a href="/muc7_1_5?mstthuky={{ current_user.masothe }}">
-          <span class="icon">💸</span>
-          <span>Nghỉ không lương - kiểm tra</span>
-          <span class="badge">{{ tk['Xin nghỉ không lương'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if tk.get('Xin nghỉ khác', 0) > 0 %}
-        <a href="/muc7_1_6?mstthuky={{ current_user.masothe }}">
-          <span class="icon">🕒</span>
-          <span>Nghỉ khác - kiểm tra</span>
-          <span class="badge">{{ tk['Xin nghỉ khác'] }}</span>
-        </a>
-        {% endif %}
-
-        {# Phê duyệt - quản lý #}
-        {% if ql.get('Điểm danh bù', 0) > 0 %}
-        <a href="/muc7_1_3?mstquanly={{ current_user.masothe }}">
-          <span class="icon">✅</span>
-          <span>Điểm danh - phê duyệt</span>
-          <span class="badge">{{ ql['Điểm danh bù'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if ql.get('Xin nghỉ phép', 0) > 0 %}
-        <a href="/muc7_1_4?mstquanly={{ current_user.masothe }}">
-          <span class="icon">✅</span>
-          <span>Nghỉ phép - phê duyệt</span>
-          <span class="badge">{{ ql['Xin nghỉ phép'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if ql.get('Xin nghỉ không lương', 0) > 0 %}
-        <a href="/muc7_1_5?mstquanly={{ current_user.masothe }}">
-          <span class="icon">✅</span>
-          <span>Nghỉ không lương - phê duyệt</span>
-          <span class="badge">{{ ql['Xin nghỉ không lương'] }}</span>
-        </a>
-        {% endif %}
-
-        {% if ql.get('Xin nghỉ khác', 0) > 0 %}
-        <a href="/muc7_1_6?mstquanly={{ current_user.masothe }}">
-          <span class="icon">✅</span>
-          <span>Nghỉ khác - phê duyệt</span>
-          <span class="badge">{{ ql['Xin nghỉ khác'] }}</span>
-        </a>
-        {% endif %}
-      </div>
-    </div>
-
-    <div class="logout">
-      <form method="POST" action="{{ url_for('logout') }}">
-        <button type="submit">Đăng xuất</button>
-      </form>
+  <div class="card">
+    <div class="card-title"><span class="icon">👤</span><span>Cá nhân</span></div>
+    <div class="menu">
+      <a href="/muc7_1_2?mst={{ current_user.masothe }}">
+        <span class="icon">⚠️</span>
+        <span>Lỗi chấm công</span>
+      </a>
+      <a href="/muc7_1_14?mst={{ current_user.masothe }}">
+        <span class="icon">📊</span>
+        <span>Bảng công</span>
+      </a>
+      <a href="/muc3_3?mst={{ current_user.masothe }}">
+        <span class="icon">📄</span>
+        <span>Hợp đồng</span>
+      </a>
+      <a href="/mail?mst={{ current_user.masothe }}">
+        <span class="icon">✉️</span>
+        <span>Mail</span>
+      </a>
     </div>
   </div>
-</body>
-</html>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
+    <div class="menu">
+      {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
+      <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}">
+        <span class="icon">⚠️</span>
+        <span>Lỗi chấm công</span>
+        <span class="badge">{{ tk['Danh sách lỗi thẻ'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Điểm danh bù', 0) > 0 %}
+      <a href="/muc7_1_3?mstthuky={{ current_user.masothe }}">
+        <span class="icon">📝</span>
+        <span>Điểm danh - kiểm tra</span>
+        <span class="badge">{{ tk['Điểm danh bù'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ phép', 0) > 0 %}
+      <a href="/muc7_1_4?mstthuky={{ current_user.masothe }}">
+        <span class="icon">📅</span>
+        <span>Nghỉ phép - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ phép'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ không lương', 0) > 0 %}
+      <a href="/muc7_1_5?mstthuky={{ current_user.masothe }}">
+        <span class="icon">💸</span>
+        <span>Nghỉ không lương - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ không lương'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ khác', 0) > 0 %}
+      <a href="/muc7_1_6?mstthuky={{ current_user.masothe }}">
+        <span class="icon">🕒</span>
+        <span>Nghỉ khác - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ khác'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Điểm danh bù', 0) > 0 %}
+      <a href="/muc7_1_3?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Điểm danh - phê duyệt</span>
+        <span class="badge">{{ ql['Điểm danh bù'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ phép', 0) > 0 %}
+      <a href="/muc7_1_4?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ phép - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ phép'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ không lương', 0) > 0 %}
+      <a href="/muc7_1_5?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ không lương - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ không lương'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ khác', 0) > 0 %}
+      <a href="/muc7_1_6?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ khác - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ khác'] }}</span>
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="logout">
+    <form method="POST" action="{{ url_for('logout') }}">
+      <button type="submit">Đăng xuất</button>
+    </form>
+  </div>
+{% endblock %}
