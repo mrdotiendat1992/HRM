@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Điểm danh bù - Mobile</title>
+  <style>
+    body { font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; margin: 0; background: #f5f5f5; }
+    .container { max-width: 480px; margin: 0 auto; padding: 12px 10px 24px; }
+    h1 { font-size: 16px; margin: 0 0 8px; }
+    .sub { font-size: 12px; color: #666; margin-bottom: 8px; }
+    .card { background: #fff; border-radius: 10px; padding: 10px 10px 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 10px; }
+    .row-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+    .name { font-size: 14px; font-weight: 600; }
+    .meta { font-size: 12px; color: #555; }
+    .meta span { margin-right: 6px; }
+    .status { font-size: 12px; font-weight: 600; margin-top: 4px; }
+    .empty { font-size: 13px; color: #777; text-align: center; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Điểm danh bù</h1>
+    <div class="sub">Tổng: {{ count }}</div>
+
+    {% if danhsach %}
+      {% for row in danhsach %}
+      <div class="card">
+        <div class="row-top">
+          <div class="name">{{ row[2] }}</div>
+          <div class="meta">MST: {{ row[1] }}</div>
+        </div>
+        <div class="meta">
+          <span>Loại: {{ row[6] }}</span>
+          <span>Ngày: {{ row[7] }}</span>
+          <span>Giờ: {{ row[8] }}</span>
+        </div>
+        <div class="meta">Lý do: {{ row[9] }}</div>
+        <div class="status">Trạng thái: {{ row[10] }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty">Không có đơn điểm danh bù nào.</div>
+    {% endif %}
+  </div>
+</body>
+</html>

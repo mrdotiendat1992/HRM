@@ -1581,11 +1581,13 @@ def loichamcong():
     end = start + per_page
     paginated_rows = danhsach[start:end]
     pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-    return render_template("7_1_2.html",
-                            page="Lỗi chấm công",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+    return _render_with_mobile_fallback(
+        "7_1_2.html",
+        page="Lỗi chấm công",
+        danhsach=paginated_rows,
+        pagination=pagination,
+        count=count,
+    )
 
 
 @app.route("/muc7_1_3", methods=["GET","POST"]) # Danh sách điểm danh bù
@@ -1612,11 +1614,13 @@ def diemdanhbu():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_3.html",
-                            page="Lỗi chấm công",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+        return _render_with_mobile_fallback(
+            "7_1_3.html",
+            page="Lỗi chấm công",
+            danhsach=paginated_rows,
+            pagination=pagination,
+            count=count,
+        )
     elif request.method == "POST":
         mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
@@ -1762,11 +1766,13 @@ def xinnghiphep():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_4.html",
-                            page="Lỗi chấm công",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+        return _render_with_mobile_fallback(
+            "7_1_4.html",
+            page="Lỗi chấm công",
+            danhsach=paginated_rows,
+            pagination=pagination,
+            count=count,
+        )
     elif request.method == "POST":
         mstquanly = request.form.get("mstquanly")
         mstthuky = request.args.get("mstthuky")
@@ -1910,11 +1916,13 @@ def xinnghikhongluong():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_5.html",
-                            page="Lỗi chấm công",
-                            danhsach=paginated_rows,
-                            pagination=pagination,
-                            count=count)
+        return _render_with_mobile_fallback(
+            "7_1_5.html",
+            page="Lỗi chấm công",
+            danhsach=paginated_rows,
+            pagination=pagination,
+            count=count,
+        )
     elif request.method == 'POST':
         mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
@@ -2056,11 +2064,13 @@ def danhsachxinnghikhac():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_6.html", 
-                               page="Lỗi chấm công", 
-                               danhsach=paginated_rows,
-                                pagination=pagination,
-                                count=count)
+        return _render_with_mobile_fallback(
+            "7_1_6.html",
+            page="Lỗi chấm công",
+            danhsach=paginated_rows,
+            pagination=pagination,
+            count=count,
+        )
     elif request.method == "POST":
         mstthuky = request.form.get("mstthuky")
         mstquanly = request.form.get("mstquanly")
