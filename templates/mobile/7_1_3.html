@@ -11,7 +11,7 @@
   {% if pagination %}
     <div class="pagination-mobile">{{ pagination.links|safe }}</div>
   {% endif %}
-  <form method="POST">
+  <form id="form-7_1_3" method="POST" onsubmit="return false;">
     {% for row in danhsach %}
     {# row structure: see main_routes POST mapping, ID = row[11] #}
     <div style="background:#fff; border-radius:10px; padding:8px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px; display:flex; gap:8px; align-items:flex-start;">
@@ -36,25 +36,73 @@
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
       {# Thư ký: chỉ kiểm tra / từ chối kiểm tra #}
       {% if is_thuky and not is_quanly %}
-        <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
-        <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối kiểm tra</button>
+        <button type="button" data-action="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm bulk-action">Đã kiểm tra</button>
+        <button type="button" data-action="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm bulk-action">Từ chối kiểm tra</button>
       {% endif %}
 
       {# Quản lý: chỉ phê duyệt / từ chối phê duyệt #}
       {% if is_quanly and not is_thuky %}
-        <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
-        <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối phê duyệt</button>
+        <button type="button" data-action="/muc7_1_3/pheduyet" class="btn btn-success btn-sm bulk-action">Phê duyệt</button>
+        <button type="button" data-action="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm bulk-action">Từ chối phê duyệt</button>
       {% endif %}
 
-      {# Trường hợp không truyền mstthuky / mstquanly (hiếm) thì hiện cả 4 để debug #}
+      {# Trường hợp không truyền mstthuky / mstquanly (debug) #}
       {% if (not is_thuky) and (not is_quanly) %}
-        <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
-        <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối kiểm tra</button>
-        <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
-        <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối phê duyệt</button>
+        <button type="button" data-action="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm bulk-action">Đã kiểm tra</button>
+        <button type="button" data-action="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm bulk-action">Từ chối kiểm tra</button>
+        <button type="button" data-action="/muc7_1_3/pheduyet" class="btn btn-success btn-sm bulk-action">Phê duyệt</button>
+        <button type="button" data-action="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm bulk-action">Từ chối phê duyệt</button>
       {% endif %}
     </div>
   </form>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const form = document.getElementById('form-7_1_3');
+      if (!form) return;
+
+      async function postBulk(actionUrl) {
+        const checked = form.querySelectorAll('input[name="selected_ids[]"]:checked');
+        if (!checked.length) {
+          alert('Vui lòng chọn ít nhất một dòng.');
+          return;
+        }
+        if (!confirm('Xác nhận thực hiện thao tác này?')) return;
+
+        const fd = new FormData();
+        checked.forEach(cb => fd.append('selected_ids[]', cb.value));
+
+        try {
+          const resp = await fetch(actionUrl, { method: 'POST', body: fd });
+          if (resp.ok) {
+            window.location.reload();
+            return;
+          }
+          let msg = 'Có lỗi xảy ra';
+          try {
+            const data = await resp.json();
+            msg = data.message || JSON.stringify(data);
+          } catch (_) {
+            const text = await resp.text();
+            msg = text || msg;
+          }
+          alert(msg);
+        } catch (e) {
+          alert('Không gọi được server: ' + e);
+        }
+      }
+
+      const buttons = form.querySelectorAll('.bulk-action');
+      buttons.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const url = this.getAttribute('data-action');
+          if (!url) return;
+          postBulk(url);
+        });
+      });
+    });
+  </script>
+
   {% else %}
     <div style="font-size:13px; color:#777; text-align:center; margin-top:16px;">Không có đơn điểm danh bù nào.</div>
   {% endif %}
