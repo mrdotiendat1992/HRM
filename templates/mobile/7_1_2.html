@@ -8,13 +8,14 @@
     {% for row in danhsach %}
     <div style="background:#fff; border-radius:10px; padding:10px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-        <div style="font-size:14px; font-weight:600;">{{ row[2] }}</div>
-        <div style="font-size:12px; color:#555;">MST: {{ row[1] }}</div>
+        <div style="font-size:14px; font-weight:600;">{{ row["Họ tên"] }}</div>
+        <div style="font-size:12px; color:#555;">MST: {{ row["MST"] }}</div>
       </div>
       <div style="font-size:12px; color:#555;">
-        <div>Chuyền: {{ row[4] }} • Phòng ban: {{ row[5] }}</div>
-        <div>Ngày: {{ row[6] }} • Giờ: {{ row[7] }}</div>
-        <div>Lý do: {{ row[8] }}</div>
+        <div>Chuyền: {{ row["Chuyền tổ"] }} • Bộ phận: {{ row["Bộ phận"] }}</div>
+        <div>Ngày: {{ row["Ngày"] }}</div>
+        <div>Giờ vào: {{ row["Giờ vào"] or "" }} • Giờ ra: {{ row["Giờ ra"] or "" }}</div>
+        <div>Số phút thiếu: {{ row["Số phút thiếu"] }} • Phép tồn: {{ row["Phép tồn"] }}</div>
       </div>
     </div>
     {% endfor %}
