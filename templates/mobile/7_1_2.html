@@ -9,7 +9,8 @@
     <div class="pagination-mobile">{{ pagination.links|safe }}</div>
   {% endif %}
     {% for row in danhsach %}
-    <div style="background:#fff; border-radius:10px; padding:10px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
+    <div class="lcc-card" data-info='{{ row | tojson | safe }}'
+         style="background:#fff; border-radius:10px; padding:10px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
         <div style="font-size:14px; font-weight:600;">{{ row["Họ tên"] }}</div>
         <div style="font-size:12px; color:#555;">MST: {{ row["MST"] }}</div>
@@ -19,9 +20,87 @@
         <div>Ngày: {{ row["Ngày"] }}</div>
         <div>Giờ vào: {{ row["Giờ vào"] or "" }} • Giờ ra: {{ row["Giờ ra"] or "" }}</div>
         <div>Số phút thiếu: {{ row["Số phút thiếu"] }} • Phép tồn: {{ row["Phép tồn"] }}</div>
+        <div style="margin-top:4px; color:#0077cc; font-weight:500;">Nhấn để xem chi tiết...</div>
       </div>
     </div>
     {% endfor %}
+
+    <div id="lccModal" style="position:fixed; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.45); display:none; z-index:9999;">
+      <div style="background:#fff; border-radius:12px; max-width:420px; margin:40px auto; padding:14px 16px 12px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <div style="font-size:15px; font-weight:600;">Chi tiết lỗi chấm công</div>
+          <button id="lccClose" type="button" style="border:none; background:none; font-size:18px; line-height:1;">×</button>
+        </div>
+        <div style="font-size:13px; color:#444; line-height:1.5;">
+          <div><strong>MST:</strong> <span id="mMst"></span></div>
+          <div><strong>Họ tên:</strong> <span id="mHoten"></span></div>
+          <div><strong>Chuyền:</strong> <span id="mChuyen"></span></div>
+          <div><strong>Phòng ban:</strong> <span id="mBophan"></span></div>
+          <div><strong>Ngày:</strong> <span id="mNgay"></span></div>
+          <div><strong>Giờ vào:</strong> <span id="mGiovao"></span></div>
+          <div><strong>Giờ ra:</strong> <span id="mGiora"></span></div>
+          <div><strong>Số phút thiếu:</strong> <span id="mThieu"></span></div>
+          <div><strong>Phép tồn:</strong> <span id="mPhepton"></span></div>
+        </div>
+        <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">
+          <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #0077cc; background:#e3f2fd; font-size:12px;"
+                  onclick="alert('Điểm danh bù sẽ được xử lý giống bản web. (TODO)')">Điểm danh bù</button>
+          <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #4caf50; background:#e8f5e9; font-size:12px;"
+                  onclick="alert('Xin nghỉ phép sẽ được xử lý giống bản web. (TODO)')">Xin nghỉ phép</button>
+        </div>
+        <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:6px;">
+          <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #ff9800; background:#fff3e0; font-size:12px;"
+                  onclick="alert('Xin nghỉ không lương sẽ được xử lý giống bản web. (TODO)')">Nghỉ không lương</button>
+          <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #9c27b0; background:#f3e5f5; font-size:12px;"
+                  onclick="alert('Xin nghỉ khác sẽ được xử lý giống bản web. (TODO)')">Nghỉ khác</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const cards = document.querySelectorAll('.lcc-card');
+        const modal = document.getElementById('lccModal');
+        const closeBtn = document.getElementById('lccClose');
+
+        function fillModal(data) {
+          document.getElementById('mMst').textContent = data['MST'] || '';
+          document.getElementById('mHoten').textContent = data['Họ tên'] || '';
+          document.getElementById('mChuyen').textContent = data['Chuyền tổ'] || '';
+          document.getElementById('mBophan').textContent = data['Bộ phận'] || '';
+          document.getElementById('mNgay').textContent = data['Ngày'] || '';
+          document.getElementById('mGiovao').textContent = data['Giờ vào'] || '';
+          document.getElementById('mGiora').textContent = data['Giờ ra'] || '';
+          document.getElementById('mThieu').textContent = data['Số phút thiếu'] || '';
+          document.getElementById('mPhepton').textContent = data['Phép tồn'] || '';
+        }
+
+        cards.forEach(function(card) {
+          card.addEventListener('click', function() {
+            try {
+              const info = JSON.parse(this.getAttribute('data-info'));
+              fillModal(info);
+              modal.style.display = 'block';
+            } catch (e) {
+              console.error('parse error', e);
+            }
+          });
+        });
+
+        if (closeBtn) {
+          closeBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+          });
+        }
+
+        modal && modal.addEventListener('click', function(e) {
+          if (e.target === modal) {
+            modal.style.display = 'none';
+          }
+        });
+      });
+    </script>
+
   {% else %}
     <div style="font-size:13px; color:#777; text-align:center; margin-top:16px;">Không có lỗi chấm công nào.</div>
   {% endif %}
