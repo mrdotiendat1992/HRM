@@ -4,6 +4,9 @@
   <h1 style="font-size:16px; margin:0 0 8px;">Điểm danh bù</h1>
   <div style="font-size:12px; color:#666; margin-bottom:8px;">Tổng: {{ count }}</div>
 
+  {% set is_thuky = request.args.get('mstthuky') %}
+  {% set is_quanly = request.args.get('mstquanly') %}
+
   {% if danhsach %}
   <form method="POST">
     {% for row in danhsach %}
@@ -28,10 +31,25 @@
     {% endfor %}
 
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
-      <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
-      <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối (thư ký)</button>
-      <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
-      <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối (quản lý)</button>
+      {# Thư ký: chỉ kiểm tra / từ chối kiểm tra #}
+      {% if is_thuky and not is_quanly %}
+        <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
+        <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối kiểm tra</button>
+      {% endif %}
+
+      {# Quản lý: chỉ phê duyệt / từ chối phê duyệt #}
+      {% if is_quanly and not is_thuky %}
+        <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
+        <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối phê duyệt</button>
+      {% endif %}
+
+      {# Trường hợp không truyền mstthuky / mstquanly (hiếm) thì hiện cả 4 để debug #}
+      {% if (not is_thuky) and (not is_quanly) %}
+        <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
+        <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối kiểm tra</button>
+        <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
+        <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối phê duyệt</button>
+      {% endif %}
     </div>
   </form>
   {% else %}
