@@ -42,17 +42,63 @@
           <div><strong>Số phút thiếu:</strong> <span id="mThieu"></span></div>
           <div><strong>Phép tồn:</strong> <span id="mPhepton"></span></div>
         </div>
+
+        {# Forms ẩn cho các thao tác, sẽ được JS fill dữ liệu #}
+        <form id="fDiemDanhBu" method="POST" action="/diemdanhbu" style="display:none;">
+          <input type="hidden" name="masothe_diemdanhbu"    id="fDdbMst">
+          <input type="hidden" name="hoten_diemdanhbu"      id="fDdbHoten">
+          <input type="hidden" name="chuyento_diemdanhbu"   id="fDdbChuyen">
+          <input type="hidden" name="chucdanh_diemdanhbu"   id="fDdbChucdanh">
+          <input type="hidden" name="phongban_diemdanhbu"   id="fDdbBophan">
+          <input type="hidden" name="ngay_diemdanhbu"       id="fDdbNgay">
+          <input type="hidden" name="giovao_diemdanhbu"     id="fDdbGiovao">
+          <input type="hidden" name="giora_diemdanhbu"      id="fDdbGiora">
+          <input type="hidden" name="lydo_diemdanhbu"       id="fDdbLydo" value="Quên dập thẻ">
+        </form>
+
+        <form id="fNghiPhep" method="POST" action="/xinnghiphep" style="display:none;">
+          <input type="hidden" name="masothe_xinnghiphep"   id="fXpMst">
+          <input type="hidden" name="hoten_xinnghiphep"     id="fXpHoten">
+          <input type="hidden" name="chuyento_xinnghiphep"  id="fXpChuyen">
+          <input type="hidden" name="chucdanh_xinnghiphep"  id="fXpChucdanh">
+          <input type="hidden" name="phongban_xinnghiphep"  id="fXpBophan">
+          <input type="hidden" name="ngay_xinnghiphep"      id="fXpNgay">
+          <input type="hidden" name="sophut_xinnghiphep"    id="fXpSophut">
+        </form>
+
+        <form id="fNghiKhongLuong" method="POST" action="/xinnghikhongluong" style="display:none;">
+          <input type="hidden" name="masothe_xinnghikhongluong"  id="fXklMst">
+          <input type="hidden" name="hoten_xinnghikhongluong"    id="fXklHoten">
+          <input type="hidden" name="chuyento_xinnghikhongluong" id="fXklChuyen">
+          <input type="hidden" name="chucdanh_xinnghikhongluong" id="fXklChucdanh">
+          <input type="hidden" name="phongban_xinnghikhongluong" id="fXklBophan">
+          <input type="hidden" name="ngay_xinnghikhongluong"     id="fXklNgay">
+          <input type="hidden" name="sophut_xinnghikhongluong"   id="fXklSophut">
+          <input type="hidden" name="lydo_xinnghikhongluong"     id="fXklLydo" value="Nghỉ không lương từ mobile">
+        </form>
+
+        <form id="fNghiKhac" method="POST" action="/xinnghikhac" style="display:none;">
+          <input type="hidden" name="masothe_xinnghikhac"   id="fXkMst">
+          <input type="hidden" name="hoten_xinnghikhac"     id="fXkHoten">
+          <input type="hidden" name="chuyento_xinnghikhac"  id="fXkChuyen">
+          <input type="hidden" name="chucdanh_xinnghikhac"  id="fXkChucdanh">
+          <input type="hidden" name="phongban_xinnghikhac"  id="fXkBophan">
+          <input type="hidden" name="ngay_xinnghikhac"      id="fXkNgay">
+          <input type="hidden" name="sophut_xinnghikhac"    id="fXkSophut">
+          <input type="hidden" name="lydo_xinnghikhac"      id="fXkLydo" value="CL">
+        </form>
+
         <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">
           <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #0077cc; background:#e3f2fd; font-size:12px;"
-                  onclick="alert('Điểm danh bù sẽ được xử lý giống bản web. (TODO)')">Điểm danh bù</button>
+                  onclick="submitDiemDanhBu()">Điểm danh bù</button>
           <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #4caf50; background:#e8f5e9; font-size:12px;"
-                  onclick="alert('Xin nghỉ phép sẽ được xử lý giống bản web. (TODO)')">Xin nghỉ phép</button>
+                  onclick="submitNghiPhep()">Xin nghỉ phép</button>
         </div>
         <div style="margin-top:6px; display:flex; flex-wrap:wrap; gap:6px;">
           <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #ff9800; background:#fff3e0; font-size:12px;"
-                  onclick="alert('Xin nghỉ không lương sẽ được xử lý giống bản web. (TODO)')">Nghỉ không lương</button>
+                  onclick="submitNghiKhongLuong()">Nghỉ không lương</button>
           <button type="button" style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #9c27b0; background:#f3e5f5; font-size:12px;"
-                  onclick="alert('Xin nghỉ khác sẽ được xử lý giống bản web. (TODO)')">Nghỉ khác</button>
+                  onclick="submitNghiKhac()">Nghỉ khác</button>
         </div>
       </div>
     </div>
@@ -64,15 +110,52 @@
         const closeBtn = document.getElementById('lccClose');
 
         function fillModal(data) {
-          document.getElementById('mMst').textContent = data['MST'] || '';
-          document.getElementById('mHoten').textContent = data['Họ tên'] || '';
-          document.getElementById('mChuyen').textContent = data['Chuyền tổ'] || '';
-          document.getElementById('mBophan').textContent = data['Bộ phận'] || '';
-          document.getElementById('mNgay').textContent = data['Ngày'] || '';
-          document.getElementById('mGiovao').textContent = data['Giờ vào'] || '';
-          document.getElementById('mGiora').textContent = data['Giờ ra'] || '';
-          document.getElementById('mThieu').textContent = data['Số phút thiếu'] || '';
+          document.getElementById('mMst').textContent     = data['MST'] || '';
+          document.getElementById('mHoten').textContent   = data['Họ tên'] || '';
+          document.getElementById('mChuyen').textContent  = data['Chuyền tổ'] || '';
+          document.getElementById('mBophan').textContent  = data['Bộ phận'] || '';
+          document.getElementById('mNgay').textContent    = data['Ngày'] || '';
+          document.getElementById('mGiovao').textContent  = data['Giờ vào'] || '';
+          document.getElementById('mGiora').textContent   = data['Giờ ra'] || '';
+          document.getElementById('mThieu').textContent   = data['Số phút thiếu'] || '';
           document.getElementById('mPhepton').textContent = data['Phép tồn'] || '';
+
+          // Điểm danh bù
+          document.getElementById('fDdbMst').value      = data['MST'] || '';
+          document.getElementById('fDdbHoten').value    = data['Họ tên'] || '';
+          document.getElementById('fDdbChuyen').value   = data['Chuyền tổ'] || '';
+          document.getElementById('fDdbChucdanh').value = data['Chức danh'] || '';
+          document.getElementById('fDdbBophan').value   = data['Bộ phận'] || '';
+          document.getElementById('fDdbNgay').value     = data['Ngày'] || '';
+          document.getElementById('fDdbGiovao').value   = data['Giờ vào'] || '';
+          document.getElementById('fDdbGiora').value    = data['Giờ ra'] || '';
+
+          // Xin nghỉ phép
+          document.getElementById('fXpMst').value     = data['MST'] || '';
+          document.getElementById('fXpHoten').value   = data['Họ tên'] || '';
+          document.getElementById('fXpChuyen').value  = data['Chuyền tổ'] || '';
+          document.getElementById('fXpChucdanh').value= data['Chức danh'] || '';
+          document.getElementById('fXpBophan').value  = data['Bộ phận'] || '';
+          document.getElementById('fXpNgay').value    = data['Ngày'] || '';
+          document.getElementById('fXpSophut').value  = data['Số phút thiếu'] || '';
+
+          // Xin nghỉ không lương
+          document.getElementById('fXklMst').value     = data['MST'] || '';
+          document.getElementById('fXklHoten').value   = data['Họ tên'] || '';
+          document.getElementById('fXklChuyen').value  = data['Chuyền tổ'] || '';
+          document.getElementById('fXklChucdanh').value= data['Chức danh'] || '';
+          document.getElementById('fXklBophan').value  = data['Bộ phận'] || '';
+          document.getElementById('fXklNgay').value    = data['Ngày'] || '';
+          document.getElementById('fXklSophut').value  = data['Số phút thiếu'] || '';
+
+          // Xin nghỉ khác
+          document.getElementById('fXkMst').value     = data['MST'] || '';
+          document.getElementById('fXkHoten').value   = data['Họ tên'] || '';
+          document.getElementById('fXkChuyen').value  = data['Chuyền tổ'] || '';
+          document.getElementById('fXkChucdanh').value= data['Chức danh'] || '';
+          document.getElementById('fXkBophan').value  = data['Bộ phận'] || '';
+          document.getElementById('fXkNgay').value    = data['Ngày'] || '';
+          document.getElementById('fXkSophut').value  = data['Số phút thiếu'] || '';
         }
 
         cards.forEach(function(card) {
@@ -99,6 +182,41 @@
           }
         });
       });
+
+      function submitDiemDanhBu() {
+        const form = document.getElementById('fDiemDanhBu');
+        if (!form) return;
+        if (!form.giovao_diemdanhbu.value || !form.giora_diemdanhbu.value) {
+          if (!confirm('Thiếu giờ vào/ra, vẫn gửi điểm danh bù?')) return;
+        }
+        if (confirm('Xác nhận gửi điểm danh bù?')) {
+          form.submit();
+        }
+      }
+
+      function submitNghiPhep() {
+        const form = document.getElementById('fNghiPhep');
+        if (!form) return;
+        if (confirm('Xác nhận xin nghỉ phép?')) {
+          form.submit();
+        }
+      }
+
+      function submitNghiKhongLuong() {
+        const form = document.getElementById('fNghiKhongLuong');
+        if (!form) return;
+        if (confirm('Xác nhận xin nghỉ không lương?')) {
+          form.submit();
+        }
+      }
+
+      function submitNghiKhac() {
+        const form = document.getElementById('fNghiKhac');
+        if (!form) return;
+        if (confirm('Xác nhận xin nghỉ khác?')) {
+          form.submit();
+        }
+      }
     </script>
 
   {% else %}
