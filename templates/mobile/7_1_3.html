@@ -5,20 +5,35 @@
   <div style="font-size:12px; color:#666; margin-bottom:8px;">Tổng: {{ count }}</div>
 
   {% if danhsach %}
+  <form method="POST">
     {% for row in danhsach %}
-    <div style="background:#fff; border-radius:10px; padding:10px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
-      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
-        <div style="font-size:14px; font-weight:600;">{{ row[2] }}</div>
-        <div style="font-size:12px; color:#555;">MST: {{ row[1] }}</div>
+    {# row structure: see main_routes POST mapping, ID = row[11] #}
+    <div style="background:#fff; border-radius:10px; padding:8px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px; display:flex; gap:8px; align-items:flex-start;">
+      <div>
+        <input type="checkbox" name="selected_ids[]" value="{{ row[11] }}" style="margin-top:4px;" />
       </div>
-      <div style="font-size:12px; color:#555;">
-        <div>Loại: {{ row[6] }}</div>
-        <div>Ngày: {{ row[7] }} • Giờ: {{ row[8] }}</div>
-        <div>Lý do: {{ row[9] }}</div>
-        <div style="font-weight:600; margin-top:4px;">Trạng thái: {{ row[10] }}</div>
+      <div style="flex:1;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+          <div style="font-size:14px; font-weight:600;">{{ row[2] }}</div>
+          <div style="font-size:12px; color:#555;">MST: {{ row[1] }}</div>
+        </div>
+        <div style="font-size:12px; color:#555;">
+          <div>Loại: {{ row[6] }}</div>
+          <div>Ngày: {{ row[7] }} • Giờ: {{ row[8] }}</div>
+          <div>Lý do: {{ row[9] }}</div>
+          <div style="font-weight:600; margin-top:4px;">Trạng thái: {{ row[10] }}</div>
+        </div>
       </div>
     </div>
     {% endfor %}
+
+    <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+      <button type="submit" formaction="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm">Đã kiểm tra</button>
+      <button type="submit" formaction="/muc7_1_3/tuchoi_kiemtra" class="btn btn-secondary btn-sm">Từ chối (thư ký)</button>
+      <button type="submit" formaction="/muc7_1_3/pheduyet" class="btn btn-success btn-sm">Phê duyệt</button>
+      <button type="submit" formaction="/muc7_1_3/tuchoi_pheduyet" class="btn btn-danger btn-sm">Từ chối (quản lý)</button>
+    </div>
+  </form>
   {% else %}
     <div style="font-size:13px; color:#777; text-align:center; margin-top:16px;">Không có đơn điểm danh bù nào.</div>
   {% endif %}
