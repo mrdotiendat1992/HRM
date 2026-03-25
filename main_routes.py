@@ -2778,10 +2778,13 @@ def muc7_1_14():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_14.html", page="Bảng chấm công",
-                            danhsach=paginated_rows, 
-                            pagination=pagination,
-                            count=count)
+        return _render_with_mobile_fallback(
+            "7_1_14.html",
+            page="Bảng chấm công",
+            danhsach=paginated_rows,
+            pagination=pagination,
+            count=count,
+        )
     elif request.method=="POST":
         mst = request.form.get('mst')
         chuyen = request.form.get('chuyen')
