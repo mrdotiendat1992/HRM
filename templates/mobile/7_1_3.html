@@ -8,6 +8,9 @@
   {% set is_quanly = request.args.get('mstquanly') %}
 
   {% if danhsach %}
+  {% if pagination %}
+    <div class="pagination-mobile">{{ pagination.links|safe }}</div>
+  {% endif %}
   <form method="POST">
     {% for row in danhsach %}
     {# row structure: see main_routes POST mapping, ID = row[11] #}

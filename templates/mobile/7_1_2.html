@@ -5,6 +5,9 @@
   <div style="font-size:12px; color:#666; margin-bottom:8px;">Tổng: {{ count }}</div>
 
   {% if danhsach %}
+  {% if pagination %}
+    <div class="pagination-mobile">{{ pagination.links|safe }}</div>
+  {% endif %}
     {% for row in danhsach %}
     <div style="background:#fff; border-radius:10px; padding:10px 10px 6px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
       <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
