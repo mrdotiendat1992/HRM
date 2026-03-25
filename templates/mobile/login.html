@@ -36,8 +36,12 @@
 
       <form method="POST" action="{{ url_for('login') }}">
         <div class="field">
-          <label for="macongty">Mã công ty</label>
-          <input id="macongty" name="macongty" type="text" required>
+          <label for="macongty">Nhà máy</label>
+          <select id="macongty" name="macongty" required style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #ccc; font-size: 14px; box-sizing: border-box;">
+            <option value="">-- Chọn nhà máy --</option>
+            <option value="NT1">NT1</option>
+            <option value="NT2">NT2</option>
+          </select>
         </div>
         <div class="field">
           <label for="masothe">Mã số thẻ</label>
