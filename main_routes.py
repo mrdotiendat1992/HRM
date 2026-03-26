@@ -915,10 +915,9 @@ def quanlyhopdong():
     try:
         if request.method == "GET":
             mst = request.args.get("mst")
-            if mst:
-                danhsach = laydanhsach_hopdong_theomst(mst)
-            else:
-                danhsach = []
+            if not mst:
+                mst = current_user.masothe
+            danhsach = laydanhsach_hopdong_theomst(mst)
             return _render_with_mobile_fallback(
                 "3_3.html",
                 page="3.3 Quản lý hợp đồng lao động",
