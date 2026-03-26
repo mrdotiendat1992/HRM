@@ -23,8 +23,9 @@
 <body>
   <div class="container">
     <div class="card">
-      <h1>HRM Mobile</h1>
-      <div class="subtitle">Đăng nhập hệ thống</div>
+      <div style="text-align:center; margin-bottom:16px;">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo công ty" style="max-width:160px; height:auto;" />
+      </div>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
