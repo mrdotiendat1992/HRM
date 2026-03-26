@@ -919,7 +919,11 @@ def quanlyhopdong():
                 danhsach = laydanhsach_hopdong_theomst(mst)
             else:
                 danhsach = []
-            return render_template("3_3.html", page="3.3 Quản lý hợp đồng lao động",danhsach=danhsach)
+            return _render_with_mobile_fallback(
+                "3_3.html",
+                page="3.3 Quản lý hợp đồng lao động",
+                danhsach=danhsach,
+            )
         elif request.method == "POST":
             nhamay = current_user.macongty
             mst = request.form.get("form_manhanvien")
