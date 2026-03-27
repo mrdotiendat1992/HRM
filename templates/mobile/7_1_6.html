@@ -25,7 +25,6 @@
         </div>
         <div style="font-size:12px; color:#555;">
           <div>Ngày nghỉ: {{ row[6] }} • Số phút: {{ row[7] }}</div>
-          <div>Loại nghỉ: {{ row[8] }}</div>
           <div>Nhận giấy tờ: {{ row[10] }}</div>
           <div style="font-weight:600; margin-top:4px;">Trạng thái: {{ row[9] }}</div>
         </div>
@@ -36,7 +35,7 @@
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
       {# Thư ký: chỉ kiểm tra / từ chối kiểm tra #}
       {% if is_thuky and not is_quanly %}
-        <button type="button" data-action="/muc7_1_6/kiemtra" class="btn btn-primary btn-sm bulk-action">Đã kiểm tra</button>
+        <button type="button" data-action="/muc7_1_6/kiemtra" class="btn btn-primary btn-sm bulk-action">Kiểm tra</button>
         <button type="button" data-action="/muc7_1_6/tuchoi_kiemtra" class="btn btn-secondary btn-sm bulk-action">Từ chối kiểm tra</button>
       {% endif %}
 
