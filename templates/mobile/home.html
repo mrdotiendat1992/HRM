@@ -30,17 +30,9 @@
   <div class="card">
     <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
     <div class="menu">
-      <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}">
-        <span class="icon">🕒</span>
-        <span>QR điểm danh bù</span>
-      </a>
-      <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}">
-        <span class="icon">📅</span>
-        <span>QR xin nghỉ phép</span>
-      </a>
-      <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}">
-        <span class="icon">💸</span>
-        <span>QR nghỉ không lương</span>
+      <a href="javascript:void(0)" onclick="openQrModal()">
+        <span class="icon">🔳</span>
+        <span>QR</span>
       </a>
       {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
       <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}">
@@ -121,4 +113,36 @@
       <button type="submit">Đăng xuất</button>
     </form>
   </div>
+
+  <div id="qrModal" style="position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9999;">
+    <div style="background:#fff; border-radius:12px; max-width:420px; margin:40px auto; padding:14px 16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-size:15px; font-weight:600;">QR</div>
+        <button type="button" onclick="closeQrModal()" style="border:none; background:none; font-size:18px; line-height:1;">×</button>
+      </div>
+      <div style="font-size:13px; display:flex; flex-direction:column; gap:8px;">
+        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR điểm danh bù</a>
+        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR xin nghỉ phép</a>
+        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR nghỉ không lương</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openQrModal() {
+      var m = document.getElementById('qrModal');
+      if (m) m.style.display = 'block';
+    }
+    function closeQrModal() {
+      var m = document.getElementById('qrModal');
+      if (m) m.style.display = 'none';
+    }
+    document.addEventListener('click', function(e) {
+      var m = document.getElementById('qrModal');
+      if (!m) return;
+      if (e.target === m) {
+        closeQrModal();
+      }
+    });
+  </script>
 {% endblock %}
