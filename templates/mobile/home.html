@@ -30,8 +30,8 @@
   <div class="card">
     <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
     <div class="menu">
-      <a href="javascript:void(0)" onclick="openQrModal()">
-        <span class="icon">🔳</span>
+      <a href="javascript:void(0)" onclick="openQrModal()" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+        <img src="{{ url_for('static', filename='img/qr.png') }}" alt="QR" style="width:20px; height:20px;" />
         <span>QR</span>
       </a>
       {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
@@ -121,15 +121,15 @@
         <button type="button" onclick="closeQrModal()" style="border:none; background:none; font-size:18px; line-height:1;">×</button>
       </div>
       <div style="font-size:13px; display:flex; flex-direction:column; gap:8px;">
-        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
           <span class="icon">🕒</span>
           <span>QR điểm danh bù</span>
         </a>
-        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
           <span class="icon">📅</span>
           <span>QR xin nghỉ phép</span>
         </a>
-        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" style="display:flex; align-items:center; gap:8px; padding:8px 10px; border-radius:10px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
           <span class="icon">💸</span>
           <span>QR nghỉ không lương</span>
         </a>
