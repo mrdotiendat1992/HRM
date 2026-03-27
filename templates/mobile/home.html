@@ -3,6 +3,7 @@
 {% block content %}
   {% set tk = notice.get('Thư ký', {}) %}
   {% set ql = notice.get('Quản lý', {}) %}
+  {% set qr_suffix = 'hp' if current_user.macongty == 'NT1' else 'na' %}
 
   <div class="card">
     <div class="card-title"><span class="icon">👤</span><span>Cá nhân</span></div>
@@ -29,6 +30,18 @@
   <div class="card">
     <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
     <div class="menu">
+      <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}">
+        <span class="icon">🕒</span>
+        <span>QR điểm danh bù</span>
+      </a>
+      <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}">
+        <span class="icon">📅</span>
+        <span>QR xin nghỉ phép</span>
+      </a>
+      <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}">
+        <span class="icon">💸</span>
+        <span>QR nghỉ không lương</span>
+      </a>
       {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
       <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}">
         <span class="icon">⚠️</span>
