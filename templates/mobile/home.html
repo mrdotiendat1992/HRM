@@ -121,9 +121,18 @@
         <button type="button" onclick="closeQrModal()" style="border:none; background:none; font-size:18px; line-height:1;">×</button>
       </div>
       <div style="font-size:13px; display:flex; flex-direction:column; gap:8px;">
-        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR điểm danh bù</a>
-        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR xin nghỉ phép</a>
-        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" class="btn btn-primary btn-sm">QR nghỉ không lương</a>
+        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+          <span class="icon">🕒</span>
+          <span>QR điểm danh bù</span>
+        </a>
+        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+          <span class="icon">📅</span>
+          <span>QR xin nghỉ phép</span>
+        </a>
+        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" class="btn btn-primary btn-sm" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+          <span class="icon">💸</span>
+          <span>QR nghỉ không lương</span>
+        </a>
       </div>
     </div>
   </div>
