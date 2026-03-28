@@ -919,11 +919,7 @@ def quanlyhopdong():
             if not mst:
                 mst = current_user.masothe
             danhsach = laydanhsach_hopdong_theomst(mst)
-            return _render_with_mobile_fallback(
-                "3_3.html",
-                page="3.3 Quáº£n lA½ há»£p Ä`á»"ng lao Ä`á»Tng",
-                danhsach=danhsach,
-            )
+            return _render_with_mobile_fallback("3_3.html", page="3.3 Quan ly hop dong lao dong", danhsach=danhsach)
         elif request.method == "POST":
             nhamay = current_user.macongty
             mst = request.form.get("form_manhanvien")
