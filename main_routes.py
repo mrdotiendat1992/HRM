@@ -949,10 +949,10 @@ def quanlyhopdong():
             sectiondescription = request.form.get("sectiondescription")
 
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noicapcccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
-                flash("ThAªm há»£p Ä`á»"ng thA nh cA'ng !!!")
+                flash("Them hop dong thanh cong !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:
-                flash("ThAªm há»£p Ä`á»"ng tháº¥t báº¡i")
+                flash("Them hop dong that bai")
             return redirect("/muc3_3")
     except:
         return redirect("/muc3_3")
