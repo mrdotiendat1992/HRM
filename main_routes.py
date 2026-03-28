@@ -433,9 +433,9 @@ def danhsachdangkytuyendung():
             macongty  = current_user.macongty,
         )
         if ketqua["ketqua"]:
-            flash("Cáº-p nháº-t thA'ng tin á»cng viAªn thA nh cA'ng !!!")
+            flash("Cap nhat thong tin ung vien thanh cong !!!")
         else:
-            flash(f"Cáº-p nháº-t tháº¥t báº¡i â?" {ketqua.get('lido')}")
+            flash(f"Cap nhat that bai - {ketqua.get('lido')}")
             app.logger.error(f"muc2_1 POST: {ketqua.get('lido')}")
     except Exception as e:
         flash(f"Lá»-i: {e}")
