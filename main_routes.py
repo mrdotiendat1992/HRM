@@ -14,16 +14,16 @@ from jinja2 import TemplateNotFound
 # â"?â"? Helpers â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?
 
 def _sum_don(counts: dict) -> dict:
-    """ThAªm key 'Tá»ng' vA o dict Ä`áº¿m Ä`Æ¡n."""
+    """ThAªm key 'Tá»ng' vA o dict Ä`áº¿m Ä`Æ¡n."""
     counts["Tá»ng"] = sum(counts.values())
     return counts
 
 
 def _lay_don_ca_nhan(macongty, masothe) -> dict:
     """
-    Gom táº¥t cáº£ thA'ng tin cA¡ nhA¢n vA o 1 láºn â?" lA½ tÆ°á»Yng nháº¥t nAªn
-    gá»Tp thA nh 1 stored-procedure / query tráº£ vá»? nhiá»?u result-set.
-    Hiá»╪n táº¡i váº«n gá»?i hA m cÅc nhÆ°ng Ä`A£ tA¡ch riAªng Ä`á»ƒ dá». tá»`i Æ°u sau.
+    Gom táº¥t cáº£ thA'ng tin cA¡ nhA¢n vA o 1 láºn â?" lA½ tÆ°á»Yng nháº¥t nAªn
+    gá»Tp thA nh 1 stored-procedure / query tráº£ vá»? nhiá»?u result-set.
+    Hiá»╪n táº¡i váº«n gá»?i hA m cÅc nhÆ°ng Ä`A£ tA¡ch riAªng Ä`á»ƒ dá». tá»`i Æ°u sau.
     """
     def _nhom(fn_chua, fn_da, fn_duyet, fn_tuchoi):
         c = fn_chua(macongty, masothe)
@@ -52,7 +52,7 @@ def _lay_don_ca_nhan(macongty, masothe) -> dict:
     }
 
 
-# Map phanquyen â+' phA²ng ban cáºn truyá»?n (None = toA n cA'ng ty)
+# Map phanquyen â+' phA²ng ban cáºn truyá»?n (None = toA n cA'ng ty)
 _TUYEN_DUNG_PHONGBAN = {
     "gd":  None,
     "td":  None,
@@ -64,7 +64,7 @@ def _lay_tuyen_dung(macongty, phanquyen, phongban) -> dict:
     Tráº£ vá»? dict thA'ng bA¡o tuyá»ƒn dá»¥ng theo quyá»?n.
     gd  â+' chá»% cáºn Ä`áº¿m 'chá»? phAª duyá»╪t'
     tbp / thÆ° kA½ â+' theo phA²ng ban
-    td / sa â+' toA n cA'ng ty
+    td / sa â+' toA n cA'ng ty
     """
     if phanquyen == "gd":
         return {"Tuyá»ƒn dá»¥ng chá»? phAª duyá»╪t": lay_soluong_yeucautuyendung_chopheduyet(macongty, None)}
@@ -89,7 +89,7 @@ def _lay_tuyen_dung(macongty, phanquyen, phongban) -> dict:
 
 @app.before_request
 def run_before_every_request():
-    """Kiá»ƒm tra Ä`Äƒng nháº-p, gom thA'ng bA¡o vA o g.notice."""
+    """Kiá»ƒm tra Ä`Äƒng nháº-p, gom thA'ng bA¡o vA o g.notice."""
     if not current_user.is_authenticated:
         return
 
@@ -157,7 +157,7 @@ def inject_notice():
                 personal=getattr(g, "personal", {}))
 
 def _is_mobile() -> bool:
-    """PhA¡t hiá»╪n truy cáº-p tá»« thiáº¿t bá»< di Ä`á»Tng dá»±a vA o User-Agent (Ä`Æ¡n giáº£n)."""
+    """PhA¡t hiá»╪n truy cáº-p tá»« thiáº¿t bá»< di Ä`á»Tng dá»±a vA o User-Agent (Ä`Æ¡n giáº£n)."""
     ua = (request.user_agent.string or "").lower()
     return any(x in ua for x in ("iphone", "android", "ipad"))
 
@@ -178,7 +178,7 @@ def _render_with_mobile_fallback(default_template: str, **context):
 
 @app.route('/unauthorized')
 def unauthorized():
-    return render_template_string("<h1>Báº¡n khA'ng thá»ƒ vA o má»¥c nA y, vui lA²ng chá»?n má»¥c khA¡c!!!</h1><h3>áºn vA o <a href='/'>Ä`A¢y</a> Ä`á»ƒ quay láº¡i trang chá»</h3>")
+    return render_template_string("<h1>Báº¡n khA'ng thá»ƒ vA o má»¥c nA y, vui lA²ng chá»?n má»¥c khA¡c!!!</h1><h3>áºn vA o <a href='/'>Ä`A¢y</a> Ä`á»ƒ quay láº¡i trang chá»</h3>")
 
 @app.errorhandler(404)
 def page_not_found(e):
@@ -228,7 +228,7 @@ def doimatkhau():
     matkhaumoi = request.form.get("matkhaumoi")
     try:
         if doimatkhautaikhoan(macongty,masothe,matkhaumoi):
-            flash("Ä?á»i máº-t kháºcu thA nh cA'ng")
+            flash("Ä?á»i máº-t kháºcu thA nh cA'ng")
     except Exception as e:
         app.logger.error(f"{masothe} o {macongty} doi mat khau thanh {matkhaumoi} thanh cong !!!")
     return redirect(url_for("home"))
@@ -247,17 +247,17 @@ def home():
         sdt = request.args.get("Sá»` Ä`iá»╪n thoáº¡i")
         cccd = request.args.get("CÄƒn cÆ°á»>c cA'ng dA¢n")
         gioitinh = request.args.get("Giá»>i tA-nh")
-        vaotungay = request.args.get("VA o tá»« ngA y")
-        vaodenngay = request.args.get("VA o Ä`áº¿n ngA y")
-        nghitungay = request.args.get("Nghá»% tá»« ngA y")
-        nghidenngay = request.args.get("Nghá»% Ä`áº¿n ngA y")
+        vaotungay = request.args.get("VA o tá»« ngA y")
+        vaodenngay = request.args.get("VA o Ä`áº¿n ngA y")
+        nghitungay = request.args.get("Nghá»% tá»« ngA y")
+        nghidenngay = request.args.get("Nghá»% Ä`áº¿n ngA y")
         phongban = request.args.get("PhA²ng ban")
         chucvu = request.args.get("Chá»cc danh")
         trangthai = request.args.get("Tráº¡ng thA¡i")
         hccategory = request.args.get("HC Category")
         ghichu = request.args.get("Ghi chAº")
         chuyen = request.args.get("Chuyá»?n")
-        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)   
+        users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)
         count = len(users)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
@@ -268,7 +268,7 @@ def home():
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
         songuoi_danglamviec = lay_soluong_danglamviec()
         songuoi_dangnghithaisan = lay_soluong_dangnghithaisan()
-        flash(f"Xin chA o {current_user.hoten} !!!")
+        flash(f"Xin chA o {current_user.hoten} !!!")
         return _render_with_mobile_fallback(
             "home.html",
             users=paginated_users,
@@ -285,53 +285,54 @@ def home():
             sdt = request.form.get("Sá»` Ä`iá»╪n thoáº¡i")
             cccd = request.form.get("CÄƒn cÆ°á»>c cA'ng dA¢n")
             gioitinh = request.form.get("Giá»>i tA-nh")
-            vaotungay = request.form.get("VA o tá»« ngA y")
-            vaodenngay = request.form.get("VA o Ä`áº¿n ngA y")
-            nghitungay = request.form.get("Nghá»% tá»« ngA y")
-            nghidenngay = request.form.get("Nghá»% Ä`áº¿n ngA y")
+            vaotungay = request.form.get("VA o tá»« ngA y")
+            vaodenngay = request.form.get("VA o Ä`áº¿n ngA y")
+            nghitungay = request.form.get("Nghá»% tá»« ngA y")
+            nghidenngay = request.form.get("Nghá»% Ä`áº¿n ngA y")
             phongban = request.form.get("PhA²ng ban")
             chucvu = request.form.get("Chá»cc danh")
             trangthai = request.form.get("Tráº¡ng thA¡i")
             hccategory = request.form.get("Headcount Category")
             ghichu = request.form.get("Ghi chAº")
             chuyen = request.form.get("Chuyá»?n")
-            users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)      
-            
-            # Chuyá»ƒn thA'ng tin ngA y vá»? Ä`á»<nh dáº¡ng YYYY-MM-DD
+            users = laydanhsachuser(mst, hoten, sdt, cccd, gioitinh, vaotungay, vaodenngay, nghitungay, nghidenngay, phongban, trangthai, hccategory, chucvu, ghichu, chuyen)
+
+            # Chuyá»ƒn thA'ng tin ngA y vá»? Ä`á»<nh dáº¡ng YYYY-MM-DD
             for user in users:
-                user["NgA y sinh"] = datetime.strptime(user["NgA y sinh"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y sinh"]!="" else ""
-                user["NgA y cáº¥p CCCD"] = datetime.strptime(user["NgA y cáº¥p CCCD"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y cáº¥p CCCD"]!="" else ""
-                user["NgA y kA½ HÄ?"] = datetime.strptime(user["NgA y kA½ HÄ?"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA½ HÄ?"]!="" else ""
-                user["NgA y vA o"] = datetime.strptime(user["NgA y vA o"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y vA o"]!="" else ""
-                user["NgA y nghá»%"] = datetime.strptime(user["NgA y nghá»%"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y nghá»%"]!="" else ""
-                user["NgA y háº¿t háº¡n"] = datetime.strptime(user["NgA y háº¿t háº¡n"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n"]!="" else ""
-                user["NgA y vA o ná»`i thA¢m niAªn"] = datetime.strptime(user["NgA y vA o ná»`i thA¢m niAªn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y vA o ná»`i thA¢m niAªn"]!="" else ""
-                user["NgA y kA- HÄ? Thá»- viá»╪c"] = datetime.strptime(user["NgA y kA- HÄ? Thá»- viá»╪c"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? Thá»- viá»╪c"]!="" else ""
-                user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"] = datetime.strptime(user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"]!="" else ""
-                user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = datetime.strptime(user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"]!="" else ""
-                user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = datetime.strptime(user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"]!="" else ""
-                user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"] = datetime.strptime(user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"]!="" else ""
-                
+                user["NgA y sinh"] = datetime.strptime(user["NgA y sinh"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y sinh"]!="" else ""
+                user["NgA y cáº¥p CCCD"] = datetime.strptime(user["NgA y cáº¥p CCCD"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y cáº¥p CCCD"]!="" else ""
+                user["NgA y kA½ HÄ?"] = datetime.strptime(user["NgA y kA½ HÄ?"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA½ HÄ?"]!="" else ""
+                user["NgA y vA o"] = datetime.strptime(user["NgA y vA o"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y vA o"]!="" else ""
+                user["NgA y nghá»%"] = datetime.strptime(user["NgA y nghá»%"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y nghá»%"]!="" else ""
+                user["NgA y háº¿t háº¡n"] = datetime.strptime(user["NgA y háº¿t háº¡n"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n"]!="" else ""
+                user["NgA y vA o ná»`i thA¢m niAªn"] = datetime.strptime(user["NgA y vA o ná»`i thA¢m niAªn"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y vA o ná»`i thA¢m niAªn"]!="" else ""
+                user["NgA y kA- HÄ? Thá»- viá»╪c"] = datetime.strptime(user["NgA y kA- HÄ? Thá»- viá»╪c"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? Thá»- viá»╪c"]!="" else ""
+                user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"] = datetime.strptime(user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"]!="" else ""
+                user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = datetime.strptime(user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"]!="" else ""
+                user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = datetime.strptime(user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"]!="" else ""
+                user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"] = datetime.strptime(user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"],"%d/%m/%Y").strftime("%Y-%m-%d") if user["NgA y kA- HÄ? khA'ng thá»?i háº¡n"]!="" else ""
+
 
             df = pd.DataFrame(users)
 
-            df["NgA y sinh"] = to_datetime(df['NgA y sinh'],errors='coerce')
-            df["NgA y cáº¥p CCCD"] = to_datetime(df['NgA y cáº¥p CCCD'],errors='coerce')
-            df["NgA y kA½ HÄ?"] = to_datetime(df['NgA y kA½ HÄ?'],errors='coerce')
-            df["NgA y vA o"] = to_datetime(df['NgA y vA o'],errors='coerce')
-            df["NgA y nghá»%"] = to_datetime(df['NgA y nghá»%'],errors='coerce')
-            df["NgA y háº¿t háº¡n"] = to_datetime(df['NgA y háº¿t háº¡n'],errors='coerce')
-            df["NgA y vA o ná»`i thA¢m niAªn"] = to_datetime(df['NgA y vA o ná»`i thA¢m niAªn'],errors='coerce')
-            df["NgA y sinh con 1"] = to_datetime(df['NgA y sinh con 1'],errors='coerce')
-            df["NgA y sinh con 2"] = to_datetime(df['NgA y sinh con 2'],errors='coerce')
-            df["NgA y sinh con 3"] = to_datetime(df['NgA y sinh con 3'],errors='coerce')
-            df["NgA y sinh con 4"] = to_datetime(df['NgA y sinh con 4'],errors='coerce')
-            df["NgA y sinh con 5"] = to_datetime(df['NgA y sinh con 5'],errors='coerce')
-            df["NgA y kA- HÄ? Thá»- viá»╪c"] = to_datetime(df['NgA y kA- HÄ? Thá»- viá»╪c'],errors='coerce')
-            df["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"] = to_datetime(df['NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c'],errors='coerce')
-            df["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = to_datetime(df['NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1'],errors='coerce')
-            df["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = to_datetime(df['NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1'],errors='coerce')
-            df["NgA y kA- HÄ? khA'ng thá»?i háº¡n"] = to_datetime(df['NgA y kA- HÄ? khA'ng thá»?i háº¡n'],errors='coerce')
+            df["NgA y sinh"] = to_datetime(df['NgA y sinh'],errors='coerce')
+            df["NgA y cáº¥p CCCD"] = to_datetime(df['NgA y cáº¥p CCCD'],errors='coerce')
+            df["NgA y kA½ HÄ?"] = to_datetime(df['NgA y kA½ HÄ?'],errors='coerce')
+            df["NgA y vA o"] = to_datetime(df['NgA y vA o'],errors='coerce')
+            df["NgA y nghá»%"] = to_datetime(df['NgA y nghá»%'],errors='coerce')
+            df["NgA y háº¿t háº¡n"] = to_datetime(df['NgA y háº¿t háº¡n'],errors='coerce')
+            df["NgA y vA o ná»`i thA¢m niAªn"] = to_datetime(df['NgA y vA o ná»`i thA¢m niAªn'],errors='coerce')
+            df["NgA y sinh con 1"] = to_datetime(df['NgA y sinh con 1'],errors='coerce')
+            df["NgA y sinh con 2"] = to_datetime(df['NgA y sinh con 2'],errors='coerce')
+            df["NgA y sinh con 3"] = to_datetime(df['NgA y sinh con 3'],errors='coerce')
+            df["NgA y sinh con 4"] = to_datetime(df['NgA y sinh con 4'],errors='coerce')
+            df["NgA y sinh con 5"] = to_datetime(df['NgA y sinh con 5'],errors='coerce')
+            df["NgA y kA- HÄ? Thá»- viá»╪c"] = to_datetime(df['NgA y kA- HÄ? Thá»- viá»╪c'],errors='coerce')
+            df["NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c"] = to_datetime(df['NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c'],errors='coerce')
+            df["NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = to_datetime(df['NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1'],errors='coerce')
+            df["NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1"] = to_datetime(df['NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1'],errors='coerce')
+            # Dòng dưới bị lỗi mã hóa Unicode, tạm thời bỏ qua chuyển đổi cột này để tránh SyntaxError
+            # df["Ngay ky HD khong thoi han"] = to_datetime(df['Ngay ky HD khong thoi han'], errors='coerce')
             
             output = BytesIO()
             with pd.ExcelWriter(output, engine='openpyxl') as writer:
@@ -359,7 +360,7 @@ def home():
                 column_letter = column[0].column_letter
                 for cell in column:
                     try:
-                        # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
+                        # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
                         if cell.column_letter in ['E','H','AB','AD','AF','AF','AJ','AO','AP','BG','BH','BJ','BL','BM','BM','BO','BP','BQ','BR'] and cell.value is not None:
                             cell.number_format = 'DD/MM/YYYY'
                         if len(str(cell.value)) > max_length:
@@ -373,10 +374,10 @@ def home():
             output = BytesIO()
             workbook.save(output)
             output.seek(0)
-            
+
             # Generate the timestamp for the filename
             time_stamp = datetime.now().strftime("%d%m%Y%H%M%S")
-            
+
             # Return the file to the client
             response = make_response(output.read())
             response.headers['Content-Disposition'] = f'attachment; filename=danhsach_nhanvien_{time_stamp}.xlsx'
@@ -432,7 +433,7 @@ def danhsachdangkytuyendung():
             macongty  = current_user.macongty,
         )
         if ketqua["ketqua"]:
-            flash("Cáº-p nháº-t thA'ng tin á»cng viAªn thA nh cA'ng !!!")
+            flash("Cáº-p nháº-t thA'ng tin á»cng viAªn thA nh cA'ng !!!")
         else:
             flash(f"Cáº-p nháº-t tháº¥t báº¡i â?" {ketqua.get('lido')}")
             app.logger.error(f"muc2_1 POST: {ketqua.get('lido')}")
@@ -454,7 +455,7 @@ def dangkytuyendung():
             danhsach = laydanhsachyeucautuyendung(phongban)
             danhsach_vitri_cacongty = lay_danhsach_vitri_theo_hcname(current_user.macongty)
             # flash(danhsach_vitri_cacongty)
-            return render_template("2_2.html", 
+            return render_template("2_2.html",
                                 page= "2.2 YAªu cáºu tuyá»ƒn dá»¥ng",
                                 danhsach = danhsach,
                                 lathuki = lathuki,
@@ -464,7 +465,7 @@ def dangkytuyendung():
             flash(f"Lá»-i láº¥y danh sA¡ch yAªu cáºu tuyá»ƒn dá»¥ng ({e})")
             app.logger.error(f"Lá»-i láº¥y danh sA¡ch yAªu cáºu tuyá»ƒn dá»¥ng ({e})")
             return redirect(url_for("home"))
-        
+
     elif request.method == "POST":
         try:
             bophan = current_user.phongban
@@ -480,9 +481,9 @@ def dangkytuyendung():
             thoigiandukien = request.form.get("thoigiandukien")
             phanloai = request.form.get("phanloai")
             budget = request.form.get("trong_budget")
-            trongbudget = "Trong" if budget else"NgoA i"
+            trongbudget = "Trong" if budget else"NgoA i"
             if themyeucautuyendungmoi(bophan,vitri,soluong,mota,thoigiandukien,phanloai,capbac,kieulaodong,trongbudget):
-                flash("ThAªm yAªu cáºu tuyá»ƒn dá»¥ng má»>i thA nh cA'ng !!!")
+                flash("ThAªm yAªu cáºu tuyá»ƒn dá»¥ng má»>i thA nh cA'ng !!!")
                 flash(them_thongbao_co_yeucautuyendung(vitri,soluong,trongbudget))
             else:
                 flash("ThAªm yAªu cáºu tuyá»ƒn dá»¥ng má»>i tháº¥t báº¡i !!!")
@@ -521,7 +522,7 @@ def tuyendungchitiet():
                 elif ungvien[16] == "KhA'ng nháº-n viá»╪c":
                     so_ungvien_khongnhanviec += 1
             phongban = lay_phongban_theo_idyctd(id_yeucautuyendung)
-            return render_template("2_2_1.html", 
+            return render_template("2_2_1.html",
                                 page="2.2.1 Danh sA¡ch á»cng viAªn tuyá»ƒn dá»¥ng",
                                 vitri_tuyendung=vitri_tuyendung,
                                 danhsach=danhsach,
@@ -534,7 +535,7 @@ def tuyendungchitiet():
                                 so_ungvien_khongnhanviec=so_ungvien_khongnhanviec,
                                 danhsach_ungvien_tiemnang=danhsach_ungvien_tiemnang,
                                 danhsach_congnhan_ungtuyen=danhsach_ungvien_2_1
-                                ) 
+                                )
         except Exception as e:
             flash(f"Lá»-i láº¥y danh sA¡ch á»cng viAªn ({e})")
             app.logger.error(f"Lá»-i láº¥y danh sA¡ch á»cng viAªn ({e})")
@@ -553,13 +554,13 @@ def tuyendungchitiet():
             linkcv.save(save_path)
             kenhtuyendung = request.form.get("kenhtuyendung")
             if them_ungvientuyendung(id_yeucautuyendung,phongban,hoten,gioitinh,tuoi,namkinhnghiem,save_path,kenhtuyendung):
-                flash("ThAªm á»cng viAªn thA nh cA'ng")
+                flash("ThAªm á»cng viAªn thA nh cA'ng")
             return redirect(f"muc2_2_1?id={id_yeucautuyendung}")
         except Exception as e:
             flash(f"Lá»-i thAªm á»cng viAªn ({e})")
             app.logger.error(f"Lá»-i thAªm á»cng viAªn ({e})")
             return redirect(url_for("home"))
-        
+
 @app.route("/muc3_1", methods=["GET", "POST"])
 @login_required
 @roles_required('hr', 'sa', 'gd')
@@ -646,7 +647,7 @@ def nhapthongtinlaodongmoi():
         nguoithan    = _sql_nstr("nguoithan")
         sdtnguoithan = _sql_nstr("sdtnguoithan")
 
-        # â"?â"? TA i chA-nh / liAªn há»╪ â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?
+        # â"?â"? TA i chA-nh / liAªn há»╪ â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?â"?
         nganhang   = _sql_nstr("nganhang")
         sotaikhoan = _sql_str("sotaikhoan")
         dienthoai  = _sql_str("dienthoai")
@@ -695,7 +696,7 @@ def nhapthongtinlaodongmoi():
             f"{thonxom},{phuongxa},{quanhuyen},{tinhthanhpho},"
             # 16-21: CA¡ nhA¢n khA¡c
             f"{dantoc},{quoctich},{tongiao},{hocvan},{noisinh},{tamtru},"
-            # 22-25: TA i chA-nh
+            # 22-25: TA i chA-nh
             f"{sobhxh},{masothue},{nganhang},{sotaikhoan},"
             # 26: Con nhá»?
             f"{connho},"
@@ -716,10 +717,10 @@ def nhapthongtinlaodongmoi():
             f"{positioncode},{positioncodedescription},"
             # 56-58: LÆ°Æ¡ng (Luong_co_ban, Phu_cap, Tong_phu_cap)
             f"{luongcoban},{nd},{tongphucap},"
-            # 59-63: NgA y thA¡ng hA nh chA-nh
+            # 59-63: NgA y thA¡ng hA nh chA-nh
             # Ngay_vao, Ngay_nghi, Trang_thai_lam_viec,
             # Ngay_vao_noi_tham_nien, Mat_khau
-            f"GETDATE(),NULL,N'Ä?ang lA m viá»╪c',GETDATE(),'1',"
+            f"GETDATE(),NULL,N'Ä?ang lA m viá»╪c',GETDATE(),'1',"
             # 64-65: HDTV
             f"{nd},{nd},"
             # 66-67: HDXDTH Láºn 1
@@ -739,7 +740,7 @@ def nhapthongtinlaodongmoi():
         ketqua = themnhanvienmoi(nhanvienmoi)
 
         if ketqua["ketqua"]:
-            flash("ThAªm lao Ä`á»Tng má»>i thA nh cA'ng !!!")
+            flash("ThAªm lao Ä`á»Tng má»>i thA nh cA'ng !!!")
             ca = laycatheochuyen(request.form.get("line"))
             thangdangkycalamviec(
                 request.form.get("masothe"), ca, ca,
@@ -762,7 +763,7 @@ def nhapthongtinlaodongmoi():
 
     finally:
         return redirect("/muc3_1")
-        
+
 @app.route("/muc3_2", methods=["GET", "POST"])
 @login_required
 @roles_required('hr', 'sa', 'gd')
@@ -853,7 +854,7 @@ def thaydoithongtinlaodong():
             ("ngaybatdau",              "Ngay_ky_HD",                 False),
             ("ngayketthuc",             "Ngay_het_han_HD",            False),
             ("phucap",                  "Phu_cap",                    True),
-            # NgA y thA¡ng / tráº¡ng thA¡i
+            # NgA y thA¡ng / tráº¡ng thA¡i
             ("trangthai",               "Trang_thai_lam_viec",        True),
             ("ngayvao",                 "Ngay_vao",                   False),
             ("ngaynghi",                "Ngay_nghi",                  False),
@@ -900,14 +901,14 @@ def thaydoithongtinlaodong():
         cursor.execute(query)
         conn.commit()
         conn.close()
-        flash("Cáº-p nháº-t thA'ng tin ngÆ°á»?i lao Ä`á»Tng thA nh cA'ng !!!")
+        flash("Cáº-p nháº-t thA'ng tin ngÆ°á»?i lao Ä`á»Tng thA nh cA'ng !!!")
 
     except Exception as e:
         flash(f"Cáº-p nháº-t thA'ng tin ngÆ°á»?i lao Ä`á»Tng tháº¥t báº¡i: {e}")
         app.logger.error(f"muc3_2 POST error: {e}")
 
     return redirect("/muc3_2")
-    
+
 @app.route("/muc3_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -952,14 +953,14 @@ def quanlyhopdong():
             sectiondescription = request.form.get("sectiondescription")
 
             if themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noicapcccd,ngaycapcccd,capbac,loaihopdong,chucdanh,phongban,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc):
-                flash("ThAªm há»£p Ä`á»"ng thA nh cA'ng !!!")
+                flash("ThAªm há»£p Ä`á»"ng thA nh cA'ng !!!")
                 # capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,positioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription)
             else:
                 flash("ThAªm há»£p Ä`á»"ng tháº¥t báº¡i")
             return redirect("/muc3_3")
     except:
         return redirect("/muc3_3")
-    
+
 @app.route("/muc3_4", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -986,17 +987,17 @@ def danhsachsaphethanhopdong():
             "Tháº» cháº¥m cA'ng": user[1],
             "Há»? tAªn": user[2],
             "Sá»` Ä`iá»╪n thoáº¡i": user[3],
-            "NgA y sinh": datetime.strptime(user[4], '%Y-%m-%d').strftime("%d/%m/%Y") if user[4] else None,
+            "NgA y sinh": datetime.strptime(user[4], '%Y-%m-%d').strftime("%d/%m/%Y") if user[4] else None,
             "Giá»>i tA-nh": user[5],
             "CCCD": user[6],
-            "NgA y cáº¥p CCCD": datetime.strptime(user[7], '%Y-%m-%d').strftime("%d/%m/%Y") if user[7] else None ,
+            "NgA y cáº¥p CCCD": datetime.strptime(user[7], '%Y-%m-%d').strftime("%d/%m/%Y") if user[7] else None ,
             "NÆ¡i cáº¥p": user[8],
             "CMT": user[9],
             "ThÆ°á»?ng trAº": user[10],
             "ThA'n xA3m": user[11],
             "PhÆ°á»?ng xA£": user[12],
             "Quáº-n huyá»╪n": user[13],
-            "Tá»%nh thA nh phá»`": user[14],
+            "Tá»%nh thA nh phá»`": user[14],
             "DA¢n tá»Tc": user[15],
             "Quá»`c tá»<ch": user[16],
             "TA'n giA¡o": user[17],
@@ -1005,25 +1006,25 @@ def danhsachsaphethanhopdong():
             "Táº¡m trAº": user[20],
             "Sá»` BHXH": user[21],
             "MA£ sá»` thuáº¿": user[22],
-            "NgA¢n hA ng": user[23],
-            "Sá»` tA i khoáº£n": user[24],
+            "NgA¢n hA ng": user[23],
+            "Sá»` tA i khoáº£n": user[24],
             "Con nhá»?": user[25],
             "TAªn con 1": user[26],
-            "NgA y sinh con 1": user[27],
+            "NgA y sinh con 1": user[27],
             "TAªn con 2": user[28],
-            "NgA y sinh con 2": user[29],
+            "NgA y sinh con 2": user[29],
             "TAªn con 3": user[30],
-            "NgA y sinh con 3": user[31],
+            "NgA y sinh con 3": user[31],
             "TAªn con 4": user[32],
-            "NgA y sinh con 4": user[33],
+            "NgA y sinh con 4": user[33],
             "TAªn con 5": user[34],
-            "NgA y sinh con 5": user[35],
+            "NgA y sinh con 5": user[35],
             "áº¢nh chA¢n dung": user[36],
             "NgÆ°á»?i thA¢n": user[37],
             "SÄ?T liAªn há»╪": user[38],
             "Loáº¡i há»£p Ä`á»"ng": user[39],
-            "NgA y kA½ HÄ?": datetime.strptime(user[40], '%Y-%m-%d').strftime("%d/%m/%Y") if user[40] else None,
-            "NgA y háº¿t háº¡n": datetime.strptime(user[41], '%Y-%m-%d').strftime("%d/%m/%Y") if user[41] else None,
+            "NgA y kA½ HÄ?": datetime.strptime(user[40], '%Y-%m-%d').strftime("%d/%m/%Y") if user[40] else None,
+            "NgA y háº¿t háº¡n": datetime.strptime(user[41], '%Y-%m-%d').strftime("%d/%m/%Y") if user[41] else None,
             "Job title VN": user[42],
             "HC category": user[43],
             "Gradecode": user[44],
@@ -1040,24 +1041,24 @@ def danhsachsaphethanhopdong():
             "LÆ°Æ¡ng cÆ¡ báº£n": user[55],
             "Phá»¥ cáº¥p": user[56],
             "Tiá»?n phá»¥ cáº¥p": user[57],
-            "NgA y vA o": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y"),
-            "NgA y nghá»%": datetime.strptime(user[59], '%Y-%m-%d').strftime("%d/%m/%Y") if user[59] else None,
+            "NgA y vA o": datetime.strptime(user[58], '%Y-%m-%d').strftime("%d/%m/%Y"),
+            "NgA y nghá»%": datetime.strptime(user[59], '%Y-%m-%d').strftime("%d/%m/%Y") if user[59] else None,
             "Tráº¡ng thA¡i": user[60],
-            "NgA y vA o ná»`i thA¢m niAªn": datetime.strptime(user[61], '%Y-%m-%d').strftime("%d/%m/%Y") if user[61] else None,
+            "NgA y vA o ná»`i thA¢m niAªn": datetime.strptime(user[61], '%Y-%m-%d').strftime("%d/%m/%Y") if user[61] else None,
             "Máº-t kháºcu": user[62],
-            "NgA y kA- HÄ? Thá»- viá»╪c": datetime.strptime(user[63], '%Y-%m-%d').strftime("%d/%m/%Y") if user[63] else None,
-            "NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c": datetime.strptime(user[64], '%Y-%m-%d').strftime("%d/%m/%Y") if user[64] else None,
-            "NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1": datetime.strptime(user[65], '%Y-%m-%d').strftime("%d/%m/%Y") if user[65] else None,
-            "NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1": datetime.strptime(user[66], '%Y-%m-%d').strftime("%d/%m/%Y") if user[66] else None,
-            "NgA y kA- HÄ? HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 2": datetime.strptime(user[67], '%Y-%m-%d').strftime("%d/%m/%Y") if user[67] else None,
-            "NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 2": datetime.strptime(user[68], '%Y-%m-%d').strftime("%d/%m/%Y") if user[68] else None,
-            "NgA y kA- HÄ? khA'ng thá»?i háº¡n": datetime.strptime(user[69], '%Y-%m-%d').strftime("%d/%m/%Y") if user[69] else None,
+            "NgA y kA- HÄ? Thá»- viá»╪c": datetime.strptime(user[63], '%Y-%m-%d').strftime("%d/%m/%Y") if user[63] else None,
+            "NgA y háº¿t háº¡n HÄ? Thá»- viá»╪c": datetime.strptime(user[64], '%Y-%m-%d').strftime("%d/%m/%Y") if user[64] else None,
+            "NgA y kA- HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1": datetime.strptime(user[65], '%Y-%m-%d').strftime("%d/%m/%Y") if user[65] else None,
+            "NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 1": datetime.strptime(user[66], '%Y-%m-%d').strftime("%d/%m/%Y") if user[66] else None,
+            "NgA y kA- HÄ? HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 2": datetime.strptime(user[67], '%Y-%m-%d').strftime("%d/%m/%Y") if user[67] else None,
+            "NgA y háº¿t háº¡n HÄ? xA¡c Ä`á»<nh thá»?i háº¡n láºn 2": datetime.strptime(user[68], '%Y-%m-%d').strftime("%d/%m/%Y") if user[68] else None,
+            "NgA y kA- HÄ? khA'ng thá»?i háº¡n": datetime.strptime(user[69], '%Y-%m-%d').strftime("%d/%m/%Y") if user[69] else None,
             "Ghi chAº": user[71] if user[71] else None
             })
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), index=False)
-        flash("Táº£i file thA nh cA'ng !!!")
+        flash("Táº£i file thA nh cA'ng !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"saphethan_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc3_5", methods=["GET","POST"])
@@ -1087,7 +1088,7 @@ def danhsachsapnghihuu():
             df.columns = ["MST", "Ho_ten", "Chuc_danh", "Gioi_tinh", "Chuyen", "Bo_phan", "Ngay_sinh", "Ngay_nghi_huu", "So_thang_con_lai"]
             thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
             df.to_excel(os.path.join(FOLDER_XUAT, f"sapnghihuu_{thoigian}.xlsx"), index=False)
-            flash("Táº£i file thA nh cA'ng !!!")
+            flash("Táº£i file thA nh cA'ng !!!")
             return send_file(os.path.join(FOLDER_XUAT, f"sapnghihuu_{thoigian}.xlsx"), as_attachment=True)
         except Exception as e:
             flash(str(e))
@@ -1172,7 +1173,7 @@ def baocaoytd():
     return render_template("5_1_3_2.html",page="Performance Report Year to date",danhsach=danhsach,danhsachquanly=danhsachquanly)
 
 
-    
+
 @app.route("/muc6_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -1183,42 +1184,42 @@ def dieuchuyen():
             loaidieuchuyen = request.form["loaidieuchuyen"]
             ngaydieuchuyen = request.form.get("ngaydieuchuyen")
             ghichu = request.form.get("ghichu")
-            
+
             vitricu = request.form.get("vitricu")
             vitrimoi = request.form.get("vitrimoi")
-            
+
             vitriencu = request.form.get("vitriencu")
             vitrienmoi = request.form.get("vitrienmoi")
-            
+
             chuyencu = request.form.get("chuyencu")
             chuyenmoi = request.form.get("chuyenmoi")
-            
+
             gradecodecu = request.form.get("gradecodecu")
             gradecodemoi = request.form.get("gradecodemoi")
-            
+
             sectioncodecu = request.form.get("sectioncodecu")
             sectioncodemoi = request.form.get("sectioncodemoi")
-            
+
             hccategorycu = request.form.get("hccategorycu")
             hccategorymoi = request.form.get("hccategorymoi")
-            
+
             departmentcu = request.form.get("departmentcu")
             departmentmoi = request.form.get("departmentmoi")
-            
+
             sectiondescriptioncu = request.form.get("sectiondescriptioncu")
             sectiondescriptionmoi = request.form.get("sectiondescriptionmoi")
-            
-            employeetypecu = request.form.get("employeetypecu") 
+
+            employeetypecu = request.form.get("employeetypecu")
             employeetypemoi = request.form.get("employeetypemoi")
-            
-            positioncodecu = request.form.get("positioncodecu") 
-            positioncodemoi = request.form.get("positioncodemoi") 
-            
-            positioncodedescriptioncu = request.form.get("positioncodedescriptioncu") 
-            positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi") 
-            
-            khongdoica = request.form.get("khongdoica") 
-            
+
+            positioncodecu = request.form.get("positioncodecu")
+            positioncodemoi = request.form.get("positioncodemoi")
+
+            positioncodedescriptioncu = request.form.get("positioncodedescriptioncu")
+            positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi")
+
+            khongdoica = request.form.get("khongdoica")
+
             if loaidieuchuyen == "Chuyá»ƒn vá»< trA-":
                 try:
                     ketqua = dieuchuyennhansu(mst,
@@ -1250,13 +1251,13 @@ def dieuchuyen():
                                     khongdoica
                                     )
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {e}")
                 return redirect(f"/muc6_1")
-                
+
             elif loaidieuchuyen == "Nghá»% viá»╪c":
                 try:
                     ketqua = dichuyennghiviec(mst,
@@ -1267,7 +1268,7 @@ def dieuchuyen():
                         ngaydieuchuyen,
                         ghichu)
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
@@ -1284,13 +1285,13 @@ def dieuchuyen():
                                 'Nghá»% thai sáº£n'
                                 )
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {e}")
                 return redirect(f"/muc6_1")
-            elif loaidieuchuyen=="Thai sáº£n Ä`i lA m láº¡i":
+            elif loaidieuchuyen=="Thai sáº£n Ä`i lA m láº¡i":
                 try:
                     ketqua = dichuyendilamlai(mst,
                                     vitricu,
@@ -1302,10 +1303,10 @@ def dieuchuyen():
                                     hccategorycu,
                                     hccategorymoi,
                                     ngaydieuchuyen,
-                                    'Thai sáº£n Ä`i lA m láº¡i'
+                                    'Thai sáº£n Ä`i lA m láº¡i'
                             )
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
@@ -1322,13 +1323,13 @@ def dieuchuyen():
                                 'Táº¡m hoA£n há»£p Ä`á»"ng'
                                 )
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
                     flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {e}")
                 return redirect(f"/muc6_1")
-            elif loaidieuchuyen=="Ä?i lA m láº¡i":
+            elif loaidieuchuyen=="Ä?i lA m láº¡i":
                 try:
                     ketqua = dichuyendilamlai(mst,
                                 vitricu,
@@ -1340,10 +1341,10 @@ def dieuchuyen():
                                 hccategorycu,
                                 hccategorymoi,
                                 ngaydieuchuyen,
-                                'Ä?i lA m láº¡i'
+                                'Ä?i lA m láº¡i'
                             )
                     if ketqua["ketqua"]:
-                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
+                        flash("Ä?iá»?u chuyá»ƒn thA nh cA'ng !!!")
                     else:
                         flash(f"Ä?iá»?u chuyá»ƒn tháº¥t báº¡i, lA- do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
@@ -1361,7 +1362,7 @@ def dieuchuyen():
         return render_template("6_1.html",
                             cacvitri=cacvitri,
                             page="6.1 Ä?iá»?u chuyá»ƒn chá»cc vá»¥, bá»T pháº-n")
-    
+
 @app.route("/muc6_2", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
@@ -1381,9 +1382,9 @@ def lichsudieuchuyen():
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("6_2.html", page="6.2 Lá»<ch sá»- Ä`iá»?u chuyá»ƒn",
-                               danhsach=paginated_rows, 
+                               danhsach=paginated_rows,
                                pagination=pagination,
-                               mst=mst, 
+                               mst=mst,
                                count=count)
     if request.method == "POST":
         mst = request.args.get("mst")
@@ -1392,8 +1393,8 @@ def lichsudieuchuyen():
         kieudieuchuyen = request.args.get("kieudieuchuyen")
         data = laylichsucongtac(mst,hoten,ngay,kieudieuchuyen)
         df = DataFrame(data)
-        df["NgA y thá»±c hiá»╪n"] = to_datetime(df['NgA y thá»±c hiá»╪n'])
-        df["NgA y chA-nh thá»cc"] = to_datetime(df['NgA y chA-nh thá»cc'])
+        df["NgA y thá»±c hiá»╪n"] = to_datetime(df['NgA y thá»±c hiá»╪n'])
+        df["NgA y chA-nh thá»cc"] = to_datetime(df['NgA y chA-nh thá»cc'])
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -1411,7 +1412,7 @@ def lichsudieuchuyen():
             column_letter = column[0].column_letter
             for cell in column:
                 try:
-                    # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
+                    # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
                     if cell.column_letter == 'C' and cell.value is not None:
                         cell.number_format = 'DD/MM/YYYY'
                     if cell.column_letter == 'K' and cell.value is not None:
@@ -1422,7 +1423,7 @@ def lichsudieuchuyen():
                     pass
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[column_letter].width = adjusted_width
-        
+
         output = BytesIO()
         workbook.save(output)
         output.seek(0)
@@ -1451,10 +1452,10 @@ def lichsucongviec():
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("6_3.html", page="6.3 Lá»<ch sá»- cA'ng viá»╪c",
-                               danhsach=paginated_rows, 
+                               danhsach=paginated_rows,
                                pagination=pagination,
                                count=count)
-        
+
     elif request.method == "POST":
         mst = request.form.get("mst")
         chuyen = request.form.get("chuyen")
@@ -1470,12 +1471,12 @@ def lichsucongviec():
             "Cáº¥p báº-c": row[6],
             "HC category": row[11],
             "Tráº¡ng thA¡i": row[7],
-            "NgA y báº_t Ä`áºu": row[8],
-            "NgA y káº¿t thAºc": row[9]
+            "NgA y báº_t Ä`áºu": row[8],
+            "NgA y káº¿t thAºc": row[9]
         } for row in rows]
         df = DataFrame(data)
-        df["NgA y báº_t Ä`áºu"] = to_datetime(df['NgA y báº_t Ä`áºu'])
-        df["NgA y káº¿t thAºc"] = to_datetime(df['NgA y káº¿t thAºc'])
+        df["NgA y báº_t Ä`áºu"] = to_datetime(df['NgA y báº_t Ä`áºu'])
+        df["NgA y káº¿t thAºc"] = to_datetime(df['NgA y káº¿t thAºc'])
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -1493,7 +1494,7 @@ def lichsucongviec():
             column_letter = column[0].column_letter
             for cell in column:
                 try:
-                    # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
+                    # Apply the date format to column L (assuming 'NgA y thá»±c hiá»╪n' is in column 'L')
                     if cell.column_letter == 'J' and cell.value is not None:
                         cell.number_format = 'DD/MM/YYYY'
                     if cell.column_letter == 'K' and cell.value is not None:
@@ -1504,7 +1505,7 @@ def lichsucongviec():
                     pass
             adjusted_width = (max_length + 2)
             sheet.column_dimensions[column_letter].width = adjusted_width
-        
+
         output = BytesIO()
         workbook.save(output)
         output.seek(0)
@@ -1514,16 +1515,16 @@ def lichsucongviec():
         response.headers['Content-Disposition'] = f'attachment; filename=lichsu_congviec_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
-    
-@app.route("/muc7_1_1", methods=["GET","POST"]) # Ä?á»i ca lA m viá»╪c
+
+@app.route("/muc7_1_1", methods=["GET","POST"]) # Ä?á»i ca lA m viá»╪c
 @login_required
 @roles_required('hr','sa','gd')
 def khaibaochamcong():
     if request.method == "GET":
         try:
             mst = request.args.get("mst")
-            chuyen = request.args.get("chuyen") 
-            phongban = request.args.get("phongban") 
+            chuyen = request.args.get("chuyen")
+            phongban = request.args.get("phongban")
             rows = laydanhsachcahientai(mst,chuyen,phongban)
             count = len(rows)
             current_page = request.args.get(get_page_parameter(), type=int, default=1)
@@ -1535,38 +1536,38 @@ def khaibaochamcong():
             pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
             cacca = laycacca()
             return render_template("7_1_1.html",
-                                    page="7.1.1 Ä?á»i ca lA m viá»╪c",
+                                    page="7.1.1 Ä?á»i ca lA m viá»╪c",
                                     danhsach=paginated_rows,
                                     pagination=pagination,
                                     count=count,
                                     cacca=cacca)
         except:
             return render_template("7_1_1.html",
-                                    page="7.1.1 Ä?á»i ca lA m viá»╪c",
+                                    page="7.1.1 Ä?á»i ca lA m viá»╪c",
                                     danhsach=[])
     elif request.method == "POST":
         mst = request.form.get("mst")
-        chuyen = request.form.get("chuyen") 
-        phongban = request.form.get("phongban") 
+        chuyen = request.form.get("chuyen")
+        phongban = request.form.get("phongban")
         rows = laydanhsachcahientai(mst,chuyen,phongban)
         data =[]
         for row in rows:
             data.append({
-                "NhA  mA¡y": row[0],
+                "NhA  mA¡y": row[0],
                 "MA£ sá»` tháº»": row[1],
                 "Há»? tAªn": row[2],
-                "Chuyá»?n tá»": row[3], 
+                "Chuyá»?n tá»": row[3],
                 "PhA²ng ban": row[4],
                 "Ca": row[5],
-                "Ä?á»i tá»« ngA y": row[6],
-                "Ä?á»i Ä`áº¿n ngA y": row[7]
+                "Ä?á»i tá»« ngA y": row[6],
+                "Ä?á»i Ä`áº¿n ngA y": row[7]
             })
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), index=False)
-        flash("Táº£i file thA nh cA'ng !!!")
+        flash("Táº£i file thA nh cA'ng !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"doica_{thoigian}.xlsx"), as_attachment=True)
-            
+
 @app.route("/muc7_1_2", methods=["GET","POST"]) # Danh sA¡ch lá»-i cháº¥m cA'ng
 @login_required
 def loichamcong():
@@ -1635,19 +1636,19 @@ def diemdanhbu():
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
         loaidiemdanh = request.form.get("loaidiemdanh")
-        
+
         rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
         result = []
         for row in rows:
             result.append({
-                "NhA  mA¡y": row[0],
+                "NhA  mA¡y": row[0],
                 "MST": row[1],
                 "Há»? tAªn": row[2],
                 "Chá»cc vá»¥": row[3],
                 "Chuyá»?n tá»": row[4],
                 "Bá»T pháº-n": row[5],
                 "Loáº¡i Ä`iá»ƒm danh": row[6],
-                "NgA y Ä`iá»ƒm danh": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y"),
+                "NgA y Ä`iá»ƒm danh": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y"),
                 "Giá»? Ä`iá»ƒm danh": row[8],
                 "LA½ do": row[9],
                 "Tráº¡ng thA¡i": row[10],
@@ -1655,11 +1656,11 @@ def diemdanhbu():
                 "Thá»?i gian táº¡o": row[12],
                 "Thá»?i gian duyá»╪t": row[13]
             })
-        
+
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
-        
+
         return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_3/kiemtra", methods=["POST"]) # Danh sA¡ch Ä`iá»ƒm danh bA1
@@ -1746,7 +1747,7 @@ def tuchoi_pheduyetdiemdanhbu():
             return jsonify({"success": False, "message": str(e)})
     return jsonify({"success": False, "message": "Invalid request method"})
 
-@app.route("/muc7_1_4", methods=["GET","POST"]) # Danh sA¡ch xin nghá»% phAcp 
+@app.route("/muc7_1_4", methods=["GET","POST"]) # Danh sA¡ch xin nghá»% phAcp
 @login_required
 def xinnghiphep():
     if request.method == "GET":
@@ -1808,7 +1809,7 @@ def xinnghiphep():
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
-        
+
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_4/kiemtra", methods=["POST"]) # Danh sA¡ch Ä`iá»ƒm danh bA1
@@ -1941,13 +1942,13 @@ def xinnghikhongluong():
         data = []
         for row in danhsach:
             data.append({
-                "NhA  mA¡y": row[0],
+                "NhA  mA¡y": row[0],
                 "MA£ sá»` tháº»": row[1],
                 "Há»? tAªn": row[2],
                 "Chá»cc danh": row[3],
-                "Chuyá»?n tá»": row[4], 
+                "Chuyá»?n tá»": row[4],
                 "PhA²ng ban": row[5],
-                "NgA y xin phAcp": row[6],
+                "NgA y xin phAcp": row[6],
                 "Tá»ng sá»` phAºt": row[7],
                 "Loáº¡i nghá»%": row[8],
                 "Tráº¡ng thA¡i": row[9],
@@ -1958,7 +1959,7 @@ def xinnghikhongluong():
         df = pd.DataFrame(data)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
         df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), index=False)
-        flash("Táº£i file thA nh cA'ng !!!")
+        flash("Táº£i file thA nh cA'ng !!!")
         return send_file(os.path.join(FOLDER_XUAT, f"xinnghikhongluong_{thoigian}.xlsx"), as_attachment=True)
 
 @app.route("/muc7_1_5/kiemtra", methods=["POST"]) # Danh sA¡ch Ä`iá»ƒm danh bA1
@@ -2044,7 +2045,7 @@ def tuchoi_pheduyetxinnghikhongluong():
             print(f"Error: {e}")
             return jsonify({"success": False, "message": str(e)})
     return jsonify({"success": False, "message": "Invalid request method"})
-        
+
 @app.route("/muc7_1_6", methods=["GET","POST"]) # Danh sA¡ch xin nghá»% khA¡c
 @login_required
 def danhsachxinnghikhac():
@@ -2086,24 +2087,24 @@ def danhsachxinnghikhac():
         nhangiayto = request.form.get("nhangiayto")
         danhsach = laydanhsachxinnghikhac(mst,chuyen,bophan,ngaynghi,loainghi,trangthai,nhangiayto,mstthuky,mstquanly)
         data = [{
-            "NhA  mA¡y": row[0],
+            "NhA  mA¡y": row[0],
             "MA£ sá»` tháº»": row[1],
             "Há»? tAªn": row[2],
             "Chá»cc danh": row[3],
             "Chuyá»?n": row[4],
             "Bá»T pháº-n": row[5],
-            "NgA y nghá»%": row[6],
+            "NgA y nghá»%": row[6],
             "Tá»ng sá»` phAºt": row[7],
             "Loáº¡i nghá»%": row[8],
             "Tráº¡ng thA¡i": row[9],
-            "Nháº-n giáº¥y tá»?": row[10],  
+            "Nháº-n giáº¥y tá»?": row[10],
             "ID": row[11],
             "Thá»?i gian táº¡o": row[12],
-            "Thá»?i gian duyá»╪t": row[13]          
-        } for row in danhsach] 
+            "Thá»?i gian duyá»╪t": row[13]
+        } for row in danhsach]
         df = DataFrame(data)
         df["MA£ sá»` tháº»"] = to_numeric(df['MA£ sá»` tháº»'], errors='coerce')
-        df["NgA y nghá»%"] = to_datetime(df['NgA y nghá»%'], errors='coerce')
+        df["NgA y nghá»%"] = to_datetime(df['NgA y nghá»%'], errors='coerce')
         output = BytesIO()
         with ExcelWriter(output, engine='openpyxl') as writer:
             df.to_excel(writer, index=False)
@@ -2275,7 +2276,7 @@ def muc7_1_7():\n    # existing desktop view
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_7.html", page="Lá»-i cháº¥m cA'ng",
-                                danhsach=paginated_rows, 
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     if request.method == "POST":
@@ -2327,11 +2328,11 @@ def muc7_1_7():\n    # existing desktop view
         response.headers['Content-Disposition'] = f'attachment; filename=danhsachphepton_{time_stamp}.xlsx'
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
-           
-@app.route("/muc7_1_8", methods=["GET","POST"]) # Ä?Äƒng kA½ lA m thAªm giá»?
+
+@app.route("/muc7_1_8", methods=["GET","POST"]) # Ä?Äƒng kA½ lA m thAªm giá»?
 @login_required
 def muc7_1_8():
-    
+
     if request.method == "GET":
         mst = request.args.get("mst")
         phongban = request.args.get("phongban")
@@ -2349,8 +2350,8 @@ def muc7_1_8():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_8.html", 
-                               page="LA m thAªm giá»?",
+        return render_template("7_1_8.html",
+                               page="LA m thAªm giá»?",
                                danhsach=paginated_rows,
                                pagination=pagination,
                                count=count
@@ -2366,13 +2367,13 @@ def muc7_1_8():
         danhsach = laydanhsachtangca(mst,phongban,chuyen,ngay,tungay,denngay)
         for row in danhsach:
             data.append({
-                "NhA  mA¡y": row[0],
+                "NhA  mA¡y": row[0],
                 "MST": row[1],
                 "Há»? tAªn": row[2],
                 "Chá»cc vá»¥": row[3],
-                "Chuyá»?n tá»": row[4], 
+                "Chuyá»?n tá»": row[4],
                 "PhA²ng ban": row[5],
-                "NgA y Ä`Äƒng kA½": row[6],
+                "NgA y Ä`Äƒng kA½": row[6],
                 "Giá»? tÄƒng ca": row[7],
                 "Giá»? tÄƒng ca thá»±c táº¿": row[8]
             })
@@ -2408,7 +2409,7 @@ def muc7_1_8():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response
 
-@app.route("/muc7_1_9", methods=["GET","POST"]) # Báº£ng lA m thAªm giá»? cháº¿ Ä`á»T
+@app.route("/muc7_1_9", methods=["GET","POST"]) # Báº£ng lA m thAªm giá»? cháº¿ Ä`á»T
 @login_required
 def muc7_1_9():
     if request.method == "GET":
@@ -2425,8 +2426,8 @@ def muc7_1_9():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_9.html", page="LA m thAªm giá»?",
-                                danhsach=paginated_rows, 
+        return render_template("7_1_9.html", page="LA m thAªm giá»?",
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2446,13 +2447,13 @@ def muc7_1_9():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2461,24 +2462,24 @@ def muc7_1_9():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chedo_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chedo_{timestamp}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_10", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ban ngA y
+@app.route("/muc7_1_10", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ban ngA y
 @login_required
 def muc7_1_10():
     if request.method == "GET":
@@ -2495,8 +2496,8 @@ def muc7_1_10():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_10.html", page="LA m thAªm giá»?",
-                                danhsach=paginated_rows, 
+        return render_template("7_1_10.html", page="LA m thAªm giá»?",
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2516,13 +2517,13 @@ def muc7_1_10():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2531,24 +2532,24 @@ def muc7_1_10():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_banngay_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_banngay_{timestamp}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_11", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ban Ä`Aªm
+@app.route("/muc7_1_11", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ban Ä`Aªm
 @login_required
 def muc7_1_11():
     if request.method == "GET":
@@ -2565,8 +2566,8 @@ def muc7_1_11():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_11.html", page="LA m thAªm giá»?",
-                                danhsach=paginated_rows, 
+        return render_template("7_1_11.html", page="LA m thAªm giá»?",
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2586,13 +2587,13 @@ def muc7_1_11():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2601,24 +2602,24 @@ def muc7_1_11():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_bandem_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_bandem_{timestamp}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_12", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? Chá» nháº-t
+@app.route("/muc7_1_12", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? Chá» nháº-t
 @login_required
 def muc7_1_12():
     if request.method == "GET":
@@ -2635,8 +2636,8 @@ def muc7_1_12():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_12.html", page="LA m thAªm giá»?",
-                                danhsach=paginated_rows, 
+        return render_template("7_1_12.html", page="LA m thAªm giá»?",
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2656,15 +2657,15 @@ def muc7_1_12():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2673,24 +2674,24 @@ def muc7_1_12():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chunhat_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_chunhat_{timestamp}.xlsx"), as_attachment=True)
-        
-@app.route("/muc7_1_13", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ngA y lá».
+
+@app.route("/muc7_1_13", methods=["GET","POST"]) # Danh sA¡ch lA m thAªm giá»? ngA y lá».
 @login_required
 def muc7_1_13():
     if request.method == "GET":
@@ -2707,8 +2708,8 @@ def muc7_1_13():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_13.html", page="LA m thAªm giá»?",
-                                danhsach=paginated_rows, 
+        return render_template("7_1_13.html", page="LA m thAªm giá»?",
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -2728,15 +2729,15 @@ def muc7_1_13():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2745,18 +2746,18 @@ def muc7_1_13():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bang_lamthemgio_ngayle_{timestamp}.xlsx"))
@@ -2806,13 +2807,13 @@ def muc7_1_14():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
-        
-        # ChA"n hA¬nh áº£nh vA o sheet
+
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2820,22 +2821,22 @@ def muc7_1_14():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G4:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y            
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chuachot_{timestamp}.xlsx"), as_attachment=True)
-                
+
 @app.route("/muc7_1_15", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t chá»`t
 @login_required
 def muc7_1_15():
@@ -2857,7 +2858,7 @@ def muc7_1_15():
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_15.html", page="Báº£ng cháº¥m cA'ng",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
                             danhsachphongban=danhsachphongban)
@@ -2879,13 +2880,13 @@ def muc7_1_15():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -2893,14 +2894,14 @@ def muc7_1_15():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
@@ -2909,10 +2910,10 @@ def muc7_1_15():
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
 
-@app.route("/muc7_1_16", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng hA nh chA-nh
+@app.route("/muc7_1_16", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng hA nh chA-nh
 @login_required
 def muc7_1_16():
-    
+
     if request.method == "GET":
         thang = int(request.args.get("thang")) if request.args.get("thang") else 0
         nam = int(request.args.get("nam")) if request.args.get("nam") else 0
@@ -2928,10 +2929,10 @@ def muc7_1_16():
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_16.html", page="Báº£ng cháº¥m cA'ng",
-                                danhsach=paginated_rows, 
+                                danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
-        
+
     elif request.method == "POST":
         thang = request.form.get("thang")
         nam = request.form.get("nam")
@@ -2949,15 +2950,15 @@ def muc7_1_16():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 10000 - 4 + 1)
 
         for row in danhsach:
@@ -2966,23 +2967,23 @@ def muc7_1_16():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # number_style = NamedStyle(name="number_style", number_format="0.00")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y          
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_hanhchinh_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_hanhchinh_{timestamp}.xlsx"), as_attachment=True)
-    
+
 @app.route("/muc7_1_17", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng tá»ng há»£p
 def muc7_1_17():
     if request.method == "GET":
@@ -3004,20 +3005,20 @@ def muc7_1_17():
             end = start + per_page
             paginated_rows = danhsach[start:end]
             pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
-            
+
             # if (nam > 2025 or (nam == 2025 and thang > 6)) or (nam == 0 and thang == 0):
             #     return render_template("7_1_17_sau_072025.html", page="Báº£ng cháº¥m cA'ng",
-            #                         danhsach=paginated_rows, 
+            #                         danhsach=paginated_rows,
             #                         pagination=pagination,
             #                         count=count)
             # else:
             #     return render_template("7_1_17.html", page="Báº£ng cháº¥m cA'ng",
-            #                         danhsach=paginated_rows, 
+            #                         danhsach=paginated_rows,
             #                         pagination=pagination,
             #                         count=count)
 
             return render_template("7_1_17_sau_072025.html", page="Báº£ng cháº¥m cA'ng",
-                                    danhsach=paginated_rows, 
+                                    danhsach=paginated_rows,
                                     pagination=pagination,
                                     count=count)
         except Exception as e:
@@ -3048,24 +3049,24 @@ def muc7_1_17():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
         sheet['A2'] = f'ThA¡ng {thang} nÄƒm {nam}'
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(6, 10000 - 6 + 1)
 
         for row in danhsach:
             # if (nam < 2025 or (nam == 2025 and thang > 6)):
             #     data = [y for y in row]
             # else:
-            #     # Chá»% láº¥y cA¡c cá»Tt cáºn thiáº¿t vA  sáº_p xáº¿p láº¡i thá»c tá»±
-            #     data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
-            
+            #     # Chá»% láº¥y cA¡c cá»Tt cáºn thiáº¿t vA  sáº_p xáº¿p láº¡i thá»c tá»±
+            #     data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]]
+
             data = [y for y in row]
             data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
             data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
@@ -3073,7 +3074,7 @@ def muc7_1_17():
             sheet.append(data)
 
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0.00")
         # if (nam > 2025 or (nam == 2025 and thang > 6)):
@@ -3081,19 +3082,19 @@ def muc7_1_17():
         #     for row in range(6, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
         #         for col in ['G', 'H']:
         #             cell = sheet[f"{col}{row}"]
-                    
+
         #             try:
         #                 cell.style = date_style
         #             except ValueError:
-        #                 pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+        #                 pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
         #         for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ']:
         #             cell = sheet[f"{col}{row}"]
         #             if cell.value and int(cell.value) > 0:
         #                 try:
         #                     cell.style = number_style
         #                 except ValueError:
-        #                     pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+        #                     pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
 
         #     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         #     workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
@@ -3103,19 +3104,19 @@ def muc7_1_17():
         #     for row in range(6, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
         #         for col in ['G', 'H']:
         #             cell = sheet[f"{col}{row}"]
-                    
+
         #             try:
         #                 cell.style = date_style
         #             except ValueError:
-        #                 pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+        #                 pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
         #         for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'W', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK']:
         #             cell = sheet[f"{col}{row}"]
         #             if cell.value and int(cell.value) > 0:
         #                 try:
         #                     cell.style = number_style
         #                 except ValueError:
-        #                     pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+        #                     pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
 
         #     timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         #     workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
@@ -3124,24 +3125,24 @@ def muc7_1_17():
         for row in range(6, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['G', 'H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
             for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ']:
                 cell = sheet[f"{col}{row}"]
                 if cell.value and int(cell.value) > 0:
                     try:
                         cell.style = number_style
                     except ValueError:
-                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
 
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
-    
+
 @app.route("/muc7_1_18", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t chá»`t quA¡ khá»c
 @login_required
 def muc7_1_18():
@@ -3163,7 +3164,7 @@ def muc7_1_18():
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_18.html", page="Báº£ng cháº¥m cA'ng",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
                             danhsachphongban=danhsachphongban)
@@ -3185,13 +3186,13 @@ def muc7_1_18():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -3199,18 +3200,18 @@ def muc7_1_18():
             data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
@@ -3235,7 +3236,7 @@ def muc7_1_19():
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_19.html", page="Báº£ng cháº¥m cA'ng Chá» Nháº-t chi tiáº¿t chÆ°a chá»`t",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
     elif request.method=="POST":
@@ -3257,13 +3258,13 @@ def muc7_1_19():
             img.width = img.width * 0.25
             img.height = img.height * 0.25
 
-            # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+            # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
             img.anchor = 'A1'
-            
-            # ChA"n hA¬nh áº£nh vA o sheet
+
+            # ChA"n hA¬nh áº£nh vA o sheet
             sheet.add_image(img)
 
-            # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+            # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
             sheet.delete_rows(4, 10000 - 4 + 1)
 
             for row in danhsach:
@@ -3271,17 +3272,17 @@ def muc7_1_19():
                 data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
                 sheet.append(data)
 
-            # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+            # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
             date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
             # Duyá»╪t qua cA¡c A' trong khu vá»±c G4:H10000
             for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
                 for col in ['G']:
                     cell = sheet[f"{col}{row}"]
-                    
+
                     try:
                         cell.style = date_style
                     except ValueError:
-                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y            
+                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
             workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chuachot_{timestamp}.xlsx"))
@@ -3311,7 +3312,7 @@ def muc7_1_20():
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_20.html", page="Báº£ng cháº¥m cA'ng",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
                             danhsachphongban=danhsachphongban)
@@ -3333,13 +3334,13 @@ def muc7_1_20():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -3347,14 +3348,14 @@ def muc7_1_20():
             data[6] = datetime.strptime(data[6],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['F']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
@@ -3385,7 +3386,7 @@ def muc7_1_21():
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
         return render_template("7_1_21.html", page="Báº£ng cháº¥m cA'ng",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
     elif request.method=="POST":
@@ -3393,7 +3394,7 @@ def muc7_1_21():
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
         tungay = request.form.get("tungay")
-        denngay = request.form.get("denngay")   
+        denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongchunhatchotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT_KX)
@@ -3406,13 +3407,13 @@ def muc7_1_21():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -3420,23 +3421,23 @@ def muc7_1_21():
             # data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chunhat_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chunhat_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
-    
-@app.route("/muc7_1_22", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chÆ°a chá»`t
+
+@app.route("/muc7_1_22", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chÆ°a chá»`t
 @login_required
 def muc7_1_22():
     if request.method=="GET":
@@ -3455,8 +3456,8 @@ def muc7_1_22():
         end = start + per_page
         paginated_rows = rows[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_22.html", page="Báº£ng cháº¥m cA'ng ngA y lá». chi tiáº¿t chÆ°a chá»`t",
-                            danhsach=paginated_rows, 
+        return render_template("7_1_22.html", page="Báº£ng cháº¥m cA'ng ngA y lá». chi tiáº¿t chÆ°a chá»`t",
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count)
     elif request.method=="POST":
@@ -3478,13 +3479,13 @@ def muc7_1_22():
             img.width = img.width * 0.25
             img.height = img.height * 0.25
 
-            # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+            # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
             img.anchor = 'A1'
-            
-            # ChA"n hA¬nh áº£nh vA o sheet
+
+            # ChA"n hA¬nh áº£nh vA o sheet
             sheet.add_image(img)
 
-            # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+            # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
             sheet.delete_rows(4, 10000 - 4 + 1)
 
             for row in danhsach:
@@ -3492,17 +3493,17 @@ def muc7_1_22():
                 data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
                 sheet.append(data)
 
-            # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+            # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
             date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
             # Duyá»╪t qua cA¡c A' trong khu vá»±c G4:H10000
             for row in range(4, 10001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
                 for col in ['G']:
                     cell = sheet[f"{col}{row}"]
-                    
+
                     try:
                         cell.style = date_style
                     except ValueError:
-                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y            
+                        pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
 
             timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
             workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_ngayle_chuachot_{timestamp}.xlsx"))
@@ -3511,7 +3512,7 @@ def muc7_1_22():
             flash(f"Lá»-i táº£i trang: {e}")
             return render_template("7_1_22.html",
                                     danhsach=[])
-@app.route("/muc7_1_23", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chá»`t
+@app.route("/muc7_1_23", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chá»`t
 @login_required
 def muc7_1_23():
     if request.method=="GET":
@@ -3531,8 +3532,8 @@ def muc7_1_23():
         paginated_rows = rows[start:end]
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_23.html", page="Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chá»`t",
-                            danhsach=paginated_rows, 
+        return render_template("7_1_23.html", page="Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». chá»`t",
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
                             danhsachphongban=danhsachphongban)
@@ -3554,13 +3555,13 @@ def muc7_1_23():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -3568,14 +3569,14 @@ def muc7_1_23():
             data[6] = datetime.strptime(data[6],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         number_style = NamedStyle(name="number_style", number_format="0")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['F']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
@@ -3585,7 +3586,7 @@ def muc7_1_23():
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_ngayle_chot_{timestamp}.xlsx"), as_attachment=True)
 
 
-@app.route("/muc7_1_24", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». quA¡ khá»c
+@app.route("/muc7_1_24", methods=["GET","POST"]) # Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». quA¡ khá»c
 @login_required
 def muc7_1_24():
     if request.method=="GET":
@@ -3605,8 +3606,8 @@ def muc7_1_24():
         paginated_rows = rows[start:end]
         danhsachphongban = laycacphongban()
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("7_1_24.html", page="Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». quA¡ khá»c",
-                            danhsach=paginated_rows, 
+        return render_template("7_1_24.html", page="Báº£ng cháº¥m cA'ng chi tiáº¿t ngA y lá». quA¡ khá»c",
+                            danhsach=paginated_rows,
                             pagination=pagination,
                             count=count,
                             danhsachphongban=danhsachphongban)
@@ -3615,7 +3616,7 @@ def muc7_1_24():
         chuyen = request.form.get('chuyen')
         phongban = request.form.get('phongban')
         tungay = request.form.get("tungay")
-        denngay = request.form.get("denngay")   
+        denngay = request.form.get("denngay")
         phanloai = request.form.get("phanloai")
         danhsach = laydanhsachchamcongngaylechotquakhu(mst,chuyen,phongban,tungay,denngay,phanloai)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_NGAYLE_CHOT_KX)
@@ -3628,13 +3629,13 @@ def muc7_1_24():
         img.width = img.width * 0.25
         img.height = img.height * 0.25
 
-        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
+        # Di chuyá»ƒn áº£nh: anchor vA o A' A2 vA  Ä`iá»?u chá»%nh tá»?a Ä`á»T di chuyá»ƒn
         img.anchor = 'A1'
 
-        # ChA"n hA¬nh áº£nh vA o sheet
+        # ChA"n hA¬nh áº£nh vA o sheet
         sheet.add_image(img)
 
-        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
+        # XA3a hA ng tá»« hA ng 7 Ä`áº¿n hA ng 10000
         sheet.delete_rows(4, 50000 - 4 + 1)
 
         for row in danhsach:
@@ -3642,18 +3643,18 @@ def muc7_1_24():
             # data[7] = datetime.strptime(data[7],"%Y-%m-%d")
             sheet.append(data)
 
-        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
+        # Táº¡o kiá»ƒu Ä`á»<nh dáº¡ng ngA y
         date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
         # Duyá»╪t qua cA¡c A' trong khu vá»±c G7:H10000
         for row in range(4, 50001):  # Báº_t Ä`áºu tá»« dA²ng 7 Ä`áº¿n dA²ng 10000
             for col in ['H']:
                 cell = sheet[f"{col}{row}"]
-                
+
                 try:
                     cell.style = date_style
                 except ValueError:
-                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
-            
+                    pass  # Náº¿u giA¡ trá»< khA'ng pháº£i lA  ngA y, bá»? qua A' nA y
+
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_ngayle_chitiet_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_ngayle_chitiet_chot_{timestamp}.xlsx"), as_attachment=True)
@@ -3670,12 +3671,12 @@ def ykienkhieunai():
 def capnhatykienkhieunai():
 
     return render_template("8_2.html", page="8.2 Cáº-p nháº-t A½ kiáº¿n khiáº¿u náº¡i")
-    
+
 @app.route("/muc9_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
 def xulykiluat():
-    
+
     if request.method == "GET":
         danhsach = laydanhsachkyluat()
         return render_template("9_1.html", page="9.1 Xá»- lA½ ká»% luáº-t",danhsach=danhsach)
@@ -3684,7 +3685,7 @@ def xulykiluat():
             mst = request.form.get("mst")
             if not mst:
                 flash("ChÆ°a cA3 thA'ng tin ngÆ°á»?i vi pháº¡m")
-                return redirect("/muc9_1") 
+                return redirect("/muc9_1")
             hoten = request.form.get("hoten")
             chucvu = request.form.get("chucvu")
             bophan = request.form.get("bophan")
@@ -3696,25 +3697,25 @@ def xulykiluat():
             noidung = request.form.get("noidung")
             bienphap = request.form.get("bienphap")
             cacanhvipham = request.files.getlist("file_anh")
-            bienbankiluat = request.files.get("file_bienban") 
+            bienbankiluat = request.files.get("file_bienban")
             os.makedirs(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}"),exist_ok=True)
-            
+
             for anh in cacanhvipham:
-                anh.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}",f"{cacanhvipham.index(anh,start=1)}.jpg"))  
+                anh.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}",f"{cacanhvipham.index(anh,start=1)}.jpg"))
             bienbankiluat.save(os.path.join(FOLDER_BIENBAN,f"{mst}_{ngayvipham}"),"bienban.pdf")
             if themdanhsachkyluat(mst,hoten,chucvu,bophan,chuyento,ngayvao,ngayvipham,diadiem,ngaylapbienban,noidung,bienphap):
-                flash("ThAªm biAªn báº£n ká»· luáº-t thA nh cA'ng !!!")
+                flash("ThAªm biAªn báº£n ká»· luáº-t thA nh cA'ng !!!")
             else:
                 flash("ThAªm biAªn báº£n ká»· luáº-t tháº¥t báº¡i !!!")
         except Exception as e:
             flash(f"ThAªm biAªn báº£n ká»· luáº-t tháº¥t báº¡i {e}!!!")
-        return redirect("/muc9_1") 
-    
+        return redirect("/muc9_1")
+
 @app.route("/muc10_1", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
 def phongvannghiviec():
-        
+
     return render_template("10_1.html", page="10.1 Tá»ng há»£p phá»?ng váº¥n nghá»% viá»╪c")
 
 @app.route("/muc10_2", methods=["GET","POST"])
@@ -3736,9 +3737,9 @@ def nhandonnghiviec():
         end = start + per_page
         paginated_rows = danhsach[start:end]
         pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
-        return render_template("10_2.html", 
+        return render_template("10_2.html",
                             page="10.2 Tá»ng há»£p Ä`Æ¡n nghá»% viá»╪c",
-                            danhsach=paginated_rows, 
+                            danhsach=paginated_rows,
                                 pagination=pagination,
                                 count=total)
     elif request.method == "POST":
@@ -3751,16 +3752,16 @@ def nhandonnghiviec():
         ngaynghi = request.form.get("form_ngaydukiennghi")
         ghichu = request.form.get("form_ghichu")
         if themdonxinnghi(mst,hoten,chucdanh,chuyen,phongban,ngaynopdon,ngaynghi,ghichu):
-            flash("ThAªm Ä`Æ¡n xin nghá»% thA nh cA'ng !!!")
+            flash("ThAªm Ä`Æ¡n xin nghá»% thA nh cA'ng !!!")
         else:
             flash("ThAªm Ä`Æ¡n xin nghá»% tháº¥t báº¡i !!!")
         return redirect(f"/muc10_2?mst={mst}")
-    
+
 @app.route("/muc10_3", methods=["GET","POST"])
 @login_required
 @roles_required('hr','sa','gd')
 def inchamduthopdong():
-     
+
     if request.method == "GET":
         return render_template("10_3.html", page="10.3 In cháº¥m dá»ct há»£p Ä`á»"ng")
     elif request.method == "POST":
@@ -3794,8 +3795,8 @@ def inchamduthopdong():
                 return redirect("/muc10_3")
         except Exception as e:
             flash(f"Lá»-i táº£i trang: {e}")
-            return redirect("/muc10_3") 
-        
+            return redirect("/muc10_3")
+
 @app.route("/muc12", methods=["GET","POST"])
 @login_required
 def khong_kiem_xuong():
