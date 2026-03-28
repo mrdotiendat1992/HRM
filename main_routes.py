@@ -218,7 +218,7 @@ def logout():
         app.logger.info(f"Nguoi dung {current_user.masothe} o {current_user.macongty} vua  dang xuat !!!")
         logout_user()
     except Exception as e:
-        app.logger.error(f'KhA'ng tháº¿ Ä`Äƒng xuáº¥t {e} !!!')
+        app.logger.error(f"Khong the dang xuat {e} !!!")
     return redirect("/")
 
 @app.route("/doimatkhau", methods=['POST'])
