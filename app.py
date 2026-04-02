@@ -4066,10 +4066,11 @@ def lay_tangcadem(thang,nam,mst,bophan,chuyen):
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
+
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
-        flash(f"Loi lay bang tang ca chu nhat: {e}")
+        flash(f"Loi lay bang tang ca dem: {e}")
         return []
     
 def lay_tangcadem_web(thang,nam,mst,bophan,chuyen):

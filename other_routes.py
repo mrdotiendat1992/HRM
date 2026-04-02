@@ -5930,7 +5930,7 @@ def dangky_nghikhongluong_hp():
                 flash("Đăng ký nghỉ phép thất bại!")
             finally:
                 conn.close()
-            flash("Đăng ký nghỉ phép thành công!")
+            flash("Đăng ký nghỉ không lương thành công!")
         else:
             flash("Không tìm thấy thông tin nhân viên!")
         return redirect("/qrcode/nhap_xinnghikhongluong_hp")
@@ -5969,10 +5969,10 @@ def dangky_nghikhongluong_na():
             except Exception as e:
                 print(e)
                 conn.rollback()
-                flash("Đăng ký nghỉ phép thất bại!")
+                flash("Đăng ký nghỉ không lương thất bại!")
             finally:
                 conn.close()
-            flash("Đăng ký nghỉ phép thành công!")
+            flash("Đăng ký nghỉ không lương thành công!")
         else:
             flash("Không tìm thấy thông tin nhân viên!")
         return redirect("/qrcode/nhap_xinnghikhongluong_na")
