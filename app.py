@@ -2386,14 +2386,17 @@ def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=Non
         flash(str(e))  
         return [] 
     
-def laydanhsachphepton(mst=None):
+def laydanhsachphepton(mst,thang,nam):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM Phep_ton_chi_tiet WHERE Nha_may = '{current_user.macongty}'"
         if mst:
             query += f" AND MST = '{mst}'"
-
+        if thang:
+            query += f" AND THANG = '{thang}'"
+        if nam:
+            query += f" AND NAM = '{nam}'"
         query += " ORDER BY CAST(MST AS INT) asc, NAM DESC,THANG DESC"
         rows = cursor.execute(query).fetchall()
         conn.close()
