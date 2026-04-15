@@ -4331,6 +4331,7 @@ def lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,den
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay DESC,MST ASC"
+        print(query)
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:

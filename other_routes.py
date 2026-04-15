@@ -2891,6 +2891,7 @@ def bangcongchunhatquakhu_web():
         phanloai = request.form.get("phanloai")
         tungay = request.form.get("tungay")
         denngay = request.form.get("denngay")
+        print(masothe,chuyen,bophan,phanloai,tungay,denngay)
         danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
