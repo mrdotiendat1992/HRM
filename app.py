@@ -4210,7 +4210,7 @@ def lay_bangcong5ngay_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         flash(f"Lỗi lấy bảng công chưa chốt thực tế: {e}")
         return []
 
-def lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay):
+def lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,tungay,denngay):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -4223,8 +4223,10 @@ def lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay):
             query += f" and Bo_phan = '{bophan}'"
         if phanloai:
             query += f" and phan_loai = N'{phanloai}'"  
-        if ngay:
-            query += f" and Ngay = '{ngay}'"      
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"  
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"     
         query += " order by Ngay desc"
         data = cursor.execute(query)
         return [x for x in data]
@@ -4259,7 +4261,7 @@ def lay_bangcongchot_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
         flash(f"Lỗi lấy bảng công chốt thực tế: {e}")
         return []
 
-def lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay):
+def lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -4272,8 +4274,10 @@ def lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay):
             query += f" and Bo_phan = '{bophan}'"
         if phanloai:
             query += f" and phan_loai = N'{phanloai}'"  
-        if ngay:
-            query += f" and Ngay = '{ngay}'"     
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"   
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"         
         query += " order by Ngay desc"
         data = cursor.execute(query)
         return [x for x in data]

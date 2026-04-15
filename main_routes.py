@@ -734,7 +734,7 @@ def nhapthongtinlaodongmoi():
             f"{cost_id})"
         )
 
-        app.logger.debug(f"muc3_1 INSERT values: {nhanvienmoi}")
+        # app.logger.debug(f"muc3_1 INSERT values: {nhanvienmoi}")
 
         ketqua = themnhanvienmoi(nhanvienmoi)
 

@@ -2573,8 +2573,9 @@ def bangcongchunhatchuachot_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         phanloai = request.args.get("phanloai")
-        ngay = request.args.get("ngay")
-        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -2591,8 +2592,9 @@ def bangcongchunhatchuachot_web():
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
-        ngay = request.form.get("ngay")
-        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHUACHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
@@ -2720,8 +2722,9 @@ def bangcongchunhatchot_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         phanloai = request.args.get("phanloai")
-        ngay = request.args.get("ngay")
-        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -2738,8 +2741,9 @@ def bangcongchunhatchot_web():
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
-        ngay = request.form.get("ngay")
-        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
