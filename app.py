@@ -3473,7 +3473,7 @@ def them_xinnghikhac(masothe,hoten,chuyen,phongban,chucdanh,ngay,sophut,lydo,tra
             query = f"""INSERT INTO Xin_nghi_khac 
             (Nha_may,MST,Ho_ten,Chuc_vu,Line,Bo_phan,Ngay_nghi,Tong_so_phut,Loai_nghi,Trang_thai,Giay_to)
             VALUES
-            ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',NULL,NULL)"""
+            ('{current_user.macongty}','{masothe}',N'{hoten}',N'{chucdanh}','{chuyen}','{phongban}','{ngay}','{sophut}',N'{lydo}',N'{trangthai}',NULL)"""
         else:
             query = f"""INSERT INTO Xin_nghi_khac 
             (Nha_may,MST,Ho_ten,Chuc_vu,Line,Bo_phan,Ngay_nghi,Tong_so_phut,Loai_nghi,Trang_thai,Giay_to)
@@ -4331,7 +4331,6 @@ def lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,den
         if denngay:
             query += f" and Ngay <= '{denngay}'"       
         query += " order by Ngay DESC,MST ASC"
-        print(query)
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:

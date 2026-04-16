@@ -46,7 +46,8 @@
     </div>
 
     {# Forms ẩn cho các thao tác, sẽ được JS fill dữ liệu #}
-    <form id="fDiemDanhBu" method="POST" action="/diemdanhbu" style="display:none;">
+    <form id="fDiemDanhBu" method="POST" action="/nhap_diemdanhbu_mobile" style="display:none;">
+      <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
       <input type="hidden" name="masothe_diemdanhbu" id="fDdbMst">
       <input type="hidden" name="hoten_diemdanhbu" id="fDdbHoten">
       <input type="hidden" name="chuyento_diemdanhbu" id="fDdbChuyen">
@@ -79,7 +80,8 @@
       <input type="hidden" name="lydo_xinnghikhongluong" id="fXklLydo" value="Nghỉ không lương từ mobile">
     </form>
 
-    <form id="fNghiKhac" method="POST" action="/xinnghikhac" style="display:none;">
+    <form id="fNghiKhac" method="POST" action="/nhap_xinnghikhac_mobile" style="display:none;">
+      <input type="hidden" name="nhamay" value="{{current_user.macongty}}">
       <input type="hidden" name="masothe_xinnghikhac" id="fXkMst">
       <input type="hidden" name="hoten_xinnghikhac" id="fXkHoten">
       <input type="hidden" name="chuyento_xinnghikhac" id="fXkChuyen">
@@ -87,13 +89,12 @@
       <input type="hidden" name="phongban_xinnghikhac" id="fXkBophan">
       <input type="hidden" name="ngay_xinnghikhac" id="fXkNgay">
       <input type="hidden" name="sophut_xinnghikhac" id="fXkSophut">
-      <input type="hidden" name="lydo_xinnghikhac" id="fXkLydo" value="CL">
     </form>
 
     <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:6px;">
       <button type="button"
         style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #0077cc; background:#e3f2fd; font-size:12px;"
-        onclick="window.location.href='{{ '/qrcode/nhap_diemdanhbu_hp' if current_user.macongty=='NT1' else '/qrcode/nhap_diemdanhbu_na' }}'">Điểm
+        onclick="submitDiemDanhBu()">Điểm
         danh bù</button>
       <button type="button"
         style="flex:1; padding:8px 6px; border-radius:8px; border:1px solid #4caf50; background:#e8f5e9; font-size:12px;"
@@ -191,13 +192,7 @@
 
     function submitDiemDanhBu() {
       const form = document.getElementById('fDiemDanhBu');
-      if (!form) return;
-      if (!form.giovao_diemdanhbu.value || !form.giora_diemdanhbu.value) {
-        if (!confirm('Thiếu giờ vào/ra, vẫn gửi điểm danh bù?')) return;
-      }
-      if (confirm('Xác nhận gửi điểm danh bù?')) {
-        form.submit();
-      }
+      form.submit();
     }
 
     function submitNghiPhep() {
@@ -219,9 +214,7 @@
     function submitNghiKhac() {
       const form = document.getElementById('fNghiKhac');
       if (!form) return;
-      if (confirm('Xác nhận xin nghỉ khác?')) {
-        form.submit();
-      }
+      form.submit();
     }
   </script>
 

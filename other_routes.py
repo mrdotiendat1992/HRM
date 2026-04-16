@@ -2891,7 +2891,6 @@ def bangcongchunhatquakhu_web():
         phanloai = request.form.get("phanloai")
         tungay = request.form.get("tungay")
         denngay = request.form.get("denngay")
-        print(masothe,chuyen,bophan,phanloai,tungay,denngay)
         danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
@@ -6124,3 +6123,86 @@ def tailen_chamcongtayle():
             flash(str(e))
                 
     return redirect("/chamcongtayle")
+
+@app.route("/nhap_diemdanhbu_mobile", methods=["POST"])
+def nhap_diemdanhbu_mobile():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe_diemdanhbu")
+    hoten = request.form.get("hoten_diemdanhbu")
+    chuyento = request.form.get("chuyento_diemdanhbu")
+    chucdanh = request.form.get("chucdanh_diemdanhbu")
+    phongban = request.form.get("phongban_diemdanhbu")
+    ngay = request.form.get("ngay_diemdanhbu")
+    ngay = datetime.strptime(ngay, '%d/%m/%Y').strftime('%Y-%m-%d')
+    giovao = request.form.get("giovao_diemdanhbu")
+    giora = request.form.get("giora_diemdanhbu")
+    lydo = request.form.get("lydo_diemdanhbu")
+    return render_template("mobile/nhap_diemdanhbu.html", 
+    nhamay=nhamay, masothe=masothe, hoten=hoten, 
+    chuyento=chuyento, chucdanh=chucdanh, 
+    phongban=phongban, ngay=ngay, giovao=giovao, 
+    giora=giora, lydo=lydo)
+
+@app.route("/mobile/dangky_diemdanhbu", methods=["POST"])
+def dangky_diemdanhbu():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe")
+    hoten = request.form.get("hoten")
+    chuyento = request.form.get("chuyento")
+    chucdanh = request.form.get("chucdanh")
+    phongban = request.form.get("phongban")
+    ngay = datetime.strptime(request.form.get("ngay"),'%Y-%m-%d').strftime('%d/%m/%Y')
+    giovao = request.form.get("giovao")
+    giora = request.form.get("giora")
+    lido = request.form.get("lido")
+    trangthai = "Chờ kiểm tra"
+    if giovao:
+        loaidiemdanh = "Điểm danh vào"
+        if them_diemdanhbu(masothe,hoten,chucdanh,chuyento,phongban,loaidiemdanh,ngay,giovao,lido,trangthai):
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thành công !!!")
+        else:
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
+    if giora:
+        loaidiemdanh = "Điểm danh ra"
+        if them_diemdanhbu(masothe,hoten,chucdanh,chuyento,phongban,loaidiemdanh,ngay,giora,lido,trangthai):
+            flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
+        else:
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
+    return redirect(f"/muc7_1_2?mstthuky={masothe}")
+
+@app.route("/nhap_xinnghikhac_mobile", methods=["POST"])
+def nhap_xinnghikhac_mobile():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe_xinnghikhac")
+    hoten = request.form.get("hoten_xinnghikhac")
+    chuyento = request.form.get("chuyento_xinnghikhac")
+    chucdanh = request.form.get("chucdanh_xinnghikhac")
+    phongban = request.form.get("phongban_xinnghikhac")
+    ngay = request.form.get("ngay_xinnghikhac")
+    ngay = datetime.strptime(ngay, '%d/%m/%Y').strftime('%Y-%m-%d')
+    sophut = int(request.form.get("sophut_xinnghikhac"))
+    return render_template("mobile/nhap_xinnghikhac.html", 
+    nhamay=nhamay, masothe=masothe, hoten=hoten, 
+    chuyento=chuyento, chucdanh=chucdanh, 
+    phongban=phongban, ngay=ngay, sophut=sophut)
+
+@app.route("/mobile/dangky_xinnghikhac", methods=["POST"])
+def dangky_xinnghikhac():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe")
+    hoten = request.form.get("hoten")
+    chuyento = request.form.get("chuyento")
+    chucdanh = request.form.get("chucdanh")
+    phongban = request.form.get("phongban")
+    ngay = datetime.strptime(request.form.get("ngay"),'%Y-%m-%d').strftime('%d/%m/%Y')
+    sophut = request.form.get("sophut")
+    lido = request.form.get("lido")
+    trangthai = "Chờ kiểm tra"
+    nhangiayto = None
+
+    if them_xinnghikhac(masothe,hoten,chuyento,phongban,chucdanh,ngay,sophut,lido,trangthai,nhangiayto):
+        flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
+    else:
+        flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
+ 
+    return redirect(f"/muc7_1_2?mstthuky={masothe}")

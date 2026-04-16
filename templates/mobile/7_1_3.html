@@ -34,6 +34,8 @@
     {% endfor %}
 
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:8px;">
+      <button type="button" onclick="selectAll()">Chọn tất cả</button>
+      <button type="button" onclick="unSelectAll()">Bỏ chọn tất cả</button>
       {# Thư ký: chỉ kiểm tra / từ chối kiểm tra #}
       {% if is_thuky and not is_quanly %}
         <button type="button" data-action="/muc7_1_3/kiemtra" class="btn btn-primary btn-sm bulk-action">Kiểm tra</button>
@@ -101,6 +103,16 @@
         });
       });
     });
+
+    function selectAll() {
+      const checkboxes = document.querySelectorAll('input[name="selected_ids[]"]');
+      checkboxes.forEach(cb => cb.checked = true);
+    }
+
+    function unSelectAll() {
+      const checkboxes = document.querySelectorAll('input[name="selected_ids[]"]');
+      checkboxes.forEach(cb => cb.checked = false);
+    }
   </script>
 
   {% else %}
