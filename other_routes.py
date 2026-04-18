@@ -6198,7 +6198,7 @@ def dangky_xinnghikhac():
     sophut = request.form.get("sophut")
     lido = request.form.get("lido")
     trangthai = "Chờ kiểm tra"
-    nhangiayto = None
+    nhangiayto = "Chưa nhận"
 
     if them_xinnghikhac(masothe,hoten,chuyento,phongban,chucdanh,ngay,sophut,lido,trangthai,nhangiayto):
         flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
