@@ -2266,7 +2266,9 @@ def khongnhan_giaytoxinnghikhac():
 def muc7_1_7():
     if request.method == "GET":
         mst = request.args.get("mst")
-        danhsach = laydanhsachphepton(mst)
+        thang = request.args.get("thang")
+        nam = request.args.get("nam")
+        danhsach = laydanhsachphepton(mst,thang,nam)
         current_page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 10
         total = len(danhsach)
@@ -2280,7 +2282,9 @@ def muc7_1_7():
                                 count=total)
     if request.method == "POST":
         mst = request.form.get("mst")
-        danhsach = laydanhsachphepton(mst)
+        thang = request.form.get("thang")
+        nam = request.form.get("nam")
+        danhsach = laydanhsachphepton(mst,thang,nam)
         result = []
         for row in danhsach:
             result.append({
