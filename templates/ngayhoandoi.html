@@ -1,0 +1,214 @@
+{% extends "12.html" %}
+
+{% block style %}
+
+.table-container {
+    background: #ffffff;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+/* Title */
+.page-title {
+    font-weight: 600;
+    color: #0d6efd;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+/* Header */
+table.table thead th {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(90deg, #0d6efd, #0b5ed7);
+    color: white;
+    text-align: center;
+    font-size: 14px;
+    padding: 10px;
+}
+
+/* Table body */
+table.table td {
+    padding: 8px 14px;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+/* Hover row */
+table.table tbody tr:hover {
+    background-color: #eef5ff;
+    transition: 0.2s;
+}
+
+/* Zebra row */
+table.table tbody tr:nth-child(even) {
+    background-color: #f8fbff;
+}
+
+/* Button delete */
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 14px;
+    border-radius: 6px;
+
+    text-decoration: none;     /* bỏ gạch chân */
+    display: inline-block;
+    font-size: 13px;
+
+    transition: 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #bb2d3b;
+    color: white;
+    transform: scale(1.05);
+
+    text-decoration: none;     /* đảm bảo không gạch chân */
+}
+
+/* Button add */
+.btn-add {
+    background-color: #198754;
+    color: white;
+    border-radius: 6px;
+    padding: 6px 16px;
+    border: none;
+    font-size: 14px;
+}
+
+.btn-add:hover {
+    background-color: #157347;
+}
+
+/* Form */
+.form-add {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Table center */
+.table-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.table-fit {
+    width: auto !important;
+    min-width: 280px;
+}
+
+/* Date */
+.date_en {
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+{% endblock style %}
+
+{% block content %}
+
+
+
+<div class="table-container">
+    <h3 class="page-title">
+    📅 Danh sách ngày hoán đổi
+    </h3>
+
+    <br>
+    <!-- FORM THÊM NGÀY -->
+    <form method="POST" action="/ngayhoandoi/them" class="form-add mb-3">
+
+        <label><b>Ngày đi làm:</b></label>
+
+        <input 
+            type="date"
+            name="ngaydilam"
+            class="form-control"
+            style="width:180px"
+            required
+        >
+
+        <label><b>Ngày nghỉ:</b></label>
+
+        <input 
+            type="date"
+            name="ngaynghi"
+            class="form-control"
+            style="width:180px"
+            required
+        >
+
+        <button type="submit" class="btn-add">
+            ➕ Thêm ngày
+        </button>
+
+    </form>
+
+
+    <div class="table-wrapper">
+
+        <table class="table table-bordered table-hover table-sm table-fit">
+
+            <thead>
+                <tr>
+                    <th>Ngày đi làm</th>
+                    <th>Ngày nghỉ</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for row in danhsach %}
+                <tr>
+
+                    <td class="date_en">
+                        {{ row[1] }}
+                    </td>
+                    <td class="date_en">
+                        {{ row[2] }}
+                    </td>
+
+                    <td>
+                        <a href="/ngayhoandoi/xoa?id={{row[0]}}"
+                        class="btn-delete">
+                            🗑 Xóa
+                        </a>
+                    </td>
+
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    <div class="pagination d-flex justify-content-center">
+        {{ pagination.links }}
+    </div>
+
+</div>
+<script>
+    function changeFormatDate(date) {
+        if (date === 'None') return "";
+        try {
+            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
+        } catch {
+            return "";
+        }
+    }
+    document.addEventListener('DOMContentLoaded', (event) => {
+        document.querySelectorAll('.date_en').forEach((element) => {
+            element.textContent = changeFormatDate(element.textContent);
+        });
+    });
+</script>
+{% endblock content %}

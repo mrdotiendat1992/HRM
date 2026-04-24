@@ -6206,3 +6206,144 @@ def dangky_xinnghikhac():
         flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
  
     return redirect(f"/muc7_1_2?mstthuky={masothe}")
+
+@app.route("/ngayle/danhsach", methods=["GET","POST"])
+def danhsach_ngayle():
+    if request.method == "GET":
+        try:
+            danhsach = lay_danhsach_ngayle()
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngayle.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+    else:
+        try:
+            danhsach = lay_danhsach_ngayle()
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            return jsonify(danhsach)
+        
+@app.route("/ngayle/xoa", methods=["GET"])
+def xoa_ngay_le():
+    ngay = request.args.get("ngay")
+
+    if ngay:
+        if xoa_ngayle(ngay):
+            flash("Xóa ngày lễ thành công")
+        else:
+            flash("Xóa ngày lễ thất bại")
+
+    return redirect("/ngayle/danhsach")
+
+@app.route("/ngayle/them", methods=["POST"])
+def them_ngay_le():
+    ngay = request.form.get("ngay")
+
+    if ngay:
+        if them_ngayle(ngay):
+            flash("Xóa ngày lễ thành công")
+        else:
+            flash("Xóa ngày lễ thất bại")
+
+    return redirect("/ngayle/danhsach")
+
+@app.route("/ngaytrangoai/danhsach", methods=["GET","POST"])
+def danhsach_ngaytrangoai():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            danhsach = lay_danhsach_ngaytrangoai(nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngaytrangoai.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+@app.route("/ngaytrangoai/xoa", methods=["GET"])
+def xoa_ngay_trangoai():
+    id = request.args.get("id")
+
+    if id:
+        if xoa_ngaytrangoai(id):
+            flash("Xóa ngày trả ngoài thành công")
+        else:
+            flash("Xóa ngày trả ngoài thất bại")
+
+    return redirect("/ngaytrangoai/danhsach")
+
+@app.route("/ngaytrangoai/them", methods=["POST"])
+def them_ngay_trangoai():
+    ngay = request.form.get("ngay")
+
+    if ngay:
+        if them_ngaytrangoai(ngay):
+            flash("Xóa ngày trả ngoài thành công")
+        else:
+            flash("Xóa ngày trả ngoài thất bại")
+
+    return redirect("/ngaytrangoai/danhsach")
+
+@app.route("/ngayhoandoi/danhsach", methods=["GET","POST"])
+def danhsach_ngayhoandoi():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            danhsach = lay_danhsach_ngayhoandoi(nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngayhoandoi.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+@app.route("/ngayhoandoi/xoa", methods=["GET"])
+def xoa_ngay_hoandoi():
+    id = request.args.get("id")
+
+    if id:
+        if xoa_ngayhoandoi(id):
+            flash("Xóa ngày hoán đổi thành công")
+        else:
+            flash("Xóa ngày thoán đổi thất bại")
+
+    return redirect("/ngayhoandoi/danhsach")
+
+@app.route("/ngayhoandoi/them", methods=["POST"])
+def them_ngay_hoandoi():
+    ngaydilam = request.form.get("ngaydilam")
+    ngaynghi = request.form.get("ngaynghi")
+
+    if ngaydilam and ngaynghi:
+        if them_ngayhoandoi(ngaydilam,ngaynghi):
+            flash("Xóa ngày thoán đổi thành công")
+        else:
+            flash("Xóa ngày thoán đổi thất bại")
+
+    return redirect("/ngayhoandoi/danhsach")

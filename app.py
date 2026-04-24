@@ -6357,3 +6357,139 @@ def laydanhsachsapnghihuu():
     except Exception as e:
         print(e)
         return []
+
+def lay_danhsach_ngayle():
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT * FROm DANH_SACH_NGAY_LE ORDER BY NGAY_DANG_KY DESC")
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [str(row).replace(",", "").replace("'", "").replace("(", "").replace(")", "") for row in rows]
+
+    except Exception as e:
+        print(str(e))
+        return []
+    
+
+def them_ngayle(ngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"INSERT INTO DANH_SACH_NGAY_LE VALUES ('{ngay}')")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+    
+def xoa_ngayle(ngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"DELETE DANH_SACH_NGAY_LE WHERE NGAY_DANG_KY = '{ngay}'")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+    
+def lay_danhsach_ngaytrangoai(nhamay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT ID,NGAY FROM NGAY_TRA_NGOAI WHERE NHA_MAY = '{nhamay}' ORDER BY NGAY DESC")
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [tuple(row) for row in rows]
+
+    except Exception as e:
+        print(str(e))
+        return []
+    
+def them_ngaytrangoai(ngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"INSERT INTO NGAY_TRA_NGOAI VALUES ('{current_user.macongty}','{ngay}')")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+    
+def xoa_ngaytrangoai(id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"DELETE NGAY_TRA_NGOAI WHERE id = '{id}'")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+
+def lay_danhsach_ngayhoandoi(nhamay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"SELECT ID,NGAY_DI_LAM,NGAY_DUOC_HOAN_DOI FROM NGAY_HOAN_DOI WHERE NHA_MAY = '{nhamay}' ORDER BY NGAY_DI_LAM DESC")
+        rows = cursor.fetchall()
+        conn.close()
+
+        return [tuple(row) for row in rows]
+
+    except Exception as e:
+        print(str(e))
+        return []
+    
+def them_ngayhoandoi(ngaydilam,ngaynghi):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"INSERT INTO NGAY_HOAN_DOI VALUES ('{current_user.macongty}','{ngaydilam}','{ngaynghi}')")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+    
+def xoa_ngayhoandoi(id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"DELETE NGAY_HOAN_DOI WHERE id = '{id}'")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
