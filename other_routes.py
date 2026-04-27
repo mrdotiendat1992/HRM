@@ -2783,7 +2783,8 @@ def bangcongchunhatchot_web():
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chot_{timestamp}.xlsx"), as_attachment=True)
-    
+
+
 @app.route("/bangcongchotquakhu_web", methods=["GET","POST"])
 def bangcongchotquakhu_web():
     if request.method == "GET":
@@ -3181,6 +3182,36 @@ def bangcong_tong_web():
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+
+@app.route("/bangcongchitiettrangoai_web", methods=["GET","POST"])
+@login_required
+def bangcongchitiettrangoai_web():
+    if request.method == "GET":
+        try:
+            masothe = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            bophan = request.args.get("bophan")
+            phanloai = request.args.get("phanloai")
+            tungay = request.args.get("tungay")
+            denngay = request.args.get("denngay")
+            ngay = request.args.get("ngay")
+            danhsach = lay_bangcong_chitiet_trangoai_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("bangcong_chitiet_trangoai_web.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            flash(str(e))
+            return render_template("bangcong_chitiet_trangoai_web.html",
+                                    danhsach=[],count=0)
+        
 @app.route("/bangcongtrangoai_web", methods=["GET","POST"])
 @login_required
 def bangcongtrangoai_web():

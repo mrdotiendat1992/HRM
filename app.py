@@ -4989,6 +4989,33 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
         flash(f"Loi them dong tu choi yeu cau tuyen dung: ({e})")
         return False
 
+def lay_bangcong_chitiet_trangoai_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_TU_DONG_TRA_NGOAI] where NHA_MAY='{current_user.macongty}' "
+        if masothe:
+            query += f" and MST = '{masothe}'"
+        if chuyen:
+            query += f" and Chuyen_to = '{chuyen}'"   
+        if bophan:
+            query += f" and Bo_phan = '{bophan}'"
+        if phanloai:
+            query += f" and phan_loai = N'{phanloai}'"  
+        if ngay:
+            query += f" and Ngay = '{ngay}'"   
+        if tungay:
+            query += f" and Ngay >= '{tungay}'"   
+        if denngay:
+            query += f" and Ngay <= '{denngay}'"       
+        query += " order by Ngay desc"
+        rows =  cursor.execute(query).fetchall()
+        # flash(len(rows))
+        return [x for x in rows]
+    except Exception as e:
+        flash(f"Loi lay bang cong tra ngoai: {e}")
+        return []
+
 def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -5010,7 +5037,7 @@ def lay_bangcongtrangoai_web(mst,chuyen,bophan,thang,nam):
         # flash(len(rows))
         return [x for x in rows]
     except Exception as e:
-        flash(f"Loi lay bang cong thang: {e}")
+        flash(f"Loi lay bang cong tra ngoai: {e}")
         return []
     
 def lay_soluong_danglamviec():
@@ -6493,3 +6520,4 @@ def xoa_ngayhoandoi(id):
     except Exception as e:
         print(str(e))
         return False
+
