@@ -3211,7 +3211,7 @@ def bangcongchitiettrangoai_web():
             flash(str(e))
             return render_template("bangcong_chitiet_trangoai_web.html",
                                     danhsach=[],count=0)
-    elif request.method == "GET":
+    elif request.method == "POST":
         try:
             masothe = request.args.get("mst")
             chuyen = request.args.get("chuyen")
