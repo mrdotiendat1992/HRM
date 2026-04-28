@@ -4991,6 +4991,8 @@ def them_yeucau_tuyendung_bi_tuchoi(id):
 
 def lay_bangcong_chitiet_trangoai_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay):
     try:
+        if not masothe and not chuyen and not bophan and not phanloai and not ngay and not tungay and not denngay:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[BANG_CHAM_CONG_TU_DONG_TRA_NGOAI] where NHA_MAY='{current_user.macongty}' "
