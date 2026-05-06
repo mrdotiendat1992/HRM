@@ -1751,7 +1751,7 @@ def laymasothemoi():
         flash(str(e))
         return 0
 
-def laydanhsachloithe(mst=None,chuyen=None, bophan=None, ngay=None, mstthuky=None):
+def laydanhsachloithe(mst,chuyen, bophan, ngay, mstthuky):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1834,7 +1834,7 @@ def laydanhsachbophan():
             flash(str(e))
             return []
 
-def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcong(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1861,7 +1861,7 @@ def laydanhsachchamcong(mst=None, chuyen=None, phongban=None, tungay=None, denng
             return []
 
 
-def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchunhatchuachot(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1887,7 +1887,7 @@ def laydanhsachchamcongchunhatchuachot(mst=None, chuyen=None, phongban=None, tun
             flash(str(e))
             return []
 
-def laydanhsachchamcongngaylechuachot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongngaylechuachot(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1913,7 +1913,7 @@ def laydanhsachchamcongngaylechuachot(mst=None, chuyen=None, phongban=None, tung
             flash(str(e))
             return []
 
-def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchot(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1942,7 +1942,7 @@ def laydanhsachchamcongchot(mst=None, chuyen=None, phongban=None, tungay=None, d
         flash(str(e))
         return []
 
-def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchunhatchot(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -1971,7 +1971,7 @@ def laydanhsachchamcongchunhatchot(mst=None, chuyen=None, phongban=None, tungay=
         flash(str(e))
         return []
 
-def laydanhsachchamcongngaylechot(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongngaylechot(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -2000,7 +2000,7 @@ def laydanhsachchamcongngaylechot(mst=None, chuyen=None, phongban=None, tungay=N
         flash(str(e))
         return []
 
-def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchotquakhu(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
         #     return []
@@ -2034,7 +2034,7 @@ def laydanhsachchamcongchotquakhu(mst=None, chuyen=None, phongban=None, tungay=N
         flash(str(e))
         return []
 
-def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongchunhatchotquakhu(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
         #     return []
@@ -2067,7 +2067,7 @@ def laydanhsachchamcongchunhatchotquakhu(mst=None, chuyen=None, phongban=None, t
         flash(str(e))
         return []
 
-def laydanhsachchamcongngaylechotquakhu(mst=None, chuyen=None, phongban=None, tungay=None, denngay=None, phanloai=None):
+def laydanhsachchamcongngaylechotquakhu(mst, chuyen, phongban, tungay, denngay, phanloai):
     try:
         # if not mst and not chuyen and not phongban and not tungay and not denngay and not phanloai:
         #     return []
@@ -2100,7 +2100,7 @@ def laydanhsachchamcongngaylechotquakhu(mst=None, chuyen=None, phongban=None, tu
         flash(str(e))
         return []
 
-def laydanhsachdiemdanhbu(mst=None,hoten=None,chucvu=None,chuyen=None,bophan=None,loaidiemdanh=None,ngaydiemdanh=None,lido=None,trangthai=None,mstquanly=None,mstthuky=None):
+def laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lido,trangthai,mstquanly,mstthuky):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -2356,8 +2356,11 @@ def insert_tangca(nhamay,mst,hoten,chucvu,chuyen,phongban,ngay,giotangca):
         conn.close()
         return False
         
-def laydanhsachtangca(mst=None,phongban=None,chuyen=None,ngayxem=None,tungay=None,denngay=None,backday=False):
+def laydanhsachtangca(mst,phongban,chuyen,ngayxem,tungay,denngay,backday=False):
+       
     try:
+        if not mst and not phongban and not chuyen and not ngayxem and not tungay and not denngay:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         
@@ -2938,6 +2941,8 @@ def nhansu_khongnhangiayto_xinnghikhac(id):
         
 def laydanhsachcahientai(mst,chuyen, phongban):
     try:
+        if not mst and not chuyen and not phongban:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"""
@@ -2967,7 +2972,6 @@ def laydanhsachcahientai(mst,chuyen, phongban):
         if phongban:
             query += f" AND Danh_sach_CBCNV.Department LIKE '%{phongban}%'"
         query += "ORDER BY Dang_ky_ca_lam_viec.Tu_ngay desc, Dang_ky_ca_lam_viec.Den_ngay desc, MST asc"
-        # 
         rows = cursor.execute(query).fetchall()
         conn.close()
         return rows
@@ -4026,21 +4030,23 @@ def lay_tangcangay_web(thang,nam,mst,bophan,chuyen):
    
 def lay_tangcadem(thang,nam,mst,bophan,chuyen):
     try:
+        if not thang and not nam and not mst and not bophan and not chuyen:
+            return []
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"select * from [HR].[dbo].[TANG_CA_DEM] where Nha_may='{current_user.macongty}'"
-        if not thang:
-            thang = datetime.now().month
-        if not nam:
-            nam =  datetime.now().year
-        query += f" and Thang={thang} and Nam={nam}"
         if mst:
             query += f" and MST='{mst}'"
         if bophan:
             query += f" and Bo_phan='{bophan}'"
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
+        if thang:
+            query += f" and THANG ={thang}"
+        if nam:
+            query += f" and Nam ={nam}"
         query += " order by MST asc"
+        print(query)
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:

@@ -2577,8 +2577,8 @@ def muc7_1_10():
 @login_required
 def muc7_1_11():
     if request.method == "GET":
-        thang = request.form.get("thang") if request.form.get("thang") else datetime.now().month
-        nam = request.form.get("nam") if request.form.get("nam") else datetime.now().year
+        thang = request.args.get("thang")
+        nam = request.args.get("nam")
         mst = request.args.get("mst")
         bophan = request.args.get("bophan")
         chuyen = request.args.get("chuyen")
