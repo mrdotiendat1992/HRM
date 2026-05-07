@@ -4648,10 +4648,13 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
         rows =  cursor.execute(query).fetchall()
+        new_rows = []
         for row in rows:
             row[-3] = round(row[-3],0) if row[-3] else 0
-
-        return rows
+            row=list(row)
+            row.append(row[-1][9] if row[-1] else "")
+            new_rows.append(row)
+        return new_rows
     except Exception as e:
         print(f"Loi lay bang cong thang: {e}")
         return []
@@ -4700,9 +4703,13 @@ def lay_bangcongthang_web_sau_072025(mst,bophan,chuyen,thang,nam):
         query += " order by MST asc"
         # print(query)
         rows =  cursor.execute(query).fetchall()
+        new_rows = []
         for row in rows:
             row[35] = round(row[35],0) if row[35] else 0
-        return rows
+            row=list(row)
+            row.append(row[-1][9] if row[-1] else "") 
+            new_rows.append(row)
+        return new_rows
     except Exception as e:
         flash(f"Loi lay bang cong thang: {e}")
         return []
