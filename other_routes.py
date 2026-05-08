@@ -1840,6 +1840,7 @@ def tailen_danhsach_tangca():
                     chuyen = row["Chuyền"]
                     phongban = row["Phòng ban"]
                     ngay = row["Ngày"] 
+                    print(ngay)
                     giotangcasang = row["Tăng ca sáng"] if not pd.isna(row["Tăng ca sáng"]) else ""
                     giotangcasangthucte = row["Tăng ca sáng thực tế"] if not pd.isna(row["Tăng ca sáng thực tế"]) else ""
                     giotangca = row["Giờ tăng ca"] if not pd.isna(row["Giờ tăng ca"]) else ""

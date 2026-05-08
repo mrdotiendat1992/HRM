@@ -1625,6 +1625,7 @@ def diemdanhbu():
             count=count,
         )
     elif request.method == "POST":
+        mstthuky = request.form.get("mstthuky")
         mstquanly = request.form.get("mstquanly")
         mst = request.form.get("mst")
         chuyen = request.form.get("chuyen")
@@ -1636,7 +1637,7 @@ def diemdanhbu():
         trangthai = request.form.get("trangthai")
         loaidiemdanh = request.form.get("loaidiemdanh")
         
-        rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
+        rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly,mstthuky)
         result = []
         for row in rows:
             result.append({
