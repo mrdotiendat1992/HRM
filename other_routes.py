@@ -4879,10 +4879,17 @@ def tailen_chamcongtay():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO CHAM_CONG_TAY (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_HC, PHUT_HC_THUC_TE, PHUT_TANG_CA_100, TC_100_THUC_TE, PHUT_TANG_CA_150, TC_150_THUC_TE, PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
+                INSERT INTO CHAM_CONG_TAY 
+                (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, 
+                PHUT_HC, PHUT_HC_THUC_TE, 
+                PHUT_TANG_CA_100, TC_100_THUC_TE, 
+                PHUT_TANG_CA_150, TC_150_THUC_TE, 
+                PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, 
+                PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, 
+                PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "TC_100_THUC_TE", "PHUT_TANG_CA_150", "TC_150_THUC_TE", "PHUT_TANG_CA_DEM", "TC_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
             # print(normalized_data_rows)
             cursor.executemany(insert_query, normalized_data_rows)
@@ -4890,7 +4897,7 @@ def tailen_chamcongtay():
             conn.commit() 
             conn.close()    
         except Exception as e:
-            flash(e)
+            flash(str(e))
                 
     return redirect("/chamcongtay")
 
