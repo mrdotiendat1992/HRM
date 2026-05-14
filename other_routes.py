@@ -3175,10 +3175,10 @@ def bangcong_tong_web():
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
                 cell = sheet[f"{col}{row}"]
-                if cell.value and int(cell.value) > 0:
-                    try:
+                try:
+                    if cell.value and int(cell.value) > 0:
                         cell.style = number_style
-                    except ValueError:
+                except ValueError:
                         pass  # Nếu giá trị không phải
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
