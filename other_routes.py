@@ -4881,17 +4881,23 @@ def tailen_chamcongtay():
             insert_query = """
                 INSERT INTO CHAM_CONG_TAY 
                 (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, 
+                GIO_VAO_THUC_TE, GIO_RA_THUC_TE,
                 PHUT_HC, PHUT_HC_THUC_TE, 
                 PHUT_TANG_CA_100, TC_100_THUC_TE, 
                 PHUT_TANG_CA_150, TC_150_THUC_TE, 
                 PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, 
                 PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, 
                 PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "TC_100_THUC_TE", "PHUT_TANG_CA_150", "TC_150_THUC_TE", "PHUT_TANG_CA_DEM", "TC_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", 
+            "GIO_RA", "GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_HC", "PHUT_HC_THUC_TE", 
+            "PHUT_TANG_CA_100", "TC_100_THUC_TE", "PHUT_TANG_CA_150", "TC_150_THUC_TE",
+            "PHUT_TANG_CA_DEM", "TC_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG",
+            "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
-            # print(normalized_data_rows)
+            print(insert_query)
+            print(normalized_data_rows)
             cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 

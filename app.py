@@ -4046,7 +4046,6 @@ def lay_tangcadem(thang,nam,mst,bophan,chuyen):
         if nam:
             query += f" and Nam ={nam}"
         query += " order by MST asc"
-        print(query)
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
