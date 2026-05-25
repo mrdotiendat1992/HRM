@@ -6585,3 +6585,36 @@ def xoa_ngayhoandoi(id):
         print(str(e))
         return False
 
+def lay_danhsach_diemdanhbu_theothang(thang, nam):
+    try:
+        if thang and nam:
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
+
+            query = f"""
+                SELECT *
+                FROM DIEM_DANH_BU
+                WHERE NHA_MAY = '{current_user.macongty}'
+                AND MONTH(Ngay_diem_danh) = {thang}
+                AND YEAR(Ngay_diem_danh) = {nam}
+                ORDER BY ID DESC
+            """
+
+            cursor.execute(query)
+
+            # Lấy dữ liệu
+            rows = cursor.fetchall()
+
+            # Lấy headers từ SQL
+            columns = [column[0] for column in cursor.description]
+
+            conn.close()
+
+            return rows, columns
+        else:
+            return [], []
+
+    except Exception as e:
+        print(str(e))
+        return [], []
+        
