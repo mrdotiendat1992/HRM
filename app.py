@@ -53,7 +53,7 @@ def checkformatmst(mst):
     if current_user.macongty == 'NT2':
         maxwidth = 5
         soluong = maxwidth-len(str(mst))
-        if soluong >0:
+        if soluong > 0:
             return '0'*soluong+str(mst)
     return mst
     
@@ -1740,7 +1740,10 @@ def laymasothemoi():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        query = f"SELECT TOP 1 MST FROM Danh_sach_CBCNV WHERE Factory = '{current_user.macongty}' ORDER BY CAST(MST AS INT) DESC"
+        query = f"""SELECT TOP 1 MST FROM Danh_sach_CBCNV 
+            WHERE Factory = '{current_user.macongty}' 
+            AND MST NOT LIKE '888___'
+            ORDER BY CAST(MST AS INT) DESC"""
         
         result =  cursor.execute(query).fetchone()
         conn.close()
