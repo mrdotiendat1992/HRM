@@ -123,7 +123,10 @@ def dieuchuyennhansu(mst,
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         ghichu = "" if str(ghichu)=='nan' else ghichu
-        query1 = f"INSERT INTO Lich_su_cong_tac VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}','{hccategorycu}','{hccategorymoi}',GETDATE())"
+        query1 = f"""INSERT INTO Lich_su_cong_tac 
+            VALUES ('{current_user.macongty}','{mst}','{chuyencu}',N'{vitricu}','{chuyenmoi}',N'{vitrimoi}',
+            N'{loaidieuchuyen}','{ngaydieuchuyen}',N'{ghichu}','{gradecodecu}','{gradecodemoi}','{hccategorycu}',
+            '{hccategorymoi}',GETDATE())"""
         try:
             cursor.execute(query1)
             conn.commit()
@@ -6621,3 +6624,74 @@ def lay_danhsach_diemdanhbu_theothang(thang, nam):
         print(str(e))
         return [], []
         
+
+def lay_danhsach_ntid(mst,nhamay):
+
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        if not mst:
+            query = f"SELECT ID, NHAMAY,MST,NTID,TUNGAY,DENNGAY FROM DANH_SACH_NTID WHERE NHAMAY = '{nhamay}' order by mst desc"
+        else:
+            query = f"SELECT ID, NHAMAY,MST,NTID,TUNGAY,DENNGAY FROM DANH_SACH_NTID WHERE NHAMAY = '{nhamay}' AND MST = '{mst}' order by DENNGAY desc"
+        cursor.execute(query)
+
+        # Lấy dữ liệu
+        rows = cursor.fetchall()
+
+        # Lấy headers từ SQL
+        columns = [column[0] for column in cursor.description]
+
+        conn.close()
+
+        return rows, columns
+
+
+    except Exception as e:
+        print(str(e))
+        return [], []
+    
+def them_ntid_moi(factory,masothe,cost_id):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        cursor.execute(f"INSER INTO DANH_SACH_NTID VALUES ('{factory}','{masothe}','{cost_id}',GETDATE(),'2054-12-31')")
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False
+    
+def sua_ntid_dieu_chuyen(factory,masothe,ntid,ngaydieuchuyen):
+    try:
+
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        ngaymax = cursor.execute(f"""SELECT MAX(DENNGAY) FROM DANH_SACH_NTID WHERE NHAMAY = '{factory}' 
+                                        AND MST = '{masothe}' """).fetchone()
+        if not ngaymax:
+            return False
+        
+        query_update_1 = f"""UPDATE DANH_SACH_NTID SET DENNGAY = DATEADD(DAY, -1, '{ngaydieuchuyen}')
+                        WHERE NHAMAY = '{factory}' AND MST = '{masothe}' AND DENNGAY = '{ngaymax[0]}'"""
+
+        query_update_2 = f"""UPDATE DANH_SACH_CBCNV SET COST_ID = '{ntid}'
+                        WHERE Factory = '{factory}' AND The_cham_cong = '{masothe}'"""
+        
+        query_insert = f"INSER INTO DANH_SACH_NTID VALUES ('{factory}','{masothe}','{ntid}','{ngaydieuchuyen}','2054-12-31')"
+        # print(query_insert)
+
+        cursor.executemany(query_update_1,query_update_2,query_insert)
+        cursor.commit()
+        conn.close()
+
+        return True
+
+    except Exception as e:
+        print(str(e))
+        return False

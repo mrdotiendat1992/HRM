@@ -752,6 +752,7 @@ def nhapthongtinlaodongmoi():
                 request.form.get("phongban"),
                 request.form.get("gradecode"),
             )
+            them_ntid_moi(factory,masothe,cost_id)
         else:
             flash(f"Thêm lao động mới thất bại: {ketqua['lido']}")
             app.logger.error(f"muc3_1 INSERT failed: {ketqua['lido']}")
@@ -1217,6 +1218,8 @@ def dieuchuyen():
             positioncodedescriptioncu = request.form.get("positioncodedescriptioncu") 
             positioncodedescriptionmoi = request.form.get("positioncodedescriptionmoi") 
             
+            ntidmoi = request.form.get("ntidmoi")
+
             khongdoica = request.form.get("khongdoica") 
             
             if loaidieuchuyen == "Chuyển vị trí":
@@ -1251,6 +1254,10 @@ def dieuchuyen():
                                     )
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
+                        if sua_ntid_dieu_chuyen(current_user.macongty,mst,ntidmoi,ngaydieuchuyen):
+                            flash("Sửa NTID thành công !!!")
+                        else:
+                            flash("Sửa NTID thất bại !!!")
                     else:
                         flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:

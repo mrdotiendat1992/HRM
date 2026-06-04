@@ -6487,3 +6487,26 @@ def taidanhsachdiemdanhbutheothang():
             "success": False,
             "message": str(e)
         }, 500
+
+@app.route("/danhsachntid", methods = ["GET","POST"])
+def danh_sach_ntid():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            mst = request.args.get("mst")
+            danhsach = lay_danhsach_ntid(mst,nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[0][start:end]
+            detail = danhsach[1]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template("danhsach_ntid.html", detail = detail, danhsach=paginated_rows,
+                                   pagination=pagination)
