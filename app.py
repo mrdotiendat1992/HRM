@@ -540,6 +540,53 @@ def inhopdongtheomau(macongty,masothe,hoten,gioitinh,ngaysinh,
                 except Exception as e:
                     flash(str(e))
                     return None
+        elif loaihopdong == "Hợp đồng có thời hạn 6 tháng":
+            if macongty == "NT1":
+                try:
+
+                        replacements = {
+                            "{{mst}}": masothe,
+                            "{{ngaylamhopdong}}": ngaylamhopdong,
+                            "{{thanglamhopdong}}": thanglamhopdong,
+                            "{{namlamhopdong}}" : namlamhopdong,
+                            "{{hoten}}": hoten,
+                            "{{ngaysinh}}": ngaysinh,
+                            "{{gioitinh}}": gioitinh,
+                            "{{sodienthoai}}": sodienthoai,
+                            "{{thuongtru}}": thuongtru,
+                            "{{tamtru}}": tamtru,
+                            "{{cccd}}": cccd,
+                            "{{ngaycapcc}}": ngaycapcccd,
+                            "{{noicapcc}}": noicap,
+                            "{{chucdanh}}": chucdanh,
+                            "{{ngayketthuchopdong}}": ngayketthuchopdong,
+                            "{{thangketthuchopdong}}": thangketthuchopdong,
+                            "{{namketthuchopdong}}": namketthuchopdong,
+                            "{{luongcoban}}": f"{int(luongcoban):,}",
+                            "{{bophan}}": phongban
+                        }
+                        
+                        # dùng docx để thay thế các dữ liệu cần thiết
+                        doc = Document(FILE_MAU_HD6T)
+
+                        replace_text_preserve_style_full(doc, replacements)
+
+                        # Lưu lai và gửi cho user file mới:
+                        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+                        filename = f'NT1_HDCTH_{masothe}_{ngaylamhopdong}{thanglamhopdong}{namlamhopdong}_{thoigian}.docx'
+                        filepath = os.path.join(FOLDER_XUAT, filename)
+
+                        # Lưu file ra thư mục xuất
+                        doc.save(filepath)
+
+                        # Trả về đường dẫn file (hoặc tên file)
+                        return filepath
+
+                except Exception as e:
+                    flash(str(e))
+                    return None
+            else:
+                return None
         elif loaihopdong == "Hợp đồng có thời hạn 1 năm":
             if macongty == "NT1":
                 if capbac in ["O3","C1","C2","W1"]:
@@ -3351,7 +3398,8 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 Headcount_category='{hccategory}', Section_code='{sectioncode}', Section_description='{sectiondescription}', Line=N'{chuyen}'
                 WHERE Factory='{nhamay}' AND The_cham_cong='{mst}'
                 """
-        elif loaihopdong == "Hợp đồng có thời hạn 28 ngày" or loaihopdong == "Hợp đồng có thời hạn 1 năm":
+        
+        elif loaihopdong in ["Hợp đồng có thời hạn 28 ngày", "Hợp đồng có thời hạn 1 năm", "Hợp đồng có thời hạn 6 tháng"]:
             query = f"""
                 UPDATE Danh_sach_CBCNV SET Luong_co_ban='{luongcoban}', Phu_cap='{phucap}', Ngay_ky_HDXDTH_Lan1='{ngaybatdau}', Ngay_het_han_HDXDTH_Lan1='{ngayketthuc}',
                 Job_title_VN=N'{chucdanh}', Job_title_EN='{vitrien}', Emp_type='{employeetype}', Position_code='{posotioncode}', Position_code_description='{postitioncodedescription}',

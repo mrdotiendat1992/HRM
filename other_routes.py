@@ -4904,8 +4904,8 @@ def tailen_chamcongtay():
             "PHUT_TANG_CA_DEM", "TC_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG",
             "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
-            print(insert_query)
-            print(normalized_data_rows)
+            # print(insert_query)
+            # print(normalized_data_rows)
             cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 
