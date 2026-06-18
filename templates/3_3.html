@@ -636,6 +636,7 @@
                         <select id="form_loaihopdong" name="form_loaihopdong">
                             <option value="Hợp đồng thử việc">Hợp đồng thử việc</option>
                             <option value="Hợp đồng có thời hạn 28 ngày">Hợp đồng có thời hạn 28 ngày</option>
+                            <option value="Hợp đồng có thời hạn 6 tháng">Hợp đồng có thời hạn 6 tháng</option>
                             <option value="Hợp đồng có thời hạn 1 năm">Hợp đồng có thời hạn 1 năm</option>
                             <option value="Hợp đồng vô thời hạn">Hợp đồng vô thời hạn</option>
                             <option value="Phụ lục hợp đồng">Phụ lục hợp đồng</option>
@@ -848,6 +849,9 @@
         } else if (loai === 'Hợp đồng có thời hạn 28 ngày') {
             end = new Date(d); end.setDate(d.getDate() + 27);
             soNgay.value = 28;
+        } else if (loai === 'Hợp đồng có thời hạn 6 tháng') {
+            end = new Date(d); end.setMonth(end.getMonth() + 6); end.setDate(end.getDate() - 1);
+            soNgay.value = 180;
         } else if (loai === 'Hợp đồng có thời hạn 1 năm') {
             end = new Date(d); end.setDate(d.getDate() + 364);
             soNgay.value = 365;

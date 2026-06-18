@@ -13,6 +13,8 @@ FOLDER_AVATAR = 'static/img/avatar'
 
 HINHANH_LOGO = os.path.join(os.path.dirname(__file__), r'static/img/logo.png')
 
+FILE_MAU_HD6T = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/hd6t.docx')
+
 FILE_MAU_HDTV_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdtv.docx')
 FILE_MAU_HDCTH_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdcth.docx')
 FILE_MAU_HDVTH_NT1_O3_TRO_XUONG = os.path.join(os.path.dirname(__file__), r'static/uploads/mau/hopdong/nt1/o3_tro_xuong/hdvth.docx')
