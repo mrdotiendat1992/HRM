@@ -4817,7 +4817,15 @@ def delete_chamcongtay():
 
 @app.route("/tai_sample_chamcongtay", methods=["POST"])
 def tai_sample_chamcongtay():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA",
+                "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", 
+                "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", 
+                "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", 
+                "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", 
+                "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", 
+                "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI",
+                'GIO_VAO_THUC_TE', 'GIO_RA_THUC_TE', 
+                'TC_100_THUC_TE', 'TC_150_THUC_TE', 'TC_DEM_THUC_TE']
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -5164,7 +5172,8 @@ def delete_chamcongtaycn():
 
 @app.route("/tai_sample_chamcongtaycn", methods=["POST"])
 def tai_sample_chamcongtaycn():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC",
+               "GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
