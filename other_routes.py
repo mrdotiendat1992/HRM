@@ -4920,7 +4920,7 @@ def capnhat_dulieu_chamcong():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        cursor.execute("Exec Dong_bo_CheckInOut")
+        cursor.execute("Exec Dong_bo_CheckInOut; Exec CAP_NHAT_GIO_VAO_RA_SANG_DK_TANG_CA_TU_DONG;")
         cursor.commit()
         conn.close()
         return redirect("/chamcong_sang_web")
