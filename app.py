@@ -6329,36 +6329,19 @@ def lay_dulieu_chotcong(mst, tungay, denngay):
 
 def chaylaicong_hientai(mst, thang, nam):
 
-    start_day = datetime(int(nam), int(thang), 1).strftime("%Y-%m-%d")
-    if int(thang) < 12:
-        end_day = (datetime(int(nam), int(thang) + 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
-    else:
-        end_day = (datetime(int(nam) + 1, 1, 1) - timedelta(days=1)).strftime("%Y-%m-%d")
-
-    success_step = 0
-
     try:
+        nhamay = current_user.macongty
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        success_step = 1
-        query_1 = f"EXEC CHAM_CONG_TU_DONG_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
-        cur.execute(query_1)
+        query = f"EXEC CHAY_LAI_CONG_CA_NHAN_TRONG_THANG {thang},{nam},'{nhamay}',{mst}"
+        cur.execute(query)
         conn.commit()
-        success_step = 2
-        query_2 = f"EXEC CHAM_CONG_CHU_NHAT_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
-        cur.execute(query_2)
-        conn.commit()
-        success_step = 3
-        query_3 = f"EXEC CHAM_CONG_NGAY_LE_CA_NHAN '{current_user.macongty}','{mst}','{start_day}','{end_day}'"
-        cur.execute(query_3)
-        conn.commit()
-        success_step = 4
+        conn.close()
         return True
     except Exception as e:
-        print(f"Loi o buoc: {success_step} - {e}")  
-        return False
-    finally:
+        print(f"Loi cap nhat cong qua khu {str(e)}")  
         conn.close()
+        return False
 
 def chaylaicong_quakhu(mst, thang, nam):
 
@@ -6366,7 +6349,7 @@ def chaylaicong_quakhu(mst, thang, nam):
         nhamay = current_user.macongty
         conn = pyodbc.connect(url_database_pyodbc)
         cur = conn.cursor()
-        query = f"EXEC CHAY_CONG_CA_NHAN_QUA_KHU {thang},{nam},'{nhamay}',{mst}"
+        query = f"EXEC CHAY_LAI_CONG_CA_NHAN_TRONG_THANG {thang},{nam},'{nhamay}',{mst}"
         cur.execute(query)
         conn.commit()
         conn.close()
