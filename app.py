@@ -3388,6 +3388,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noic
             return {"ketqua":False,"lido":e,"query":query}
     
 def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
+    print(loaihopdong)
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
@@ -3421,6 +3422,8 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 """
         else:
             query = ""
+
+        print(f"Query: {query}")
         if query:
             try:
                 cursor.execute(query)
@@ -3428,10 +3431,12 @@ def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phu
                 conn.close()  
                 return {"ketqua":True}
             except Exception as e:
+                print(f"Lỗi khi cập nhật thông tin hợp đồng: {e}")
                 return {"ketqua":False,"lido":e, "query":query}
         else:   
             return {"ketqua":False,"lido":"Khong hieu loai hop dong", "query":query}
     except Exception as e:
+        print(f"Lỗi khi cập nhật thông tin hợp đồng: {e}")
         return {"ketqua":False,"lido":e, "query":query}
     
 def thaydoithongtinhopdong(id,masothe,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,ngaycapcccd,noicap,
