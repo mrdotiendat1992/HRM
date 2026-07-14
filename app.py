@@ -3362,6 +3362,8 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noic
             ngayketthuc=ngayketthuc
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
+        if cccd[0] != "0":
+            cccd = "0" + cccd
         query = f"""
         INSERT INTO QUAN_LY_HD VALUES (
             '{nhamay}', '{int(mst)}', N'{hoten}', N'{gioitinh}', '{ngaysinh}', N'{thuongtru}', N'{tamtru}', '{cccd}', '{ngaycapcccd}', '{capbac}',
@@ -3388,7 +3390,7 @@ def themhopdongmoi(nhamay,mst,hoten,gioitinh,ngaysinh,thuongtru,tamtru,cccd,noic
             return {"ketqua":False,"lido":e,"query":query}
     
 def capnhatthongtinhopdong(nhamay,mst,loaihopdong,chucdanh,chuyen,luongcoban,phucap,ngaybatdau,ngayketthuc,vitrien,employeetype,posotioncode,postitioncodedescription,hccategory,sectioncode,sectiondescription):
-    print(loaihopdong)
+    # print(loaihopdong)
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
