@@ -4723,12 +4723,23 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
+        print(query)
         rows =  cursor.execute(query).fetchall()
         new_rows = []
         for row in rows:
-            row[-3] = round(row[-3],0) if row[-3] else 0
-            row=list(row)
-            row.append(row[-1][9] if row[-1] else "")
+            row = list(row)
+
+            # TONG_CONG = vị trí -3
+            row[-3] = round(row[-3], 0) if row[-3] is not None else 0
+
+            # NTID = vị trí -1
+            ntid = str(row[-1]) if row[-1] is not None else ""
+
+            # Lấy ký tự thứ 10 nếu NTID đủ dài
+            ky_tu = ntid[9] if len(ntid) > 9 else ""
+
+            row.append(ky_tu)
+
             new_rows.append(row)
         return new_rows
     except Exception as e:
