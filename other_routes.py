@@ -6498,6 +6498,40 @@ def taidanhsachdiemdanhbutheothang():
             "message": str(e)
         }, 500
 
+@app.route("/lay_danhsach_xinnghiphep_theothang", methods=["POST"])
+def taidanhsachxinnghipheptheothang():
+    try:
+        thang = request.form.get("thang_taixuong")
+        nam = request.form.get("nam_taixuong")
+
+        rows, columns = lay_danhsach_xinnghiphep_theothang(thang, nam)
+
+        # Chuyển sang DataFrame
+        df = pd.DataFrame.from_records(rows, columns=columns)
+
+        # Tạo file Excel trong RAM
+        output = BytesIO()
+
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='XIN_NGHI_PHEP')
+
+        output.seek(0)
+
+        filename = f"XIN_NGHI_PHEP_{thang}_{nam}.xlsx"
+
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=filename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+    
 @app.route("/danhsachntid", methods = ["GET","POST"])
 def danh_sach_ntid():
     if request.method == "GET":

@@ -6693,7 +6693,39 @@ def lay_danhsach_diemdanhbu_theothang(thang, nam):
         print(str(e))
         return [], []
         
+def lay_danhsach_xinnghiphep_theothang(thang, nam):
+    try:
+        if thang and nam:
+            conn = pyodbc.connect(url_database_pyodbc)
+            cursor = conn.cursor()
 
+            query = f"""
+                SELECT *
+                FROM XIN_NGHI_PHEP
+                WHERE NHA_MAY = '{current_user.macongty}'
+                AND MONTH(Ngay_nghi_phep) = {thang}
+                AND YEAR(Ngay_nghi_phep) = {nam}
+                ORDER BY ID DESC
+            """
+
+            cursor.execute(query)
+
+            # Lấy dữ liệu
+            rows = cursor.fetchall()
+
+            # Lấy headers từ SQL
+            columns = [column[0] for column in cursor.description]
+
+            conn.close()
+
+            return rows, columns
+        else:
+            return [], []
+
+    except Exception as e:
+        print(str(e))
+        return [], []
+    
 def lay_danhsach_ntid(mst,nhamay):
 
     try:
