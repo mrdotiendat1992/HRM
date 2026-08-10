@@ -1250,14 +1250,15 @@ def dieuchuyen():
                                     vitrienmoi,
                                     ngaydieuchuyen,
                                     ghichu,
-                                    khongdoica
+                                    khongdoica,
+                                    ntidmoi
                                     )
                     if ketqua["ketqua"]:
                         flash("Điều chuyển thành công !!!")
-                        if sua_ntid_dieu_chuyen(current_user.macongty,mst,ntidmoi,ngaydieuchuyen):
-                            flash("Sửa NTID thành công !!!")
-                        else:
-                            flash("Sửa NTID thất bại !!!")
+                        # if sua_ntid_dieu_chuyen(current_user.macongty,mst,ntidmoi,ngaydieuchuyen):
+                        #     flash("Sửa NTID thành công !!!")
+                        # else:
+                        #     flash("Sửa NTID thất bại !!!")
                     else:
                         flash(f"Điều chuyển thất bại, lí do: {ketqua['lido']}, query: {ketqua['query']} !!!")
                 except Exception as e:
