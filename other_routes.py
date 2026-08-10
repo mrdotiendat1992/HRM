@@ -1899,6 +1899,7 @@ def capnhatdieuchuyentheofile():
                     loaidieuchuyen = row["Loại điều chuyển"]
                     ngay = row["Ngày"]
                     ghichu = row["Ghi chú"] 
+                    ntid_moi = row["NTID"]
                     if loaidieuchuyen == "Chuyển vị trí":
                         
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
@@ -1926,14 +1927,14 @@ def capnhatdieuchuyentheofile():
                         chucdanhtamoi = hc_name_moi[2]
 
                         khongdoica= ""
-                    
+
                         
                         dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
                                          chuyencu, chuyenmoi,capbaccu,capbacmoi,
                                          sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
                                          phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,
                                          employeetypecu,employeetypemoi,positioncodedescriptioncu,positioncodedescriptionmoi,
-                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica)
+                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica,ntid_moi)
                         
                     elif loaidieuchuyen == "Nghỉ việc":
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]

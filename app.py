@@ -117,7 +117,8 @@ def dieuchuyennhansu(mst,
                     vitrienmoi,
                     ngaydieuchuyen,
                     ghichu,
-                    khongdoica
+                    khongdoica,
+                    ntid_moi
                    ):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
@@ -153,6 +154,21 @@ def dieuchuyennhansu(mst,
                     "query":query3
                     }
             conn.close()
+
+        if ntid_moi:
+            query4 = f"""
+            UPDATE Danh_sach_CBCNV SET COST_ID = '{ntid_moi}' WHERE Factory = '{current_user.macongty}' AND The_cham_cong = '{mst}'
+            """
+            try:
+                cursor.execute(query4)
+                conn.commit()
+            except Exception as e:
+                return {
+                    "ketqua": False,
+                    "lido":e,
+                    "query":query4
+                    }
+        
         return {"ketqua":True}
     except Exception as e:
         flash(str(e))
