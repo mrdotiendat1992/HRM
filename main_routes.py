@@ -1748,10 +1748,12 @@ def xinnghiphep():
                             page="Lỗi chấm công",
                             danhsach=paginated_rows, 
                             pagination=pagination,
-                            count=count)
+                            count=count,
+                            current_month=datetime.now().month,
+                            current_year=datetime.now().year)
     elif request.method == "POST":
         mstquanly = request.form.get("mstquanly")
-        mstthuky = request.args.get("mstthuky")
+        mstthuky = request.form.get("mstthuky")
         mst = request.form.get("mst")
         hoten = request.form.get("hoten")
         chucvu = request.form.get("chucvu")
@@ -1760,9 +1762,33 @@ def xinnghiphep():
         ngay = request.form.get("ngaynghi")
         lydo = request.form.get("lydo")
         trangthai = request.form.get("trangthai")
+        export_type = request.form.get("export_type")
         danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
+
+        def _parse_ngay(value):
+            if not value:
+                return None
+            for fmt in ("%Y-%m-%d", "%Y-%m-%d %H:%M:%S", "%d/%m/%Y"):
+                try:
+                    return datetime.strptime(str(value), fmt)
+                except ValueError:
+                    continue
+            return None
+
+        if export_type == "month":
+            target_month = int(request.form.get("thang") or datetime.now().month)
+            target_year = int(request.form.get("nam") or datetime.now().year)
+            filtered_rows = []
+            for row in danhsach:
+                row_date = _parse_ngay(row[6])
+                if row_date and row_date.month == target_month and row_date.year == target_year:
+                    filtered_rows.append(row)
+            danhsach = filtered_rows
+
         result = []
         for row in danhsach:
+            row_date = _parse_ngay(row[6])
+            ngay_nghi = row_date.strftime("%d/%m/%Y") if row_date else row[6]
             result.append({
                 'Mã công ty': row[0],
                 'Mã số thẻ': row[1],
@@ -1770,7 +1796,7 @@ def xinnghiphep():
                 'Chức vụ': row[3],
                 'Chuyền tổ': row[4],
                 'Phòng ban': row[5],
-                'Ngày nghỉ phép': datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y"),
+                'Ngày nghỉ phép': ngay_nghi,
                 'Tổng số phút': row[7],
                 'Lý do': row[8],
                 'Trạng thái': row[9],
@@ -1780,9 +1806,13 @@ def xinnghiphep():
             })
         df = pd.DataFrame(result)
         thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-        df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
+        if export_type == "month":
+            filename = f"xinnghiphep_{target_year:04d}{target_month:02d}_{thoigian}.xlsx"
+        else:
+            filename = f"xinnghiphep_{thoigian}.xlsx"
+        df.to_excel(os.path.join(FOLDER_XUAT, filename), index=False)
         
-        return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True)
+        return send_file(os.path.join(FOLDER_XUAT, filename), as_attachment=True)
 
 @app.route("/muc7_1_4/kiemtra", methods=["POST"]) # Danh sách điểm danh bù
 @login_required

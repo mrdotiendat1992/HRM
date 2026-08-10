@@ -111,7 +111,7 @@
             <div style="display: flex; align-items: center;">
                 <h5>Tổng: {{count}}</h5>
 
-                <form method="POST">
+                <form method="POST" style="display: inline-flex; align-items: center; gap: 8px;">
                     <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
                     <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
                     <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
@@ -120,10 +120,59 @@
                     <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
                     <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
                     <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                    <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                    <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                    <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
+                    <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                    <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
+                    <input type="hidden" name="export_type" value="all">
+                    <button type="submit" class="btn btn-success btn-sm">Xuất Excel</button>
                 </form>
+                <button type="button" class="btn btn-success btn-sm" style="margin-left: 8px;" data-toggle="modal" data-target="#exportMonthModal"><i class="fas fa-download"></i> Theo tháng</button>
+                <div class="modal fade" id="exportMonthModal" tabindex="-1" role="dialog" aria-labelledby="exportMonthModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exportMonthModalLabel">Chọn tháng, năm để xuất Excel</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <form method="POST">
+                                <div class="modal-body">
+                                    <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                                    <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
+                                    <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                                    <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
+                                    <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                                    <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                                    <input type="hidden" name="mstquanly" value="{{ request.args.get('mstquanly', '') }}">
+                                    <input type="hidden" name="mstthuky" value="{{ request.args.get('mstthuky', '') }}">
+                                    <input type="hidden" name="export_type" value="month">
+                                    <div class="form-group">
+                                        <label for="monthSelect">Tháng</label>
+                                        <select id="monthSelect" name="thang" class="form-control form-control-sm">
+                                            {% for month in range(1, 13) %}
+                                            <option value="{{ month }}" {% if month == current_month %}selected{% endif %}>Tháng {{ month }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="yearSelect">Năm</label>
+                                        <select id="yearSelect" name="nam" class="form-control form-control-sm">
+                                            {% for year in range(current_year - 2, current_year + 3) %}
+                                            <option value="{{ year }}" {% if year == current_year %}selected{% endif %}>{{ year }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Đóng</button>
+                                    <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-download"></i> Tải Excel</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
                 <div class="pagination">{{ pagination.links }}</div>
                 {% if not request.args.get('mstthuky') %}
                     <form method = "GET" style="margin-left: 50px;">
