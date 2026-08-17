@@ -196,88 +196,20 @@ def export_dstc():
     
 @app.route("/export_dslt", methods=["POST"])
 def export_dslt():
-    mst = request.form.get("mst")
-    chuyen = request.form.get("chuyen")
-    bophan = request.form.get("bophan")
-    ngay = request.form.get("ngay")
-    rows = laydanhsachloithe(mst, chuyen, bophan, ngay)
-    df = pd.DataFrame(rows)
-    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), index=False)
-    
-    return send_file(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
-
-# @app.route("/export_dsddb", methods=["POST"])
-# def export_dsddb():
-    # mstquanly = request.form.get("mstquanly")
-    # mst = request.form.get("mst")
-    # chuyen = request.form.get("chuyen")
-    # bophan = request.form.get("bophan")
-    # hoten = request.form.get("hoten")
-    # chucvu = request.form.get("chucvu")
-    # ngaydiemdanh = request.form.get("ngay")
-    # lydo = request.form.get("lydo")
-    # trangthai = request.form.get("trangthai")
-    # loaidiemdanh = request.form.get("loaidiemdanh")
-    
-    # rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
-    # result = []
-    # for row in rows:
-    #     result.append({
-    #         "Nhà máy": row[0],
-    #         "MST": row[1],
-    #         "Họ tên": row[2],
-    #         "Chức vụ": row[3],
-    #         "Chuyền tổ": row[4],
-    #         "Bộ phận": row[5],
-    #         "Loại điểm danh": row[6],
-    #         "Ngày điểm danh": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y"),
-    #         "Giờ điểm danh": row[8],
-    #         "Lý do": row[9],
-    #         "Trạng thái": row[10],
-    #         "ID":row[11],
-    #         "Thời gian tạo": row[12],
-    #         "Thời gian duyệt": row[13]
-    #     })
-    
-    # df = pd.DataFrame(result)
-    # thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    # df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
-    
-    # return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
-
-# @app.route("/export_dsxnp", methods=["POST"])
-# def export_dsxnp():
-#     mstquanly = request.form.get("mstquanly")
-#     mstthuky = request.args.get("mstthuky")
-#     mst = request.form.get("mst")
-#     hoten = request.form.get("hoten")
-#     chucvu = request.form.get("chucvu")
-#     chuyen = request.form.get("chuyen")
-#     bophan = request.form.get("bophan")
-#     ngay = request.form.get("ngaynghi")
-#     lydo = request.form.get("lydo")
-#     trangthai = request.form.get("trangthai")
-#     danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
-#     result = []
-#     for row in danhsach:
-#         result.append({
-#             'Mã công ty': row[0],
-#             'Mã số thẻ': row[1],
-#             'Họ tên': row[2],
-#             'Chức vụ': row[3],
-#             'Chuyền tổ': row[4],
-#             'Phòng ban': row[5],
-#             'Ngày nghỉ phép': datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y"),
-#             'Tổng số phút': row[7],
-#             'Lý do': row[8],
-#             'Trạng thái': row[9]
-#         })
-#     df = pd.DataFrame(result)
-#     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-#     df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
-    
-#     return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True) 
+    try:
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngay")
+        rows = laydanhsachloithe(mst, chuyen, bophan, ngay, None)
+        df = pd.DataFrame(rows)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
+    except Exception as e:
+        flash(f"Xuất danh sách lỗi: {e}")
+        return redirect("/muc7_1_5")
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
@@ -1927,7 +1859,6 @@ def capnhatdieuchuyentheofile():
                         chucdanhtamoi = hc_name_moi[2]
 
                         khongdoica= ""
-
                         
                         dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
                                          chuyencu, chuyenmoi,capbaccu,capbacmoi,
