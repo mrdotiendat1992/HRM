@@ -3296,14 +3296,14 @@ def rutdonnghiviec(id):
         flash(str(e))
         return False
 
-def laydanhsach_hopdong_theomst(mst):
+def laydanhsach_hopdong_theomst(mst,mst_nguoi_xem):
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         query = f"SELECT * FROM [HR].[dbo].[QUAN_LY_HD] WHERE MST='{mst}' AND NHA_MAY='{current_user.macongty}'"
         rows = cursor.execute(query).fetchall()
         conn.close()
-        return [{
+        list_result = [{
             "Số thứ tự": row[0],
             "Nhà máy": row[1],
             "Mã số thẻ": row[2],
@@ -3324,6 +3324,14 @@ def laydanhsach_hopdong_theomst(mst):
             "Ngày ký hợp đồng": row[17],
             "Ngày hết hạn hợp đồng": row[18]
         } for row in rows]
+        danh_sach_hopdong = []
+        for record in list_result:
+            if (mst_nguoi_xem in (9514,14847,9321) and record["Nhà máy"] == "NT1") \
+                or (mst_nguoi_xem in (9514,14847,9321) and record["Nhà máy"] == "NT2") \
+                or (((mst_nguoi_xem in (14285,) and record["Nhà máy"] == "NT1") or \
+                    (mst_nguoi_xem in (37,) and record["Nhà máy"] == "NT2")) and record["Cấp bậc"] in ("O2","O3","C1","C2","C3","W1","W2","W3")):
+                danh_sach_hopdong.append(record)
+        return danh_sach_hopdong
     except Exception as e:
         flash(str(e))
         return []  

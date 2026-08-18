@@ -917,13 +917,30 @@ def quanlyhopdong():
         if request.method == "GET":
             mst = request.args.get("mst")
             if not mst:
-                mst = current_user.masothe
-            danhsach = laydanhsach_hopdong_theomst(mst)
-            return _render_with_mobile_fallback(
-                "3_3.html",
-                page="3.3 Quản lý hợp đồng lao động",
-                danhsach=danhsach,
-            )
+                return _render_with_mobile_fallback(
+                    "3_3.html",
+                    page="3.3 Quản lý hợp đồng lao động",
+                    danhsach=[],
+                )
+            if current_user.macongty == 'NT1' and current_user.masothe in (9514,14847,9321,14285)\
+                or current_user.macongty == 'NT2' and current_user.masothe in (4575,2366,37):
+                mst = request.args.get("mst")
+                mst_nguoi_xem = current_user.masothe
+                if not mst:
+                    mst = current_user.masothe
+                danhsach = laydanhsach_hopdong_theomst(mst, mst_nguoi_xem)
+                return _render_with_mobile_fallback(
+                    "3_3.html",
+                    page="3.3 Quản lý hợp đồng lao động",
+                    danhsach=danhsach,
+                )
+            else:
+                flash("Bạn không có quyền xem Hợp đồng lao động của người khác. Vui lòng liên hệ quản trị viên để được cấp quyền.")
+                return _render_with_mobile_fallback(
+                    "3_3.html",
+                    page="3.3 Quản lý hợp đồng lao động",
+                    danhsach=[],
+                )
         elif request.method == "POST":
             nhamay = current_user.macongty
             mst = request.form.get("form_manhanvien")
