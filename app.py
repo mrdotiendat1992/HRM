@@ -4177,7 +4177,7 @@ def lay_tangcangayle(thang,nam,mst,bophan,chuyen):
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
-        print(query)
+
         data = cursor.execute(query)
         return [x for x in data]
     except Exception as e:
@@ -4731,7 +4731,7 @@ def lay_bangcongthang_kx_sau_072025(mst,bophan,chuyen,thang,nam):
         if chuyen:
             query += f" and Chuyen='{chuyen}'"
         query += " order by MST asc"
-        print(query)
+
         rows =  cursor.execute(query).fetchall()
         new_rows = []
         for row in rows:

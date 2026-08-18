@@ -3,7 +3,7 @@ from other_routes import *
 if __name__ == "__main__":
     while True:
         try:
-            print("PRODUCT")
+            print("PRODUCTION MODE RUNNING ..........")
             serve(app, host="0.0.0.0", port=81, _quiet=True, threads=100)
         except subprocess.CalledProcessError as e:
             print(f"Flask gặp lỗi: {e}")

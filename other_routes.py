@@ -1772,7 +1772,7 @@ def tailen_danhsach_tangca():
                     chuyen = row["Chuyền"]
                     phongban = row["Phòng ban"]
                     ngay = row["Ngày"] 
-                    print(ngay)
+
                     giotangcasang = row["Tăng ca sáng"] if not pd.isna(row["Tăng ca sáng"]) else ""
                     giotangcasangthucte = row["Tăng ca sáng thực tế"] if not pd.isna(row["Tăng ca sáng thực tế"]) else ""
                     giotangca = row["Giờ tăng ca"] if not pd.isna(row["Giờ tăng ca"]) else ""
@@ -5607,7 +5607,7 @@ def hcname():
     elif request.method == "POST":
         search_type = request.form.get("search-type")
         search_value = request.form.get("search")
-        print(search_type, search_value)
+
         danhsach = [{
                         "Line": row[0],
                         "Detail_job_title_VN": row[1],
@@ -5749,7 +5749,7 @@ def sua_tuoi_nghi_huu():
         nam = request.form.get("nam")
         thang = request.form.get("thang")
         query = f"""UPDATE Tuoi_nghi_huu SET nam = {nam}, thang = {thang} WHERE id = {id}"""
-        print(query)
+
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         try:
