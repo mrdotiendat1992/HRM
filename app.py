@@ -3329,7 +3329,7 @@ def laydanhsach_hopdong_theomst(mst,mst_nguoi_xem):
             if (mst_nguoi_xem in (9514,14847,9321) and record["Nhà máy"] == "NT1") \
                 or (mst_nguoi_xem in (9514,14847,9321) and record["Nhà máy"] == "NT2") \
                 or (((mst_nguoi_xem in (14285,) and record["Nhà máy"] == "NT1") or \
-                    (mst_nguoi_xem in (37,) and record["Nhà máy"] == "NT2")) and record["Cấp bậc"] in ("O2","O3","C1","C2","C3","W1","W2","W3")):
+                    (mst_nguoi_xem in (2366,) and record["Nhà máy"] == "NT2")) and record["Cấp bậc"] in ("O2","O3","C1","C2","C3","W1","W2","W3")):
                 danh_sach_hopdong.append(record)
         return danh_sach_hopdong
     except Exception as e:
