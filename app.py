@@ -5957,6 +5957,173 @@ def lay_soluong_loichamcong(nhamay,masothe):
         flash(f"Lỗi lấy số lượng lỗi chấm công tổng: {e}")
         return 0
 
+# ==========================================================================
+# TỐI ƯU HIỆU NĂNG (before_request): các hàm "gộp" nhiều COUNT(*) / nhiều
+# connection riêng lẻ thành 1 query duy nhất, dùng cho run_before_every_request
+# trong main_routes.py. Các hàm lay_soluong_* / la_quanly / la_thuky gốc phía
+# trên KHÔNG bị xoá — vẫn hoạt động bình thường nếu chỗ khác trong code còn
+# gọi tới, và để dễ rollback nếu cần so sánh/kiểm tra lại.
+# ==========================================================================
+
+def lay_soluong_quanly_canduyet_gop(nhamay, masothe):
+    """Gộp 4 query (điểm danh bù / nghỉ phép / nghỉ không lương / nghỉ khác)
+    quản lý cần duyệt thành 1 round-trip DB thay vì 4."""
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = """
+            SELECT
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may,Chuyen_to,MST_QL FROM Phan_quyen_thu_ky) a
+                 INNER JOIN Diem_danh_bu ON Diem_danh_bu.Nha_may = ? AND Diem_danh_bu.Line = a.Chuyen_to
+                 WHERE Diem_danh_bu.Trang_thai = N'Đã kiểm tra' AND a.MST_QL = ?) AS ddb,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may,Chuyen_to,MST_QL FROM Phan_quyen_thu_ky) a
+                 INNER JOIN Xin_nghi_phep ON Xin_nghi_phep.Nha_may = ? AND Xin_nghi_phep.Line = a.Chuyen_to
+                 WHERE Xin_nghi_phep.Trang_thai = N'Đã kiểm tra' AND a.MST_QL = ?) AS nphep,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may,Chuyen_to,MST_QL FROM Phan_quyen_thu_ky) a
+                 INNER JOIN Xin_nghi_khong_luong ON Xin_nghi_khong_luong.Nha_may = ? AND Xin_nghi_khong_luong.Chuyen = a.Chuyen_to
+                 WHERE Xin_nghi_khong_luong.Trang_thai = N'Đã kiểm tra' AND a.MST_QL = ?) AS nkl,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may,Chuyen_to,MST_QL FROM Phan_quyen_thu_ky) a
+                 INNER JOIN Xin_nghi_khac ON Xin_nghi_khac.Nha_may = ? AND Xin_nghi_khac.Line = a.Chuyen_to
+                 WHERE Xin_nghi_khac.Trang_thai = N'Đã kiểm tra' AND a.MST_QL = ?) AS nkhac
+        """
+        params = (nhamay, masothe) * 4
+        row = cursor.execute(query, params).fetchone()
+        conn.close()
+        ddb, nphep, nkl, nkhac = (x or 0 for x in row)
+        return {
+            "Điểm danh bù": ddb,
+            "Xin nghỉ phép": nphep,
+            "Xin nghỉ không lương": nkl,
+            "Xin nghỉ khác": nkhac,
+        }
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng quản lý cần duyệt: {e}")
+        return {"Điểm danh bù": 0, "Xin nghỉ phép": 0, "Xin nghỉ không lương": 0, "Xin nghỉ khác": 0}
+
+
+def lay_soluong_thuky_cankiemtra_gop(nhamay, masothe):
+    """Gộp 5 query (lỗi thẻ / điểm danh bù / nghỉ phép / nghỉ không lương /
+    nghỉ khác) thư ký cần kiểm tra thành 1 round-trip DB thay vì 5.
+    LƯU Ý: bản gốc lay_soluong_xinnghikhac_thuky_cankiemtra dùng
+    current_user.masothe thay vì tham số masothe truyền vào (có thể là lỗi
+    gõ nhầm) — hàm gộp này dùng đúng tham số masothe cho nhất quán với 4 mục
+    còn lại. Kiểm tra lại nếu thấy số liệu "Xin nghỉ khác" thay đổi."""
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = """
+            SELECT
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may, Chuyen_to, MST FROM Phan_quyen_thu_ky) distinct_pqt
+                 INNER JOIN Danh_sach_loi_the_3 ON Danh_sach_loi_the_3.Nha_may = ?
+                    AND Danh_sach_loi_the_3.Chuyen_to = distinct_pqt.Chuyen_to
+                 WHERE Danh_sach_loi_the_3.Trang_thai IS NULL AND distinct_pqt.MST = ?) AS loithe,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may, Chuyen_to, MST FROM Phan_quyen_thu_ky) distinct_pqt
+                 INNER JOIN Diem_danh_bu ON Diem_danh_bu.Nha_may = ? AND Diem_danh_bu.Line = distinct_pqt.Chuyen_to
+                 WHERE Diem_danh_bu.Trang_thai = N'Chờ kiểm tra' AND distinct_pqt.MST = ?) AS ddb,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may, Chuyen_to, MST FROM Phan_quyen_thu_ky) distinct_pqt
+                 INNER JOIN Xin_nghi_phep ON Xin_nghi_phep.Nha_may = ? AND Xin_nghi_phep.Line = distinct_pqt.Chuyen_to
+                 WHERE Xin_nghi_phep.Trang_thai = N'Chờ kiểm tra' AND distinct_pqt.MST = ?) AS nphep,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may, Chuyen_to, MST FROM Phan_quyen_thu_ky) distinct_pqt
+                 INNER JOIN Xin_nghi_khong_luong ON Xin_nghi_khong_luong.Nha_may = ? AND Xin_nghi_khong_luong.Chuyen = distinct_pqt.Chuyen_to
+                 WHERE Xin_nghi_khong_luong.Trang_thai = N'Chờ kiểm tra' AND distinct_pqt.MST = ?) AS nkl,
+                (SELECT COUNT(*)
+                 FROM (SELECT DISTINCT Nha_may, Chuyen_to, MST FROM Phan_quyen_thu_ky) distinct_pqt
+                 INNER JOIN Xin_nghi_khac ON Xin_nghi_khac.Nha_may = ? AND Xin_nghi_khac.Line = distinct_pqt.Chuyen_to
+                 WHERE Xin_nghi_khac.Trang_thai = N'Chờ kiểm tra' AND distinct_pqt.MST = ?) AS nkhac
+        """
+        params = (nhamay, masothe) * 5
+        row = cursor.execute(query, params).fetchone()
+        conn.close()
+        loithe, ddb, nphep, nkl, nkhac = (x or 0 for x in row)
+        return {
+            "Danh sách lỗi thẻ": loithe,
+            "Điểm danh bù": ddb,
+            "Xin nghỉ phép": nphep,
+            "Xin nghỉ không lương": nkl,
+            "Xin nghỉ khác": nkhac,
+        }
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng thư ký cần kiểm tra: {e}")
+        return {"Danh sách lỗi thẻ": 0, "Điểm danh bù": 0, "Xin nghỉ phép": 0,
+                "Xin nghỉ không lương": 0, "Xin nghỉ khác": 0}
+
+
+def lay_don_ca_nhan_gop(nhamay, masothe):
+    """Gộp 4 query trạng thái (chưa kiểm tra / đã kiểm tra / đã phê duyệt /
+    bị từ chối) của MỖI bảng cá nhân thành 1 query/bảng bằng SUM(CASE...),
+    tức 4 round-trip DB thay vì 16."""
+    def _dem_1_bang(ten_bang):
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = f"""
+            SELECT
+                SUM(CASE WHEN Trang_thai = N'Chờ kiểm tra' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai = N'Đã kiểm tra' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai = N'Đã phê duyệt' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai LIKE N'Bị từ chối%' THEN 1 ELSE 0 END)
+            FROM {ten_bang}
+            WHERE MST = ? AND Nha_may = ?
+        """
+        row = cursor.execute(query, masothe, nhamay).fetchone()
+        conn.close()
+        c, d, p, r = (x or 0 for x in row)
+        return {"Chưa kiểm tra": c, "Đã kiểm tra": d, "Đã phê duyệt": p, "Bị từ chối": r, "Tổng": c + d + p + r}
+
+    rong = {"Chưa kiểm tra": 0, "Đã kiểm tra": 0, "Đã phê duyệt": 0, "Bị từ chối": 0, "Tổng": 0}
+    try:
+        return {
+            "Điểm danh bù": _dem_1_bang("Diem_danh_bu"),
+            "Xin nghỉ phép": _dem_1_bang("Xin_nghi_phep"),
+            "Xin nghỉ không lương": _dem_1_bang("Xin_nghi_khong_luong"),
+            "Xin nghỉ khác": _dem_1_bang("Xin_nghi_khac"),
+        }
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng đơn cá nhân: {e}")
+        return {"Điểm danh bù": rong, "Xin nghỉ phép": rong, "Xin nghỉ không lương": rong, "Xin nghỉ khác": rong}
+
+
+def lay_soluong_tuyendung_gop(nhamay, phongban):
+    """Gộp 4 query tuyển dụng (chờ kiểm tra / chờ phê duyệt / đã duyệt /
+    bị từ chối) thành 1 round-trip DB bằng SUM(CASE...) thay vì 4."""
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+        query = """
+            SELECT
+                SUM(CASE WHEN Trang_thai_yeu_cau = N'Chưa kiểm tra' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai_yeu_cau = N'Chưa phê duyệt' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai_yeu_cau = N'Phê duyệt' THEN 1 ELSE 0 END),
+                SUM(CASE WHEN Trang_thai_yeu_cau = N'Từ chối' THEN 1 ELSE 0 END)
+            FROM YEU_CAU_TUYEN_DUNG
+            WHERE Nha_may = ? AND Ngay_dong_yeu_cau IS NULL
+        """
+        params = [nhamay]
+        if phongban:
+            query += " AND Bo_phan = ?"
+            params.append(phongban)
+        row = cursor.execute(query, params).fetchone()
+        conn.close()
+        chokiemtra, chopheduyet, dapheduyet, bituchoi = (x or 0 for x in row)
+        return {
+            "Tuyển dụng chờ kiểm tra": chokiemtra,
+            "Tuyển dụng chờ phê duyệt": chopheduyet,
+            "Tuyển dụng được duyệt": dapheduyet,
+            "Tuyển dụng bị từ chối": bituchoi,
+        }
+    except Exception as e:
+        flash(f"Lỗi lấy số lượng tuyển dụng: {e}")
+        return {"Tuyển dụng chờ kiểm tra": 0, "Tuyển dụng chờ phê duyệt": 0,
+                "Tuyển dụng được duyệt": 0, "Tuyển dụng bị từ chối": 0}
+
+
 def lay_soluong_yeucautuyendung_chopheduyet(nhamay, phongban):
     try:
         conn = pyodbc.connect(url_database_pyodbc)

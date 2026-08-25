@@ -7,9 +7,44 @@ from app import *
 ##################################
 
 # from functools import wraps
+import time
+from threading import Lock
+
 from flask import g, flash, request, render_template
 from flask_login import current_user
 from jinja2 import TemplateNotFound
+
+# ── Cache cho notice (chuông thông báo) ─────────────────────────────────────
+# before_request chạy trên MỌI request (kể cả reload trang, submit form...),
+# nên nếu tính lại notice mỗi lần thì tốn rất nhiều round-trip DB. Cache theo
+# (macongty, masothe) trong NOTICE_CACHE_TTL giây để giảm tần suất tính toán.
+# Nếu cần notice cập nhật ngay sau khi user duyệt/nộp đơn (không đợi hết TTL),
+# gọi _clear_cached_notice(macongty, masothe) ngay sau khi xử lý xong hành động đó.
+
+NOTICE_CACHE_TTL = 20  # giây — chỉnh tuỳ nhu cầu "độ mới" của badge thông báo
+_notice_cache = {}
+_notice_cache_lock = Lock()
+
+
+def _get_cached_notice(mact, mast):
+    with _notice_cache_lock:
+        entry = _notice_cache.get((mact, mast))
+        if entry and time.time() - entry["ts"] < NOTICE_CACHE_TTL:
+            return entry["data"]
+    return None
+
+
+def _set_cached_notice(mact, mast, data):
+    with _notice_cache_lock:
+        _notice_cache[(mact, mast)] = {"data": data, "ts": time.time()}
+
+
+def _clear_cached_notice(mact, mast):
+    """Gọi hàm này ngay sau khi user duyệt / nộp đơn để notice cập nhật
+    ngay lập tức thay vì phải đợi hết NOTICE_CACHE_TTL."""
+    with _notice_cache_lock:
+        _notice_cache.pop((mact, mast), None)
+
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -21,26 +56,12 @@ def _sum_don(counts: dict) -> dict:
 
 def _lay_don_ca_nhan(macongty, masothe) -> dict:
     """
-    Gom tất cả thông tin cá nhân vào 1 lần — lý tưởng nhất nên
-    gộp thành 1 stored-procedure / query trả về nhiều result-set.
-    Hiện tại vẫn gọi hàm cũ nhưng đã tách riêng để dễ tối ưu sau.
+    Gom tất cả thông tin cá nhân vào 1 lần. Dùng lay_don_ca_nhan_gop (app.py)
+    để tính 4 nhóm chỉ bằng 4 query (SUM(CASE...)) thay vì 16 query rời rạc.
     """
-    def _nhom(fn_chua, fn_da, fn_duyet, fn_tuchoi):
-        c = fn_chua(macongty, masothe)
-        d = fn_da(macongty, masothe)
-        p = fn_duyet(macongty, masothe)
-        r = fn_tuchoi(macongty, masothe)
-        return {"Chưa kiểm tra": c, "Đã kiểm tra": d,
-                "Đã phê duyệt": p, "Bị từ chối": r, "Tổng": c + d + p + r}
-
-    ddb  = _nhom(lay_soluong_diemdanhbu_chuakiemtra,   lay_soluong_diemdanhbu_dakiemtra,
-                 lay_soluong_diemdanhbu_dapheduyet,    lay_soluong_diemdanhbu_bituchoi)
-    nphep = _nhom(lay_soluong_xinnghiphep_chuakiemtra,  lay_soluong_xinnghiphep_dakiemtra,
-                  lay_soluong_xinnghiphep_dapheduyet,   lay_soluong_xinnghiphep_bituchoi)
-    nkl   = _nhom(lay_soluong_xinnghikhongluong_chuakiemtra, lay_soluong_xinnghikhongluong_dakiemtra,
-                  lay_soluong_xinnghikhongluong_dapheduyet,  lay_soluong_xinnghikhongluong_bituchoi)
-    nkhac = _nhom(lay_soluong_xinnghikhac_chuakiemtra, lay_soluong_xinnghikhac_dakiemtra,
-                  lay_soluong_xinnghikhac_dapheduyet,  lay_soluong_xinnghikhac_bituchoi)
+    nhom = lay_don_ca_nhan_gop(macongty, masothe)
+    ddb, nphep = nhom["Điểm danh bù"], nhom["Xin nghỉ phép"]
+    nkl, nkhac = nhom["Xin nghỉ không lương"], nhom["Xin nghỉ khác"]
 
     return {
         "Điểm danh bù":       ddb,
@@ -65,9 +86,11 @@ def _lay_tuyen_dung(macongty, phanquyen, phongban) -> dict:
     gd  → chỉ cần đếm 'chờ phê duyệt'
     tbp / thư ký → theo phòng ban
     td / sa → toàn công ty
+    Dùng lay_soluong_tuyendung_gop (app.py): 1 query duy nhất thay vì tối đa 4.
     """
     if phanquyen == "gd":
-        return {"Tuyển dụng chờ phê duyệt": lay_soluong_yeucautuyendung_chopheduyet(macongty, None)}
+        gop = lay_soluong_tuyendung_gop(macongty, None)
+        return {"Tuyển dụng chờ phê duyệt": gop["Tuyển dụng chờ phê duyệt"]}
 
     # Xác định scope phòng ban
     if phanquyen in ("td", "sa"):
@@ -77,54 +100,49 @@ def _lay_tuyen_dung(macongty, phanquyen, phongban) -> dict:
     else:
         return {}
 
-    return {
-        "Tuyển dụng chờ kiểm tra":  lay_soluong_yeucautuyendung_chokiemtra(macongty, pb),
-        "Tuyển dụng chờ phê duyệt": lay_soluong_yeucautuyendung_chopheduyet(macongty, pb),
-        "Tuyển dụng được duyệt":    lay_soluong_yeucautuyendung_dapheduyet(macongty, pb),
-        "Tuyển dụng bị từ chối":    lay_soluong_yeucautuyendung_bituchoi(macongty, pb),
-    }
+    return lay_soluong_tuyendung_gop(macongty, pb)
 
 
 # ── before_request ─────────────────────────────────────────────────────────────
 
 @app.before_request
 def run_before_every_request():
-    """Kiểm tra đăng nhập, gom thông báo vào g.notice."""
+    """Kiểm tra đăng nhập, gom thông báo vào g.notice.
+
+    TỐI ƯU: kết quả được cache NOTICE_CACHE_TTL giây theo (macongty, masothe)
+    để không phải chạy lại toàn bộ khối query bên dưới trên MỌI request (trước
+    đây before_request chạy full ở mỗi lần load/reload trang, tốn ~30+ query
+    riêng lẻ mỗi lần). Khi cache còn hạn, chỉ 1 lần tra dict trong RAM, không
+    chạm DB."""
     if not current_user.is_authenticated:
         return
 
-    f12  = trang_thai_function_12()
     mact = current_user.macongty
     mast = current_user.masothe
 
+    cached = _get_cached_notice(mact, mast)
+    if cached is not None:
+        g.notice = cached
+        return
+
+    f12 = trang_thai_function_12()
     notice = {"f12": f12, "db": url_database_pyodbc, "Tổng": 0}
 
     try:
-        # ── Quản lý ──────────────────────────────────────────────────────────
+        # ── Quản lý (1 query gộp thay vì 4) ─────────────────────────────────
         if la_quanly(mact, mast):
-            ql = {
-                "Điểm danh bù":       lay_soluong_diemdanhbu_quanly_canduyet(mact, mast),
-                "Xin nghỉ phép":      lay_soluong_xinnghiphep_quanly_canduyet(mact, mast),
-                "Xin nghỉ không lương": lay_soluong_xinnghikhongluong_quanly_canduyet(mact, mast),
-                "Xin nghỉ khác":      lay_soluong_xinnghikhac_quanly_canduyet(mact, mast),
-            }
+            ql = lay_soluong_quanly_canduyet_gop(mact, mast)
             ql["Số thông báo"] = sum(ql.values())
             notice["Quản lý"]  = ql
             notice["Tổng"]    += ql["Số thông báo"]
         else:
             notice["Quản lý"] = {}
 
-        # ── Thư ký ───────────────────────────────────────────────────────────
+        # ── Thư ký (1 query gộp thay vì 5) ───────────────────────────────────
         if la_thuky(mact, mast):
             chuyen = lay_danhsach_chuyen_thuky_quanly(mact, mast)
-            tk = {
-                "Danh sách lỗi thẻ":    lay_soluong_loithe_thuky_canxuly(mact, mast),
-                "Điểm danh bù":         lay_soluong_diemdanhbu_thuky_cankiemtra(mact, mast),
-                "Xin nghỉ phép":        lay_soluong_xinnghiphep_thuky_cankiemtra(mact, mast),
-                "Xin nghỉ không lương": lay_soluong_xinnghikhongluong_thuky_cankiemtra(mact, mast),
-                "Xin nghỉ khác":        lay_soluong_xinnghikhac_thuky_cankiemtra(mact, mast),
-                "Line":                 chuyen[0] if len(chuyen) == 1 else "",
-            }
+            tk = lay_soluong_thuky_cankiemtra_gop(mact, mast)
+            tk["Line"] = chuyen[0] if len(chuyen) == 1 else ""
             tk["Số thông báo"] = (tk["Danh sách lỗi thẻ"] + tk["Điểm danh bù"]
                                   + tk["Xin nghỉ phép"] + tk["Xin nghỉ không lương"])
             notice["Thư ký"]   = tk
@@ -132,10 +150,10 @@ def run_before_every_request():
         else:
             notice["Thư ký"] = {}
 
-        # ── Cá nhân ──────────────────────────────────────────────────────────
+        # ── Cá nhân (4 query gộp thay vì 16) ────────────────────────────────
         notice["personal"] = _lay_don_ca_nhan(mact, mast)
 
-        # ── Tuyển dụng ───────────────────────────────────────────────────────
+        # ── Tuyển dụng (1 query gộp thay vì tối đa 4) ───────────────────────
         td = _lay_tuyen_dung(mact, current_user.phanquyen, current_user.phongban)
         for k, v in td.items():
             if v > 0:
@@ -149,6 +167,7 @@ def run_before_every_request():
         notice = {"f12": f12, "db": url_database_pyodbc}
 
     g.notice = notice
+    _set_cached_notice(mact, mast, notice)
 
 
 @app.context_processor
