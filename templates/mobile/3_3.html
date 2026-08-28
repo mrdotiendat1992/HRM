@@ -1,0 +1,38 @@
+{% extends "mobile/base.html" %}
+{% block title %}Quản lý hợp đồng - Mobile{% endblock %}
+{% block content %}
+  <h1 style="font-size:16px; margin:0 0 8px;">Hợp đồng lao động</h1>
+  <div style="font-size:12px; color:#666; margin-bottom:8px;">
+    MST hiện tại: {{ current_user.masothe }}
+  </div>
+
+  {% if danhsach %}
+    {% for row in danhsach %}
+    {# row là dict giống 3_3.html, chứa "Số thứ tự" để in #}
+    <div class="hd-mobile-card"
+         style="background:#fff; border-radius:10px; padding:10px 10px 8px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;">
+        <div style="font-size:14px; font-weight:600;">{{ row["Họ tên"] }}</div>
+        <div style="font-size:12px; color:#555;">MST: {{ row["MST"] }}</div>
+      </div>
+      <div style="font-size:12px; color:#555;">
+        <div>Loại HĐ: {{ row["Loại hợp đồng"] }}</div>
+        <div>Chức danh: {{ row["Chức danh"] }}</div>
+        <div>Phòng ban: {{ row["Phòng ban"] }} • Chuyền: {{ row["Chuyền"] }}</div>
+        <div>Ngày ký: {{ row["Ngày ký hợp đồng"] }} • Hết hạn: {{ row["Ngày hết hạn hợp đồng"] }}</div>
+      </div>
+      <div style="margin-top:6px; text-align:right;">
+        <form action="/inhopdong" method="POST" class="hd-print-form" style="display:inline;">
+          <input type="hidden" name="mst" value="{{ current_user.masothe }}">
+          <input type="hidden" name="idhopdongin" value="{{ row["Số thứ tự"] }}">
+          <button type="submit" class="btn btn-primary btn-sm" style="font-size:12px;">Tải hợp đồng</button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div style="font-size:13px; color:#777; text-align:center; margin-top:16px;">
+      Không có hợp đồng để hiển thị.
+    </div>
+  {% endif %}
+{% endblock %}

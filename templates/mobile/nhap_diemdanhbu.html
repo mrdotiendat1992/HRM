@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký điểm danh</title>
+    <style>
+        /* --- CSS CŨ (GIỮ NGUYÊN) --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        .container {
+            background-color: #ffffff;
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px; /* Giảm margin một chút để nhường chỗ cho flash */
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 500; color: #555; font-size: 14px; }
+        input[type="text"], input[type="date"], input[type="time"], input[type="number"], select {
+            width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 16px; background-color: #fff; transition: border-color 0.3s ease; font-family: inherit;
+        }
+        input:focus, select:focus {
+            border-color: #3498db; outline: none; box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+        input[type="submit"] {
+            width: 100%; padding: 14px; background-color: #3498db; color: white; border: none; border-radius: 6px; font-size: 16px; font-weight: 600; cursor: pointer; transition: background-color 0.3s ease; margin-top: 10px;
+        }
+        input[type="submit"]:hover { background-color: #2980b9; }
+        @media (max-width: 480px) {
+            .container { padding: 25px; border-radius: 0; height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+        }
+
+        /* --- CSS CHO TOAST NOTIFICATION --- */
+        .flash-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000; /* Luôn nổi trên cùng */
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .flash-message {
+            min-width: 300px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15); /* Bóng đổ sâu */
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 15px;
+            border-left: 6px solid #ccc; /* Viền màu bên trái */
+            animation: slideInRight 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Hiệu ứng nảy */
+            opacity: 1;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        /* Màu sắc và Icon cho Thành công */
+        .flash-message.success {
+            border-left-color: #2ecc71;
+        }
+        .flash-message.success::before {
+            content: '✅'; /* Icon check */
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        /* Màu sắc và Icon cho Lỗi */
+        .flash-message.error {
+            border-left-color: #e74c3c;
+        }
+        .flash-message.error::before {
+            content: '❌'; /* Icon X */
+            font-size: 20px;
+            margin-right: 15px;
+        }
+
+        /* Nút tắt thông báo */
+        .close-btn {
+            margin-left: 15px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #999;
+        }
+        .close-btn:hover { color: #333; }
+
+        /* Animation trượt từ phải sang */
+        @keyframes slideInRight {
+            0% { transform: translateX(100%); opacity: 0; }
+            100% { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Đăng ký điểm danh</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        <form method="post" action="/mobile/dangky_diemdanhbu">
+            <input name="nhamay" value="{{nhamay}}" hidden>
+            <input name="hoten" value="{{hoten}}" hidden>
+            <input name="chuyento" value="{{chuyento}}" hidden>
+            <input name="chucdanh" value="{{chucdanh}}" hidden>
+            <input name="phongban" value="{{phongban}}" hidden>
+            <div class="form-group">
+                <label for="machamcong">Mã chấm công</label>
+                <input type="text" id="masothe" name="masothe" readonly value = "{{masothe}}">
+            </div>
+
+            <div class="form-group">
+                <label for="ngay">Ngày</label>
+                <input type="date" id="ngay" name="ngay" readonly value = {{ngay}}>
+            </div>
+
+            <div class="form-group">
+                <label for="giovao">Giờ vào</label>
+                {% if giovao %}
+                <input type="time" id="giovao" name="giovao" disabled value={{giovao}}>
+                {% else %}
+                <input type="time" id="giovao" name="giovao">
+                {% endif %}
+            </div>
+            <div class="form-group">
+                {% if giora %}
+                <label for="giora">Giờ ra</label>
+                <input type="time" id="giora" name="giora" disabled value={{giora}}>
+                {% else %}
+                <input type="time" id="giora" name="giora">
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="lido">Lý do</label>
+                <select id="lido" name="lido">
+                    <option value="Quên dập thẻ">Quên dập thẻ</option>
+                    <option value="Quên thẻ">Quên thẻ</option>
+                    <option value="Lỗi máy chấm công">Lỗi máy chấm công</option>
+                    <option value="Đi công tác">Đi công tác</option>
+                </select>
+            </div>
+
+            <input type="text" name="nhamay" value="NT1" hidden>
+
+            <input type="submit" value="Gửi Đăng Ký">
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Tự động ẩn thông báo sau 3 giây (Optional)
+            const flashMsg = document.querySelector('.flash-message');
+            if(flashMsg) {
+                setTimeout(() => {
+                    flashMsg.style.transition = "opacity 0.5s ease";
+                    flashMsg.style.opacity = 0;
+                    setTimeout(() => flashMsg.remove(), 500); 
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

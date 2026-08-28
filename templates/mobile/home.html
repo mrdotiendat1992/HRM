@@ -1,0 +1,162 @@
+{% extends "mobile/base.html" %}
+{% block title %}Trang chủ - HRM Mobile{% endblock %}
+{% block content %}
+  {% set tk = notice.get('Thư ký', {}) %}
+  {% set ql = notice.get('Quản lý', {}) %}
+  {% set qr_suffix = 'hp' if current_user.macongty == 'NT1' else 'na' %}
+
+  <div class="card">
+    <div class="card-title"><span class="icon">👤</span><span>Cá nhân</span></div>
+    <div class="menu">
+      <a href="/muc7_1_2?mst={{ current_user.masothe }}">
+        <span class="icon">⚠️</span>
+        <span>Lỗi chấm công</span>
+      </a>
+      <a href="/muc7_1_14?mst={{ current_user.masothe }}">
+        <span class="icon">📊</span>
+        <span>Bảng công</span>
+      </a>
+      <a href="javascript:void(0)" style="pointer-events:none; opacity:0.5; cursor:not-allowed;">
+        <span class="icon">📄</span>
+        <span>Hợp đồng</span>
+      </a>
+      <a href="http://mail.namthuan.vn" target="_blank">
+        <span class="icon">✉️</span>
+        <span>Mail</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><span class="icon">🧑‍💼</span><span>Quản lý</span></div>
+    <div class="menu">
+      <a href="javascript:void(0)" onclick="openQrModal()" style="display:flex; align-items:center; gap:6px; justify-content:center;">
+        <img src="{{ url_for('static', filename='img/qr/linkphanmem.png') }}" alt="QR" style="width:24px; height:24px;" />
+        <span>QR</span>
+      </a>
+      {% if tk.get('Danh sách lỗi thẻ', 0) > 0 %}
+      <a href="/muc7_1_2?mstthuky={{ current_user.masothe }}">
+        <span class="icon">⚠️</span>
+        <span>Lỗi chấm công</span>
+        <span class="badge">{{ tk['Danh sách lỗi thẻ'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Điểm danh bù', 0) > 0 %}
+      <a href="/muc7_1_3?mstthuky={{ current_user.masothe }}">
+        <span class="icon">📝</span>
+        <span>Điểm danh - kiểm tra</span>
+        <span class="badge">{{ tk['Điểm danh bù'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ phép', 0) > 0 %}
+      <a href="/muc7_1_4?mstthuky={{ current_user.masothe }}">
+        <span class="icon">📅</span>
+        <span>Nghỉ phép - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ phép'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ không lương', 0) > 0 %}
+      <a href="/muc7_1_5?mstthuky={{ current_user.masothe }}">
+        <span class="icon">💸</span>
+        <span>Nghỉ không lương - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ không lương'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if tk.get('Xin nghỉ khác', 0) > 0 %}
+      <a href="/muc7_1_6?mstthuky={{ current_user.masothe }}">
+        <span class="icon">🕒</span>
+        <span>Nghỉ khác - kiểm tra</span>
+        <span class="badge">{{ tk['Xin nghỉ khác'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Điểm danh bù', 0) > 0 %}
+      <a href="/muc7_1_3?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Điểm danh - phê duyệt</span>
+        <span class="badge">{{ ql['Điểm danh bù'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ phép', 0) > 0 %}
+      <a href="/muc7_1_4?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ phép - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ phép'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ không lương', 0) > 0 %}
+      <a href="/muc7_1_5?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ không lương - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ không lương'] }}</span>
+      </a>
+      {% endif %}
+
+      {% if ql.get('Xin nghỉ khác', 0) > 0 %}
+      <a href="/muc7_1_6?mstquanly={{ current_user.masothe }}">
+        <span class="icon">✅</span>
+        <span>Nghỉ khác - phê duyệt</span>
+        <span class="badge">{{ ql['Xin nghỉ khác'] }}</span>
+      </a>
+      {% endif %}
+
+      <a href="/muc7_1_7mobile?mst={{ current_user.masothe }}">
+        <span class="icon">🧮</span>
+        <span>Phép tồn</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="logout">
+    <form method="POST" action="{{ url_for('logout') }}">
+      <button type="submit">Đăng xuất</button>
+    </form>
+  </div>
+
+  <div id="qrModal" style="position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; z-index:9999;">
+    <div style="background:#fff; border-radius:12px; max-width:420px; margin:40px auto; padding:14px 16px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+        <div style="font-size:15px; font-weight:600;">QR</div>
+        <button type="button" onclick="closeQrModal()" style="border:none; background:none; font-size:18px; line-height:1;">×</button>
+      </div>
+      <div style="font-size:14px; display:flex; flex-direction:column; gap:10px;">
+        <a href="/qrcode/nhap_diemdanhbu_{{ qr_suffix }}" style="display:flex; align-items:center; gap:10px; padding:12px 12px; border-radius:12px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
+          <span class="icon">🕒</span>
+          <span>QR điểm danh bù</span>
+        </a>
+        <a href="/qrcode/nhap_xinnghiphep_{{ qr_suffix }}" style="display:flex; align-items:center; gap:10px; padding:12px 12px; border-radius:12px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
+          <span class="icon">📅</span>
+          <span>QR xin nghỉ phép</span>
+        </a>
+        <a href="/qrcode/nhap_xinnghikhongluong_{{ qr_suffix }}" style="display:flex; align-items:center; gap:10px; padding:12px 12px; border-radius:12px; background:#f5f5f5; text-decoration:none; color:#0077cc;">
+          <span class="icon">💸</span>
+          <span>QR nghỉ không lương</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function openQrModal() {
+      var m = document.getElementById('qrModal');
+      if (m) m.style.display = 'block';
+    }
+    function closeQrModal() {
+      var m = document.getElementById('qrModal');
+      if (m) m.style.display = 'none';
+    }
+    document.addEventListener('click', function(e) {
+      var m = document.getElementById('qrModal');
+      if (!m) return;
+      if (e.target === m) {
+        closeQrModal();
+      }
+    });
+  </script>
+{% endblock %}

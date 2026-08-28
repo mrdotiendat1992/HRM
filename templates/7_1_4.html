@@ -102,79 +102,253 @@
     .hidden-col {
         display: none;
     }
+
+    .popup-overlay{
+        position: fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background: rgba(0,0,0,0.5);
+
+        display:none;
+
+        justify-content:center;
+        align-items:center;
+
+        z-index:9999;
+    }
+
+    .popup-box{
+        background:white;
+        width:350px;
+        padding:20px;
+        border-radius:10px;
+        box-shadow:0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .popup-header{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        margin-bottom:15px;
+    }
+
+    .close-btn{
+        border:none;
+        background:none;
+        cursor:pointer;
+    }
+    #btn_cathang {
+        margin-left:20px;
+        margin-right:20px;
+    }
+    .top-toolbar{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:10px;
+        margin-bottom:15px;
+    }
+
+    .toolbar-left{
+        display:flex;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:8px;
+    }
+
+    .toolbar-left form{
+        margin:0;
+    }
+
+    .toolbar-right{
+        display:flex;
+        align-items:center;
+        gap:15px;
+    }
+
+    .tong-record{
+        font-size:14px;
+        font-weight:bold;
+        color:#333;
+    }
+
+    .pagination-wrapper{
+        display:flex;
+        align-items:center;
+    }
+
+    .pagination{
+        margin:0 !important;
+    }
+
 </style>
 {% endblock style %}
 {% block content %}
 <div class="container-fluid">
     <div class="scroll-container">
         <div class="content">
-            <div style="display: flex; align-items: center;">
-                <h5>Tổng: {{count}}</h5>
+            <div class="top-toolbar">
 
-                <form method="POST">
-                    <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
-                    <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
-                    <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
-                    <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
-                    <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
-                    <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
-                    <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
-                    <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
-                    <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
-                    <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
-                    <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel"></input>
-                </form>
-                <div class="pagination">{{ pagination.links }}</div>
-                {% if not request.args.get('mstthuky') %}
-                    <form method = "GET" style="margin-left: 50px;">
-                        <input type="hidden" name="mstthuky" value="{{ current_user.masothe }}">
-                        <button type="submit" class="btn btn-primary btn-sm">Kiểm tra</button>
-                    </form>
-                {% endif %}
-                {% if not request.args.get('mstquanly') %}
-                    <form method = "GET" style="margin-left: 20px;">
-                        <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
-                        <button type="submit" class="btn btn-primary btn-sm">Phê duyệt</button>
-                    </form>
-                {% endif %}
-                <button class="btn btn-primary btn-sm" onclick="window.location.href='/muc7_1_4'" style="margin-left: 20px;">Tất cả</button>
-                {% if notice["f12"]=="1" %}
-                <button id="toggle-cols" class="btn btn-outline-primary btn-sm" style="margin-left: 20px;">Hiển thị đầy đủ</button>
-                {% endif %}
-                {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
-                or (current_user.masothe==2176 and current_user.macongty=='NT2')
-                or (current_user.masothe==1369 and current_user.macongty=='NT2')
-                or current_user.phanquyen == 'sa' %}
-                <button data-toggle="modal" style="margin-left: 20px;" data-target="#myModal" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
-                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Thêm số lượng lớn</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
+                <div class="toolbar-left">
+
+                    {% if "HRD" in current_user.phongban %}
+                    <button type="button"
+                            id="btn_cathang"
+                            class="btn btn-success btn-sm"
+                            onclick="openPopup()">
+                        📥 Tải theo tháng
+                    </button>
+
+                    <!-- Popup -->
+                    <div id="popup-export" class="popup-overlay">
+
+                        <div class="popup-box">
+
+                            <div class="popup-header">
+                                <h5>Xuất danh sách xin nghỉ phép</h5>
+
+                                <button type="button" class="close-btn" onclick="closePopup()">
+                                    ×
                                 </button>
                             </div>
-                            <div class="modal-body">
-                                <div class="form-group">
-                                    <form method="POST" action="/taifilexinnghiphepmau">
-                                        <input type="submit" class="btn btn-success btn-sm" value="Tải file mẫu">
-                                    </form>
+
+                            <form method="POST" action="/lay_danhsach_xinnghiphep_theothang">
+
+                                <div class="mb-3">
+                                    <label class="form-label">Tháng</label>
+
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="thang_taixuong"
+                                        min="1"
+                                        max="12"
+                                        required
+                                    >
                                 </div>
-                                <div class="form-group">
-                                    <form method="POST" action="/nhansu_themxinnghiphep" enctype="multipart/form-data">
-                                        <input type="file" id="file" name="file">
-                                        <input type="submit" class="btn btn-success btn-sm" value="Tải lên">
-                                    </form>
+
+                                <div class="mb-3">
+                                    <label class="form-label">Năm</label>
+
+                                    <input
+                                        type="number"
+                                        class="form-control"
+                                        name="nam_taixuong"
+                                        min="2020"
+                                        max="2100"
+                                        required
+                                    >
                                 </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+
+                                <button type="submit" class="btn btn-primary w-100">
+                                    Tải Excel
+                                </button>
+
+                            </form>
+
+                        </div>
+
+                    </div>
+                    {% endif %}
+
+                    <div class="tong-record">
+                        Tổng: <strong>{{count}}</strong>
+                    </div>
+
+                    <form method="POST">
+                        <input type="hidden" name="mst" value="{{ request.args.get('mst', '') }}">
+                        <input type="hidden" name="chuyen" value="{{ request.args.get('chuyen', '') }}">
+                        <input type="hidden" name="hoten" value="{{ request.args.get('hoten', '') }}">
+                        <input type="hidden" name="ngaynghi" value="{{ request.args.get('ngaynghi', '') }}">
+                        <input type="hidden" name="chucvu" value="{{ request.args.get('chucvu', '') }}">
+                        <input type="hidden" name="trangthai" value="{{ request.args.get('trangthai', '') }}">
+                        <input type="hidden" name="bophan" value="{{ request.args.get('bophan', '') }}">
+                        <input type="hidden" name="lydo" value="{{ request.args.get('lydo', '') }}">
+                        <input type="hidden" name="mst_quanly" value="{{ request.args.get('mstquanly', '') }}">
+                        <input type="hidden" name="mst_thuky" value="{{ request.args.get('mst_thuky', '') }}">
+                        <input type="submit" class="btn btn-success btn-sm" value="Xuất Excel">
+                    </form>
+
+                    <div class="pagination-wrapper">
+                        {{ pagination.links }}
+                    </div>
+
+                    {% if not request.args.get('mstthuky') %}
+                    <form method="GET">
+                        <input type="hidden" name="mstthuky" value="{{ current_user.masothe }}">
+                        <button type="submit" class="btn btn-info btn-sm">Kiểm tra</button>
+                    </form>
+                    {% endif %}
+
+                    {% if not request.args.get('mstquanly') %}
+                    <form method="GET">
+                        <input type="hidden" name="mstquanly" value="{{ current_user.masothe }}">
+                        <button type="submit" class="btn btn-warning btn-sm">Phê duyệt</button>
+                    </form>
+                    {% endif %}
+
+                    <button class="btn btn-secondary btn-sm"
+                            onclick="window.location.href='/muc7_1_4'">
+                        🔄 Tất cả
+                    </button>
+
+                    {% if notice["f12"]=="1" %}
+                    <button id="toggle-cols"
+                            class="btn btn-outline-dark btn-sm">
+                        Hiển thị đầy đủ
+                    </button>
+                    {% endif %}
+
+                    {% if (current_user.masothe==2833 and current_user.macongty=='NT1')
+                    or (current_user.masothe==2176 and current_user.macongty=='NT2')
+                    or (current_user.masothe==1369 and current_user.macongty=='NT2')
+                    or current_user.phanquyen == 'sa' %}
+                    <button data-toggle="modal" style="margin-left: 20px;" data-target="#myModal" class="btn btn-success btn-sm"><i class="fas fa-plus"></i></button>
+                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Thêm số lượng lớn</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="form-group">
+                                        <form method="POST" action="/taifilexinnghiphepmau">
+                                            <input type="submit" class="btn btn-success btn-sm" value="Tải file mẫu">
+                                        </form>
+                                    </div>
+                                    <div class="form-group">
+                                        <form method="POST" action="/nhansu_themxinnghiphep" enctype="multipart/form-data">
+                                            <input type="file" id="file" name="file">
+                                            <input type="submit" class="btn btn-success btn-sm" value="Tải lên">
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Quay lại</button>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    {% endif %}
+
                 </div>
-                {% endif %}
+
+                <div class="toolbar-right">
+                    <div class="tong-record">
+                        Tổng: <strong>{{count}}</strong>
+                    </div>
+
+                    <div class="pagination-wrapper">
+                        {{pagination.links}}
+                    </div>
+                </div>
+
             </div>
             <br>
             <table class="table table-hover table-sm">
@@ -477,5 +651,13 @@
             });
         }
     });
+
+    function openPopup(){
+        document.getElementById("popup-export").style.display = "flex";
+    }
+
+    function closePopup(){
+        document.getElementById("popup-export").style.display = "none";
+    }
 </script>
 {% endblock content %}

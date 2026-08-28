@@ -108,6 +108,8 @@
                                             chốt</a></li>
                                     <li><a class="dropdown-item" href="/bangcongchotquakhu_web">Bảng chấm công chi tiết
                                             quá khứ</a></li>
+                                    <li><a class="dropdown-item" href="/bangcongchitiettrangoai_web">Bảng chấm công chi
+                                            tiết trả ngoài</a></li>
                                     <li><a class="dropdown-item" href="/bangcongtrangoai_web">Bảng công tổng hợp trả
                                             ngoài</a></li>
                                     <li><a class="dropdown-item" href="/bangcongchunhatchuachot_web">Bảng chấm công chi
@@ -210,12 +212,22 @@
                             or (current_user.macongty=='NT2' and current_user.masothe==1369)
                             or current_user.phanquyen == 'sa' %}
                             <a href="/chotcong" class="btn btn-primary btn-sm">Chốt công</a>
+                            <div class="dropdown">
+                                <button class="btn btn-primary btn-sm dropdown-toggle" type="button"
+                                    id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Ngày đặc biệt
+                                </button>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    <li><a href="/ngayle/danhsach" class="dropdown-item">Ngày lễ</a></li>
+                                    <li><a href="/ngayhoandoi/danhsach" class="dropdown-item">Ngày hoán đổi</a></li>
+                                    <li><a href="/ngaytrangoai/danhsach" class="dropdown-item">Ngày trả ngoài</a></li>
+                                </ul>
+                            </div>
                             {% endif %}
                             {% if "HRD" in current_user.phongban %}
                             <a href="/thoivu" class="btn btn-primary btn-sm">Thời vụ</a>
-                            {% endif %}
-                            {% if "HRD" in current_user.phongban %}
                             <a href="/hcname" class="btn btn-primary btn-sm">Headcount name</a>
+                            <a href="/danhsachntid" class="btn btn-primary btn-sm">NTID</a>
                             <a href="/tuoi_nghi_huu" class="btn btn-primary btn-sm">Tuổi nghỉ hưu</a>
                             {% endif %}
 

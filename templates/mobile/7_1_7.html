@@ -1,0 +1,32 @@
+{% extends "mobile/base.html" %}
+{% block title %}Phép tồn - Mobile{% endblock %}
+{% block content %}
+<h1 style="font-size:16px; margin:0 0 8px;">Phép tồn</h1>
+
+<form method="GET" action="{{ url_for('muc7_1_7mobile') }}" style="margin-bottom:10px;">
+  <div style="display:flex; gap:6px; margin-bottom:6px;">
+    <input type="text" name="mst" value="{{ mst }}" placeholder="MST"
+      style="flex:1; padding:6px 10px; border-radius:8px; border:1px solid #ccc; font-size:13px;">
+    <button type="submit" class="btn btn-primary btn-sm" style="white-space:nowrap;">Xem</button>
+  </div>
+</form>
+
+{% if danhsach and danhsach|length > 0 %}
+{# Phep_ton_chi_tiet: [Nha_may, MST, Ho_ten, Chuc_danh, Thang, Nam,
+Phep_duoc_su_dung, Phep_da_chot, Phep_chua_chot, Phep_cho_su_dung, Phep_con_lai] #}
+{% set r = danhsach[0] %}
+<div
+  style="background:#fff; border-radius:10px; padding:10px 12px; box-shadow:0 2px 6px rgba(0,0,0,0.05); margin-bottom:10px;">
+  <div style="font-size:13px; margin-bottom:4px;">
+    <strong>MST:</strong> {{ r[1] }} • Tháng {{ r[4] }}/{{ r[5] }}
+  </div>
+  <div style="font-size:13px;"><strong>Phút phép được sử dụng:</strong> {{ r[6] }}</div>
+  <div style="font-size:13px;"><strong>Phút phép đã dùng:</strong> {{ (r[7] or 0) + (r[8] or 0) }}</div>
+  <div style="font-size:13px;"><strong>Phút phép còn lại:</strong> {{ r[10] }}</div>
+</div>
+{% else %}
+<div style="font-size:13px; color:#777; text-align:center; margin-top:16px;">
+  Không có dữ liệu phép tồn.
+</div>
+{% endif %}
+{% endblock %}

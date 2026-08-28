@@ -1,6 +1,6 @@
 {% extends "12.html" %}
 {% block title %}
-    Bảng công chi tiết Chủ Nhật chốt
+    Bảng công chi tiết trả ngoài
 {% endblock title %}
 {% block style %}
     .scroll {
@@ -30,8 +30,7 @@
     
 {% block content %}
 <div class="scroll">
-    <br>
-    <h1>Bảng công chi tiết Chủ Nhật chốt</h1>
+    <h1>Bảng công chi tiết trả ngoài</h1>
     <br>
     <div style="display: flex; gap:20px;">
         <form method="GET">
@@ -51,18 +50,18 @@
             <input type="date" id="denngay" name="denngay" value={{request.args.get('denngay', '')}}>
             <input type="submit" class="btn btn-primary btn-sm" value="Tìm kiếm"></select>
         </form>
-        <form method="POST" >
+    </div>
+    <div style="display: flex; gap:20px;">
+        <h5>Tổng: {{count}}</h5>
+        <div class="pagination">{{ pagination.links }}</div>
+        <form method="POST">
             <input type="text" id="mst" name="mst" hidden value={{request.args.get('mst', '')}}>
             <input type="text" id="chuyen" name="chuyen" hidden value={{request.args.get('chuyen', '')}}>
             <input type="text" id="bophan" name="bophan" hidden value={{request.args.get('bophan', '')}}>
             <input type="date" id="ngay" name="ngay" hidden value={{request.args.get('ngay', '')}}>
-            <input type="date" id="tungay" name="tungay" hidden value={{request.args.get('tungay', '')}}>
-            <input type="date" id="denngay" name="denngay" hidden value={{request.args.get('denngay', '')}}>
             <input type="text" id="phanloai" name="phanloai" hidden value={{request.args.get('phanloai', '')}}>
             <button type="submit" class="btn btn-success btn-sm"><i class="fas fa-fw fa-download"></i></button>
-        </form>
-        <h5>Tổng: {{count}}</h5>
-        <div class="pagination">{{ pagination.links }}</div>
+        </form>  
     </div>
     <br>
     <table class="table table-hover table-sm table-bordered">
@@ -78,9 +77,7 @@
                 <th>Ca</th>
                 <th>Giờ vào</th>
                 <th>Giờ ra</th>
-                <th>Phút tăng ca 200%</th> 
-                <th>Phút nghỉ khác</th>
-                <th>Loại nghỉ khác</th>
+                <th>Phút tăng ca</th>
             </tr>
         </thead>
         
@@ -93,29 +90,42 @@
                 <td>{{row[3]}}</td>
                 <td>{{row[4]}}</td>
                 <td>{{row[5]}}</td>
-                <td class="date_en">{{row[6]}}</td>
-                <td>{{row[7]}}</td>
+                <td class="date_en">{{row[7]}}</td>
                 <td>{{row[8]}}</td>
-                <td>{{row[9]}}</td>
                 <td>{{row[10]}}</td>
-                <td>{{row[11]}}</td>                    
+                <td>{{row[11]}}</td>  
+                <td>{{row[15]}}</td>              
             </tr>  
             {% endfor %}
         </tbody>
     </table>
 </div>
 <script>
-    function changeFormatDate(date){
-        if(date == 'None') return "";
-        try{
-            return date.split("-")[2] + "/" + date.split("-")[1] + "/" + date.split("-")[0];
-        } catch {
-            return "";    
-    }}
-    document.addEventListener('DOMContentLoaded', (event) => {
-        document.querySelectorAll('.date_en').forEach((element) => {
-            element.textContent = changeFormatDate(element.textContent);
-        });
+    function changeFormatDate(date) {
+    if (date === 'None') return "";
+
+    try {
+        let parts = date.split("-");
+        return parts[2] + "/" + parts[1] + "/" + parts[0];
+    } catch {
+        return "";
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Format date
+    document.querySelectorAll('.date_en').forEach((element) => {
+        element.textContent = changeFormatDate(element.textContent.trim());
     });
+
+    // Xóa None
+    document.querySelectorAll('td').forEach((element) => {
+        if (element.textContent.trim() === 'None') {
+            element.textContent = '';
+        }
+    });
+
+});
 </script>
 {% endblock content %}

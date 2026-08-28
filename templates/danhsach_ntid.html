@@ -1,0 +1,232 @@
+{% extends "12.html" %}
+
+{% block style %}
+    .table-responsive {
+        width: 100%;
+        font-size: 10px;
+    }
+    table th {
+        white-space: pre-line;
+        text-align: center;
+        color: white;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; 
+        vertical-align: middle;
+    }
+    table td {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px; /* Adjust based on your requirement */
+        font-weight: bold;
+    }
+    .pagination {
+        font-size: 10px;
+    }
+
+    table input[type="text"] {
+        width: 100%;
+        padding: 0.2rem;
+        font-size: 10px;
+        box-sizing: border-box; /* Ensures padding is included in width */
+    }
+
+
+{% endblock style %}
+
+{% block content %}
+<h1 class="text-center">NTID</h1>
+<br>
+<div class="container">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <button id="toggleEditAll" class="btn btn-warning mb-2" onclick="toggleEditAll()">Sửa</button>
+        <div class="pagination">{{pagination.links}}</div>
+        <div class="filter">
+            <form method="GET">
+                <label for="search">Tìm kiếm:</label>
+                <input type="text" id="search" name="mst" value="{{ request.args.get('mst', '') }}">
+                <button class="btn btn-primary" type="submit">Lọc</button>
+            </form>
+        </div>
+        <div class="export">
+            <form method="POST" action="/danhsachntid/export">
+                <input type="hidden" name="search-type" value="{{ request.args.get('mst', '') }}">
+                <button class="btn btn-success" type="submit">Xuất Excel</button>
+            </form>
+        </div>
+
+        <!-- Nút mở modal -->
+        <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add_hcname_modal">
+        <i class="fa fa-upload"></i> Thêm mới
+        </button>
+
+        <!-- Modal -->
+        <div class="modal fade" id="add_hcname_modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5">Thêm mới headcount name</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-sm">
+                        <thead>
+                        <tr class="bg-primary text-white">
+                            {% for col in detail[1:] %}
+                            <th>{{col}}</col>
+                            {% endfor %}
+                        </tr>
+                        </thead>
+                        <tbody id="hcname_tbody">
+                        <tr>
+                            <td><input readonly  name="nhamay" value="{{ current_user.macongty }}" required></td>
+                            <td><input type="text"  name="mst"  required></td>
+                            <td><input type="text"  name="ntid"  required></td>
+                            <td><input type="date"  name="tungay"  required></td>
+                            <td><input type="date"  name="denngay"  required></td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Nút dấu + -->
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="addRow()">
+                        <i class="fa fa-plus"></i> Thêm dòng
+                    </button>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
+                <button type="button" class="btn btn-primary" onclick="submitData()">Lưu</button>
+            </div>
+            </div>
+        </div>
+        </div>
+
+        
+                    
+    </div>
+    <br>
+    
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover table-sm">
+            <thead>
+                <tr class="bg-primary">
+                    {% for col in detail %}
+                            <th>{{col}}</col>
+                            {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in danhsach %}
+                    <tr>
+                        <form action="/danhsachntid/edit" method="POST">
+                            <td><input readonly name="id" value="{{ item[0] }}"></td>
+                            <td><input readonly  name="nhamay" value="{{ item[1] }}" required></td>
+                            <td><input type="text"  name="mst" value="{{ item[2] }}" required></td>
+                            <td><input type="text"  name="ntid" value="{{ item[3] }}" required></td>
+                            <td><input type="date"  name="tungay" value="{{ item[4] }}" required></td>
+                            <td><input type="date"  name="denngay" value="{{ item[5] }}" required></td>
+                            <td>
+                                <button type="submit" class="btn btn-success btn-sm">Lưu</button>
+                            </form>
+                            <form action="/danhsachntid/delete" method="POST" style="display:inline;">
+                                <input type="hidden" name="id" value="{{ item[0] }}">
+                                <button type="submit" class="btn btn-danger btn-sm">Xóa</button>
+                            </form>
+                            </td>
+                                        
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    // Hàm thêm dòng mới vào bảng
+    function addRow() {
+    const tbody = document.getElementById("hcname_tbody");
+    const firstRow = tbody.rows[0];
+    const newRow = firstRow.cloneNode(true);
+    newRow.querySelectorAll("input").forEach(input => input.value = "");
+    tbody.appendChild(newRow);
+    }
+
+    function submitData() {
+    const tbody = document.getElementById("hcname_tbody");
+    const rows = tbody.querySelectorAll("tr");
+    const data = [];
+
+    rows.forEach(row => {
+        const rowData = {};
+        row.querySelectorAll("input").forEach(input => {
+        rowData[input.name] = input.value.trim();
+        });
+        data.push(rowData);
+    });
+
+    fetch('/hcname/add', {
+        method: 'POST',
+        headers: {
+        'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ rows: data })
+    })
+    .then(response => {
+        if (response.ok) {
+        alert('Đã lưu thành công!');
+        // Reset bảng nếu muốn
+        // location.reload();
+        } else {
+        alert('Lỗi khi gửi dữ liệu.');
+        }
+    })
+    .catch(error => {
+        console.error('Lỗi gửi request:', error);
+        alert('Lỗi mạng hoặc máy chủ.');
+    });
+    }
+
+    // Biến để theo dõi trạng thái chỉnh sửa toàn bộ
+    let isEditingAll = true;
+
+    function toggleEditAll() {
+        const button = document.getElementById('toggleEditAll');
+        const rows = document.querySelectorAll('tbody tr');
+
+        rows.forEach(row => {
+            row.querySelectorAll('input[type="text"]').forEach(input => {
+                if (isEditingAll) {
+                    // Chế độ xem → chỉ hiển thị text
+                    const span = document.createElement('span');
+                    span.textContent = input.value;
+                    span.classList.add('static-text');
+                    span.style.display = 'inline-block';
+                    input.style.display = 'none';
+                    input.after(span);
+                } else {
+                    // Chế độ sửa → hiển thị lại input
+                    input.style.display = '';
+                    if (input.nextElementSibling && input.nextElementSibling.classList.contains('static-text')) {
+                        input.nextElementSibling.remove();
+                    }
+                }
+            });
+
+            // Ẩn/hiện nút Lưu
+            const saveButton = row.querySelector('button.btn-success');
+            if (saveButton) {
+                saveButton.style.display = isEditingAll ? 'none' : '';
+            }
+        });
+
+        button.textContent = isEditingAll ? 'Xem' : 'Sửa';
+        isEditingAll = !isEditingAll;
+    }
+
+</script>
+{% endblock content %}

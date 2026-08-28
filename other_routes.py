@@ -196,88 +196,20 @@ def export_dstc():
     
 @app.route("/export_dslt", methods=["POST"])
 def export_dslt():
-    mst = request.form.get("mst")
-    chuyen = request.form.get("chuyen")
-    bophan = request.form.get("bophan")
-    ngay = request.form.get("ngay")
-    rows = laydanhsachloithe(mst, chuyen, bophan, ngay)
-    df = pd.DataFrame(rows)
-    thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), index=False)
-    
-    return send_file(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
-
-# @app.route("/export_dsddb", methods=["POST"])
-# def export_dsddb():
-    # mstquanly = request.form.get("mstquanly")
-    # mst = request.form.get("mst")
-    # chuyen = request.form.get("chuyen")
-    # bophan = request.form.get("bophan")
-    # hoten = request.form.get("hoten")
-    # chucvu = request.form.get("chucvu")
-    # ngaydiemdanh = request.form.get("ngay")
-    # lydo = request.form.get("lydo")
-    # trangthai = request.form.get("trangthai")
-    # loaidiemdanh = request.form.get("loaidiemdanh")
-    
-    # rows = laydanhsachdiemdanhbu(mst,hoten,chucvu,chuyen,bophan,loaidiemdanh,ngaydiemdanh,lydo,trangthai,mstquanly)
-    # result = []
-    # for row in rows:
-    #     result.append({
-    #         "Nhà máy": row[0],
-    #         "MST": row[1],
-    #         "Họ tên": row[2],
-    #         "Chức vụ": row[3],
-    #         "Chuyền tổ": row[4],
-    #         "Bộ phận": row[5],
-    #         "Loại điểm danh": row[6],
-    #         "Ngày điểm danh": datetime.strptime(row[7], "%Y-%m-%d").strftime("%d/%m/%Y"),
-    #         "Giờ điểm danh": row[8],
-    #         "Lý do": row[9],
-    #         "Trạng thái": row[10],
-    #         "ID":row[11],
-    #         "Thời gian tạo": row[12],
-    #         "Thời gian duyệt": row[13]
-    #     })
-    
-    # df = pd.DataFrame(result)
-    # thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-    # df.to_excel(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), index=False) # f"diemdanhbu_{thoigian}.xlsx", index=False)
-    
-    # return send_file(os.path.join(FOLDER_XUAT, f"diemdanhbu_{thoigian}.xlsx"), as_attachment=True)  
-
-# @app.route("/export_dsxnp", methods=["POST"])
-# def export_dsxnp():
-#     mstquanly = request.form.get("mstquanly")
-#     mstthuky = request.args.get("mstthuky")
-#     mst = request.form.get("mst")
-#     hoten = request.form.get("hoten")
-#     chucvu = request.form.get("chucvu")
-#     chuyen = request.form.get("chuyen")
-#     bophan = request.form.get("bophan")
-#     ngay = request.form.get("ngaynghi")
-#     lydo = request.form.get("lydo")
-#     trangthai = request.form.get("trangthai")
-#     danhsach = laydanhsachxinnghiphep(mst,hoten,chucvu,chuyen,bophan,ngay,lydo,trangthai,mstquanly,mstthuky)
-#     result = []
-#     for row in danhsach:
-#         result.append({
-#             'Mã công ty': row[0],
-#             'Mã số thẻ': row[1],
-#             'Họ tên': row[2],
-#             'Chức vụ': row[3],
-#             'Chuyền tổ': row[4],
-#             'Phòng ban': row[5],
-#             'Ngày nghỉ phép': datetime.strptime(row[6], "%Y-%m-%d").strftime("%d/%m/%Y"),
-#             'Tổng số phút': row[7],
-#             'Lý do': row[8],
-#             'Trạng thái': row[9]
-#         })
-#     df = pd.DataFrame(result)
-#     thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
-#     df.to_excel(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), index=False)
-    
-#     return send_file(os.path.join(FOLDER_XUAT, f"xinnghiphep_{thoigian}.xlsx"), as_attachment=True) 
+    try:
+        mst = request.form.get("mst")
+        chuyen = request.form.get("chuyen")
+        bophan = request.form.get("bophan")
+        ngay = request.form.get("ngay")
+        rows = laydanhsachloithe(mst, chuyen, bophan, ngay, None)
+        df = pd.DataFrame(rows)
+        thoigian = datetime.now().strftime("%d%m%Y%H%M%S")
+        df.to_excel(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), index=False)
+        
+        return send_file(os.path.join(FOLDER_XUAT, f"danhsachloithe_{thoigian}.xlsx"), as_attachment=True) 
+    except Exception as e:
+        flash(f"Xuất danh sách lỗi: {e}")
+        return redirect("/muc7_1_5")
 
 @app.route("/export_dsdktt", methods=["POST"])
 def export_dsdktt():
@@ -1840,6 +1772,7 @@ def tailen_danhsach_tangca():
                     chuyen = row["Chuyền"]
                     phongban = row["Phòng ban"]
                     ngay = row["Ngày"] 
+
                     giotangcasang = row["Tăng ca sáng"] if not pd.isna(row["Tăng ca sáng"]) else ""
                     giotangcasangthucte = row["Tăng ca sáng thực tế"] if not pd.isna(row["Tăng ca sáng thực tế"]) else ""
                     giotangca = row["Giờ tăng ca"] if not pd.isna(row["Giờ tăng ca"]) else ""
@@ -1898,6 +1831,7 @@ def capnhatdieuchuyentheofile():
                     loaidieuchuyen = row["Loại điều chuyển"]
                     ngay = row["Ngày"]
                     ghichu = row["Ghi chú"] 
+                    ntid_moi = row["NTID"]
                     if loaidieuchuyen == "Chuyển vị trí":
                         
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
@@ -1925,14 +1859,13 @@ def capnhatdieuchuyentheofile():
                         chucdanhtamoi = hc_name_moi[2]
 
                         khongdoica= ""
-                    
                         
                         dieuchuyennhansu(masothe,loaidieuchuyen,chucdanhcu,chucdanhmoi,
                                          chuyencu, chuyenmoi,capbaccu,capbacmoi,
                                          sectioncodecu,sectioncodemoi,hccategorycu,hccategorymoi,
                                          phongbancu,phongbanmoi,sectiondescriptioncu,sectiondescriptionmoi,
                                          employeetypecu,employeetypemoi,positioncodedescriptioncu,positioncodedescriptionmoi,
-                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica)
+                                         positioncodecu, positioncodemoi,chucdanhtacu,chucdanhtamoi,ngay,ghichu,khongdoica,ntid_moi)
                         
                     elif loaidieuchuyen == "Nghỉ việc":
                         thongtin_laodong = laydanhsachtheothechamcong(masothe)[0]
@@ -2573,8 +2506,9 @@ def bangcongchunhatchuachot_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         phanloai = request.args.get("phanloai")
-        ngay = request.args.get("ngay")
-        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -2591,8 +2525,9 @@ def bangcongchunhatchuachot_web():
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
-        ngay = request.form.get("ngay")
-        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        danhsach = lay_bangcong_chunhat_chuachot_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHUACHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
@@ -2720,8 +2655,9 @@ def bangcongchunhatchot_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         phanloai = request.args.get("phanloai")
-        ngay = request.args.get("ngay")
-        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -2738,8 +2674,9 @@ def bangcongchunhatchot_web():
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
-        ngay = request.form.get("ngay")
-        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        danhsach = lay_bangcongchot_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
@@ -2779,7 +2716,8 @@ def bangcongchunhatchot_web():
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chot_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_chunhat_chot_{timestamp}.xlsx"), as_attachment=True)
-    
+
+
 @app.route("/bangcongchotquakhu_web", methods=["GET","POST"])
 def bangcongchotquakhu_web():
     if request.method == "GET":
@@ -2866,8 +2804,9 @@ def bangcongchunhatquakhu_web():
         chuyen = request.args.get("chuyen")
         bophan = request.args.get("bophan")
         phanloai = request.args.get("phanloai")
-        ngay = request.args.get("ngay")
-        danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.args.get("tungay")
+        denngay = request.args.get("denngay")
+        danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         total = len(danhsach)
         page = request.args.get(get_page_parameter(), type=int, default=1)
         per_page = 15
@@ -2884,8 +2823,9 @@ def bangcongchunhatquakhu_web():
         chuyen = request.form.get("chuyen")
         bophan = request.form.get("bophan")
         phanloai = request.form.get("phanloai")
-        ngay = request.form.get("ngay")
-        danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,ngay)
+        tungay = request.form.get("tungay")
+        denngay = request.form.get("denngay")
+        danhsach = lay_bangcongchotquakhu_chunhat_web(masothe,chuyen,bophan,phanloai,tungay,denngay)
         workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUNHAT_CHOT)
 
         sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
@@ -3167,14 +3107,105 @@ def bangcong_tong_web():
                     pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
             for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
                 cell = sheet[f"{col}{row}"]
-                if cell.value and int(cell.value) > 0:
-                    try:
+                try:
+                    if cell.value and int(cell.value) > 0:
                         cell.style = number_style
-                    except ValueError:
+                except ValueError:
                         pass  # Nếu giá trị không phải
         timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
         workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
         return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+
+@app.route("/bangcongchitiettrangoai_web", methods=["GET","POST"])
+@login_required
+def bangcongchitiettrangoai_web():
+    if request.method == "GET":
+        try:
+            masothe = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            bophan = request.args.get("bophan")
+            phanloai = request.args.get("phanloai")
+            tungay = request.args.get("tungay")
+            denngay = request.args.get("denngay")
+            ngay = request.args.get("ngay")
+            danhsach = lay_bangcong_chitiet_trangoai_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+            total = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("bangcong_chitiet_trangoai_web.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=total)
+        except Exception as e:
+            flash(str(e))
+            return render_template("bangcong_chitiet_trangoai_web.html",
+                                    danhsach=[],count=0)
+    elif request.method == "POST":
+        try:
+            masothe = request.args.get("mst")
+            chuyen = request.args.get("chuyen")
+            bophan = request.args.get("bophan")
+            phanloai = request.args.get("phanloai")
+            tungay = request.args.get("tungay")
+            denngay = request.args.get("denngay")
+            ngay = request.args.get("ngay")
+            danhsach = lay_bangcong_chitiet_trangoai_web(masothe,chuyen,bophan,phanloai,ngay,tungay,denngay)
+            workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_CHUACHOT)
+
+            sheet = workbook['Sheet1']  # Thay 'Sheet1' bằng tên sheet của bạn
+            image_path = HINHANH_LOGO
+            # Tạo đối tượng hình ảnh
+            img = Image(image_path)
+            # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+            img.width = img.width * 0.25
+            img.height = img.height * 0.25
+
+            # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+            img.anchor = 'A1'
+            
+            # Chèn hình ảnh vào sheet
+            sheet.add_image(img)
+
+            # Xóa hàng từ hàng 7 đến hàng 10000
+            sheet.delete_rows(4, 10000 - 4 + 1)
+
+            for row in danhsach:
+                data = [y for y in row[:-1]]
+                data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+                sheet.append(data)
+
+            # Tạo kiểu định dạng ngày
+            date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+            number_style = NamedStyle(name="number_style", number_format="0")
+            # Duyệt qua các ô trong khu vực G7:H10000
+            for row in range(4, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+                for col in ['H']:
+                    cell = sheet[f"{col}{row}"]
+                    
+                    try:
+                        cell.style = date_style
+                    except ValueError:
+                        pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+                # for col in ['J','M','N', 'O','P', 'Q','R', 'S','U']:
+                #     cell =  sheet[f"{col}{row}"]
+                #     if cell.value and int(cell.value) > 0:
+                #         try:
+                #             cell.style = number_style
+                #         except ValueError:
+                #             pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+                
+
+            timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+            workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_trangoai_{timestamp}.xlsx"))
+            return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_chitiet_trangoai_{timestamp}.xlsx"), as_attachment=True)
+        except Exception as e:
+            flash(str(e))
+            return redirect("/bangcongchitiettrangoai_web")
+        
 @app.route("/bangcongtrangoai_web", methods=["GET","POST"])
 @login_required
 def bangcongtrangoai_web():
@@ -4718,7 +4749,15 @@ def delete_chamcongtay():
 
 @app.route("/tai_sample_chamcongtay", methods=["POST"])
 def tai_sample_chamcongtay():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA",
+                "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", 
+                "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", 
+                "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", 
+                "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", 
+                "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", 
+                "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI",
+                'GIO_VAO_THUC_TE', 'GIO_RA_THUC_TE', 
+                'TC_100_THUC_TE', 'TC_150_THUC_TE', 'TC_DEM_THUC_TE']
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -4780,18 +4819,31 @@ def tailen_chamcongtay():
             df["NHA_MAY"] = current_user.macongty
             
             insert_query = """
-                INSERT INTO CHAM_CONG_TAY (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, PHUT_HC, PHUT_HC_THUC_TE, PHUT_TANG_CA_100, TC_100_THUC_TE, PHUT_TANG_CA_150, TC_150_THUC_TE, PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO CHAM_CONG_TAY 
+                (NHA_MAY, MST, HO_TEN, NGAY, CA, GIO_VAO, GIO_RA, 
+                GIO_VAO_THUC_TE, GIO_RA_THUC_TE,
+                PHUT_HC, PHUT_HC_THUC_TE, 
+                PHUT_TANG_CA_100, TC_100_THUC_TE, 
+                PHUT_TANG_CA_150, TC_150_THUC_TE, 
+                PHUT_TANG_CA_DEM, TC_DEM_THUC_TE, 
+                PHUT_NGHI_PHEP, PHUT_NGHI_KHONG_LUONG, 
+                PHUT_NGHI_KHAC, LOAI_NGHI_KHAC, PHUT_TANG_CA_AN_TOI)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """
-            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_HC", "PHUT_HC_THUC_TE", "PHUT_TANG_CA_100", "PHUT_TANG_CA_100_THUC_TE", "PHUT_TANG_CA_150", "PHUT_TANG_CA_150_THUC_TE", "PHUT_TANG_CA_DEM", "PHUT_TANG_CA_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
+            data_to_insert = df[["NHA_MAY", "MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", 
+            "GIO_RA", "GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_HC", "PHUT_HC_THUC_TE", 
+            "PHUT_TANG_CA_100", "TC_100_THUC_TE", "PHUT_TANG_CA_150", "TC_150_THUC_TE",
+            "PHUT_TANG_CA_DEM", "TC_DEM_THUC_TE", "PHUT_NGHI_PHEP", "PHUT_NGHI_KHONG_LUONG",
+            "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC", "PHUT_TANG_CA_AN_TOI"]].values.tolist()
             normalized_data_rows = [normalize_row(row) for row in data_to_insert]
+            # print(insert_query)
             # print(normalized_data_rows)
             cursor.executemany(insert_query, normalized_data_rows)
 
             conn.commit() 
             conn.close()    
         except Exception as e:
-            flash(e)
+            flash(str(e))
                 
     return redirect("/chamcongtay")
 
@@ -4800,7 +4852,7 @@ def capnhat_dulieu_chamcong():
     try:
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
-        cursor.execute("Exec Dong_bo_CheckInOut")
+        cursor.execute("Exec Dong_bo_CheckInOut; Exec CAP_NHAT_GIO_VAO_RA_SANG_DK_TANG_CA_TU_DONG;")
         cursor.commit()
         conn.close()
         return redirect("/chamcong_sang_web")
@@ -5052,7 +5104,8 @@ def delete_chamcongtaycn():
 
 @app.route("/tai_sample_chamcongtaycn", methods=["POST"])
 def tai_sample_chamcongtaycn():
-    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC","GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]
+    headers = ["MST", "HO_TEN", "NGAY", "CA", "GIO_VAO", "GIO_RA", "PHUT_TANG_CA_200", "PHUT_NGHI_KHAC", "LOAI_NGHI_KHAC",
+               "GIO_VAO_THUC_TE", "GIO_RA_THUC_TE","PHUT_TANG_CA_200_THUC_TE"]
     
     df = pd.DataFrame(columns=headers)
     output = BytesIO()
@@ -5554,7 +5607,7 @@ def hcname():
     elif request.method == "POST":
         search_type = request.form.get("search-type")
         search_value = request.form.get("search")
-        print(search_type, search_value)
+
         danhsach = [{
                         "Line": row[0],
                         "Detail_job_title_VN": row[1],
@@ -5696,7 +5749,7 @@ def sua_tuoi_nghi_huu():
         nam = request.form.get("nam")
         thang = request.form.get("thang")
         query = f"""UPDATE Tuoi_nghi_huu SET nam = {nam}, thang = {thang} WHERE id = {id}"""
-        print(query)
+
         conn = pyodbc.connect(url_database_pyodbc)
         cursor = conn.cursor()
         try:
@@ -6117,3 +6170,318 @@ def tailen_chamcongtayle():
             flash(str(e))
                 
     return redirect("/chamcongtayle")
+
+@app.route("/nhap_diemdanhbu_mobile", methods=["POST"])
+def nhap_diemdanhbu_mobile():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe_diemdanhbu")
+    hoten = request.form.get("hoten_diemdanhbu")
+    chuyento = request.form.get("chuyento_diemdanhbu")
+    chucdanh = request.form.get("chucdanh_diemdanhbu")
+    phongban = request.form.get("phongban_diemdanhbu")
+    ngay = request.form.get("ngay_diemdanhbu")
+    ngay = datetime.strptime(ngay, '%d/%m/%Y').strftime('%Y-%m-%d')
+    giovao = request.form.get("giovao_diemdanhbu")
+    giora = request.form.get("giora_diemdanhbu")
+    lydo = request.form.get("lydo_diemdanhbu")
+    return render_template("mobile/nhap_diemdanhbu.html", 
+    nhamay=nhamay, masothe=masothe, hoten=hoten, 
+    chuyento=chuyento, chucdanh=chucdanh, 
+    phongban=phongban, ngay=ngay, giovao=giovao, 
+    giora=giora, lydo=lydo)
+
+@app.route("/mobile/dangky_diemdanhbu", methods=["POST"])
+def dangky_diemdanhbu():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe")
+    hoten = request.form.get("hoten")
+    chuyento = request.form.get("chuyento")
+    chucdanh = request.form.get("chucdanh")
+    phongban = request.form.get("phongban")
+    ngay = datetime.strptime(request.form.get("ngay"),'%Y-%m-%d').strftime('%d/%m/%Y')
+    giovao = request.form.get("giovao")
+    giora = request.form.get("giora")
+    lido = request.form.get("lido")
+    trangthai = "Chờ kiểm tra"
+    if giovao:
+        loaidiemdanh = "Điểm danh vào"
+        if them_diemdanhbu(masothe,hoten,chucdanh,chuyento,phongban,loaidiemdanh,ngay,giovao,lido,trangthai):
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thành công !!!")
+        else:
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay} thất bại !!!")
+    if giora:
+        loaidiemdanh = "Điểm danh ra"
+        if them_diemdanhbu(masothe,hoten,chucdanh,chuyento,phongban,loaidiemdanh,ngay,giora,lido,trangthai):
+            flash(f"Thêm điểm danh ra cho {hoten} vào ngày {ngay} thành công !!!") 
+        else:
+            flash(f"Thêm điểm danh vào cho {hoten} vào ngày {ngay}  thất bại !!!")
+    return redirect(f"/muc7_1_2?mstthuky={masothe}")
+
+@app.route("/nhap_xinnghikhac_mobile", methods=["POST"])
+def nhap_xinnghikhac_mobile():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe_xinnghikhac")
+    hoten = request.form.get("hoten_xinnghikhac")
+    chuyento = request.form.get("chuyento_xinnghikhac")
+    chucdanh = request.form.get("chucdanh_xinnghikhac")
+    phongban = request.form.get("phongban_xinnghikhac")
+    ngay = request.form.get("ngay_xinnghikhac")
+    ngay = datetime.strptime(ngay, '%d/%m/%Y').strftime('%Y-%m-%d')
+    sophut = int(request.form.get("sophut_xinnghikhac"))
+    return render_template("mobile/nhap_xinnghikhac.html", 
+    nhamay=nhamay, masothe=masothe, hoten=hoten, 
+    chuyento=chuyento, chucdanh=chucdanh, 
+    phongban=phongban, ngay=ngay, sophut=sophut)
+
+@app.route("/mobile/dangky_xinnghikhac", methods=["POST"])
+def dangky_xinnghikhac():
+    nhamay = request.form.get("nhamay")
+    masothe = request.form.get("masothe")
+    hoten = request.form.get("hoten")
+    chuyento = request.form.get("chuyento")
+    chucdanh = request.form.get("chucdanh")
+    phongban = request.form.get("phongban")
+    ngay = datetime.strptime(request.form.get("ngay"),'%Y-%m-%d').strftime('%d/%m/%Y')
+    sophut = request.form.get("sophut")
+    lido = request.form.get("lido")
+    trangthai = "Chờ kiểm tra"
+    nhangiayto = "Chưa nhận"
+
+    if them_xinnghikhac(masothe,hoten,chuyento,phongban,chucdanh,ngay,sophut,lido,trangthai,nhangiayto):
+        flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thành công !!!")
+    else:
+        flash(f"Thêm xin nghỉ khác cho {hoten} vào ngày {ngay} thất bại !!!")
+ 
+    return redirect(f"/muc7_1_2?mstthuky={masothe}")
+
+@app.route("/ngayle/danhsach", methods=["GET","POST"])
+def danhsach_ngayle():
+    if request.method == "GET":
+        try:
+            danhsach = lay_danhsach_ngayle()
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngayle.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+    else:
+        try:
+            danhsach = lay_danhsach_ngayle()
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            return jsonify(danhsach)
+        
+@app.route("/ngayle/xoa", methods=["GET"])
+def xoa_ngay_le():
+    ngay = request.args.get("ngay")
+
+    if ngay:
+        if xoa_ngayle(ngay):
+            flash("Xóa ngày lễ thành công")
+        else:
+            flash("Xóa ngày lễ thất bại")
+
+    return redirect("/ngayle/danhsach")
+
+@app.route("/ngayle/them", methods=["POST"])
+def them_ngay_le():
+    ngay = request.form.get("ngay")
+
+    if ngay:
+        if them_ngayle(ngay):
+            flash("Xóa ngày lễ thành công")
+        else:
+            flash("Xóa ngày lễ thất bại")
+
+    return redirect("/ngayle/danhsach")
+
+@app.route("/ngaytrangoai/danhsach", methods=["GET","POST"])
+def danhsach_ngaytrangoai():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            danhsach = lay_danhsach_ngaytrangoai(nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngaytrangoai.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+@app.route("/ngaytrangoai/xoa", methods=["GET"])
+def xoa_ngay_trangoai():
+    id = request.args.get("id")
+
+    if id:
+        if xoa_ngaytrangoai(id):
+            flash("Xóa ngày trả ngoài thành công")
+        else:
+            flash("Xóa ngày trả ngoài thất bại")
+
+    return redirect("/ngaytrangoai/danhsach")
+
+@app.route("/ngaytrangoai/them", methods=["POST"])
+def them_ngay_trangoai():
+    ngay = request.form.get("ngay")
+
+    if ngay:
+        if them_ngaytrangoai(ngay):
+            flash("Xóa ngày trả ngoài thành công")
+        else:
+            flash("Xóa ngày trả ngoài thất bại")
+
+    return redirect("/ngaytrangoai/danhsach")
+
+@app.route("/ngayhoandoi/danhsach", methods=["GET","POST"])
+def danhsach_ngayhoandoi():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            danhsach = lay_danhsach_ngayhoandoi(nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+            return render_template("ngayhoandoi.html",danhsach=paginated_rows,
+                                   pagination=pagination)
+
+@app.route("/ngayhoandoi/xoa", methods=["GET"])
+def xoa_ngay_hoandoi():
+    id = request.args.get("id")
+
+    if id:
+        if xoa_ngayhoandoi(id):
+            flash("Xóa ngày hoán đổi thành công")
+        else:
+            flash("Xóa ngày thoán đổi thất bại")
+
+    return redirect("/ngayhoandoi/danhsach")
+
+@app.route("/ngayhoandoi/them", methods=["POST"])
+def them_ngay_hoandoi():
+    ngaydilam = request.form.get("ngaydilam")
+    ngaynghi = request.form.get("ngaynghi")
+
+    if ngaydilam and ngaynghi:
+        if them_ngayhoandoi(ngaydilam,ngaynghi):
+            flash("Xóa ngày thoán đổi thành công")
+        else:
+            flash("Xóa ngày thoán đổi thất bại")
+
+    return redirect("/ngayhoandoi/danhsach")
+
+@app.route("/lay_danhsach_diemdanhbu_theothang", methods=["POST"])
+def taidanhsachdiemdanhbutheothang():
+    try:
+        thang = request.form.get("thang_taixuong")
+        nam = request.form.get("nam_taixuong")
+
+        rows, columns = lay_danhsach_diemdanhbu_theothang(thang, nam)
+
+        # Chuyển sang DataFrame
+        df = pd.DataFrame.from_records(rows, columns=columns)
+
+        # Tạo file Excel trong RAM
+        output = BytesIO()
+
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='DIEM_DANH_BU')
+
+        output.seek(0)
+
+        filename = f"DIEM_DANH_BU_{thang}_{nam}.xlsx"
+
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=filename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+
+@app.route("/lay_danhsach_xinnghiphep_theothang", methods=["POST"])
+def taidanhsachxinnghipheptheothang():
+    try:
+        thang = request.form.get("thang_taixuong")
+        nam = request.form.get("nam_taixuong")
+
+        rows, columns = lay_danhsach_xinnghiphep_theothang(thang, nam)
+
+        # Chuyển sang DataFrame
+        df = pd.DataFrame.from_records(rows, columns=columns)
+
+        # Tạo file Excel trong RAM
+        output = BytesIO()
+
+        with pd.ExcelWriter(output, engine='openpyxl') as writer:
+            df.to_excel(writer, index=False, sheet_name='XIN_NGHI_PHEP')
+
+        output.seek(0)
+
+        filename = f"XIN_NGHI_PHEP_{thang}_{nam}.xlsx"
+
+        return send_file(
+            output,
+            as_attachment=True,
+            download_name=filename,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+
+    except Exception as e:
+        return {
+            "success": False,
+            "message": str(e)
+        }, 500
+    
+@app.route("/danhsachntid", methods = ["GET","POST"])
+def danh_sach_ntid():
+    if request.method == "GET":
+        try:
+            nhamay = current_user.macongty
+            mst = request.args.get("mst")
+            danhsach = lay_danhsach_ntid(mst,nhamay)
+        except Exception as e:
+            flash(str(e))
+            danhsach = []
+        finally:
+            current_page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 10
+            total = len(danhsach)
+            start = (current_page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[0][start:end]
+            detail = danhsach[1]
+            pagination = Pagination(page=current_page, per_page=per_page, total=total, css_framework='bootstrap4')
+
+        return render_template("danhsach_ntid.html", detail = detail, danhsach=paginated_rows,
+                                   pagination=pagination)

@@ -198,6 +198,13 @@
                             <td>Position code description:</td>
                             <td><input type="text" id="positioncodedescriptionmoi" name="positioncodedescriptionmoi" ></td>
                         </tr>
+                        <tr>
+                            <td>NTID:</td>
+                            <td><input type="text" id="ntidcu" name="ntidcu" ></td>
+                            <td></td>
+                            <td>NTID:</td>
+                            <td><input type="text" id="ntidmoi" name="ntidmoi" ></td>
+                        </tr>
                     </tbody>
                     <tfoot>
                         <tr class="save-button" style="text-align: center;">
@@ -232,6 +239,7 @@
                         document.getElementById("employeetypecu").value = data["Employee type"];
                         document.getElementById("positioncodecu").value = data["Position code"];
                         document.getElementById("positioncodedescriptioncu").value = data["Position description"];
+                        document.getElementById("ntidcu").value = data["COST_ID"];
                     }
                 })
                 .catch(function (error) {
