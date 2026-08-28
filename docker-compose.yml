@@ -1,0 +1,46 @@
+# ============================================================================
+#  HRM - docker compose (PRODUCTION)
+#  Dat file nay tai:  D:\PHANMEM_NT\HRM\
+#  Yeu cau: Docker Engine >= 24, Docker Compose v2 (khong con key "version:")
+#
+#  Chay:  docker compose up -d --build
+#  Log :  docker compose logs -f
+#  Dung:  docker compose down
+# ============================================================================
+
+name: nt-hrm
+
+services:
+  hrm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        PIP_INDEX_URL: ${PIP_INDEX_URL:-https://pypi.org/simple}
+    image: namthuan/hrm:1.0.0
+    container_name: nt-hrm
+    restart: unless-stopped
+    ports:
+      - "${HRM_PORT:-81}:81"
+    environment:
+      TZ: ${TZ:-Asia/Ho_Chi_Minh}
+      # config.py doc 4 bien nay (python-dotenv / os.environ)
+      DATABASE_SERVER: ${DATABASE_SERVER}
+      DATABASE_NAME: ${DATABASE_NAME}
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - ./nhapxuat:/app/nhapxuat
+      - ./static/uploads:/app/static/uploads
+      - ./static/img:/app/static/img
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:81/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: json-file
+      options:
+        max-size: "20m"
+        max-file: "5"

@@ -1,0 +1,24 @@
+.git
+.gitignore
+.vscode
+.idea
+__pycache__/
+**/__pycache__/
+*.py[cod]
+
+# Bien moi truong do docker-compose truyen vao
+.env
+
+*.log
+*.log.*
+nhapxuat/nhap/*.xlsx
+nhapxuat/xuat/*
+nhapxuat/bienban/*
+instance/
+
+*.bat
+
+Dockerfile
+.dockerignore
+docker-compose*.yml
+.env.example

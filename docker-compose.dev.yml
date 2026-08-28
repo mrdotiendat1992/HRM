@@ -1,0 +1,17 @@
+# ============================================================================
+#  HRM - override DEVELOPMENT (debug + hot reload)
+#  Chay: docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+# ============================================================================
+
+services:
+  hrm:
+    image: namthuan/hrm:dev
+    container_name: nt-hrm-dev
+    restart: "no"
+    command: ["python", "dev.py"]      # giong developer.bat
+    environment:
+      FLASK_DEBUG: "1"
+    volumes:
+      - .:/app                          # mount toan bo source -> sua la reload
+    healthcheck:
+      disable: true
