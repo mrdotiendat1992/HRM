@@ -19,6 +19,11 @@ params = urllib.parse.quote_plus(
 app.config["SQLALCHEMY_DATABASE_URI"] = f"mssql+pyodbc:///?odbc_connect={params}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["SECRET_KEY"] = "NAMTHUAN"
+# --- Tuong thich driver cu (xem nt_compat.py) -----------------------------
+from nt_compat import install_pyodbc_legacy_dates, install_json_provider
+install_pyodbc_legacy_dates()
+install_json_provider(app)
+app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {"pool_pre_ping": True, "pool_recycle": 1800}
 
 # Khởi tạo ORM & login
 db.init_app(app)
@@ -31,17 +36,7 @@ def is_mobile():
     ua = request.headers.get('User-Agent', '').lower()
     return any(agent in ua for agent in MOBILE_AGENTS)
 
-# model sử dụng khi đăng nhập
-class Nhanvien(UserMixin, db.Model):
-    __tablename__ = 'Nhanvien'
-    id = db.Column(db.Integer, primary_key=True)
-    macongty = db.Column(db.String(10), nullable=False)
-    masothe = db.Column(db.Integer, nullable=False)
-    hoten = db.Column(db.Unicode(50), nullable=False)
-    phongban = db.Column(db.String(10), nullable=False)
-    capbac = db.Column(db.String(10), nullable=False)
-    phanquyen = db.Column(db.String(10), nullable=False)
-    matkhau = db.Column(db.String(10), nullable=False)
+# Model Nhanvien da chuyen sang models/nhanvien.py (import o dau file)
 
 
 # Cấu hình log dùng hàm chung
