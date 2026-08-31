@@ -6568,6 +6568,22 @@ def chaylaicong_quakhu(mst, thang, nam):
         conn.close()
         return False
 
+def chaylaicong_chunhat(mst, thang, nam):
+
+    try:
+        nhamay = current_user.macongty
+        conn = pyodbc.connect(url_database_pyodbc)
+        cur = conn.cursor()
+        query = f"EXEC CHAY_LAI_CHAM_CONG_TU_DONG_CHU_NHAT '{nam}-{thang}-01','{nhamay}',{mst};"
+        cur.execute(query)
+        conn.commit()
+        conn.close()
+        return True
+    except Exception as e:
+        print(f"Loi cap nhat cong qua khu {str(e)}")  
+        conn.close()
+        return False
+
 def chotcong_layhoten(mst):
     try:
         conn = pyodbc.connect(url_database_pyodbc)

@@ -5526,6 +5526,8 @@ def chaylaicong():
         ketqua = chaylaicong_hientai(mst, thang, nam)
     elif loai == "Quá khứ":
         ketqua = chaylaicong_quakhu(mst, thang, nam)
+    elif loai == "Chủ nhật":
+        ketqua = chaylaicong_chunhat(mst, thang, nam)
     else:
         ketqua = False
 
