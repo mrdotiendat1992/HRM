@@ -20,8 +20,13 @@ services:
     image: namthuan/hrm:1.0.0
     container_name: nt-hrm
     restart: unless-stopped
+    # Cong 81 gio do Traefik (thu muc traefik/) dam nhan, khong publish ra ngoai nua
+    # -> moi truy cap deu di qua proxy, nho vay moi thong ke duoc ai dang dung.
+    # Dong duoi chi mo cho CHINH MAY CHU (127.0.0.1), de khi co su co thi
+    # curl truc tiep vao app, tach bach loi cua nginx voi loi cua app:
+    #     curl -I http://127.0.0.1:18081/
     ports:
-      - "${HRM_PORT:-81}:81"
+      - "127.0.0.1:18081:81"
     environment:
       TZ: ${TZ:-Asia/Ho_Chi_Minh}
       # config.py doc 4 bien nay (python-dotenv / os.environ)
@@ -44,3 +49,12 @@ services:
       options:
         max-size: "20m"
         max-file: "5"
+    networks:
+      - nt_net
+
+# Mang dung chung de Traefik goi toi duoc. Tao bang: bash cai-dat-traefik.sh
+# (nt.sh cung tu tao neu thieu)
+networks:
+  nt_net:
+    name: nt_net
+    external: true
