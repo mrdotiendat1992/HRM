@@ -35,8 +35,15 @@
         cung tra ve datetime cho kieu do, khong doi.
 
    2. install_json_provider(app)
-        Cho Flask jsonify() tu doi date/time/datetime/Decimal thanh chuoi
-        thay vi nem TypeError.
+        Cho Flask jsonify() xu ly time / timedelta / Decimal / bytes thay vi
+        nem TypeError. KHONG dung toi date/datetime - giu nguyen format cu
+        cua Flask de khong lam doi output cua cac endpoint dang chay tot.
+
+ CHAY TREN WINDOWS?
+ ------------------
+ An toan. install_pyodbc_legacy_dates() tu dong bo qua khi os.name == "nt",
+ nen commit file nay vao repo khong anh huong gi den viec chay `python main.py`
+ truc tiep tren may Windows.
 
  CACH DUNG - them 3 dong vao dau app.py, NGAY SAU dong `app = Flask(...)`:
 
@@ -52,6 +59,7 @@
 """
 
 import datetime
+import os
 import struct
 from decimal import Decimal
 
@@ -100,9 +108,18 @@ def _fallback_text(raw):
     return raw
 
 
-def install_pyodbc_legacy_dates():
-    """Bat che do 'DATE/TIME tra ve chuoi' cho MOI connection pyodbc moi tao."""
+def install_pyodbc_legacy_dates(force=False):
+    """Bat che do 'DATE/TIME tra ve chuoi' cho MOI connection pyodbc moi tao.
+
+    Tren WINDOWS -> khong lam gi ca. O do DRIVER={SQL Server} la SQLSRV32.DLL,
+    von da tra ve chuoi san; can thiep vao chi them rui ro. Nho vay commit file
+    nay vao repo KHONG anh huong gi den viec chay truc tiep tren may Windows.
+    (force=True neu muon bat ep, chi dung de thu nghiem.)
+    """
     import pyodbc
+
+    if os.name == "nt" and not force:
+        return
 
     if getattr(pyodbc, "_nt_compat_installed", False):
         return
@@ -126,12 +143,16 @@ def install_json_provider(app):
     from flask.json.provider import DefaultJSONProvider
 
     class NTJSONProvider(DefaultJSONProvider):
+        """Chi xu ly nhung kieu ma Flask VON DA nem TypeError.
+
+        KHONG dung toi date / datetime: Flask co cach serialize rieng cho hai
+        kieu do ("Fri, 05 Jan 2024 08:30:00 GMT"). Neu doi format o day thi
+        nhung endpoint dang chay binh thuong se doi output -> frontend co the
+        vo. Uy quyen lai cho Flask de khong doi hanh vi cu.
+        """
+
         @staticmethod
         def default(o):
-            if isinstance(o, datetime.datetime):
-                return o.strftime("%Y-%m-%d %H:%M:%S")
-            if isinstance(o, datetime.date):
-                return o.strftime("%Y-%m-%d")
             if isinstance(o, datetime.time):
                 return o.strftime("%H:%M:%S")
             if isinstance(o, datetime.timedelta):
@@ -171,21 +192,30 @@ if __name__ == "__main__":
           datetime.datetime.strptime(_date_to_str(struct.pack("<hHH", 2024, 1, 5)),
                                      "%Y-%m-%d").strftime("%d/%m/%Y"), "05/01/2024")
 
-    print("\n3. Flask jsonify")
+    print("\n3. Flask jsonify - phai SUA duoc loi ma KHONG doi format cu")
     try:
         from flask import Flask, jsonify
-        app = install_json_provider(Flask(__name__))
-        with app.test_request_context():
-            body = jsonify({"data": [{
-                "gio": datetime.time(8, 30),
-                "ngay": datetime.date(2024, 1, 5),
-                "luc": datetime.datetime(2024, 1, 5, 8, 30),
-                "tien": Decimal("1234.50"),
-            }]}).get_data(as_text=True)
-        check("jsonify time",     '"gio":"08:30:00"' in body.replace(" ", ""), True)
-        check("jsonify date",     '"ngay":"2024-01-05"' in body.replace(" ", ""), True)
-        check("jsonify datetime", '"luc":"2024-01-0508:30:00"' in body.replace(" ", ""), True)
-        check("jsonify Decimal",  '"tien":1234.5' in body.replace(" ", ""), True)
+
+        def body(prov, obj):
+            a = Flask(__name__)
+            if prov:
+                install_json_provider(a)
+            with a.test_request_context():
+                try:
+                    return jsonify(obj).get_data(as_text=True).strip()
+                except TypeError:
+                    return "TypeError"
+
+        for ten, val in [("date", datetime.date(2024, 1, 5)),
+                         ("datetime", datetime.datetime(2024, 1, 5, 8, 30))]:
+            check("giu nguyen format " + ten,
+                  body(True, {"v": val}), body(False, {"v": val}))
+        check("sua duoc time",    body(True, {"v": datetime.time(8, 30)}),
+              '{"v":"08:30:00"}')
+        check("sua duoc Decimal", body(True, {"v": Decimal("1234.50")}),
+              '{"v":1234.5}')
+        check("truoc do time bi loi", body(False, {"v": datetime.time(8, 30)}),
+              "TypeError")
     except ImportError:
         print("  --  bo qua (may nay chua cai flask)")
 
