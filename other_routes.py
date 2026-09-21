@@ -20,7 +20,7 @@ def capnhattrangthaiungvien():
         else:
             return {"status": "fail"}, 400
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"status": "fail"}, 400
 
 @app.route("/laythongtincccd", methods=["POST"])
@@ -158,7 +158,7 @@ def dangkitangcanhom():
                             else:
                                 flash(f"{current_user.masothe} đã đăng ký tăng ca cho {row['MST']} thất bại", "danger")
                         except Exception as e:
-                            flash(e)   
+                            flash(str(e))   
                     else:
                         flash(f"{current_user.masothe} không được đăng ký tăng ca cho {row['MST']}")            
             return redirect("/muc7_1_6")
@@ -367,7 +367,7 @@ def export_dsdktt():
         response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         return response 
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect("/muc2_1")
       
 @app.route("/check_hcname", methods=["POST"])
@@ -466,7 +466,7 @@ def doicanhom():
             flash(f"Đổi ca thành công các MST {str(cacmst)} thành {camoi}", "success")
         return redirect("/muc7_1_1")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         app.logger.error(e)
         flash(f"Đổi ca bị lỗi, {e} !!!")
         return redirect("/muc7_1_1")
@@ -970,7 +970,7 @@ def taifilemaukp():
             return send_file(file, as_attachment=True)
             
         except Exception as e:
-            flash(e)
+            flash(str(e))
             flash("Download file error !!!")
             return redirect("/muc5_1_1")
 
@@ -985,7 +985,7 @@ def rutdonxinnghiviec():
                 flash("Rút đơn nghỉ việc thất bại !!!")
             return redirect("/muc10_2")
         except Exception as e:
-            flash(e)
+            flash(str(e))
             flash(f"Rút đơn bị lỗi ({e}) !!!")
             return redirect("/muc10_2")    
         
@@ -1136,7 +1136,7 @@ def suahopdong():
             return render_template("suahopdong.html",hopdong=hopdong)
         return redirect("/muc3_3")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect("/muc3_3")  
     
 @app.route("/xoahopdong", methods=["POST"])
@@ -1150,7 +1150,7 @@ def xoahopdong():
             flash(f"Xoá hợp đồng có ID {id} không thành công !!!")
         return redirect("/muc3_3")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect("/muc3_3")    
     
 @app.route("/suahopdonglaodong", methods=["POST"])
@@ -1187,7 +1187,7 @@ def suahopdonglaodong():
         else:
             flash(f"Cập nhật hợp đồng số {id} thất bại !!!")
     except Exception as e:
-        flash(e)
+        flash(str(e))
     return redirect("/muc3_3")  
 
 @app.route("/qr_code", methods=["GET"])
@@ -1419,7 +1419,7 @@ def on_f12():
         if request.method == "POST":
             bat_function_12()
     except Exception as e:
-        flash(e)
+        flash(str(e))
     return redirect("/admin")
 
 @app.route("/tat_12", methods=["POST"])
@@ -1428,7 +1428,7 @@ def off_f12():
         if request.method == "POST":
             tat_function_12()
     except Exception as e:
-        flash(e)
+        flash(str(e))
     return redirect("/admin")
 
 @app.route("/dangki_tangca_web", methods=["GET","POST"])
@@ -1685,7 +1685,7 @@ def nhansu_them_xinnghikhac():
                         flash(f"Loi them xin nghi khac: {e}")
                         break
             except Exception as e:
-                flash(e)
+                flash(str(e))
         return redirect("/muc7_1_6")
 
 @app.route("/tai_danhsach_tangca", methods=["POST"])
@@ -1790,7 +1790,7 @@ def tailen_danhsach_tangca():
 
                 conn.close()    
             except Exception as e:
-                flash(e)
+                flash(str(e))
                     
         return redirect("/dangki_tangca_web")
 
@@ -2886,7 +2886,7 @@ def tailen_nhansu_pheduyet_tangca():
                     else:
                         flash(f"Nhân sự phê duyệt tăng ca ID {id} thất bại !!!")        
             except Exception as e:
-                flash(e)
+                flash(str(e))
             finally:         
                 return redirect("/dangki_tangca_web")
             
@@ -3229,7 +3229,7 @@ def bangcongtrangoai_web():
                                     pagination=pagination,
                                     count=total)
         except Exception as e:
-            flash(e)
+            flash(str(e))
             return render_template("bangcongtrangoai_web.html",
                                     danhsach=[])
     else:
@@ -3659,7 +3659,7 @@ def dangky_dilam_ngayle():
                         else:
                             flash(f"Thêm làm ngày lễ  thất bại !!!")
             except Exception as e:
-                flash(e)
+                flash(str(e))
         return redirect("/dangky_ngayle_web")
             
 @app.route("/dangky_dilam_chunhat", methods=["POST"])
@@ -3709,7 +3709,7 @@ def hr_pheduyet_dangky_dilam_chunhat():
                     else:
                         flash(f"Nhân sự phê duyệt làm Chủ nhật ID {id} thất bại !!!")       
             except Exception as e:
-                flash(e)
+                flash(str(e))
         return redirect("/dangky_chunhat_web")
     
 @app.route('/download_JD',methods=["POST"])
@@ -3720,7 +3720,7 @@ def download_file():
         flash(os.path.exists(filename))
         return send_file(filename, as_attachment=True)
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect("/muc2_2")
  
 @app.route('/duyet_hangloat_tangca',methods=["POST"])
@@ -4115,7 +4115,7 @@ def phanquyen_thuky():
 
             return render_template("phanquyenthuky.html", danhsach=paginated_rows, pagination=pagination)
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return render_template("phanquyenthuky.html", danhsach=[])
 
 @app.route("/add_phanquyenthuky", methods=["POST"])
@@ -4134,7 +4134,7 @@ def add_phanquyenthuky():
 
         return {"message": "Thêm thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Thêm thất bại"}
 
 @app.route("/update_phanquyenthuky", methods=["POST"])
@@ -4153,7 +4153,7 @@ def update_phanquyenthuky():
 
         return {"message": "Sửa thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Sửa thất bại"}
 
 @app.route("/delete_phanquyenthuky", methods=["GET"])
@@ -4171,7 +4171,7 @@ def delete_phanquyenthuky():
 
         return {"message": "Xóa thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Xóa thất bại"}
 
 @app.route("/update_sophut_phepton", methods=["POST"])
@@ -4209,7 +4209,7 @@ def thaydoi_ten_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_cccd_yctd", methods=["POST"])
@@ -4227,7 +4227,7 @@ def thaydoi_cccd_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_gioitinh_yctd", methods=["POST"])
@@ -4245,7 +4245,7 @@ def thaydoi_gioitinh_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_tuoi_yctd", methods=["POST"])
@@ -4263,7 +4263,7 @@ def thaydoi_tuoi_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_kinhnghiem_yctd", methods=["POST"])
@@ -4281,7 +4281,7 @@ def thaydoi_kinhnghiem_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_kenhtuyendung_yctd", methods=["POST"])
@@ -4299,7 +4299,7 @@ def thaydoi_kenhtuyendung_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
     
 @app.route("/thaydoi_cv_yctd", methods=["POST"])
@@ -4321,7 +4321,7 @@ def thaydoi_cv_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
     
 @app.route("/thaydoi_ngaypv1_yctd", methods=["POST"])
@@ -4339,7 +4339,7 @@ def thaydoi_ngaypv1_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_ketquapv1_yctd", methods=["POST"])
@@ -4357,7 +4357,7 @@ def thaydoi_ketquapv1_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/upload_danhgia_uvtd_pv1", methods=["POST"])
@@ -4379,7 +4379,7 @@ def upload_danhgia_uvtd_pv1():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
     
 @app.route("/thaydoi_ngaypv2_yctd", methods=["POST"])
@@ -4397,7 +4397,7 @@ def thaydoi_ngaypv2_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_ketquapv2_yctd", methods=["POST"])
@@ -4415,7 +4415,7 @@ def thaydoi_ketquapv2_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/upload_danhgia_uvtd_pv2", methods=["POST"])
@@ -4437,7 +4437,7 @@ def upload_danhgia_uvtd_pv2():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
     
 @app.route("/thaydoi_ngaypv3_yctd", methods=["POST"])
@@ -4456,7 +4456,7 @@ def thaydoi_ngaypv3_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_ketquapv3_yctd", methods=["POST"])
@@ -4474,7 +4474,7 @@ def thaydoi_ketquapv3_yctd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/upload_danhgia_uvtd_pv3", methods=["POST"])
@@ -4497,7 +4497,7 @@ def upload_danhgia_uvtd_pv3():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/thaydoi_trangthai_uvtd", methods=["POST"])
@@ -4510,7 +4510,7 @@ def thaydoi_trangthai_uvtd():
         capnhat_trangthai_ungvien_chitiet(id,trangthai,id_yctd)
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 
@@ -4529,7 +4529,7 @@ def thaydoi_ghichu_uvtd():
         conn.close()
         return redirect(f"/muc2_2_1?id={id_yctd}")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2_1?id={id_yctd}")
 
 @app.route("/xoa_uvtd", methods=["POST"])
@@ -4560,7 +4560,7 @@ def xoa_tuyendung():
         conn.close()
         return redirect(f"/muc2_2")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2")
 
 @app.route("/mo_yeucautuyendung", methods=["POST"])
@@ -4576,7 +4576,7 @@ def mo_yeucautuyendung():
         conn.close()
         return redirect(f"/muc2_2")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2")
 
 @app.route("/dong_yeucautuyendung", methods=["POST"])
@@ -4593,7 +4593,7 @@ def dong_yeucautuyendung():
         conn.close()
         return redirect(f"/muc2_2")
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return redirect(f"/muc2_2")
 
 @app.route("/chamcongtay", methods=["GET","POST"])
@@ -4650,7 +4650,7 @@ def chamcongtay():
 
             return render_template("chamcongtay.html", danhsach=formatted_rows, pagination=pagination, total=total)
         except Exception as e:
-            flash(e)
+            flash(str(e))
             return render_template("chamcongtay.html", danhsach=[], total=0)
     elif request.method == "POST":
         mst = request.form.get("mst")
@@ -4744,7 +4744,7 @@ def delete_chamcongtay():
 
         return {"message": "Xóa thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Xóa thất bại"}
 
 @app.route("/tai_sample_chamcongtay", methods=["POST"])
@@ -5082,7 +5082,7 @@ def chamcongtaycn():
 
         return render_template("chamcongtaycn.html", danhsach=formatted_rows, pagination=pagination)
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return render_template("chamcongtaycn.html", danhsach=[])
 
 @app.route("/delete_chamcongtaycn", methods=["DELETE"])
@@ -5099,7 +5099,7 @@ def delete_chamcongtaycn():
 
         return {"message": "Xóa thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Xóa thất bại"}
 
 @app.route("/tai_sample_chamcongtaycn", methods=["POST"])
@@ -5204,7 +5204,7 @@ def sua_not_cham_cong():
         else:
             return jsonify({"success": "False"})
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return jsonify({"success": "False"})
 
 @app.route('/api/sua-not-cham-cong/update', methods=['POST'])
@@ -6082,7 +6082,7 @@ def chamcongtayle():
 
         return render_template("chamcongtayle.html", danhsach=formatted_rows, pagination=pagination)
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return render_template("chamcongtayle.html", danhsach=[])
 
 @app.route("/delete_chamcongtayle", methods=["DELETE"])
@@ -6099,7 +6099,7 @@ def delete_chamcongtayle():
 
         return {"message": "Xóa thành công"}
     except Exception as e:
-        flash(e)
+        flash(str(e))
         return {"message": "Xóa thất bại"}
 
 @app.route("/tai_sample_chamcongtayle", methods=["POST"])
