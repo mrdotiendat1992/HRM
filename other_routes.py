@@ -6609,7 +6609,7 @@ def bangcong_tonghop_kiemxuong_moi():
         chuyen = request.form.get("chuyen")
 
         danhsach = lay_bangcong_tonghop_kiemxuong_moi(mst,bophan,chuyen,thang,nam)
-        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_KX_SAU_072025)
 
         sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
         image_path = HINHANH_LOGO
