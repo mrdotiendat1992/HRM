@@ -4925,7 +4925,217 @@ def lay_bangcongthang_web(mst,bophan,chuyen,thang,nam):
     except Exception as e:
         flash(f"Loi lay bang cong thang: {e}")
         return []
-    
+
+def lay_bangcong_tonghop_thucte_moi(mst, bophan, chuyen, thang, nam):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        query = """
+            SELECT 
+                MST,
+                HO_TEN,
+                BO_PHAN,
+                CHUYEN,
+                VI_TRI,
+                Chuc_danh,
+                NGAY_VAO,
+                NGAY_CHINH_THUC,
+                CA,
+                CONG_TV,
+                CONG_CT,
+                TC_CHE_DO_TV,
+                TC_CHE_DO_CT,
+                TC_NGAY_TV,
+                TC_NGAY_CT,
+                TC_DEM_TV,
+                TC_DEM_CT,
+                TC_CHU_NHAT_TV,
+                TC_CHU_NHAT_CT,
+                TC_NGAY_LE_TV,
+                TC_NGAY_LE_CT,
+                TUAN_THU_NOI_QUY,
+                UA,
+                UP,
+                UP01_CL,
+                AL,
+                PH_PL01_PL02_PL03_TV,
+                PH_PL01_PL02_PL03_CT,
+                OCL,
+                SL,
+                BL,
+                ML03,
+                ML02,
+                LML,
+                TSLC,
+                OSL,
+                TONG_CONG,
+                SO_BIEN_BAN_KY_LUAT,
+                NTID
+            FROM [HR].[dbo].[Bangcong_tonghop_thucte_t10_2026]
+            WHERE Nha_may = ?
+              AND Thang = ?
+              AND Nam = ?
+        """
+
+        params = [current_user.macongty, thang, nam]
+
+        # Điều kiện lọc động
+        if mst:
+            query += " AND MST = ?"
+            params.append(mst)
+
+        if bophan:
+            query += " AND BO_PHAN = ?"
+            params.append(bophan)
+
+        if chuyen:
+            query += " AND CHUYEN = ?"
+            params.append(chuyen)
+
+        query += " ORDER BY MST ASC"
+
+        # Debug SQL
+        # print(query)
+        # print(params)
+
+        rows = cursor.execute(query, params).fetchall()
+
+        new_rows = []
+
+        for row in rows:
+
+            # Convert pyodbc.Row -> list
+            row = list(row)
+
+            # Cột TONG_CONG
+            # index 36 vì bắt đầu từ 0
+            row[36] = round(row[36], 0) if row[36] else 0
+
+            # Xử lý NTID
+            ntid = row[-1]
+
+            # Lấy ký tự thứ 10 nếu đủ độ dài
+            ky_tu_ntid = ntid[9] if ntid and len(ntid) > 9 else ""
+
+            row.append(ky_tu_ntid)
+
+            new_rows.append(row)
+
+        cursor.close()
+        conn.close()
+
+        return new_rows
+
+    except Exception as e:
+        flash(f"Loi lay bang cong thang: {str(e)}")
+        return []
+
+def lay_bangcong_tonghop_kiemxuong_moi(mst, bophan, chuyen, thang, nam):
+    try:
+        conn = pyodbc.connect(url_database_pyodbc)
+        cursor = conn.cursor()
+
+        query = """
+            SELECT 
+                MST,
+                HO_TEN,
+                BO_PHAN,
+                CHUYEN,
+                VI_TRI,
+                Chuc_danh,
+                NGAY_VAO,
+                NGAY_CHINH_THUC,
+                CA,
+                CONG_TV,
+                CONG_CT,
+                TC_CHE_DO_TV,
+                TC_CHE_DO_CT,
+                TC_NGAY_TV,
+                TC_NGAY_CT,
+                TC_DEM_TV,
+                TC_DEM_CT,
+                TC_CHU_NHAT_TV,
+                TC_CHU_NHAT_CT,
+                TC_NGAY_LE_TV,
+                TC_NGAY_LE_CT,
+                TUAN_THU_NOI_QUY,
+                UA,
+                UP,
+                UP01_CL,
+                AL,
+                PH_PL01_PL02_PL03_TV,
+                PH_PL01_PL02_PL03_CT,
+                OCL,
+                SL,
+                BL,
+                ML03,
+                ML02,
+                LML,
+                TSLC,
+                OSL,
+                TONG_CONG,
+                SO_BIEN_BAN_KY_LUAT,
+                NTID
+            FROM [HR].[dbo].[Bangcong_tonghop_kiemxuong_t10_2026]
+            WHERE Nha_may = ?
+              AND Thang = ?
+              AND Nam = ?
+        """
+
+        params = [current_user.macongty, thang, nam]
+
+        # Điều kiện lọc động
+        if mst:
+            query += " AND MST = ?"
+            params.append(mst)
+
+        if bophan:
+            query += " AND BO_PHAN = ?"
+            params.append(bophan)
+
+        if chuyen:
+            query += " AND CHUYEN = ?"
+            params.append(chuyen)
+
+        query += " ORDER BY MST ASC"
+
+        # Debug SQL
+        # print(query)
+        # print(params)
+
+        rows = cursor.execute(query, params).fetchall()
+
+        new_rows = []
+
+        for row in rows:
+
+            # Convert pyodbc.Row -> list
+            row = list(row)
+
+            # Cột TONG_CONG
+            # index 36 vì bắt đầu từ 0
+            row[36] = round(row[36], 0) if row[36] else 0
+
+            # Xử lý NTID
+            ntid = row[-1]
+
+            # Lấy ký tự thứ 10 nếu đủ độ dài
+            ky_tu_ntid = ntid[9] if ntid and len(ntid) > 9 else ""
+
+            row.append(ky_tu_ntid)
+
+            new_rows.append(row)
+
+        cursor.close()
+        conn.close()
+
+        return new_rows
+
+    except Exception as e:
+        flash(f"Loi lay bang cong thang: {str(e)}")
+        return []
+
 def capnhat_trangthai_yeucau_tuyendung(id,trangthaimoi):
     try:
         conn = pyodbc.connect(url_database_pyodbc)

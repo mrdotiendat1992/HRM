@@ -6485,3 +6485,181 @@ def danh_sach_ntid():
 
         return render_template("danhsach_ntid.html", detail = detail, danhsach=paginated_rows,
                                    pagination=pagination)
+
+@app.route("/bangcong_tonghop_thucte_moi", methods=["GET","POST"])
+@login_required
+def bangcong_tonghop_thucte_moi():
+    if request.method == "GET":
+        try:
+            thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+            nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+            mst = request.args.get("mst")
+            bophan = request.args.get("bophan")
+            chuyen = request.args.get("chuyen")
+            danhsach = lay_bangcong_tonghop_thucte_moi(mst,bophan,chuyen,thang,nam)
+            count = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
+            return render_template("bangcong_tonghop_thucte_moi.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=count)
+        except Exception as e:
+            flash(str(e))
+            return render_template("bangcong_tonghop_thucte_moi.html",
+                                    danhsach=[])
+    else:
+        thang = int(request.form.get("thang")) if request.args.get("thang") else datetime.now().month
+        nam = int(request.form.get("nam")) if request.args.get("nam") else datetime.now().year
+        mst = request.form.get("mst")
+        bophan = request.form.get("bophan")
+        chuyen = request.form.get("chuyen")
+
+        danhsach = lay_bangcong_tonghop_thucte_moi(mst,bophan,chuyen,thang,nam)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
+
+        sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
+
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(6, 10000 - 6 + 1)
+
+        for row in danhsach:
+            # if (nam < 2025 or (nam == 2025 and thang > 6)):
+            #     data = [y for y in row]
+            # else:
+            #     # Chỉ lấy các cột cần thiết và sắp xếp lại thứ tự
+            #     data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            data = [y for y in row]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0.00")
+
+        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
+                try:
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                cell = sheet[f"{col}{row}"]
+                try:
+                    if cell.value and int(cell.value) > 0:
+                        cell.style = number_style
+                except ValueError:
+                        pass  # Nếu giá trị không phải
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)
+
+@app.route("/bangcong_tonghop_kiemxuong_moi", methods=["GET","POST"])
+@login_required
+def bangcong_tonghop_kiemxuong_moi():
+    if request.method == "GET":
+        try:
+            thang = int(request.args.get("thang")) if request.args.get("thang") else 0
+            nam = int(request.args.get("nam")) if request.args.get("nam") else 0
+            mst = request.args.get("mst")
+            bophan = request.args.get("bophan")
+            chuyen = request.args.get("chuyen")
+            danhsach = lay_bangcong_tonghop_kiemxuong_moi(mst,bophan,chuyen,thang,nam)
+            count = len(danhsach)
+            page = request.args.get(get_page_parameter(), type=int, default=1)
+            per_page = 15
+            start = (page - 1) * per_page
+            end = start + per_page
+            paginated_rows = danhsach[start:end]
+            pagination = Pagination(page=page, per_page=per_page, total=count, css_framework='bootstrap4')
+            return render_template("bangcong_tonghop_kiemxuong_moi.html",
+                                    danhsach=paginated_rows, 
+                                    pagination=pagination,
+                                    count=count)
+        except Exception as e:
+            flash(str(e))
+            return render_template("bangcong_tonghop_kiemxuong_moi.html",
+                                    danhsach=[])
+    else:
+        thang = int(request.form.get("thang")) if request.args.get("thang") else datetime.now().month
+        nam = int(request.form.get("nam")) if request.args.get("nam") else datetime.now().year
+        mst = request.form.get("mst")
+        bophan = request.form.get("bophan")
+        chuyen = request.form.get("chuyen")
+
+        danhsach = lay_bangcong_tonghop_kiemxuong_moi(mst,bophan,chuyen,thang,nam)
+        workbook = openpyxl.load_workbook(FILE_MAU_BANGCONG_TONGHOP_SAU_072025)
+
+        sheet = workbook['BẢNG CHẤM CÔNG TỔNG HỢP']  # Thay 'Sheet1' bằng tên sheet của bạn
+        image_path = HINHANH_LOGO
+        # Tạo đối tượng hình ảnh
+        img = Image(image_path)
+        # Điều chỉnh kích thước hình ảnh xuống 70% so với kích thước gốc
+        img.width = img.width * 0.25
+        img.height = img.height * 0.25
+
+        # Di chuyển ảnh: anchor vào ô A2 và điều chỉnh tọa độ di chuyển
+        img.anchor = 'A1'
+
+        # Chèn hình ảnh vào sheet
+        sheet.add_image(img)
+
+        sheet['A2'] = f'Tháng {thang} năm {nam}'
+
+        # Xóa hàng từ hàng 7 đến hàng 10000
+        sheet.delete_rows(6, 10000 - 6 + 1)
+
+        for row in danhsach:
+            # if (nam < 2025 or (nam == 2025 and thang > 6)):
+            #     data = [y for y in row]
+            # else:
+            #     # Chỉ lấy các cột cần thiết và sắp xếp lại thứ tự
+            #     data = [y for y in row[:-7]] + [row[-1]] + [y for y in row[-7:-4]] 
+            data = [y for y in row]
+            data[6] = datetime.strptime(data[6],"%Y-%m-%d") if data[6] else ""
+            data[7] = datetime.strptime(data[7],"%Y-%m-%d") if data[7] else ""
+            sheet.append(data)
+
+        # Tạo kiểu định dạng ngày
+        date_style = NamedStyle(name="date_style", number_format="DD/MM/YYYY")
+        number_style = NamedStyle(name="number_style", number_format="0.00")
+
+        for row in range(6, 10001):  # Bắt đầu từ dòng 7 đến dòng 10000
+            for col in ['G', 'H']:
+                cell = sheet[f"{col}{row}"]
+                
+                try:
+                    cell.style = date_style
+                except ValueError:
+                    pass  # Nếu giá trị không phải là ngày, bỏ qua ô này
+            for col in ['J', 'K','L', 'M','N', 'O','P', 'Q','R', 'S','T', 'U', 'X','Y', 'Z','AA','AB', 'AC','AD', 'AE', 'AF','AG', 'AH','AI', 'AJ', 'AK','AL', 'AM', 'AN']:
+                cell = sheet[f"{col}{row}"]
+                try:
+                    if cell.value and int(cell.value) > 0:
+                        cell.style = number_style
+                except ValueError:
+                        pass  # Nếu giá trị không phải
+        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        workbook.save(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"))
+        return send_file(os.path.join(os.path.dirname(__file__),f"nhapxuat/xuat/bangchamcong_tonghop_{timestamp}.xlsx"), as_attachment=True)

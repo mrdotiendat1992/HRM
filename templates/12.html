@@ -98,6 +98,15 @@
                                     Bảng công
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                    {% if (current_user.macongty=='NT1' and current_user.masothe==2833) or
+                                    (current_user.macongty=='NT2' and current_user.masothe==2176) or
+                                    (current_user.macongty=='NT2' and current_user.masothe==1369) or
+                                    current_user.phanquyen == 'sa' %}
+                                    <li><a class="dropdown-item" href="/bangcong_tonghop_kiemxuong_moi">Bảng chấm công tổng hợp kiểm xưởng mới</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="/bangcong_tonghop_thucte_moi">Bảng chấm công tổng hợp thực tế mới</a>
+                                    </li>
+                                    {% endif %}
                                     <li><a class="dropdown-item" href="/bangcong_thang_web">Bảng chấm công tổng hợp</a>
                                     </li>
                                     <li><a class="dropdown-item" href="/bangcong_hanhchinh_web">Bảng chấm công hành
